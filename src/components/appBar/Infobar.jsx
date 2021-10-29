@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme) => {
   return {
     infoBarRoot: {
       position: "fixed",
-      zIndex: "1",
+      zIndex: "2",
       height: "40px",
     },
     appBarContent: {

@@ -61,7 +61,7 @@ const Tokens = () => {
 
   return (
     <div className={classes.tokensRoot}>
-      <p className={classes.subTitle}>Your watchlist</p>
+      <p className={classes.subTitle + " titleHalloween"}>Your watchlist</p>
       <Paper>
         {watchlistTokens.length > 0 ? (
           <TokensTable
@@ -75,7 +75,7 @@ const Tokens = () => {
           <p>Saved tokens will appear here</p>
         )}
       </Paper>
-      <p className={classes.subTitle}>All tokens</p>
+      <p className={classes.subTitle + " titleHalloween"}>All tokens</p>
       <Paper>
         <TokensTable data={tokens} textEmpty={"Any rows"} size={size} onClickToken={onClickToken} sortable={true} />
       </Paper>
