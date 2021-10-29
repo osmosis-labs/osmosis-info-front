@@ -32,15 +32,15 @@ const PoolPath = ({ pool }) => {
     const name = pool && pool?.name ? pool.name : ""
     return (
         <div className={classes.pathRoot}>
-            <p className={` ${classes.pathLink}`} onClick={() => { go("/") }}>
+            <p className={` ${classes.pathLink} titleHalloweenWhite`} onClick={() => { go("/") }}>
                 Overview
             </p>
             <ChevronRightIcon className={classes.icons} />
-            <p className={` ${classes.pathLink}`} onClick={() => { go("/pools") }}>
+            <p className={` ${classes.pathLink} titleHalloweenWhite`} onClick={() => { go("/pools") }}>
                 Pools
             </p>
             <ChevronRightIcon className={classes.icons} />
-            <p className={` ${classes.currentPath}`} >
+            <p className={` ${classes.currentPath} titleHalloween`} >
                 {name}
             </p>
         </div>

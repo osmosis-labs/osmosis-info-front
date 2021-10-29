@@ -408,19 +408,19 @@ const Pool = ({ showToast }) => {
             </div>
             <div className={classes.detail}>
               <p className={classes.titleDetail}>Liquidity</p>
-              <p variant="body2" className={classes.dataDetail}>
+              <p variant="body2" data-glitch={formateNumberPrice(pool.liquidity)} className={classes.dataDetail + " glitchText"}>
                 {formateNumberPrice(pool.liquidity)}
               </p>
             </div>
             <div className={classes.detail}>
               <p className={classes.titleDetail}>Volume (24hrs)</p>
-              <p variant="body2" className={classes.dataDetail}>
+              <p variant="body2" data-glitch={formateNumberPrice(pool.volume_24h)} className={classes.dataDetail + " glitchText2"}>
                 {formateNumberPrice(pool.volume_24h)}
               </p>
             </div>
             <div className={classes.detail}>
               <p className={classes.titleDetail}>Volume (7d)</p>
-              <p variant="body2" className={classes.dataDetail}>
+              <p variant="body2" data-glitch={formateNumberPrice(pool.volume_7d)} className={classes.dataDetail + " glitchText3"}>
                 {formateNumberPrice(pool.volume_7d)}
               </p>
             </div>

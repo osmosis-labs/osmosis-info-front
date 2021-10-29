@@ -93,7 +93,6 @@ const App = () => {
                       </PricesProvider>
                       <AppBar />
                       <div className={classes.container}>
-                        <p className="textHappy">Happy halloween</p>
                         <div className={classes.content}>
                           <Route path="/" exact={true}>
                             <Overview showToast={showToast} />

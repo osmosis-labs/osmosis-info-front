@@ -180,13 +180,13 @@ const Overview = () => {
         <div className={classes.charts}>
           <Paper className={classes.chart}>
             <p className={`${classes.chartTitle} titleHalloween`}>Liquidity</p>
-            <p className={`${classes.chartTextBig} glitchText`} data-glitch={chartLiquidityInfo.price}>{chartLiquidityInfo.price}</p>
+            <p className={`${classes.chartTextBig} glitchText glitchTextOverview`} data-glitch={chartLiquidityInfo.price}>{chartLiquidityInfo.price}</p>
             <p className={classes.chartTextSmall}>{chartLiquidityInfo.date}</p>
             <LiquidityChart data={dataLiquidity} crossMove={crossMoveLiquidity} />
           </Paper>
           <Paper className={classes.chart}>
             <p className={`${classes.chartTitle} titleHalloween`}>Volume</p>
-            <p className={`${classes.chartTextBig} glitchText`} data-glitch={chartVolumeInfo.price}>{chartVolumeInfo.price}</p>
+            <p className={`${classes.chartTextBig} glitchText glitchTextOverview`} data-glitch={chartVolumeInfo.price}>{chartVolumeInfo.price}</p>
             <p className={classes.chartTextSmall}>{chartVolumeInfo.date}</p>
             <VolumeChart data={dataVolume} crossMove={crossMoveVolume} />
           </Paper>
