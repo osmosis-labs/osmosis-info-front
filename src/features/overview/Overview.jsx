@@ -176,23 +176,23 @@ const Overview = () => {
     <div className={classes.overviewRoot}>
       {/* <div className={classes.radiant}> </div> */}
       <div className={classes.container}>
-        <p className={classes.subTitle}>Osmosis - Overview</p>
+        <p className={`${classes.subTitle} titleHalloween`}>Osmosis - Overview</p>
         <div className={classes.charts}>
           <Paper className={classes.chart}>
-            <p className={classes.chartTitle}>Liquidity</p>
-            <p className={classes.chartTextBig}>{chartLiquidityInfo.price}</p>
+            <p className={`${classes.chartTitle} titleHalloween`}>Liquidity</p>
+            <p className={`${classes.chartTextBig} glitchText`} data-glitch={chartLiquidityInfo.price}>{chartLiquidityInfo.price}</p>
             <p className={classes.chartTextSmall}>{chartLiquidityInfo.date}</p>
             <LiquidityChart data={dataLiquidity} crossMove={crossMoveLiquidity} />
           </Paper>
           <Paper className={classes.chart}>
-            <p className={classes.chartTitle}>Volume</p>
-            <p className={classes.chartTextBig}>{chartVolumeInfo.price}</p>
+            <p className={`${classes.chartTitle} titleHalloween`}>Volume</p>
+            <p className={`${classes.chartTextBig} glitchText`} data-glitch={chartVolumeInfo.price}>{chartVolumeInfo.price}</p>
             <p className={classes.chartTextSmall}>{chartVolumeInfo.date}</p>
             <VolumeChart data={dataVolume} crossMove={crossMoveVolume} />
           </Paper>
         </div>
 
-        <p className={classes.subTitle}>Top tokens</p>
+        <p className={`${classes.subTitle} titleHalloween`}>Top tokens</p>
         <Paper>
           <TokensTable
             data={dataTokens}
@@ -202,7 +202,7 @@ const Overview = () => {
             onClickToken={onClickToken}
           />
         </Paper>
-        <p className={classes.subTitle}>Top pools</p>
+        <p className={`${classes.subTitle} titleHalloween`}>Top pools</p>
         <Paper>
           <PoolsTable data={dataPools} textEmpty={"Any rows"} size={size} sortable={true} onClickPool={onClickPool} />
         </Paper>
