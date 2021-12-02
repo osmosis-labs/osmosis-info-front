@@ -15,7 +15,6 @@ import { PricesProvider } from "../../contexts/PricesProvider";
 import { TokensProvider } from "../../contexts/TokensProvider";
 import { WatchlistTokensProvider } from "../../contexts/WatchlistTokensProvider";
 import Token from "../tokens/token/Token";
-import pumpkinIMG from "../../assets/pumpkin.png";
 const useStyles = makeStyles((theme) => {
   return {
     appRoot: {
@@ -27,7 +26,6 @@ const useStyles = makeStyles((theme) => {
       backgroundColor: theme.palette.primary.main,
       overflow: "hidden",
       fontSize: theme.fontSize.medium,
-      position: "relative",
     },
     container: {
       paddingTop: "140px",
@@ -43,7 +41,6 @@ const useStyles = makeStyles((theme) => {
     content: {
       maxWidth: "1200px",
       width: "90%",
-      zIndex: "1",
     },
   };
 });
@@ -69,19 +66,6 @@ const App = () => {
                 <WatchlistPoolsProvider>
                   <WatchlistTokensProvider>
                     <div className={classes.appRoot}>
-                      <div className="spiderWeb"></div>
-                      <div className="spiderWeb2"></div>
-                      <div className="spider">
-                        <div className="body">
-                          <div className="leg left"></div>
-                          <div className="leg right"></div>
-                        </div>
-                      </div>
-                      <img src={pumpkinIMG} alt="pumpkin" className={`pumplinkImg glitch1`} />
-                      <img src={pumpkinIMG} alt="pumpkin" className={`pumplinkImg glitch2`} />
-                      <img src={pumpkinIMG} alt="pumpkin" className={`pumplinkImg glitch3`} />
-                      <img src={pumpkinIMG} alt="pumpkin" className={`pumplinkImg glitch4`} />
-                      <img src={pumpkinIMG} alt="pumpkin" className={`pumplinkImg`} />
                       <Toast
                         open={stateToast.open}
                         severity={stateToast.severity}

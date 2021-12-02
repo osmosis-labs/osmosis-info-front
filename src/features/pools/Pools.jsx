@@ -61,7 +61,7 @@ const Pools = () => {
 
   return (
     <div className={classes.poolsRoot}>
-      <p className={classes.subTitle + " titleHalloween"}>Your watchlist</p>
+      <p className={classes.subTitle}>Your watchlist</p>
       <Paper>
         {watchlistPools.length > 0 ? (
           <PoolsTable
@@ -75,7 +75,7 @@ const Pools = () => {
           <p>Saved pools will appear here</p>
         )}
       </Paper>
-      <p className={classes.subTitle + " titleHalloween"}>All pools</p>
+      <p className={classes.subTitle}>All pools</p>
       <Paper>
         <PoolsTable data={pools} textEmpty={"Any rows"} size={size} onClickPool={onClickPool} sortable={true} />
       </Paper>

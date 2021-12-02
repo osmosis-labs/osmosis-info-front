@@ -280,19 +280,19 @@ const Token = ({ showToast }) => {
           <div className={classes.details}>
             <div className={classes.detail}>
               <p className={classes.titleDetail}>Liquidity</p>
-              <p variant="body2" data-glitch={formateNumberPrice(token.liquidity)} className={classes.dataDetail + " glitchText2"}>
+              <p variant="body2" className={classes.dataDetail}>
                 {formateNumberPrice(token.liquidity)}
               </p>
             </div>
             <div className={classes.detail}>
               <p className={classes.titleDetail}>Volume (24hrs)</p>
-              <p variant="body2" data-glitch={formateNumberPrice(token.volume_24h)} className={classes.dataDetail + " glitchText3"}>
+              <p variant="body2" className={classes.dataDetail}>
                 {formateNumberPrice(token.volume_24h)}
               </p>
             </div>
             <div className={classes.detail}>
               <p className={classes.titleDetail}>Price</p>
-              <p variant="body2" data-glitch={formateNumberPriceDecimals(token.price)} className={classes.dataDetail + " glitchText"}>
+              <p variant="body2" className={classes.dataDetail}>
                 {formateNumberPriceDecimals(token.price)}
               </p>
             </div>

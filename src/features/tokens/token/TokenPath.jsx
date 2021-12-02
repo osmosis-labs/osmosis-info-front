@@ -31,7 +31,7 @@ const TokenPath = ({ token }) => {
   return (
     <div className={classes.pathRoot}>
       <p
-        className={` ${classes.pathLink} titleHalloweenWhite`}
+        className={` ${classes.pathLink}`}
         onClick={() => {
           go("/");
         }}
@@ -40,7 +40,7 @@ const TokenPath = ({ token }) => {
       </p>
       <ChevronRightIcon className={classes.icons} />
       <p
-        className={` ${classes.pathLink} titleHalloweenWhite`}
+        className={` ${classes.pathLink}`}
         onClick={() => {
           go("/tokens");
         }}
@@ -48,7 +48,7 @@ const TokenPath = ({ token }) => {
         Tokens
       </p>
       <ChevronRightIcon className={classes.icons} />
-      <p className={` ${classes.currentPath} titleHalloween`}>{name}</p>
+      <p className={` ${classes.currentPath}`}>{name}</p>
     </div>
   );
 };

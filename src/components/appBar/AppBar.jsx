@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => {
   return {
     appBarRoot: {
       position: "fixed",
-      zIndex: "2",
+      zIndex: "1",
       marginTop: "40px",
     },
     appBarContent: {
@@ -57,7 +57,6 @@ const useStyles = makeStyles((theme) => {
         margin: `${theme.spacing(3)}px ${theme.spacing(3)}px ${theme.spacing(1)}px ${theme.spacing(4)}px`,
       },
     },
-
     menuItem: {
       color: theme.palette.gray.dark,
       margin: theme.spacing(1),
@@ -89,7 +88,6 @@ const AppBar = () => {
   }, [location.pathname, setCurrentPath]);
   return (
     <div className={classes.appBarRoot}>
-
       <div className={classes.appBarContent}>
         <div className={classes.left}>
           <img
@@ -103,31 +101,19 @@ const AppBar = () => {
           <div className={classes.menu}>
             <Link
               to="/"
-              className={
-                currentPath === "/"
-                  ? `${classes.menuItem} ${classes.menuItemActive} menuItemActiveHalloween`
-                  : `menuItemHalloween ${classes.menuItem}`
-              }
+              className={currentPath === "/" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
             >
               Overview
             </Link>
             <Link
               to="/pools"
-              className={
-                currentPath === "/pools"
-                  ? `${classes.menuItem} ${classes.menuItemActive} menuItemActiveHalloween`
-                  : `menuItemHalloween ${classes.menuItem}`
-              }
+              className={currentPath === "/pools" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
             >
               Pools
             </Link>
             <Link
               to="/tokens"
-              className={
-                currentPath === "/tokens"
-                  ? `${classes.menuItem} ${classes.menuItemActive} .menuItemActiveHalloween`
-                  : `menuItemHalloween ${classes.menuItem}`
-              }
+              className={currentPath === "/tokens" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
             >
               Tokens
             </Link>
