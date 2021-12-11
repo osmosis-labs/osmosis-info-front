@@ -62,7 +62,7 @@ const Tokens = () => {
   return (
     <div className={classes.tokensRoot}>
       <p className={classes.subTitle}>Your watchlist</p>
-      <Paper>
+      <Paper className={"paper-christmas"}>
         {watchlistTokens.length > 0 ? (
           <TokensTable
             data={tokensOnWatchlist}
@@ -76,7 +76,7 @@ const Tokens = () => {
         )}
       </Paper>
       <p className={classes.subTitle}>All tokens</p>
-      <Paper>
+      <Paper className={"paper-christmas"}>
         <TokensTable data={tokens} textEmpty={"Any rows"} size={size} onClickToken={onClickToken} sortable={true} />
       </Paper>
     </div>

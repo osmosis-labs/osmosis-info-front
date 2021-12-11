@@ -193,7 +193,7 @@ const Overview = () => {
         </div>
 
         <p className={classes.subTitle}>Top tokens</p>
-        <Paper>
+        <Paper className={"paper-christmas"}>
           <TokensTable
             data={dataTokens}
             textEmpty={"Any rows"}
@@ -203,7 +203,7 @@ const Overview = () => {
           />
         </Paper>
         <p className={classes.subTitle}>Top pools</p>
-        <Paper>
+        <Paper className={"paper-christmas"}>
           <PoolsTable data={dataPools} textEmpty={"Any rows"} size={size} sortable={true} onClickPool={onClickPool} />
         </Paper>
       </div>

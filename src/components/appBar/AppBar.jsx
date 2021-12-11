@@ -3,6 +3,11 @@ import { useEffect, useState } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import logo from "./logo.png";
 import Search from "./Search";
+
+import snowMan from "../../assets/snowman.png";
+import christmasTree from "../../assets/christmas-tree.png";
+import christmasTree2 from "../../assets/christmas-tree2.png";
+import gift from "../../assets/gift-box.png";
 const useStyles = makeStyles((theme) => {
   return {
     appBarRoot: {
@@ -87,8 +92,17 @@ const AppBar = () => {
     setCurrentPath(location.pathname);
   }, [location.pathname, setCurrentPath]);
   return (
-    <div className={classes.appBarRoot}>
-      <div className={classes.appBarContent}>
+    <div className={classes.appBarRoot + " appBar-christmas"}>
+      <div className="appBar_container-christmas">
+        <img src={snowMan} className="appBar_image-snowman" alt="" />
+        <img src={snowMan} className="appBar_image-snowman2" alt="" />
+        <img src={christmasTree2} className="appBar_image-christmasTree2" alt="" />
+        <img src={christmasTree} className="appBar_image-christmasTree" alt="" />
+        <img src={gift} className="appBar_image-gift" alt="" />
+        <img src={gift} className="appBar_image-gift2" alt="" />
+        <div className="reindeer"></div>
+      </div>
+      <div className={classes.appBarContent + " appBarContent-christmas "}>
         <div className={classes.left}>
           <img
             className={classes.logo}
@@ -101,19 +115,31 @@ const AppBar = () => {
           <div className={classes.menu}>
             <Link
               to="/"
-              className={currentPath === "/" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
+              className={
+                currentPath === "/"
+                  ? `${classes.menuItem} ${classes.menuItemActive} menuItemActiveChristmas`
+                  : `${classes.menuItem} menuItemChristmas`
+              }
             >
               Overview
             </Link>
             <Link
               to="/pools"
-              className={currentPath === "/pools" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
+              className={
+                currentPath === "/pools"
+                  ? `${classes.menuItem} ${classes.menuItemActive} menuItemActiveChristmas`
+                  : `${classes.menuItem} menuItemChristmas`
+              }
             >
               Pools
             </Link>
             <Link
               to="/tokens"
-              className={currentPath === "/tokens" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
+              className={
+                currentPath === "/tokens"
+                  ? `${classes.menuItem} ${classes.menuItemActive} menuItemActiveChristmas`
+                  : `${classes.menuItem} menuItemChristmas`
+              }
             >
               Tokens
             </Link>

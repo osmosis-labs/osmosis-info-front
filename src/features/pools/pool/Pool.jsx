@@ -365,7 +365,7 @@ const Pool = ({ showToast }) => {
       <PoolPath pool={pool} />
       <PoolTitle pool={pool} tokens={tokens} />
 
-      <Paper className={classes.convertContainer}>
+      <Paper className={classes.convertContainer + " paper-christmas"}>
         <Image
           className={`${classes.image}`}
           assets={true}
@@ -381,7 +381,7 @@ const Pool = ({ showToast }) => {
       <PoolSelect tokens={tokens} setSelectedTokens={onChangeSeletedToken} selectedTokens={selectedTokens} />
       <div className={classes.charts}>
         <div className={classes.details}>
-          <Paper className={classes.detailPaper}>
+          <Paper className={classes.detailPaper + " paper-christmas"}>
             <div className={classes.pooledTokens}>
               <p className={classes.pooledTokensTitle}>Pooled tokens</p>
               <div className={classes.tokensContainer}>
