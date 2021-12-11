@@ -85,15 +85,15 @@ const PoolTitle = ({ pool, tokens }) => {
         {tokens.map((token, index) => {
           return (
             <Image
-              pathAssets="../assets/"
               key={`${token.denom} - poolImage`}
               style={
                 matchMD ? { transform: `translateX(-${index * 10}%)` } : { transform: `translateX(-${index * 75}%)` }
               }
               className={`${classes.image} ${classes.poolImage}`}
               assets={true}
-              src={`${token.symbol?.toLowerCase()}.png`}
-              srcFallback="default.png"
+              src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${token.symbol.toLowerCase()}.png`}
+              srcFallback="../assets/default.png"
+              pathAssets=""
               alt={`${token.symbol}`}
             />
           );
