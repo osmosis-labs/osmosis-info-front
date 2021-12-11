@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import * as serviceWorker from "./serviceWorker";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 import "./index.css";
+import "./christmas.css";
 import App from "./features/app/App";
 
 // Create theme for the application

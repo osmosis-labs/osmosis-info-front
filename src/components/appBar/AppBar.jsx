@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import logo from "./logo.png";
 import Search from "./Search";
+
+import snowMan from "../../assets/snowman.png";
 const useStyles = makeStyles((theme) => {
   return {
     appBarRoot: {
@@ -87,7 +89,12 @@ const AppBar = () => {
     setCurrentPath(location.pathname);
   }, [location.pathname, setCurrentPath]);
   return (
-    <div className={classes.appBarRoot}>
+    <div className={classes.appBarRoot + " appBar-christmast"}>
+      <div className="appBar_container-christmast">
+        <img src={snowMan} className="appBar_image-snowman" alt="" />
+        <img src={snowMan} className="appBar_image-snowman2" alt="" />
+        <div className="reindeer"></div>
+      </div>
       <div className={classes.appBarContent}>
         <div className={classes.left}>
           <img

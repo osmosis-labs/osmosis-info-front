@@ -65,7 +65,12 @@ const App = () => {
               <ChartsProvider>
                 <WatchlistPoolsProvider>
                   <WatchlistTokensProvider>
-                    <div className={classes.appRoot}>
+                    <div className={classes.appRoot + " snowFallContainer"}>
+                      <div className="snow">
+                        <div className="snow__layer"></div>
+                        <div className="snow__layer"></div>
+                        <div className="snow__layer"></div>
+                      </div>
                       <Toast
                         open={stateToast.open}
                         severity={stateToast.severity}

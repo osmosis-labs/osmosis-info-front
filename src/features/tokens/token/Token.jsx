@@ -276,7 +276,7 @@ const Token = ({ showToast }) => {
       <TokenTitle token={token} />
       <p className={classes.tokenPrice}>{formateNumberPriceDecimals(token.price)}</p>
       <div className={classes.charts}>
-        <Paper>
+        <Paper className={"paper-christmas"}>
           <div className={classes.details}>
             <div className={classes.detail}>
               <p className={classes.titleDetail}>Liquidity</p>

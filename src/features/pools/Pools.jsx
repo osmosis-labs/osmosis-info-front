@@ -62,7 +62,7 @@ const Pools = () => {
   return (
     <div className={classes.poolsRoot}>
       <p className={classes.subTitle}>Your watchlist</p>
-      <Paper>
+      <Paper className={"paper-christmas"}>
         {watchlistPools.length > 0 ? (
           <PoolsTable
             data={poolsOnWatchlist}
@@ -76,7 +76,7 @@ const Pools = () => {
         )}
       </Paper>
       <p className={classes.subTitle}>All pools</p>
-      <Paper>
+      <Paper className={"paper-christmas"}>
         <PoolsTable data={pools} textEmpty={"Any rows"} size={size} onClickPool={onClickPool} sortable={true} />
       </Paper>
     </div>

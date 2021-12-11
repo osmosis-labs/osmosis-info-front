@@ -1,0 +1,149 @@
+.snow {
+  position: relative;
+}
+
+.paper-christmas {
+  z-index: 0;
+}
+
+.snow__layer {
+  position: absolute;
+  animation: wind 5s cubic-bezier(0.5, 0.1, 0.6, 0.99) infinite alternate;
+  left: -100px;
+  right: -100px;
+  perspective: 100px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.snow__layer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 300vh;
+  background: url("/src/assets/snow-light.png");
+  opacity: 0.8;
+  animation: fallLight 10s linear infinite;
+  transform: translateZ(10px);
+}
+
+.snow__layer:nth-child(1) {
+  animation-duration: 30s;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.snow__layer:nth-child(1)::after {
+  background: url("/src/assets/snow-blur.png");
+  opacity: 0.1;
+  animation-name: fallBlur;
+  transform: translateZ(25px);
+  animation-duration: 30s;
+}
+
+.snow__layer:nth-child(2) {
+  animation-duration: 20s;
+  pointer-events: none;
+  z-index: 0;
+  transform: translateX(-50px);
+}
+
+.snow__layer:nth-child(2)::after {
+  background: url("/src/assets/snow-medium.png");
+  opacity: 0.8;
+  animation-duration: 20s;
+}
+
+@keyframes fall {
+  from {
+    transform: translateY(-1000px);
+  }
+}
+
+@keyframes fallLight {
+  from {
+    transform: translateY(-1000px) translateZ(10px);
+  }
+}
+
+@keyframes fallBlur {
+  from {
+    transform: translateY(-1000px) translateZ(25px);
+  }
+}
+
+@keyframes wind {
+  to {
+    transform: translateX(50px);
+  }
+}
+
+.appBar-christmast {
+  position: relative;
+}
+
+.appBar_container-christmast {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.appBar_image-snowman {
+  position: absolute;
+  height: 30px;
+  bottom: 2px;
+  left: 50px;
+}
+
+.appBar_image-snowman2 {
+  position: absolute;
+  height: 30px;
+  bottom: 2px;
+  right: 15px;
+}
+
+.reindeer::after {
+  content: "";
+  position: absolute;
+  height: 32px;
+  width: 32px;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  background: url("./assets/reindeerSprite.png");
+  animation-name: spriteReindeer;
+  animation-duration: 0.5s;
+  animation-timing-function: steps(5);
+  animation-iteration-count: infinite;
+  background-position: 0px -64px;
+}
+
+@keyframes spriteReindeer {
+  from {
+    background-position: 0px -64px;
+    transform: translateX(0px);
+  }
+  to {
+    background-position: 160px -64px;
+  }
+}
+
+.reindeer {
+  animation: reindeerWalk 15s infinite linear;
+  position: absolute;
+  bottom: 0px;
+}
+@keyframes reindeerWalk {
+  from {
+    transform: translateX(-5vw);
+  }
+  to {
+    transform: translateX(110vw);
+  }
+}
