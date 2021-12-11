@@ -2,5 +2,5 @@ node_modules
 build
 package-lock.json
 .DS_Store
-deploy-preprod.bat
+deploy_preprod.bat
 www.tar

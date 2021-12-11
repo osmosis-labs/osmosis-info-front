@@ -78,12 +78,12 @@ const TokenTitle = ({ token }) => {
     <div className={classes.tokenName}>
       <div className={classes.images}>
         <Image
-          pathAssets="../assets/"
           key={`${token.denom} - tokenImage`}
           className={`${classes.image} ${classes.tokenImage}`}
           assets={true}
-          src={`${token.symbol?.toLowerCase()}.png`}
-          srcFallback="default.png"
+          pathAssets=""
+          src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${token?.symbol?.toLowerCase()}.png`}
+          srcFallback="../assets/default.png"
           alt={`${token.symbol}`}
         />
       </div>
