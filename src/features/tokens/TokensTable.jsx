@@ -307,13 +307,13 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
                               .map((symbol, index) => {
                                 return (
                                   <Image
-                                    pathAssets="../assets/"
                                     style={{ left: index * 18 + "px" }}
                                     key={headCell.id + row.id + symbol}
                                     className={classes.image}
                                     assets={true}
-                                    src={`${symbol.toLowerCase()}.png`}
-                                    srcFallback="default.png"
+                                    pathAssets=""
+                                    src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${symbol.toLowerCase()}.png`}
+                                    srcFallback="../assets/default.png"
                                     alt={`${symbol}`}
                                   />
                                 );

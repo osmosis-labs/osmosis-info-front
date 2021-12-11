@@ -369,10 +369,10 @@ const Pool = ({ showToast }) => {
         <Image
           className={`${classes.image}`}
           assets={true}
-          pathAssets="../assets/"
-          src={`${selectedTokens.two?.symbol?.toLowerCase()}.png`}
-          srcFallback="default.png"
           alt={`${selectedTokens.two.symbol}`}
+          src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${selectedTokens.two?.symbol?.toLowerCase()}.png`}
+          srcFallback="../assets/default.png"
+          pathAssets=""
         />
         <p>
           1 {selectedTokens.two.symbol} = {convertData} {selectedTokens.one.symbol}{" "}
@@ -390,12 +390,12 @@ const Pool = ({ showToast }) => {
                     <div className={classes.token} key={token.denom}>
                       <div className={classes.tokenName}>
                         <Image
-                          pathAssets="../assets/"
                           className={`${classes.image} ${classes.pooledTokensImages}`}
                           assets={true}
-                          src={`${token.symbol.toLowerCase()}.png`}
-                          srcFallback="default.png"
                           alt={`${token.symbol}`}
+                          src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${token.symbol.toLowerCase()}.png`}
+                          srcFallback="../assets/default.png"
+                          pathAssets=""
                         />
                         <p>{token.symbol}</p>
                       </div>

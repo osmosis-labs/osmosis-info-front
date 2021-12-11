@@ -302,14 +302,14 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
                               .map((name, index) => {
                                 return (
                                   <Image
-                                    pathAssets="../assets/"
                                     style={{ left: index * 18 + "px" }}
                                     key={headCell.id + row.id + name}
                                     className={classes.image}
                                     assets={true}
-                                    src={`${name.toLowerCase()}.png`}
-                                    srcFallback="default.png"
                                     alt={`${name}`}
+                                    src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${name.toLowerCase()}.png`}
+                                    srcFallback="../assets/default.png"
+                                    pathAssets=""
                                   />
                                 );
                               })}
