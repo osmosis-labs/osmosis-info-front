@@ -97,15 +97,43 @@
 .appBar_image-snowman {
   position: absolute;
   height: 30px;
-  bottom: 2px;
+  bottom: 0px;
   left: 50px;
 }
 
 .appBar_image-snowman2 {
   position: absolute;
   height: 30px;
-  bottom: 2px;
-  right: 15px;
+  bottom: 0px;
+  right: 45px;
+}
+
+.appBar_image-christmasTree {
+  position: absolute;
+  height: 30px;
+  bottom: 0px;
+  right: 150px;
+}
+
+.appBar_image-christmasTree2 {
+  position: absolute;
+  height: 30px;
+  bottom: -1px;
+  left: 200px;
+}
+
+.appBar_image-gift {
+  position: absolute;
+  height: 20px;
+  bottom: 0px;
+  left: 320px;
+}
+
+.appBar_image-gift2 {
+  position: absolute;
+  height: 20px;
+  bottom: 0px;
+  right: 175px;
 }
 
 .reindeer::after {
@@ -146,4 +174,49 @@
   to {
     transform: translateX(110vw);
   }
+}
+
+.snowflakeDisappear {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.snowflake {
+  position: fixed;
+  z-index: 1000000;
+  background: url("./assets/snowflake.png") no-repeat;
+  animation: snowflake 2s infinite reverse linear;
+  height: 24px;
+  width: 24px;
+}
+
+.snowflake-small {
+  background-size: 8px 8px;
+}
+.snowflake-medium {
+  background-size: 15px 15px;
+}
+.snowflake-big {
+  background-size: 24px 24px;
+}
+
+@keyframes snowflake {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.menuItemActiveChristmas {
+  font-family: "Lobster", serif !important;
+  letter-spacing: 2px;
+  font-size: 20px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
+  background-color: #5e0d0c !important;
+}
+.menuItemChristmas {
+  font-family: "Lobster", serif !important;
+  letter-spacing: 2px;
+  font-size: 20px;
 }
