@@ -385,7 +385,7 @@ const Pool = ({ showToast }) => {
             <div className={classes.pooledTokens}>
               <p className={classes.pooledTokensTitle}>Pooled tokens</p>
               <div className={classes.tokensContainer}>
-                {tokens.reverse().map((token) => {
+                {tokens.map((token) => {
                   return (
                     <div className={classes.token} key={token.denom}>
                       <div className={classes.tokenName}>
