@@ -157,6 +157,7 @@
     background-position: 0px -64px;
     transform: translateX(0px);
   }
+
   to {
     background-position: 160px -64px;
   }
@@ -167,10 +168,12 @@
   position: absolute;
   bottom: 0px;
 }
+
 @keyframes reindeerWalk {
   from {
     transform: translateX(-5vw);
   }
+
   to {
     transform: translateX(110vw);
   }
@@ -180,6 +183,7 @@
   opacity: 0;
   transition: opacity 0.3s;
 }
+
 .snowflake {
   position: fixed;
   z-index: 1000000;
@@ -192,9 +196,11 @@
 .snowflake-small {
   background-size: 8px 8px;
 }
+
 .snowflake-medium {
   background-size: 15px 15px;
 }
+
 .snowflake-big {
   background-size: 24px 24px;
 }
@@ -203,6 +209,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -215,8 +222,40 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
   background-color: #5e0d0c !important;
 }
+
 .menuItemChristmas {
   font-family: "Lobster", serif !important;
   letter-spacing: 2px;
   font-size: 20px;
+}
+
+.containerChristmasOsmosis {
+  position: relative;
+}
+
+.christmasOsmosis {
+  position: absolute;
+  width: 300px;
+  transform: translate(0, -100%);
+  top: 0;
+  right: 60px;
+}
+
+.christmasOsmosis2 {
+  display: none;
+}
+
+@media screen and (max-width: 640px) {
+  .christmasOsmosis2 {
+    position: absolute;
+    display: block;
+    width: 100px;
+    transform: translate(0, -100%);
+    top: 0;
+    right: 60px;
+  }
+
+  .christmasOsmosis {
+    display: none;
+  }
 }

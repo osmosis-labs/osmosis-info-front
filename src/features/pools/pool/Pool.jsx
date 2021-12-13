@@ -22,6 +22,7 @@ import PoolPath from "./PoolPath";
 import PoolSelect from "./PoolSelect";
 import PoolTitle from "./PoolTitle";
 import PoolVolumeChart from "./PoolVolumeChart";
+import christmasOsmosis from '../../../assets/osmosis-christmas.png'
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -381,7 +382,8 @@ const Pool = ({ showToast }) => {
       <PoolSelect tokens={tokens} setSelectedTokens={onChangeSeletedToken} selectedTokens={selectedTokens} />
       <div className={classes.charts}>
         <div className={classes.details}>
-          <Paper className={classes.detailPaper + " paper-christmas"}>
+          <Paper className={classes.detailPaper + " paper-christmas containerChristmasOsmosis"}>
+            <img src={christmasOsmosis} alt="" className="christmasOsmosis2" />
             <div className={classes.pooledTokens}>
               <p className={classes.pooledTokensTitle}>Pooled tokens</p>
               <div className={classes.tokensContainer}>
@@ -432,7 +434,8 @@ const Pool = ({ showToast }) => {
             </div>
           </Paper>
         </div>
-        <Paper className={classes.right}>
+        <Paper className={classes.right + " containerChristmasOsmosis"}>
+          <img src={christmasOsmosis} alt="" className="christmasOsmosis" />
           <div className={classes.chartHeader}>
             <div className={classes.chartData}>
               <p className={classes.textBig}>
