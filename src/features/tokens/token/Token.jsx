@@ -18,6 +18,7 @@ import TokenLiquidityChart from "./TokenLiquidityChart";
 import TokenPath from "./TokenPath";
 import TokenTitle from "./TokenTitle";
 import TokenVolumeChart from "./TokenVolumeChart";
+import christmasOsmosis from '../../../assets/osmosis-christmas.png'
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -276,7 +277,8 @@ const Token = ({ showToast }) => {
       <TokenTitle token={token} />
       <p className={classes.tokenPrice}>{formateNumberPriceDecimals(token.price)}</p>
       <div className={classes.charts}>
-        <Paper className={"paper-christmas"}>
+        <Paper className={"paper-christmas containerChristmasOsmosis"}>
+          <img src={christmasOsmosis} alt="" className="christmasOsmosis2" />
           <div className={classes.details}>
             <div className={classes.detail}>
               <p className={classes.titleDetail}>Liquidity</p>
@@ -298,7 +300,8 @@ const Token = ({ showToast }) => {
             </div>
           </div>
         </Paper>
-        <Paper className={classes.right}>
+        <Paper className={classes.right + " containerChristmasOsmosis"}>
+          <img src={christmasOsmosis} alt="" className="christmasOsmosis" />
           <div className={classes.chartHeader}>
             <div className={classes.chartData}>
               <p className={classes.textBig}>{dataHover.price}</p>
