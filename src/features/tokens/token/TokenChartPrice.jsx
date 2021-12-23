@@ -2,7 +2,7 @@ import { makeStyles, useMediaQuery } from "@material-ui/core";
 import { useEffect } from "react";
 import { useRef } from "react";
 import { createChart, CrosshairMode } from "lightweight-charts";
-import { float2Numbers } from "../../../helpers/helpers";
+import { detectBestDecimalsDisplay, formateNumberPriceDecimals } from "../../../helpers/helpers";
 import { ResizeObserver } from "resize-observer";
 
 const useStyles = makeStyles((theme) => {
@@ -31,6 +31,7 @@ const TokenChartPrice = ({ data, crossMove }) => {
   const serieRef = useRef(null);
   const resizeObserver = useRef(null);
   const matchXS = useMediaQuery((theme) => theme.breakpoints.down("xs"));
+  const priceDecimals = useRef(2);
 
   useEffect(() => {
     resizeObserver.current = new ResizeObserver((entries, b) => {
@@ -57,7 +58,7 @@ const TokenChartPrice = ({ data, crossMove }) => {
         },
         localization: {
           priceFormatter: (price) => {
-            return float2Numbers(price);
+            return formateNumberPriceDecimals(price, priceDecimals.current);
           },
         },
         grid: {
@@ -88,12 +89,13 @@ const TokenChartPrice = ({ data, crossMove }) => {
     return () => {
       chartRef.current.unsubscribeCrosshairMove();
     };
-  }, [crossMove]);
+  }, [crossMove, priceDecimals]);
 
   useEffect(() => {
     // When data is updated
     serieRef.current.setData(data);
     chartRef.current.timeScale().fitContent();
+    priceDecimals.current = data.length > 0 ? detectBestDecimalsDisplay(data[0].open) : 2;
   }, [data]);
 
   return (

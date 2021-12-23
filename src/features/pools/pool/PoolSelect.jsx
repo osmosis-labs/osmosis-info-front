@@ -93,34 +93,6 @@ const PoolSelect = ({ tokens, setSelectedTokens, selectedTokens }) => {
         <Image
           className={`${classes.image} ${classes.select}`}
           assets={true}
-          src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${selectedTokens.one?.symbol?.toLowerCase()}.png`}
-          srcFallback="../assets/default.png"
-          pathAssets=""
-          alt={`${selectedTokens.one.symbol}`}
-        />
-        <Select
-          className={classes.select}
-          value={selectPairs.one}
-          onChange={(e) => {
-            onChangeSelect(e.target.value, true);
-          }}
-        >
-          {tokens.map((token) => {
-            return (
-              <MenuItem disabled={selectPairs.two === token.denom} key={`one-${token.denom}`} value={token.denom}>
-                {token.symbol.length > 0 ? token.symbol : token.denom}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </div>
-      <IconButton className={`${classes.icon} ${classes.select}`} onClick={swapToken} component="span">
-        {matchXS ? <SwapVertIcon /> : <SwapHorizIcon />}
-      </IconButton>
-      <div className={classes.selectContainer}>
-        <Image
-          className={`${classes.image} ${classes.select}`}
-          assets={true}
           src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${selectedTokens.two?.symbol?.toLowerCase()}.png`}
           srcFallback="../assets/default.png"
           pathAssets=""
@@ -136,6 +108,34 @@ const PoolSelect = ({ tokens, setSelectedTokens, selectedTokens }) => {
           {tokens.map((token) => {
             return (
               <MenuItem disabled={selectPairs.one === token.denom} key={`two-${token.denom}`} value={token.denom}>
+                {token.symbol.length > 0 ? token.symbol : token.denom}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </div>
+      <IconButton className={`${classes.icon} ${classes.select}`} onClick={swapToken} component="span">
+        {matchXS ? <SwapVertIcon /> : <SwapHorizIcon />}
+      </IconButton>
+      <div className={classes.selectContainer}>
+        <Image
+          className={`${classes.image} ${classes.select}`}
+          assets={true}
+          src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${selectedTokens.one?.symbol?.toLowerCase()}.png`}
+          srcFallback="../assets/default.png"
+          pathAssets=""
+          alt={`${selectedTokens.one.symbol}`}
+        />
+        <Select
+          className={classes.select}
+          value={selectPairs.one}
+          onChange={(e) => {
+            onChangeSelect(e.target.value, true);
+          }}
+        >
+          {tokens.map((token) => {
+            return (
+              <MenuItem disabled={selectPairs.two === token.denom} key={`one-${token.denom}`} value={token.denom}>
                 {token.symbol.length > 0 ? token.symbol : token.denom}
               </MenuItem>
             );

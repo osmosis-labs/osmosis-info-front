@@ -29,6 +29,23 @@ export const formatDateHours = (date) => {
 }
 
 
+export const detectBestDecimalsDisplay = (price) => {
+    let decimals = 2;
+    if (price !== undefined) {
+        // Find out the number of leading floating zeros via regex
+        const priceSplit = price.toString().split('.');
+        if (priceSplit.length === 2) {
+            const leadingZeros = priceSplit[1].match(/^0+/);
+            decimals += leadingZeros ? leadingZeros[0].length + 1 : 0;
+            if (decimals === 2 && priceSplit[0] === '0') {
+                // Add one more decimal in case of 0.12 kind of price
+                decimals++;
+            }
+        }
+    }
+    return decimals;
+}
+
 export const formateNumberPriceDecimals = (price, decimals = 2) => {
     return new Intl.NumberFormat('en-US',
         {
