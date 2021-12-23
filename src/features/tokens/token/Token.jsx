@@ -1,10 +1,11 @@
 import { makeStyles } from "@material-ui/core";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import ButtonGroup from "../../../components/buttonGroup/ButtonGroup";
 import Paper from "../../../components/paper/Paper";
 import { useTokens } from "../../../contexts/TokensProvider";
 import {
+  detectBestDecimalsDisplay,
   formatDate,
   formatDateHours,
   formateNumberPrice,
@@ -117,6 +118,7 @@ const Token = ({ showToast }) => {
   const [dataHover, setDataHover] = useState({ price: "0", date: "-" });
   const [liquidity, setLiquidity] = useState([]);
   const [volume, setVolume] = useState([]);
+  const priceDecimals = useRef(2);
 
   useEffect(() => {
     // get token from history state
@@ -154,6 +156,7 @@ const Token = ({ showToast }) => {
         let priceData = results[0];
         let liquidityData = results[1];
         let volumeData = results[2];
+        priceDecimals.current = priceData.length > 0 ? detectBestDecimalsDisplay(priceData[0].open) : 2;;
         setLiquidity(liquidityData);
         setVolume(volumeData);
         let name = getName("price", "7d");
@@ -163,7 +166,7 @@ const Token = ({ showToast }) => {
           return { ...ps, [name]: priceData };
         });
         setDataHover({
-          price: formateNumberPriceDecimals(priceData[priceData.length - 1].open, 2),
+          price: formateNumberPriceDecimals(priceData[priceData.length - 1].open, priceDecimals.current),
           date: formatDateHours(new Date()),
         });
       } catch (error) {
@@ -183,7 +186,7 @@ const Token = ({ showToast }) => {
     (event, serie) => {
       if (selectTypeChart === "price") {
         if (event.time) {
-          let price = formateNumberPriceDecimals(event.seriesPrices.get(serie).close, 2);
+          let price = formateNumberPriceDecimals(event.seriesPrices.get(serie).close, priceDecimals.current);
           let currentDate = new Date(event.time * 1000);
           setDataHover({ price, date: formatDateHours(currentDate) });
         }
@@ -205,7 +208,7 @@ const Token = ({ showToast }) => {
         }
       }
     },
-    [selectTypeChart]
+    [selectTypeChart, priceDecimals]
   );
 
   const onChangeTypeChart = (value) => {
@@ -239,7 +242,7 @@ const Token = ({ showToast }) => {
           return { ...ps, [name]: chartData };
         });
         setDataHover({
-          price: formateNumberPriceDecimals(chartData[chartData.length - 1].open),
+          price: formateNumberPriceDecimals(chartData[chartData.length - 1].open, priceDecimals.current),
           date: formatDateHours(new Date()),
         });
       }
@@ -274,7 +277,7 @@ const Token = ({ showToast }) => {
     <div className={classes.tokenRoot}>
       <TokenPath token={token} />
       <TokenTitle token={token} />
-      <p className={classes.tokenPrice}>{formateNumberPriceDecimals(token.price)}</p>
+      <p className={classes.tokenPrice}>{formateNumberPriceDecimals(token.price, priceDecimals.current)}</p>
       <div className={classes.charts}>
         <Paper>
           <div className={classes.details}>
@@ -293,7 +296,7 @@ const Token = ({ showToast }) => {
             <div className={classes.detail}>
               <p className={classes.titleDetail}>Price</p>
               <p variant="body2" className={classes.dataDetail}>
-                {formateNumberPriceDecimals(token.price)}
+                {formateNumberPriceDecimals(token.price, priceDecimals.current)}
               </p>
             </div>
           </div>
