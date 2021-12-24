@@ -2,7 +2,7 @@ import { makeStyles, Table, TableBody, TableCell, TableRow, Tooltip } from "@mat
 import { useState } from "react";
 import Image from "../../components/image/Image";
 import TablePagination from "../../components/tablePagination/TablePagination";
-import { formateNumberPrice, formateNumberPriceDecimals, formaterNumber, twoNumber } from "../../helpers/helpers";
+import { formateNumberPrice, formateNumberPriceDecimalsAuto, formaterNumber } from "../../helpers/helpers";
 import TokensHeaderTable from "./TokensHearderTable";
 
 const useStyles = makeStyles((theme) => {
@@ -208,7 +208,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
         cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
         classes: size === "xs" ? classes.hCellsExtraSmall : classes.hCellsLg,
         sortable: sortable,
-        transform: formateNumberPriceDecimals,
+        transform: formateNumberPriceDecimalsAuto,
         disablePadding: false,
         label: "Price",
         align: "right",
