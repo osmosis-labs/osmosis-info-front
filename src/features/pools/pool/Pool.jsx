@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useRef } from "react";
 import { useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import ButtonGroup from "../../../components/buttonGroup/ButtonGroup";
@@ -12,6 +12,7 @@ import {
   formateNumberDecimals,
   formateNumberPrice,
   formateNumberPriceDecimals,
+  detectBestDecimalsDisplay,
   formaterNumber,
   getInclude,
   twoNumber,
@@ -168,6 +169,8 @@ const Pool = ({ showToast }) => {
   const [selectTypeChart, setSelectTypeChart] = useState("price");
   const [selectedTokens, setSelectedTokens] = useState({ one: {}, two: {} });
   const [price, setPrice] = useState({ price: "0", date: "-" });
+  const pairDecimals = useRef(3);
+  const pricesDecimals = useRef([2, 2]);
 
   useEffect(() => {
     // get pool from history state
@@ -213,13 +216,21 @@ const Pool = ({ showToast }) => {
         if (typeof firstPair === "string") {
           throw new Error(firstPair);
         }
+        // Update pair token decimal
+        pairDecimals.current = firstPair.length > 0 ? detectBestDecimalsDisplay(firstPair[firstPair.length - 1].open) : 3;
+        // Update both token price decimals
+        let tmpPricesDecimals = [2, 2];
+        for (let i = 0; i < tokens.length; i++) {
+          tmpPricesDecimals[i] = detectBestDecimalsDisplay(tokens[i].price);
+        }
+        pricesDecimals.current = tmpPricesDecimals;
         setPairs((ps) => {
           let namePair = getPairName({ one: tokens[0], two: tokens[1], range: "7d" });
           return { ...ps, [namePair]: firstPair };
         });
         setCurrentPair(firstPair);
         setPrice({
-          price: formateNumberDecimals(firstPair[firstPair.length - 1].open, 3),
+          price: formateNumberDecimals(firstPair[firstPair.length - 1].open, pairDecimals.current),
           date: formatDateHours(new Date()),
         });
         setVolume(await getVolumeChartPool({ poolId: pool.id }));
@@ -258,8 +269,9 @@ const Pool = ({ showToast }) => {
       }
     }
     if (pair.length > 0) {
+      pairDecimals.current = detectBestDecimalsDisplay(pair[pair.length - 1].open);
       setPrice({
-        price: formateNumberDecimals(pair[pair.length - 1].open, 3),
+        price: formateNumberDecimals(pair[pair.length - 1].open, pairDecimals.current),
         date: formatDateHours(new Date()),
       });
 
@@ -320,7 +332,7 @@ const Pool = ({ showToast }) => {
     (event, serie) => {
       if (selectTypeChart === "price") {
         if (event.time) {
-          let price = formateNumberDecimals(event.seriesPrices.get(serie).close, 3);
+          let price = formateNumberDecimals(event.seriesPrices.get(serie).close, pairDecimals.current);
 
           let currentDate = new Date(event.time * 1000);
           setPrice({ price, date: formatDateHours(currentDate) });
@@ -385,7 +397,7 @@ const Pool = ({ showToast }) => {
             <div className={classes.pooledTokens}>
               <p className={classes.pooledTokensTitle}>Pooled tokens</p>
               <div className={classes.tokensContainer}>
-                {tokens.map((token) => {
+                {tokens.map((token, i) => {
                   return (
                     <div className={classes.token} key={token.denom}>
                       <div className={classes.tokenName}>
@@ -400,7 +412,7 @@ const Pool = ({ showToast }) => {
                         <p>{token.symbol}</p>
                       </div>
                       <p className={classes.pooledTokensNumber}>{formaterNumber(token.amount, 0)}</p>
-                      <p className={classes.pooledTokensNumber}>{formateNumberPriceDecimals(token.price)}</p>
+                      <p className={classes.pooledTokensNumber}>{formateNumberPriceDecimals(token.price, pricesDecimals.current[i])}</p>
                     </div>
                   );
                 })}
