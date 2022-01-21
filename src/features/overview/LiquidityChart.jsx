@@ -56,9 +56,9 @@ const LiquidityChart = ({ data, crossMove }) => {
     if (chartRef.current === null) {
       let chart = createChart(containerRef.current, {
         rightPriceScale: {
-          scaleMargins: {
-            top: 0.1,
-            bottom: 0.2,
+          margins: {
+            above: 0,
+            below: 10,
           },
         },
         layout: {
