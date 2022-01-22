@@ -35,6 +35,7 @@
 </details>
 
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
 [![Screenshot](./screenshot.png)](https://osmosis.imperator.co/)
@@ -44,13 +45,14 @@ This project allow to display and make accessible all the information relating t
 
 ### Built With
 
-* [ReactJS](https://reactjs.org/)
-* [Material UI](https://material-ui.com/)
-* [Tradingview](https://www.tradingview.com/)
+- [ReactJS](https://reactjs.org/)
+- [Material UI](https://material-ui.com/)
+- [Tradingview](https://www.tradingview.com/)
 
-* [Osmosis API](https://api-osmosis.imperator.co/swagger/)
+- [Osmosis API](https://api-osmosis.imperator.co/swagger/)
 
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 To get a local copy up and running follow these simple steps.
@@ -62,20 +64,25 @@ No prerequisites is need except NPM or YARN.
 ### Installation
 
 1. Install packages
-   ```sh
-    yarn 
-    ```
-    or
 
-    ```sh
-    npm install
-    ```
+   ```sh
+    yarn
+   ```
+
+   or
+
+   ```sh
+   npm install
+   ```
+
 2. Run it
+
    ```sh
     yarn start
-    ```
-    or
+   ```
 
-    ```sh
-    npm run start
-    ```
+   or
+
+   ```sh
+   npm run start
+   ```

@@ -1,21 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 
-const PREFIX = "OSMOSIS-";
+const PREFIX = "OSMOSIS-"
 const useSessionStorage = (key, initialValue) => {
-  let prefixedKey = PREFIX + key;
+	let prefixedKey = PREFIX + key
 
-  const [value, setValue] = useState(() => {
-    const jsonValue = sessionStorage.getItem(prefixedKey);
-    if (jsonValue !== null) return JSON.parse(jsonValue);
-    else return initialValue;
-  });
+	const [value, setValue] = useState(() => {
+		const jsonValue = sessionStorage.getItem(prefixedKey)
+		if (jsonValue !== null) return JSON.parse(jsonValue)
+		else return initialValue
+	})
 
-  useEffect(() => {
-    sessionStorage.setItem(prefixedKey, JSON.stringify(value));
-    setValue(value);
-  }, [prefixedKey, value]);
+	useEffect(() => {
+		sessionStorage.setItem(prefixedKey, JSON.stringify(value))
+		setValue(value)
+	}, [prefixedKey, value])
 
-  return [value, setValue];
-};
+	return [value, setValue]
+}
 
-export default useSessionStorage;
+export default useSessionStorage
