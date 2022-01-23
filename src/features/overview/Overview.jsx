@@ -5,6 +5,7 @@ import { useState } from "react"
 import { useHistory } from "react-router-dom"
 import Paper from "../../components/paper/Paper"
 import { useCharts } from "../../contexts/ChartsProvider"
+import { useLoader } from "../../contexts/LoaderProvider"
 import { usePools } from "../../contexts/PoolsProvider"
 import { useTokens } from "../../contexts/TokensProvider"
 import { formatDate, formateNumberPrice, twoNumber } from "../../helpers/helpers"
@@ -76,6 +77,7 @@ const useStyles = makeStyles((theme) => {
 
 const Overview = () => {
 	const classes = useStyles()
+	const {showLoader} = useLoader()
 	const { dataLiquidity, dataVolume } = useCharts()
 	const [size, setSize] = useState("xl")
 	const matchXS = useMediaQuery((theme) => theme.breakpoints.down("xs"))
@@ -95,6 +97,10 @@ const Overview = () => {
 	const [dataPools, setDataPools] = useState([])
 	const [dataTokens, setDataTokens] = useState([])
 	const history = useHistory()
+
+	useEffect(()=>{
+		showLoader()
+	},[])
 	const crossMoveLiquidity = useCallback((event, serie) => {
 		if (event.time) {
 			let price = formateNumberPrice(event.seriesPrices.get(serie))

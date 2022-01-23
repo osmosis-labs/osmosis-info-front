@@ -15,6 +15,8 @@ import { PricesProvider } from "../../contexts/PricesProvider"
 import { TokensProvider } from "../../contexts/TokensProvider"
 import { WatchlistTokensProvider } from "../../contexts/WatchlistTokensProvider"
 import Token from "../tokens/token/Token"
+import LoaderOsmosis from "../../components/loader/LoaderOsmosis"
+import { LoaderProvider } from "../../contexts/LoaderProvider"
 const useStyles = makeStyles((theme) => {
 	return {
 		appRoot: {
@@ -69,37 +71,40 @@ const App = () => {
 							<ChartsProvider>
 								<WatchlistPoolsProvider>
 									<WatchlistTokensProvider>
-										<div className={classes.appRoot}>
-											<Toast
-												open={stateToast.open}
-												severity={stateToast.severity}
-												message={stateToast.text}
-												handleClose={closeToast}
-											/>
-											<PricesProvider>
-												<InfoBar />
-											</PricesProvider>
-											<AppBar />
-											<div className={classes.container}>
-												<div className={classes.content}>
-													<Route path="/" exact={true}>
-														<Overview showToast={showToast} />
-													</Route>
-													<Route path="/pools">
-														<Pools showToast={showToast} />
-													</Route>
-													<Route path="/pool/:id">
-														<Pool showToast={showToast} />
-													</Route>
-													<Route path="/tokens">
-														<Tokens showToast={showToast} />
-													</Route>
-													<Route path="/token/:symbol">
-														<Token showToast={showToast} />
-													</Route>
+										<LoaderProvider>
+											<LoaderOsmosis />
+											<div className={classes.appRoot}>
+												<Toast
+													open={stateToast.open}
+													severity={stateToast.severity}
+													message={stateToast.text}
+													handleClose={closeToast}
+												/>
+												<PricesProvider>
+													<InfoBar />
+												</PricesProvider>
+												<AppBar />
+												<div className={classes.container}>
+													<div className={classes.content}>
+														<Route path="/" exact={true}>
+															<Overview showToast={showToast} />
+														</Route>
+														<Route path="/pools">
+															<Pools showToast={showToast} />
+														</Route>
+														<Route path="/pool/:id">
+															<Pool showToast={showToast} />
+														</Route>
+														<Route path="/tokens">
+															<Tokens showToast={showToast} />
+														</Route>
+														<Route path="/token/:symbol">
+															<Token showToast={showToast} />
+														</Route>
+													</div>
 												</div>
 											</div>
-										</div>
+										</LoaderProvider>
 									</WatchlistTokensProvider>
 								</WatchlistPoolsProvider>
 							</ChartsProvider>
