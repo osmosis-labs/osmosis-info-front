@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => {
 			fontFamily: "'Inter', sans-serif",
 			padding: `0 0 ${theme.spacing(4)}px 0`,
 			minHeight: "100vh",
-			width: "100ww",
+			// width: "100vw",
 			color: theme.palette.gray.main,
 			backgroundColor: theme.palette.primary.main,
 			overflow: "hidden",
