@@ -3,6 +3,7 @@ import { useCallback } from "react"
 import { useEffect } from "react"
 import { useState } from "react"
 import { useHistory } from "react-router-dom"
+import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
 import { useCharts } from "../../contexts/ChartsProvider"
 import { useLoader } from "../../contexts/LoaderProvider"
@@ -53,6 +54,7 @@ const useStyles = makeStyles((theme) => {
 			},
 		},
 		chart: {
+			position: "relative",
 			width: "49%",
 			zIndex: "0",
 			[theme.breakpoints.down("xs")]: {
@@ -72,13 +74,17 @@ const useStyles = makeStyles((theme) => {
 			fontSize: "12px",
 			padding: `2px 0`,
 		},
+		containerLoading:{
+			position: "relative",
+			minWidth: "200px",
+			minHeight: "200px",
+		}
 	}
 })
 
 const Overview = () => {
 	const classes = useStyles()
-	const {showLoader} = useLoader()
-	const { dataLiquidity, dataVolume } = useCharts()
+	const { dataLiquidity, dataVolume, loadingData } = useCharts()
 	const [size, setSize] = useState("xl")
 	const matchXS = useMediaQuery((theme) => theme.breakpoints.down("xs"))
 	const matchSM = useMediaQuery((theme) => theme.breakpoints.down("sm"))
@@ -92,15 +98,12 @@ const Overview = () => {
 		price: "0",
 		date: "-",
 	})
-	const { pools } = usePools()
-	const { tokens } = useTokens()
+	const { pools, loadingPools } = usePools()
+	const { tokens, loadingTokens } = useTokens()
 	const [dataPools, setDataPools] = useState([])
 	const [dataTokens, setDataTokens] = useState([])
 	const history = useHistory()
 
-	useEffect(()=>{
-		showLoader()
-	},[])
 	const crossMoveLiquidity = useCallback((event, serie) => {
 		if (event.time) {
 			let price = formateNumberPrice(event.seriesPrices.get(serie))
@@ -191,12 +194,14 @@ const Overview = () => {
 				<p className={classes.subTitle}>Osmosis - Overview</p>
 				<div className={classes.charts}>
 					<Paper className={classes.chart}>
+						<BlocLoaderOsmosis open={loadingData} borderRadius={true} />
 						<p className={classes.chartTitle}>Liquidity</p>
 						<p className={classes.chartTextBig}>{chartLiquidityInfo.price}</p>
 						<p className={classes.chartTextSmall}>{chartLiquidityInfo.date}</p>
 						<LiquidityChart data={dataLiquidity} crossMove={crossMoveLiquidity} />
 					</Paper>
 					<Paper className={classes.chart}>
+						<BlocLoaderOsmosis open={loadingData} borderRadius={true} />
 						<p className={classes.chartTitle}>Volume</p>
 						<p className={classes.chartTextBig}>{chartVolumeInfo.price}</p>
 						<p className={classes.chartTextSmall}>{chartVolumeInfo.date}</p>
@@ -205,7 +210,8 @@ const Overview = () => {
 				</div>
 
 				<p className={classes.subTitle}>Top tokens</p>
-				<Paper>
+				<Paper className={classes.containerLoading}>
+						<BlocLoaderOsmosis open={loadingTokens} borderRadius={true} />
 					<TokensTable
 						data={dataTokens}
 						textEmpty={"Any rows"}
@@ -215,7 +221,8 @@ const Overview = () => {
 					/>
 				</Paper>
 				<p className={classes.subTitle}>Top pools</p>
-				<Paper>
+				<Paper className={classes.containerLoading}>
+					<BlocLoaderOsmosis open={loadingPools}  borderRadius={true}/>
 					<PoolsTable data={dataPools} textEmpty={"Any rows"} size={size} sortable={true} onClickPool={onClickPool} />
 				</Paper>
 			</div>

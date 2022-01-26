@@ -7,6 +7,7 @@ export const useCharts = () => useContext(ChartsContext)
 export const ChartsProvider = ({ children }) => {
 	const [dataLiquidity, setDataLiquidity] = useState([]) //useSessionStorage("dataLiquidity", []);
 	const [dataVolume, setDataVolume] = useState([]) //useSessionStorage("dataVolume", []);
+	const [loadingData, setLoadingData] = useState(false)
 
 	useEffect(() => {
 		let fetch = async () => {
@@ -22,11 +23,13 @@ export const ChartsProvider = ({ children }) => {
 			let volume = results[1].data
 			liquidity.push(results[3].data)
 			volume.push(results[2].data)
+			setLoadingData(false)
 			setDataLiquidity(liquidity)
 			setDataVolume(volume)
 		}
+		setLoadingData(true)
 		fetch()
 	}, [])
 
-	return <ChartsContext.Provider value={{ dataLiquidity, dataVolume }}>{children}</ChartsContext.Provider>
+	return <ChartsContext.Provider value={{ dataLiquidity, dataVolume, loadingData}}>{children}</ChartsContext.Provider>
 }
