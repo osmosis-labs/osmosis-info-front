@@ -73,7 +73,7 @@ const TokenLiquidityChart = ({ data, crossMove }) => {
 				rightPriceScale: {
 					scaleMargins: {
 						top: 0.1,
-						bottom: 0.2,
+						bottom: 0.1,
 					},
 				},
 				layout: {
