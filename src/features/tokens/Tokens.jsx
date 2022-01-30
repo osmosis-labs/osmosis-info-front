@@ -2,6 +2,7 @@ import { makeStyles, useMediaQuery } from "@material-ui/core"
 import { useEffect } from "react"
 import { useState } from "react"
 import { useHistory } from "react-router-dom"
+import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
 import { useTokens } from "../../contexts/TokensProvider"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
@@ -15,12 +16,16 @@ const useStyles = makeStyles((theme) => {
 			gridAutoRows: "auto",
 			rowGap: theme.spacing(2),
 		},
+		containerLoader:{
+			position: "relative",
+			minHeight: "200px"
+		}
 	}
 })
 
 const Tokens = () => {
 	const classes = useStyles()
-	const { tokens } = useTokens()
+	const { tokens, loadingTokens } = useTokens()
 	// get tokens from watch list
 	const { watchlistTokens } = useWatchlistTokens()
 	const [tokensOnWatchlist, setTokensOnWatchlist] = useState([])
@@ -76,7 +81,8 @@ const Tokens = () => {
 				)}
 			</Paper>
 			<p className={classes.subTitle}>All tokens</p>
-			<Paper>
+			<Paper className={classes.containerLoader}>
+				<BlocLoaderOsmosis open={loadingTokens} borderRadius={true} />
 				<TokensTable data={tokens} textEmpty={"Any rows"} size={size} onClickToken={onClickToken} sortable={true} />
 			</Paper>
 		</div>

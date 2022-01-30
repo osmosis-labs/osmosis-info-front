@@ -7,45 +7,49 @@ export const usePools = () => useContext(PoolsContext)
 export const PoolsProvider = ({ children }) => {
 	const [pools, setPools] = useState([])
 	const [loadingPools, setLoadingPools] = useState(false)
+	const [loadingPool, setLoadingPool] = useState(false)
+	const [loadingChartPool, setLoadingChartPool] = useState(false)
+	const [loadingLiquidityPool, setLoadingLiquidityPool] = useState(false)
+	const [loadingVolumePool, setLoadingVolumePool] = useState(false)
 
 	const getPoolData = useCallback(async (poolId) => {
-		setLoadingPools(true)
+		setLoadingPool(true)
 		let response = await API.request({
 			url: `pools/v1/${poolId}`,
 			type: "get",
 		})
-		setLoadingPools(false)
+		setLoadingPool(false)
 		return response.data
 	}, [])
 
 	const getChartPool = useCallback(async ({ poolId, denomIn, denomOut, range }) => {
 		if (range === "all") range = "50y"
-		setLoadingPools(true)
+		setLoadingChartPool(true)
 		let response = await API.request({
 			url: `pairs/v1/historical/${poolId}/chart?asset_in=${denomIn}&asset_out=${denomOut}&range=${range}&asset_type=denom`,
 			type: "get",
 		})
-		setLoadingPools(false)
+		setLoadingChartPool(false)
 		return response.data
 	}, [])
 
 	const getLiquidityChartPool = useCallback(async ({ poolId }) => {
-		setLoadingPools(true)
+		setLoadingLiquidityPool(true)
 		let response = await API.request({
 			url: `pools/v1/liquidity/${poolId}/chart`,
 			type: "get",
 		})
-		setLoadingPools(false)
+		setLoadingLiquidityPool(false)
 		return response.data
 	}, [])
 
 	const getVolumeChartPool = useCallback(async ({ poolId }) => {
-		setLoadingPools(true)
+		setLoadingVolumePool(true)
 		let response = await API.request({
 			url: `pools/v1/volume/${poolId}/chart`,
 			type: "get",
 		})
-		setLoadingPools(false)
+		setLoadingVolumePool(false)
 		return response.data
 	}, [])
 
@@ -78,11 +82,15 @@ export const PoolsProvider = ({ children }) => {
 		<PoolsContext.Provider
 			value={{
 				pools,
-				loadingPools,
 				getPoolData,
 				getChartPool,
 				getVolumeChartPool,
 				getLiquidityChartPool,
+				loadingPools,
+				loadingPool,
+				loadingChartPool,
+				loadingLiquidityPool,
+				loadingVolumePool,
 			}}
 		>
 			{children}

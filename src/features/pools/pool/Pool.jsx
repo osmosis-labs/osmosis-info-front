@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import { useHistory, useParams } from "react-router-dom"
 import ButtonGroup from "../../../components/buttonGroup/ButtonGroup"
 import Image from "../../../components/image/Image"
+import ContainerLoader from "../../../components/loader/ContainerLoader"
 import Paper from "../../../components/paper/Paper"
 import { usePools } from "../../../contexts/PoolsProvider"
 import {
@@ -30,6 +31,12 @@ const useStyles = makeStyles((theme) => {
 			display: "grid",
 			gridAutoRows: "auto",
 			rowGap: theme.spacing(2),
+		},
+		containerInfo: {
+			display: "grid",
+			gridAutoRows: "auto",
+			rowGap: theme.spacing(2),
+			minHeight: "180px",
 		},
 		charts: {
 			display: "grid",
@@ -66,6 +73,7 @@ const useStyles = makeStyles((theme) => {
 		},
 		right: {
 			zIndex: "0",
+			height: "100%",
 			[theme.breakpoints.down("xs")]: {
 				width: "100%",
 			},
@@ -172,6 +180,11 @@ const Pool = ({ showToast }) => {
 	const pairDecimals = useRef(3)
 	const pricesDecimals = useRef([2, 2])
 
+	/* Loaders */
+	const [loadingRateChart, setLoadingRateChart] = useState(true) // rate data is not loaded
+	const [loadingPoolDetails, setLoadingPoolDetails] = useState(true) // rate data is not loaded
+	const [loadingPoolInfo, setLoadingPoolInfo] = useState(true) // rate data is not loaded
+
 	useEffect(() => {
 		// get pool from history state
 		if (!id) {
@@ -212,6 +225,9 @@ const Pool = ({ showToast }) => {
 		// fetch the first pair details from server
 		const fetch = async () => {
 			// range possible: 7d, 1mo, 1y, all
+			setLoadingRateChart(true)
+			setLoadingPoolDetails(true)
+			setLoadingPoolInfo(true)
 			try {
 				let firstPair = await getChartPool({
 					poolId: pool.id,
@@ -246,8 +262,14 @@ const Pool = ({ showToast }) => {
 				})
 				setVolume(await getVolumeChartPool({ poolId: pool.id }))
 				setLiquidity(await getLiquidityChartPool({ poolId: pool.id }))
+				setLoadingRateChart(false)
+				setLoadingPoolDetails(false)
+				setLoadingPoolInfo(false)
 			} catch (error) {
 				console.log("Pool.jsx -> 207: error", error)
+				setLoadingRateChart(false)
+				setLoadingPoolDetails(false)
+				setLoadingPoolInfo(false)
 			}
 			convertCoin(tokens[0], tokens[1])
 			setSelectedTokens({ one: tokens[0], two: tokens[1] })
@@ -390,152 +412,158 @@ const Pool = ({ showToast }) => {
 
 	return (
 		<div className={classes.poolRoot}>
-			<PoolPath pool={pool} />
-			<PoolTitle pool={pool} tokens={tokens} />
+			<ContainerLoader className={classes.containerInfo} isLoading={loadingPoolDetails}>
+				<PoolPath pool={pool} />
+				<PoolTitle pool={pool} tokens={tokens} />
 
-			<Paper className={classes.convertContainer}>
-				<Image
-					className={`${classes.image}`}
-					assets={true}
-					alt={`${selectedTokens.two.symbol}`}
-					src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${selectedTokens.two?.symbol?.toLowerCase()}.png`}
-					srcFallback="../assets/default.png"
-					pathAssets=""
-				/>
-				<p>
-					1 {selectedTokens.two.symbol} = {convertData} {selectedTokens.one.symbol}{" "}
-				</p>
-			</Paper>
-			<PoolSelect tokens={tokens} setSelectedTokens={onChangeSeletedToken} selectedTokens={selectedTokens} />
+				<Paper className={classes.convertContainer}>
+					<Image
+						className={`${classes.image}`}
+						assets={true}
+						alt={`${selectedTokens.two.symbol}`}
+						src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${selectedTokens.two?.symbol?.toLowerCase()}.png`}
+						srcFallback="../assets/default.png"
+						pathAssets=""
+					/>
+					<p>
+						1 {selectedTokens.two.symbol} = {convertData} {selectedTokens.one.symbol}{" "}
+					</p>
+				</Paper>
+				<PoolSelect tokens={tokens} setSelectedTokens={onChangeSeletedToken} selectedTokens={selectedTokens} />
+			</ContainerLoader>
 			<div className={classes.charts}>
-				<div className={classes.details}>
-					<Paper className={classes.detailPaper}>
-						<div className={classes.pooledTokens}>
-							<p className={classes.pooledTokensTitle}>Pooled tokens</p>
-							<div className={classes.tokensContainer}>
-								{tokens.map((token, i) => {
-									return (
-										<div className={classes.token} key={token.denom}>
-											<div className={classes.tokenName}>
-												<Image
-													className={`${classes.image} ${classes.pooledTokensImages}`}
-													assets={true}
-													alt={`${token.symbol}`}
-													src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${token.symbol.toLowerCase()}.png`}
-													srcFallback="../assets/default.png"
-													pathAssets=""
-												/>
-												<p>{token.symbol}</p>
+				<ContainerLoader isLoading={loadingPoolInfo}>
+					<div className={classes.details}>
+						<Paper className={classes.detailPaper}>
+							<div className={classes.pooledTokens}>
+								<p className={classes.pooledTokensTitle}>Pooled tokens</p>
+								<div className={classes.tokensContainer}>
+									{tokens.map((token, i) => {
+										return (
+											<div className={classes.token} key={token.denom}>
+												<div className={classes.tokenName}>
+													<Image
+														className={`${classes.image} ${classes.pooledTokensImages}`}
+														assets={true}
+														alt={`${token.symbol}`}
+														src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${token.symbol.toLowerCase()}.png`}
+														srcFallback="../assets/default.png"
+														pathAssets=""
+													/>
+													<p>{token.symbol}</p>
+												</div>
+												<p className={classes.pooledTokensNumber}>{formaterNumber(token.amount, 0)}</p>
+												<p className={classes.pooledTokensNumber}>
+													{formateNumberPriceDecimals(token.price, pricesDecimals.current[i])}
+												</p>
 											</div>
-											<p className={classes.pooledTokensNumber}>{formaterNumber(token.amount, 0)}</p>
-											<p className={classes.pooledTokensNumber}>
-												{formateNumberPriceDecimals(token.price, pricesDecimals.current[i])}
-											</p>
-										</div>
-									)
-								})}
+										)
+									})}
+								</div>
+							</div>
+							<div className={classes.detail}>
+								<p className={classes.titleDetail}>Liquidity</p>
+								<p variant="body2" className={classes.dataDetail}>
+									{formateNumberPrice(pool.liquidity)}
+								</p>
+							</div>
+							<div className={classes.detail}>
+								<p className={classes.titleDetail}>Volume (24hrs)</p>
+								<p variant="body2" className={classes.dataDetail}>
+									{formateNumberPrice(pool.volume_24h)}
+								</p>
+							</div>
+							<div className={classes.detail}>
+								<p className={classes.titleDetail}>Volume (7d)</p>
+								<p variant="body2" className={classes.dataDetail}>
+									{formateNumberPrice(pool.volume_7d)}
+								</p>
+							</div>
+							<div className={classes.detail}>
+								<p className={classes.titleDetail}>Fees</p>
+								<p variant="body2" className={classes.dataDetail}>
+									{fees}
+								</p>
+							</div>
+						</Paper>
+					</div>
+				</ContainerLoader>
+				<ContainerLoader className={classes.right} isLoading={loadingPoolInfo}>
+					<Paper className={classes.right}>
+						<div className={classes.chartHeader}>
+							<div className={classes.chartData}>
+								<p className={classes.textBig}>
+									{price.price} {selectTypeChart === "price" ? selectedTokens.one.symbol : ""}
+								</p>
+								<p>{price.date}</p>
+							</div>
+							<div className={classes.groupButtons}>
+								<ButtonGroup
+									className={classes.groupButton}
+									buttons={[
+										{
+											id: "price",
+											name: "Rate",
+											onClick: () => {
+												onChangeTypeChart("price")
+											},
+										},
+										{
+											id: "liquidity",
+											name: "Liquidity",
+											onClick: () => {
+												onChangeTypeChart("liquidity")
+											},
+										},
+										{
+											id: "volume",
+											name: "Volume",
+											onClick: () => {
+												onChangeTypeChart("volume")
+											},
+										},
+									]}
+									active={selectTypeChart}
+								/>
+								<ButtonGroup
+									style={selectTypeChart !== "price" ? { display: "none" } : {}}
+									buttons={[
+										{
+											id: "7d",
+											name: "7d",
+											onClick: () => {
+												onChangeRange("7d")
+											},
+										},
+										{
+											id: "1mo",
+											name: "1m",
+											onClick: () => {
+												onChangeRange("1mo")
+											},
+										},
+										{
+											id: "1y",
+											name: "1y",
+											onClick: () => {
+												onChangeRange("1y")
+											},
+										},
+										{
+											id: "all",
+											name: "all",
+											onClick: () => {
+												onChangeRange("all")
+											},
+										},
+									]}
+									active={selectRange}
+								/>
 							</div>
 						</div>
-						<div className={classes.detail}>
-							<p className={classes.titleDetail}>Liquidity</p>
-							<p variant="body2" className={classes.dataDetail}>
-								{formateNumberPrice(pool.liquidity)}
-							</p>
-						</div>
-						<div className={classes.detail}>
-							<p className={classes.titleDetail}>Volume (24hrs)</p>
-							<p variant="body2" className={classes.dataDetail}>
-								{formateNumberPrice(pool.volume_24h)}
-							</p>
-						</div>
-						<div className={classes.detail}>
-							<p className={classes.titleDetail}>Volume (7d)</p>
-							<p variant="body2" className={classes.dataDetail}>
-								{formateNumberPrice(pool.volume_7d)}
-							</p>
-						</div>
-						<div className={classes.detail}>
-							<p className={classes.titleDetail}>Fees</p>
-							<p variant="body2" className={classes.dataDetail}>
-								{fees}
-							</p>
-						</div>
+						<div className={classes.chart}>{chartRender}</div>
 					</Paper>
-				</div>
-				<Paper className={classes.right}>
-					<div className={classes.chartHeader}>
-						<div className={classes.chartData}>
-							<p className={classes.textBig}>
-								{price.price} {selectTypeChart === "price" ? selectedTokens.one.symbol : ""}
-							</p>
-							<p>{price.date}</p>
-						</div>
-						<div className={classes.groupButtons}>
-							<ButtonGroup
-								className={classes.groupButton}
-								buttons={[
-									{
-										id: "price",
-										name: "Rate",
-										onClick: () => {
-											onChangeTypeChart("price")
-										},
-									},
-									{
-										id: "liquidity",
-										name: "Liquidity",
-										onClick: () => {
-											onChangeTypeChart("liquidity")
-										},
-									},
-									{
-										id: "volume",
-										name: "Volume",
-										onClick: () => {
-											onChangeTypeChart("volume")
-										},
-									},
-								]}
-								active={selectTypeChart}
-							/>
-							<ButtonGroup
-								style={selectTypeChart !== "price" ? { display: "none" } : {}}
-								buttons={[
-									{
-										id: "7d",
-										name: "7d",
-										onClick: () => {
-											onChangeRange("7d")
-										},
-									},
-									{
-										id: "1mo",
-										name: "1m",
-										onClick: () => {
-											onChangeRange("1mo")
-										},
-									},
-									{
-										id: "1y",
-										name: "1y",
-										onClick: () => {
-											onChangeRange("1y")
-										},
-									},
-									{
-										id: "all",
-										name: "all",
-										onClick: () => {
-											onChangeRange("all")
-										},
-									},
-								]}
-								active={selectRange}
-							/>
-						</div>
-					</div>
-					<div className={classes.chart}>{chartRender}</div>
-				</Paper>
+				</ContainerLoader>
 			</div>
 		</div>
 	)

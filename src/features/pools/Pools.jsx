@@ -2,6 +2,7 @@ import { makeStyles, useMediaQuery } from "@material-ui/core"
 import { useEffect } from "react"
 import { useState } from "react"
 import { useHistory } from "react-router-dom"
+import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
 import { usePools } from "../../contexts/PoolsProvider"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
@@ -15,12 +16,16 @@ const useStyles = makeStyles((theme) => {
 			gridAutoRows: "auto",
 			rowGap: theme.spacing(2),
 		},
+		containerLoader:{
+			position: "relative",
+			minHeight: "200px"
+		}
 	}
 })
 
 const Pools = () => {
 	const classes = useStyles()
-	const { pools } = usePools()
+	const { pools, loadingPools} = usePools()
 	// get pools from watch list
 	const { watchlistPools } = useWatchlistPools()
 	const [poolsOnWatchlist, setPoolsOnWatchlist] = useState([])
@@ -76,7 +81,8 @@ const Pools = () => {
 				)}
 			</Paper>
 			<p className={classes.subTitle}>All pools</p>
-			<Paper>
+			<Paper className={classes.containerLoader}>
+				<BlocLoaderOsmosis open={loadingPools} borderRadius={true} />
 				<PoolsTable data={pools} textEmpty={"Any rows"} size={size} onClickPool={onClickPool} sortable={true} />
 			</Paper>
 		</div>

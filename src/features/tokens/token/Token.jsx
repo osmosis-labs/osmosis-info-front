@@ -2,6 +2,7 @@ import { makeStyles } from "@material-ui/core"
 import { useCallback, useEffect, useState, useRef } from "react"
 import { useHistory, useParams } from "react-router-dom"
 import ButtonGroup from "../../../components/buttonGroup/ButtonGroup"
+import ContainerLoader from "../../../components/loader/ContainerLoader"
 import Paper from "../../../components/paper/Paper"
 import { useTokens } from "../../../contexts/TokensProvider"
 import {
@@ -39,6 +40,7 @@ const useStyles = makeStyles((theme) => {
 		},
 		right: {
 			zIndex: "0",
+			height: "100%",
 			[theme.breakpoints.down("xs")]: {
 				width: "100%",
 			},
@@ -120,6 +122,10 @@ const Token = ({ showToast }) => {
 	const [volume, setVolume] = useState([])
 	const priceDecimals = useRef(2)
 
+	const [loadingRateChart, setLoadingRateChart] = useState(true) // rate data is not loaded
+	const [loadingTokenDetails, setLoadingTokenDetails] = useState(true) // rate data is not loaded
+	const [loadingTokenInfo, setLoadingTokenInfo] = useState(true) // rate data is not loaded
+
 	useEffect(() => {
 		// get token from history state
 		if (!symbol) {
@@ -151,6 +157,9 @@ const Token = ({ showToast }) => {
 	useEffect(() => {
 		// fetch token details from server
 		const fetch = async () => {
+			setLoadingRateChart(true)
+			setLoadingTokenDetails(true)
+			setLoadingTokenInfo(true)
 			let tokenData = await getTokenData(token.symbol)
 			try {
 				let promises = [
@@ -175,12 +184,18 @@ const Token = ({ showToast }) => {
 					price: formateNumberPriceDecimals(priceData[priceData.length - 1].open, priceDecimals.current),
 					date: formatDateHours(new Date()),
 				})
+				setLoadingRateChart(false)
+				setLoadingTokenDetails(false)
+				setLoadingTokenInfo(false)
 			} catch (error) {
 				console.log("Token.jsx -> 130: error", error)
 				setDataHover({
 					price: "-",
 					date: "-",
 				})
+				setLoadingRateChart(false)
+				setLoadingTokenDetails(false)
+				setLoadingTokenInfo(false)
 			}
 		}
 		if (token.id) {
@@ -281,104 +296,110 @@ const Token = ({ showToast }) => {
 	}
 	return (
 		<div className={classes.tokenRoot}>
-			<TokenPath token={token} />
-			<TokenTitle token={token} />
-			<p className={classes.tokenPrice}>{formateNumberPriceDecimals(token.price, priceDecimals.current)}</p>
+			<ContainerLoader isLoading={loadingTokenDetails}>
+				<TokenPath token={token} />
+				<TokenTitle token={token} />
+				<p className={classes.tokenPrice}>{formateNumberPriceDecimals(token.price, priceDecimals.current)}</p>
+			</ContainerLoader>
 			<div className={classes.charts}>
-				<Paper>
-					<div className={classes.details}>
-						<div className={classes.detail}>
-							<p className={classes.titleDetail}>Liquidity</p>
-							<p variant="body2" className={classes.dataDetail}>
-								{formateNumberPrice(token.liquidity)}
-							</p>
+				<ContainerLoader isLoading={loadingTokenInfo}>
+					<Paper>
+						<div className={classes.details}>
+							<div className={classes.detail}>
+								<p className={classes.titleDetail}>Liquidity</p>
+								<p variant="body2" className={classes.dataDetail}>
+									{formateNumberPrice(token.liquidity)}
+								</p>
+							</div>
+							<div className={classes.detail}>
+								<p className={classes.titleDetail}>Volume (24hrs)</p>
+								<p variant="body2" className={classes.dataDetail}>
+									{formateNumberPrice(token.volume_24h)}
+								</p>
+							</div>
+							<div className={classes.detail}>
+								<p className={classes.titleDetail}>Price</p>
+								<p variant="body2" className={classes.dataDetail}>
+									{formateNumberPriceDecimals(token.price, priceDecimals.current)}
+								</p>
+							</div>
 						</div>
-						<div className={classes.detail}>
-							<p className={classes.titleDetail}>Volume (24hrs)</p>
-							<p variant="body2" className={classes.dataDetail}>
-								{formateNumberPrice(token.volume_24h)}
-							</p>
+					</Paper>
+				</ContainerLoader>
+				<ContainerLoader className={classes.right} isLoading={loadingRateChart}>
+					<Paper className={classes.right}>
+						<div className={classes.chartHeader}>
+							<div className={classes.chartData}>
+								<p className={classes.textBig}>{dataHover.price}</p>
+								<p>{dataHover.date}</p>
+							</div>
+							<div className={classes.groupButtons}>
+								<ButtonGroup
+									className={classes.groupButton}
+									buttons={[
+										{
+											id: "price",
+											name: "Rate",
+											onClick: () => {
+												onChangeTypeChart("price")
+											},
+										},
+										{
+											id: "liquidity",
+											name: "Liquidity",
+											onClick: () => {
+												onChangeTypeChart("liquidity")
+											},
+										},
+										{
+											id: "volume",
+											name: "Volume",
+											onClick: () => {
+												onChangeTypeChart("volume")
+											},
+										},
+									]}
+									active={selectTypeChart}
+								/>
+								<ButtonGroup
+									style={selectTypeChart !== "price" ? { display: "none" } : {}}
+									buttons={[
+										{
+											id: "7d",
+											name: "7d",
+											onClick: () => {
+												onChangeRange("7d")
+											},
+										},
+										{
+											id: "1mo",
+											name: "1m",
+											onClick: () => {
+												onChangeRange("1mo")
+											},
+										},
+										{
+											id: "1y",
+											name: "1y",
+											onClick: () => {
+												onChangeRange("1y")
+											},
+										},
+										{
+											id: "all",
+											name: "all",
+											onClick: () => {
+												onChangeRange("all")
+											},
+										},
+									]}
+									active={selectedRange}
+								/>
+							</div>
 						</div>
-						<div className={classes.detail}>
-							<p className={classes.titleDetail}>Price</p>
-							<p variant="body2" className={classes.dataDetail}>
-								{formateNumberPriceDecimals(token.price, priceDecimals.current)}
-							</p>
-						</div>
-					</div>
-				</Paper>
-				<Paper className={classes.right}>
-					<div className={classes.chartHeader}>
-						<div className={classes.chartData}>
-							<p className={classes.textBig}>{dataHover.price}</p>
-							<p>{dataHover.date}</p>
-						</div>
-						<div className={classes.groupButtons}>
-							<ButtonGroup
-								className={classes.groupButton}
-								buttons={[
-									{
-										id: "price",
-										name: "Rate",
-										onClick: () => {
-											onChangeTypeChart("price")
-										},
-									},
-									{
-										id: "liquidity",
-										name: "Liquidity",
-										onClick: () => {
-											onChangeTypeChart("liquidity")
-										},
-									},
-									{
-										id: "volume",
-										name: "Volume",
-										onClick: () => {
-											onChangeTypeChart("volume")
-										},
-									},
-								]}
-								active={selectTypeChart}
-							/>
-							<ButtonGroup
-								style={selectTypeChart !== "price" ? { display: "none" } : {}}
-								buttons={[
-									{
-										id: "7d",
-										name: "7d",
-										onClick: () => {
-											onChangeRange("7d")
-										},
-									},
-									{
-										id: "1mo",
-										name: "1m",
-										onClick: () => {
-											onChangeRange("1mo")
-										},
-									},
-									{
-										id: "1y",
-										name: "1y",
-										onClick: () => {
-											onChangeRange("1y")
-										},
-									},
-									{
-										id: "all",
-										name: "all",
-										onClick: () => {
-											onChangeRange("all")
-										},
-									},
-								]}
-								active={selectedRange}
-							/>
-						</div>
-					</div>
-					<div className={classes.chart}>{chartRender}</div>
-				</Paper>
+						<div className={classes.chart}>{chartRender}</div>
+					</Paper>
+				</ContainerLoader>
 			</div>
 		</div>
 	)
