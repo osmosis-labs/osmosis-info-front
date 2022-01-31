@@ -24,6 +24,7 @@ import PoolPath from "./PoolPath"
 import PoolSelect from "./PoolSelect"
 import PoolTitle from "./PoolTitle"
 import PoolVolumeChart from "./PoolVolumeChart"
+import { CSSTransitionGroup } from "react-transition-group"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -397,17 +398,19 @@ const Pool = ({ showToast }) => {
 	)
 
 	let chartRender = (
-		<div className={classes.containerErrorChart}>
+		<div className={classes.containerErrorChart} key="noChart">
 			<p className={classes.errorChart}>Not enough liquidity to display chart price.</p>
 		</div>
 	)
 
 	if (selectTypeChart === "price" && currentPair.length > 0) {
-		chartRender = <PoolChart data={currentPair} crossMove={crossMove} />
+		chartRender = <PoolChart key={"PoolChartPrice" + selectRange} data={currentPair} crossMove={crossMove} />
 	} else if (selectTypeChart === "volume" && volume.length > 0) {
-		chartRender = <PoolVolumeChart data={volume} crossMove={crossMove} />
+		chartRender = <PoolVolumeChart key={"PoolChartVolume" + selectRange} data={volume} crossMove={crossMove} />
 	} else if (selectTypeChart === "liquidity" && liquidity.length > 0) {
-		chartRender = <PoolLiquidityChart data={liquidity} crossMove={crossMove} />
+		chartRender = (
+			<PoolLiquidityChart key={"PoolChartLiquidity" + selectRange} data={liquidity} crossMove={crossMove} />
+		)
 	}
 
 	return (
@@ -561,7 +564,11 @@ const Pool = ({ showToast }) => {
 								/>
 							</div>
 						</div>
-						<div className={classes.chart}>{chartRender}</div>
+						<div className={classes.chart}>
+							<CSSTransitionGroup transitionName="fade" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+								{chartRender}
+							</CSSTransitionGroup>
+						</div>
 					</Paper>
 				</ContainerLoader>
 			</div>

@@ -20,6 +20,7 @@ import TokenLiquidityChart from "./TokenLiquidityChart"
 import TokenPath from "./TokenPath"
 import TokenTitle from "./TokenTitle"
 import TokenVolumeChart from "./TokenVolumeChart"
+import { CSSTransitionGroup } from "react-transition-group"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -282,17 +283,17 @@ const Token = ({ showToast }) => {
 	}
 
 	let chartRender = (
-		<div className={classes.containerErrorChart}>
+		<div className={classes.containerErrorChart} key="noChart">
 			<p className={classes.errorChart}>Not enough liquidity to display chart price.</p>
 		</div>
 	)
 
 	if (selectTypeChart === "price" && dataChart.length > 0) {
-		chartRender = <TokenChartPrice data={dataChart} crossMove={crossMove} />
+		chartRender = <TokenChartPrice key={"TokenChartPrice"+selectedRange} data={dataChart} crossMove={crossMove} />
 	} else if (selectTypeChart === "volume" && volume.length > 0) {
-		chartRender = <TokenVolumeChart data={volume} crossMove={crossMove} />
+		chartRender = <TokenVolumeChart key={"TokenVolumeChart"+selectedRange} data={volume} crossMove={crossMove} />
 	} else if (selectTypeChart === "liquidity" && liquidity.length > 0) {
-		chartRender = <TokenLiquidityChart data={liquidity} crossMove={crossMove} />
+		chartRender = <TokenLiquidityChart key={"TokenLiquidityChart"+selectedRange} data={liquidity} crossMove={crossMove} />
 	}
 	return (
 		<div className={classes.tokenRoot}>
@@ -397,7 +398,11 @@ const Token = ({ showToast }) => {
 								/>
 							</div>
 						</div>
-						<div className={classes.chart}>{chartRender}</div>
+						<div className={classes.chart}>
+							<CSSTransitionGroup transitionName="fade" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+								{chartRender}
+							</CSSTransitionGroup>
+						</div>
 					</Paper>
 				</ContainerLoader>
 			</div>

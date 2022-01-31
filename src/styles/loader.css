@@ -1,0 +1,100 @@
+/* For logo loader */
+#buble1 {
+	transform-origin: 50% 50%;
+	animation: bubleFly 3s infinite linear;
+}
+
+#buble2 {
+	transform-origin: 50% 50%;
+	animation: bubleFly2 2s infinite linear;
+}
+
+#buble3 {
+	transform-origin: 50% 50%;
+	animation: bubleFly 4s infinite linear;
+}
+
+#buble4 {
+	transform-origin: 50% 50%;
+	animation: bubleFly2 3s infinite linear;
+}
+
+#buble5 {
+	transform-origin: 50% 50%;
+	animation: bubleFly 5s infinite linear;
+}
+
+#buble6 {
+	transform-origin: 50% 50%;
+	animation: bubleFly2 4s infinite linear;
+}
+
+@keyframes bubleFly {
+	0% {
+		transform: translate(0) rotate(0deg);
+		opacity: 1;
+	}
+	25% {
+		transform: translate(0, -10%) rotate(15deg);
+		opacity: 1;
+	}
+	50% {
+		transform: translate(0, -20%) rotate(0deg);
+		opacity: 1;
+	}
+	75% {
+		transform: translate(0, -35%) rotate(-15deg);
+		opacity: 0.5;
+	}
+	80% {
+		opacity: 0;
+		transform: translate(0, -35%) rotate(-30deg);
+	}
+	100% {
+		transform: translate(0, 45%) rotate(-10deg);
+		opacity: 0;
+	}
+}
+
+@keyframes bubleFly2 {
+	0% {
+		transform: translate(0) rotate(0deg);
+		opacity: 1;
+	}
+	25% {
+		transform: translate(0, -10%) rotate(30deg);
+		opacity: 1;
+	}
+	50% {
+		transform: translate(0, -20%) rotate(0deg);
+		opacity: 1;
+	}
+	75% {
+		transform: translate(0, -35%) rotate(-30deg);
+		opacity: 0.5;
+	}
+	80% {
+		opacity: 0;
+		transform: translate(0, -35%) rotate(-30deg);
+	}
+	100% {
+		transform: translate(0, 45%) rotate(-10deg);
+		opacity: 0;
+	}
+}
+
+#Bottle {
+	transform-origin: 40% 40%;
+	animation: bottle 5s infinite linear;
+}
+
+@keyframes bottle {
+	0%,
+	100% {
+		transform: rotate(5deg);
+	}
+
+	50% {
+		transform: rotate(-5deg);
+	}
+}

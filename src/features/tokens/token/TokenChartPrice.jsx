@@ -8,7 +8,8 @@ import { ResizeObserver } from "resize-observer"
 const useStyles = makeStyles((theme) => {
 	return {
 		liquidityChartRoot: {
-			position: "absolute",
+	display: "block",
+	position: "absolute",
 			top: "0",
 			right: "0",
 			bottom: "0",

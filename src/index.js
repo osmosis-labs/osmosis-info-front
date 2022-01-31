@@ -2,7 +2,9 @@ import React from "react"
 import ReactDOM from "react-dom"
 import * as serviceWorker from "./serviceWorker"
 import { createMuiTheme, ThemeProvider } from "@material-ui/core"
-import "./index.css"
+import "./styles/index.css"
+import "./styles/loader.css"
+import "./styles/transitions.css"
 import App from "./features/app/App"
 
 // Create theme for the application
