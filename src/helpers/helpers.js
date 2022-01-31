@@ -59,11 +59,11 @@ export const formateNumberDecimals = (price, decimals = 2) => {
 }
 
 export const formaterNumber = (num) => {
-	if (num < 1_000) {
+	if (Math.abs(num) < 1_000) {
 		return formateNumberDecimals(num) // if value < 1000, nothing to do
-	} else if (num < 1_000_000) {
+	} else if (Math.abs(num) < 1_000_000) {
 		return parseFloat((num / 1000).toFixed(1)) + "K" // convert to K for number from > 1000 < 1 million
-	} else if (num < 1_000_000_000) {
+	} else if (Math.abs(num) < 1_000_000_000) {
 		return parseFloat((num / 1_000_000).toFixed(1)) + "M" // convert to M for number from > 1 million
 	} else {
 		return parseFloat((num / 1_000_000_000).toFixed(1)) + "B" // convert to M for number from > 1 billion
