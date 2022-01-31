@@ -105,6 +105,12 @@ const useStyles = makeStyles((theme) => {
 		errorChart: {
 			margin: "auto",
 		},
+		containerInfo: {
+			display: "flex",
+			flexDirection: "column",
+			justifyContent: "space-around",
+			minHeight: "180px",
+		},
 	}
 })
 
@@ -297,7 +303,7 @@ const Token = ({ showToast }) => {
 	}
 	return (
 		<div className={classes.tokenRoot}>
-			<ContainerLoader isLoading={loadingTokenDetails}>
+			<ContainerLoader className={classes.containerInfo} isLoading={loadingTokenDetails}>
 				<TokenPath token={token} />
 				<TokenTitle token={token} />
 				<p className={classes.tokenPrice}>{formateNumberPriceDecimals(token.price, priceDecimals.current)}</p>

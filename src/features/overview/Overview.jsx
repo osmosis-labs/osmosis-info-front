@@ -3,6 +3,7 @@ import { useCallback } from "react"
 import { useEffect } from "react"
 import { useState } from "react"
 import { useHistory } from "react-router-dom"
+import ButtonGroup from "../../components/buttonGroup/ButtonGroup"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
 import { useCharts } from "../../contexts/ChartsProvider"
@@ -74,17 +75,35 @@ const useStyles = makeStyles((theme) => {
 			fontSize: "12px",
 			padding: `2px 0`,
 		},
-		containerLoading:{
+		containerLoading: {
 			position: "relative",
 			minWidth: "200px",
 			minHeight: "200px",
-		}
+		},
+		chartHeader: {
+			display: "flex",
+			flexDirection: "row",
+			justifyContent: "space-between",
+			alignItems: "center",
+		},
+		chartHeaderData: {},
+		chartHeaderButton: {
+			display: "flex",
+			alignItems: "flex-end",
+			flexDirection: "column",
+			justifyContent: "flex-end",
+			padding: theme.spacing(1),
+		},
+		groupButton: {
+			marginBottom: theme.spacing(1),
+		},
 	}
 })
 
 const Overview = () => {
 	const classes = useStyles()
-	const { dataLiquidity, dataVolume, loadingData } = useCharts()
+	const { dataLiquidityD, dataLiquidityW, dataLiquidityM, dataVolumeD, dataVolumeW, dataVolumeM, loadingData } =
+		useCharts()
 	const [size, setSize] = useState("xl")
 	const matchXS = useMediaQuery((theme) => theme.breakpoints.down("xs"))
 	const matchSM = useMediaQuery((theme) => theme.breakpoints.down("sm"))
@@ -102,7 +121,12 @@ const Overview = () => {
 	const { tokens, loadingTokens } = useTokens()
 	const [dataPools, setDataPools] = useState([])
 	const [dataTokens, setDataTokens] = useState([])
+	const [rangeVolume, setRangeVolume] = useState("d")
+	const [rangeLiquidity, setRangeLiquidity] = useState("d")
 	const history = useHistory()
+
+	const [dataLiquidity, setDataLiquidity] = useState([])
+	const [dataVolume, setDataVolume] = useState([])
 
 	const crossMoveLiquidity = useCallback((event, serie) => {
 		if (event.time) {
@@ -133,7 +157,9 @@ const Overview = () => {
 		}
 		setChartLiquidityInfo({ price: priceLiquidity, date: initDate })
 		setChartVolumeInfo({ price: priceVolume, date: initDate })
-	}, [dataLiquidity, dataVolume])
+		setDataLiquidity(dataLiquidityD)
+		setDataVolume(dataVolumeD)
+	}, [dataLiquidityD, dataVolumeD])
 
 	useEffect(() => {
 		// sort pools on the first time is fetched
@@ -187,31 +213,128 @@ const Overview = () => {
 		history.push(`/token/${token.symbol}`)
 	}
 
+	const onChangeRangeVolume = (value) => {
+		setRangeVolume(value)
+		let volume = []
+		if (value === "d") volume = dataVolumeD
+		else if (value === "w") volume = dataVolumeW
+		else if (value === "m") volume = dataVolumeM
+		const today = new Date()
+		const initDate = formatDate(today)
+		let priceVolume = "0"
+		if (volume.length > 0) {
+			priceVolume = formateNumberPrice(volume[volume.length - 1].value)
+		}
+		setChartVolumeInfo({ price: priceVolume, date: initDate })
+		setDataVolume(volume)
+	}
+
+	const onChangeRangeLiquidity = (value) => {
+		setRangeLiquidity(value)
+		let liquidity = []
+		if (value === "d") liquidity = dataLiquidityD
+		else if (value === "w") liquidity = dataLiquidityW
+		else if (value === "m") liquidity = dataLiquidityM
+		const today = new Date()
+		const initDate = formatDate(today)
+		let priceLiquidity = "0"
+		if (dataLiquidity.length > 0) {
+			priceLiquidity = formateNumberPrice(dataLiquidity[dataLiquidity.length - 1].value)
+		}
+		setChartLiquidityInfo({ price: priceLiquidity, date: initDate })
+		setDataLiquidity(liquidity)
+	}
+
 	return (
 		<div className={classes.overviewRoot}>
-			{/* <div className={classes.radiant}> </div> */}
 			<div className={classes.container}>
 				<p className={classes.subTitle}>Osmosis - Overview</p>
 				<div className={classes.charts}>
 					<Paper className={classes.chart}>
 						<BlocLoaderOsmosis open={loadingData} borderRadius={true} />
-						<p className={classes.chartTitle}>Liquidity</p>
-						<p className={classes.chartTextBig}>{chartLiquidityInfo.price}</p>
-						<p className={classes.chartTextSmall}>{chartLiquidityInfo.date}</p>
+						<div className={classes.chartHeader}>
+							<div className={classes.chartHeaderData}>
+								<p className={classes.chartTitle}>Liquidity</p>
+								<p className={classes.chartTextBig}>{chartLiquidityInfo.price}</p>
+								<p className={classes.chartTextSmall}>{chartLiquidityInfo.date}</p>
+							</div>
+							<div className={classes.chartHeaderButton}>
+								<ButtonGroup
+									className={classes.groupButton}
+									buttons={[
+										{
+											id: "d",
+											name: "D",
+											onClick: () => {
+												onChangeRangeLiquidity("d")
+											},
+										},
+										{
+											id: "w",
+											name: "W",
+											onClick: () => {
+												onChangeRangeLiquidity("w")
+											},
+										},
+										{
+											id: "m",
+											name: "M",
+											onClick: () => {
+												onChangeRangeLiquidity("m")
+											},
+										},
+									]}
+									active={rangeLiquidity}
+								/>
+							</div>
+						</div>
 						<LiquidityChart data={dataLiquidity} crossMove={crossMoveLiquidity} />
 					</Paper>
 					<Paper className={classes.chart}>
 						<BlocLoaderOsmosis open={loadingData} borderRadius={true} />
-						<p className={classes.chartTitle}>Volume</p>
-						<p className={classes.chartTextBig}>{chartVolumeInfo.price}</p>
-						<p className={classes.chartTextSmall}>{chartVolumeInfo.date}</p>
+						<div className={classes.chartHeader}>
+							<div className={classes.chartHeaderData}>
+								<p className={classes.chartTitle}>Volume</p>
+								<p className={classes.chartTextBig}>{chartVolumeInfo.price}</p>
+								<p className={classes.chartTextSmall}>{chartVolumeInfo.date}</p>
+							</div>
+							<div className={classes.chartHeaderButton}>
+								<ButtonGroup
+									className={classes.groupButton}
+									buttons={[
+										{
+											id: "d",
+											name: "D",
+											onClick: () => {
+												onChangeRangeVolume("d")
+											},
+										},
+										{
+											id: "w",
+											name: "W",
+											onClick: () => {
+												onChangeRangeVolume("w")
+											},
+										},
+										{
+											id: "m",
+											name: "M",
+											onClick: () => {
+												onChangeRangeVolume("m")
+											},
+										},
+									]}
+									active={rangeVolume}
+								/>
+							</div>
+						</div>
 						<VolumeChart data={dataVolume} crossMove={crossMoveVolume} />
 					</Paper>
 				</div>
 
 				<p className={classes.subTitle}>Top tokens</p>
 				<Paper className={classes.containerLoading}>
-						<BlocLoaderOsmosis open={loadingTokens} borderRadius={true} />
+					<BlocLoaderOsmosis open={loadingTokens} borderRadius={true} />
 					<TokensTable
 						data={dataTokens}
 						textEmpty={"Any rows"}
@@ -222,7 +345,7 @@ const Overview = () => {
 				</Paper>
 				<p className={classes.subTitle}>Top pools</p>
 				<Paper className={classes.containerLoading}>
-					<BlocLoaderOsmosis open={loadingPools}  borderRadius={true}/>
+					<BlocLoaderOsmosis open={loadingPools} borderRadius={true} />
 					<PoolsTable data={dataPools} textEmpty={"Any rows"} size={size} sortable={true} onClickPool={onClickPool} />
 				</Paper>
 			</div>
