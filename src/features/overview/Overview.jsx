@@ -7,10 +7,9 @@ import ButtonGroup from "../../components/buttonGroup/ButtonGroup"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
 import { useCharts } from "../../contexts/ChartsProvider"
-import { useLoader } from "../../contexts/LoaderProvider"
 import { usePools } from "../../contexts/PoolsProvider"
 import { useTokens } from "../../contexts/TokensProvider"
-import { formatDate, formateNumberPrice, twoNumber } from "../../helpers/helpers"
+import { formatDate, formateNumberPrice, getDates, twoNumber } from "../../helpers/helpers"
 import PoolsTable from "../pools/PoolsTable"
 import TokensTable from "../tokens/TokensTable"
 import LiquidityChart from "./LiquidityChart"
@@ -128,35 +127,78 @@ const Overview = () => {
 	const [dataLiquidity, setDataLiquidity] = useState([])
 	const [dataVolume, setDataVolume] = useState([])
 
-	const crossMoveLiquidity = useCallback((event, serie) => {
-		if (event.time) {
-			let price = formateNumberPrice(event.seriesPrices.get(serie))
-			let date = new Date(`${twoNumber(event.time.year)}/${twoNumber(event.time.month)}/${twoNumber(event.time.day)}`)
-			setChartLiquidityInfo({ price, date: formatDate(date) })
-		}
-	}, [])
+	const crossMoveLiquidity = useCallback(
+		(event, serie) => {
+			if (event.time) {
+				updateChartLiquidityInfo(
+					{
+						time: new Date(`${event.time.year}-${event.time.month}-${event.time.day}`),
+						value: event.seriesPrices.get(serie),
+					},
+					rangeLiquidity
+				)
+			}
+		},
+		[rangeLiquidity]
+	)
+
 	const crossMoveVolume = useCallback((event, serie) => {
 		if (event.time) {
-			let price = formateNumberPrice(event.seriesPrices.get(serie))
-			let date = new Date(`${twoNumber(event.time.year)}/${twoNumber(event.time.month)}/${twoNumber(event.time.day)}`)
-			setChartVolumeInfo({ price, date: formatDate(date) })
+			updateChartVolumeInfo({
+				time: new Date(`${event.time.year}-${event.time.month}-${event.time.day}`),
+				value: event.seriesPrices.get(serie),
+			}, rangeVolume)
 		}
-	}, [])
+	}, [rangeVolume])
+
+	const updateChartLiquidityInfo = (item, range) => {
+		if (item && item.time) {
+			let date = new Date(item.time)
+			let price = formateNumberPrice(item.value)
+			let dateStr = formatDate(date)
+			if (range && range != "d") {
+				let dates = getDates(date, range)
+				dateStr = `${formatDate(dates[0])} - ${formatDate(dates[1])}`
+			}
+			setChartLiquidityInfo({ price, date: dateStr })
+		}
+	}
+
+	const updateChartVolumeInfo = (item, range) => {
+		if (item && item.time) {
+			let date = new Date(item.time)
+			let price = formateNumberPrice(item.value)
+			let dateStr = formatDate(date)
+			if (range && range != "d") {
+				let dates = getDates(date, range)
+				dateStr = `${formatDate(dates[0])} - ${formatDate(dates[1])}`
+			}
+			setChartVolumeInfo({ price, date: dateStr })
+		}
+	}
 
 	useEffect(() => {
 		// set default data
-		const today = new Date()
-		const initDate = formatDate(today)
-		let priceLiquidity = "0"
-		if (dataLiquidity.length > 0) {
-			priceLiquidity = formateNumberPrice(dataLiquidity[dataLiquidity.length - 1].value)
+		if (dataLiquidityD.length > 0) {
+			let lastElt = dataLiquidityD[dataLiquidityD.length - 1]
+			let date = ""
+			if (lastElt.time.year) {
+				date = new Date(lastElt.time.year + "-" + lastElt.time.month + "-" + lastElt.time.day)
+			} else {
+				date = new Date(lastElt.time)
+			}
+			updateChartLiquidityInfo({ time: date, value: lastElt.value })
 		}
-		let priceVolume = "0"
-		if (dataVolume.length > 0) {
-			priceVolume = formateNumberPrice(dataVolume[dataVolume.length - 1].value)
+		if (dataVolumeD.length > 0) {
+			let lastElt = dataVolumeD[dataVolumeD.length - 1]
+			let date = ""
+			if (lastElt.time.year) {
+				date = new Date(lastElt.time.year + "-" + lastElt.time.month + "-" + lastElt.time.day)
+			} else {
+				date = new Date(lastElt.time)
+			}
+			updateChartVolumeInfo({ time: date, value: lastElt.value })
 		}
-		setChartLiquidityInfo({ price: priceLiquidity, date: initDate })
-		setChartVolumeInfo({ price: priceVolume, date: initDate })
 		setDataLiquidity(dataLiquidityD)
 		setDataVolume(dataVolumeD)
 	}, [dataLiquidityD, dataVolumeD])
@@ -219,13 +261,17 @@ const Overview = () => {
 		if (value === "d") volume = dataVolumeD
 		else if (value === "w") volume = dataVolumeW
 		else if (value === "m") volume = dataVolumeM
-		const today = new Date()
-		const initDate = formatDate(today)
-		let priceVolume = "0"
 		if (volume.length > 0) {
-			priceVolume = formateNumberPrice(volume[volume.length - 1].value)
+			let lastElt = volume[volume.length - 1]
+			let date = ""
+			if (lastElt.time.year) {
+				// If time can be use to get date or need to be modified
+				date = new Date(lastElt.time.year + "-" + lastElt.time.month + "-" + lastElt.time.day)
+			} else {
+				date = new Date(lastElt.time)
+			}
+			updateChartVolumeInfo({ time: date, value: lastElt.value }, value)
 		}
-		setChartVolumeInfo({ price: priceVolume, date: initDate })
 		setDataVolume(volume)
 	}
 
@@ -235,13 +281,18 @@ const Overview = () => {
 		if (value === "d") liquidity = dataLiquidityD
 		else if (value === "w") liquidity = dataLiquidityW
 		else if (value === "m") liquidity = dataLiquidityM
-		const today = new Date()
-		const initDate = formatDate(today)
-		let priceLiquidity = "0"
-		if (dataLiquidity.length > 0) {
-			priceLiquidity = formateNumberPrice(dataLiquidity[dataLiquidity.length - 1].value)
+		if (liquidity.length > 0) {
+			let lastElt = liquidity[liquidity.length - 1]
+			let date = ""
+			if (lastElt.time.year) {
+				// If time can be use to get date or need to be modified
+				date = new Date(lastElt.time.year + "-" + lastElt.time.month + "-" + lastElt.time.day)
+			} else {
+				date = new Date(lastElt.time)
+			}
+			console.log("Overview.jsx -> 284: date", date)
+			updateChartLiquidityInfo({ time: date, value: lastElt.value }, value)
 		}
-		setChartLiquidityInfo({ price: priceLiquidity, date: initDate })
 		setDataLiquidity(liquidity)
 	}
 

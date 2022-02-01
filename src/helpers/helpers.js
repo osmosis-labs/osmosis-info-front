@@ -98,9 +98,25 @@ export const normalize = (string) => {
 }
 
 export const getWeekNumber = (date) => {
-	let d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-	let dayNum = d.getUTCDay() || 7;
-	d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-	let yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
-	return Math.ceil((((d - yearStart) / 86400000) + 1)/7)
+	let d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
+	let dayNum = d.getUTCDay() || 7
+	d.setUTCDate(d.getUTCDate() + 4 - dayNum)
+	let yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
+	return Math.ceil(((d - yearStart) / 86400000 + 1) / 7)
+}
+
+export const getDates = (startDate, range) => {
+	if (range === "m") {
+		let firstDay = new Date(startDate.getFullYear(), startDate.getMonth(), 1)
+		let lastDay = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0)
+		return [startDate, lastDay]
+	}
+	if (range === "w") {
+		let first = startDate.getDate() - startDate.getDay()
+		let last = first + 6
+
+		let firstday = new Date(startDate.setDate(first))
+		let lastday = new Date(firstday.setDate(last))
+		return [startDate, lastday]
+	}
 }

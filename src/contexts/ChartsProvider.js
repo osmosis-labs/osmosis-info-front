@@ -34,25 +34,25 @@ export const ChartsProvider = ({ children }) => {
 
 			// Aggregate by week and month for volume
 			let volumeW = []
-			let currentWeek = {time: volume[0].time, value: 0}
+			let currentWeek = { time: volume[0].time, value: 0 }
 			let volumeM = []
-			let currentMonth = {time: volume[0].time, value: 0}
-			volume.forEach(item => {
-				if(new Date(item.time).getMonth() === new Date(currentMonth.time).getMonth()){
+			let currentMonth = { time: volume[0].time, value: 0 }
+			volume.forEach((item) => {
+				if (new Date(item.time).getMonth() === new Date(currentMonth.time).getMonth()) {
 					currentMonth.value += item.value
-				}else{
+				} else {
 					volumeM.push(currentMonth)
-					currentMonth = {time: item.time, value: item.value}
+					currentMonth = { time: item.time, value: item.value }
 				}
 				let currentDate = new Date(item.time)
 				let dateOfCurrentWeek = new Date(currentWeek.time)
 				let numberOfWeek = getWeekNumber(currentDate)
 				let numberOfWeekOfCurrentWeek = getWeekNumber(dateOfCurrentWeek)
-				if(numberOfWeek === numberOfWeekOfCurrentWeek){
+				if (numberOfWeek === numberOfWeekOfCurrentWeek) {
 					currentWeek.value += item.value
-				}else{
+				} else {
 					volumeW.push(currentWeek)
-					currentWeek = {time: item.time, value: item.value}
+					currentWeek = { time: item.time, value: item.value }
 				}
 			})
 			volumeW.push(currentWeek)
@@ -63,26 +63,30 @@ export const ChartsProvider = ({ children }) => {
 
 			// Aggregate by week and month for liquidity
 			let liquidityW = []
-			currentWeek = {time: liquidity[0].time, value: 0}
+			currentWeek = { time: liquidity[0].time, timeEnd: liquidity[0].time, value: 0 }
 			let liquidityM = []
-			currentMonth = {time: liquidity[0].time, value: 0}
-			liquidity.forEach(item => {
-				let currentDate = new Date(item.time.year+"-"+item.time.month+"-"+item.time.day)
-				let dateMonth= new Date(currentMonth.time.year+"-"+currentMonth.time.month+"-"+currentMonth.time.day)
-				if(currentDate.getMonth() === dateMonth.getMonth()){
-					currentMonth.value += item.value
-				}else{
+			currentMonth = { time: liquidity[0].time, timeEnd: liquidity[0].time, value: 0 }
+			liquidity.forEach((item) => {
+				let currentDate = new Date(item.time.year + "-" + item.time.month + "-" + item.time.day)
+				let dateMonth = new Date(currentMonth.time.year + "-" + currentMonth.time.month + "-" + currentMonth.time.day)
+				if (currentDate.getMonth() === dateMonth.getMonth()) {
+					currentMonth.value = item.value
+					currentMonth.timeEnd = item.time
+				} else {
 					liquidityM.push(currentMonth)
-					currentMonth = {time: item.time, value: item.value}
+					currentMonth = { time: item.time, timeEnd: item.time, value: item.value }
 				}
-				let dateOfCurrentWeek = new Date(currentWeek.time.year+"-"+currentWeek.time.month+"-"+currentWeek.time.day)
+				let dateOfCurrentWeek = new Date(
+					currentWeek.time.year + "-" + currentWeek.time.month + "-" + currentWeek.time.day
+				)
 				let numberOfWeek = getWeekNumber(currentDate)
 				let numberOfWeekOfCurrentWeek = getWeekNumber(dateOfCurrentWeek)
-				if(numberOfWeek === numberOfWeekOfCurrentWeek){
-					currentWeek.value += item.value
-				}else{
+				if (numberOfWeek === numberOfWeekOfCurrentWeek) {
+					currentWeek.value = item.value
+					currentWeek.timeEnd = item.time
+				} else {
 					liquidityW.push(currentWeek)
-					currentWeek = {time: item.time, value: item.value}
+					currentWeek = { time: item.time, timeEnd: item.time, value: item.value }
 				}
 			})
 			liquidityW.push(currentWeek)
@@ -94,5 +98,11 @@ export const ChartsProvider = ({ children }) => {
 		fetch()
 	}, [])
 
-	return <ChartsContext.Provider value={{ dataLiquidityD, dataLiquidityW, dataLiquidityM, dataVolumeD, dataVolumeW, dataVolumeM, loadingData}}>{children}</ChartsContext.Provider>
+	return (
+		<ChartsContext.Provider
+			value={{ dataLiquidityD, dataLiquidityW, dataLiquidityM, dataVolumeD, dataVolumeW, dataVolumeM, loadingData }}
+		>
+			{children}
+		</ChartsContext.Provider>
+	)
 }
