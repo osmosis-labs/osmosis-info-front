@@ -84,9 +84,14 @@ const useStyles = makeStyles((theme) => {
 			flexDirection: "row",
 			justifyContent: "space-between",
 			alignItems: "center",
+			[theme.breakpoints.down("xs")]: {
+				flexDirection: "column",
+				alignItems: "flex-start",
+			},
 		},
 		chartHeaderData: {},
 		chartHeaderButton: {
+			alignSelf: "flex-end",
 			display: "flex",
 			alignItems: "flex-end",
 			flexDirection: "column",
@@ -142,16 +147,23 @@ const Overview = () => {
 		[rangeLiquidity]
 	)
 
-	const crossMoveVolume = useCallback((event, serie) => {
-		if (event.time) {
-			updateChartVolumeInfo({
-				time: new Date(`${event.time.year}-${event.time.month}-${event.time.day}`),
-				value: event.seriesPrices.get(serie),
-			}, rangeVolume)
-		}
-	}, [rangeVolume])
+	const crossMoveVolume = useCallback(
+		(event, serie) => {
+			if (event.time) {
+				updateChartVolumeInfo(
+					{
+						time: new Date(`${event.time.year}-${event.time.month}-${event.time.day}`),
+						value: event.seriesPrices.get(serie),
+					},
+					rangeVolume
+				)
+			}
+		},
+		[rangeVolume]
+	)
 
 	const updateChartLiquidityInfo = (item, range) => {
+		console.log("Overview.jsx -> 166: item, range", item, range  )
 		if (item && item.time) {
 			let date = new Date(item.time)
 			let price = formateNumberPrice(item.value)
@@ -183,7 +195,7 @@ const Overview = () => {
 			let lastElt = dataLiquidityD[dataLiquidityD.length - 1]
 			let date = ""
 			if (lastElt.time.year) {
-				date = new Date(lastElt.time.year + "-" + lastElt.time.month + "-" + lastElt.time.day)
+				date = new Date(lastElt.time.year + "-" + twoNumber(lastElt.time.month) + "-" + twoNumber(lastElt.time.day))
 			} else {
 				date = new Date(lastElt.time)
 			}
@@ -193,7 +205,7 @@ const Overview = () => {
 			let lastElt = dataVolumeD[dataVolumeD.length - 1]
 			let date = ""
 			if (lastElt.time.year) {
-				date = new Date(lastElt.time.year + "-" + lastElt.time.month + "-" + lastElt.time.day)
+				date = new Date(lastElt.time.year + "-" + twoNumber(lastElt.time.month) + "-" + twoNumber(lastElt.time.day))
 			} else {
 				date = new Date(lastElt.time)
 			}
