@@ -12,6 +12,7 @@ import {
 	formateNumberPrice,
 	formateNumberPriceDecimals,
 	formaterNumber,
+	getDates,
 	getInclude,
 	twoNumber,
 } from "../../../helpers/helpers"
@@ -129,6 +130,8 @@ const Token = ({ showToast }) => {
 	const [volume, setVolume] = useState([])
 	const priceDecimals = useRef(2)
 
+	const [rangeVolume, setRangeVolume] = useState("d")
+
 	const [loadingRateChart, setLoadingRateChart] = useState(true) // rate data is not loaded
 	const [loadingTokenDetails, setLoadingTokenDetails] = useState(true) // rate data is not loaded
 	const [loadingTokenInfo, setLoadingTokenInfo] = useState(true) // rate data is not loaded
@@ -220,11 +223,13 @@ const Token = ({ showToast }) => {
 				}
 			} else if (selectTypeChart === "volume") {
 				if (event.time) {
-					let price = "$" + formaterNumber(event.seriesPrices.get(serie), 2)
-					let date = new Date(
-						`${twoNumber(event.time.year)}/${twoNumber(event.time.month)}/${twoNumber(event.time.day)}`
+					updateVolumeInfo(
+						{
+							time: new Date(`${event.time.year}-${event.time.month}-${event.time.day}`),
+							value: event.seriesPrices.get(serie),
+						},
+						rangeVolume
 					)
-					setDataHover({ price, date: formatDate(date) })
 				}
 			} else {
 				if (event.time) {
@@ -236,7 +241,7 @@ const Token = ({ showToast }) => {
 				}
 			}
 		},
-		[selectTypeChart, priceDecimals]
+		[selectTypeChart, priceDecimals, rangeVolume]
 	)
 
 	const onChangeTypeChart = (value) => {
@@ -280,11 +285,37 @@ const Token = ({ showToast }) => {
 					date: formatDateHours(new Date()),
 				})
 			} else {
-				setDataHover({
-					price: "$" + formaterNumber(volume[volume.length - 1].value, 2),
-					date: formatDateHours(new Date()),
-				})
+				if (volume.length > 0) {
+					let lastElt = volume[volume.length - 1]
+					let date = ""
+					if (lastElt.time.year) {
+						date = new Date(lastElt.time.year + "-" + twoNumber(lastElt.time.month) + "-" + twoNumber(lastElt.time.day))
+					} else {
+						date = new Date(lastElt.time)
+					}
+					updateVolumeInfo({ time: date, value: lastElt.value }, rangeVolume)
+				}
 			}
+		}
+	}
+
+	const onChangeRangeVolume = async (value) => {
+		setRangeVolume(value)
+		let volume = await getVolumeChartToken({ symbol: token.symbol, range: value })
+		setVolume(volume)
+		updateVolumeInfo(volume[volume.length - 1], value)
+	}
+
+	const updateVolumeInfo = (item, range) => {
+		if (item && item.time) {
+			let date = new Date(item.time)
+			let price = "$" + formaterNumber(item.value, 2)
+			let dateStr = formatDate(date)
+			if (range && range != "d") {
+				let dates = getDates(date, range)
+				dateStr = `${formatDate(dates[0])} - ${formatDate(dates[1])}`
+			}
+			setDataHover({ price, date: dateStr })
 		}
 	}
 
@@ -295,11 +326,13 @@ const Token = ({ showToast }) => {
 	)
 
 	if (selectTypeChart === "price" && dataChart.length > 0) {
-		chartRender = <TokenChartPrice key={"TokenChartPrice"+selectedRange} data={dataChart} crossMove={crossMove} />
+		chartRender = <TokenChartPrice key={"TokenChartPrice" + selectedRange} data={dataChart} crossMove={crossMove} />
 	} else if (selectTypeChart === "volume" && volume.length > 0) {
-		chartRender = <TokenVolumeChart key={"TokenVolumeChart"+selectedRange} data={volume} crossMove={crossMove} />
+		chartRender = <TokenVolumeChart key={"TokenVolumeChart" + selectedRange} data={volume} crossMove={crossMove} />
 	} else if (selectTypeChart === "liquidity" && liquidity.length > 0) {
-		chartRender = <TokenLiquidityChart key={"TokenLiquidityChart"+selectedRange} data={liquidity} crossMove={crossMove} />
+		chartRender = (
+			<TokenLiquidityChart key={"TokenLiquidityChart" + selectedRange} data={liquidity} crossMove={crossMove} />
+		)
 	}
 	return (
 		<div className={classes.tokenRoot}>
@@ -401,6 +434,33 @@ const Token = ({ showToast }) => {
 										},
 									]}
 									active={selectedRange}
+								/>
+								<ButtonGroup
+									style={selectTypeChart !== "volume" ? { display: "none" } : {}}
+									buttons={[
+										{
+											id: "d",
+											name: "d",
+											onClick: () => {
+												onChangeRangeVolume("d")
+											},
+										},
+										{
+											id: "w",
+											name: "w",
+											onClick: () => {
+												onChangeRangeVolume("w")
+											},
+										},
+										{
+											id: "m",
+											name: "m",
+											onClick: () => {
+												onChangeRangeVolume("m")
+											},
+										},
+									]}
+									active={rangeVolume}
 								/>
 							</div>
 						</div>

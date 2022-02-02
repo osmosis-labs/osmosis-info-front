@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react"
 import API from "../helpers/API"
+import { getWeekNumber } from "../helpers/helpers"
 const TokensContext = createContext()
 
 export const useTokens = () => useContext(TokensContext)
@@ -52,14 +53,46 @@ export const TokensProvider = ({ children }) => {
 		return response.data
 	}, [])
 
-	const getVolumeChartToken = useCallback(async ({ symbol }) => {
+	const getVolumeChartToken = useCallback(async ({ symbol, range = "d" }) => {
 		setLoadingVolumeToken(true)
 		let response = await API.request({
 			url: `tokens/v1/volume/${symbol}/chart`,
 			type: "get",
 		})
+		let res = response.data
+		if (range === "m") {
+			let resMonth = []
+			let current = { time: res[0].time, value: 0 }
+			res.forEach((item) => {
+				if (new Date(item.time).getMonth() === new Date(current.time).getMonth()) {
+					current.value += item.value
+				} else {
+					resMonth.push(current)
+					current = { time: item.time, value: item.value }
+				}
+			})
+			resMonth.push(current)
+			res = resMonth
+		} else if (range === "w") {
+			let resWeek = []
+			let current = { time: res[0].time, value: 0 }
+			res.forEach((item) => {
+				let currentDate = new Date(item.time)
+				let dateOfCurrentWeek = new Date(current.time)
+				let numberOfWeek = getWeekNumber(currentDate)
+				let numberOfWeekOfCurrentWeek = getWeekNumber(dateOfCurrentWeek)
+				if (numberOfWeek === numberOfWeekOfCurrentWeek) {
+					current.value += item.value
+				} else {
+					resWeek.push(current)
+					current = { time: item.time, value: item.value }
+				}
+			})
+			resWeek.push(current)
+			res = resWeek
+		}
 		setLoadingVolumeToken(false)
-		return response.data
+		return res
 	}, [])
 
 	useEffect(() => {

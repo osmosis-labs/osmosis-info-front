@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react"
 import API from "../helpers/API"
+import { getWeekNumber } from "../helpers/helpers"
 const PoolsContext = createContext()
 
 export const usePools = () => useContext(PoolsContext)
@@ -43,14 +44,46 @@ export const PoolsProvider = ({ children }) => {
 		return response.data
 	}, [])
 
-	const getVolumeChartPool = useCallback(async ({ poolId }) => {
+	const getVolumeChartPool = useCallback(async ({ poolId, range = "d" }) => {
 		setLoadingVolumePool(true)
 		let response = await API.request({
 			url: `pools/v1/volume/${poolId}/chart`,
 			type: "get",
 		})
+		let res = response.data
+		if (range === "m") {
+			let resMonth = []
+			let current = { time: res[0].time, value: 0 }
+			res.forEach((item) => {
+				if (new Date(item.time).getMonth() === new Date(current.time).getMonth()) {
+					current.value += item.value
+				} else {
+					resMonth.push(current)
+					current = { time: item.time, value: item.value }
+				}
+			})
+			resMonth.push(current)
+			res = resMonth
+		}else if (range === "w") {
+			let resWeek = []
+			let current = { time: res[0].time, value: 0 }
+			res.forEach((item) => {
+				let currentDate = new Date(item.time)
+				let dateOfCurrentWeek = new Date(current.time)
+				let numberOfWeek = getWeekNumber(currentDate)
+				let numberOfWeekOfCurrentWeek = getWeekNumber(dateOfCurrentWeek)
+				if (numberOfWeek === numberOfWeekOfCurrentWeek) {
+					current.value += item.value
+				} else {
+					resWeek.push(current)
+					current = { time: item.time, value: item.value }
+				}
+			})
+			resWeek.push(current)
+			res = resWeek
+		}
 		setLoadingVolumePool(false)
-		return response.data
+		return res
 	}, [])
 
 	useEffect(() => {

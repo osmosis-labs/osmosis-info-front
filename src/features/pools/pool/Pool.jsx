@@ -17,6 +17,7 @@ import {
 	formaterNumber,
 	getInclude,
 	twoNumber,
+	getDates,
 } from "../../../helpers/helpers"
 import PoolChart from "./PoolChart"
 import PoolLiquidityChart from "./PoolLiquidityChart"
@@ -181,6 +182,8 @@ const Pool = ({ showToast }) => {
 	const pairDecimals = useRef(3)
 	const pricesDecimals = useRef([2, 2])
 
+	const [rangeVolume, setRangeVolume] = useState("d")
+
 	/* Loaders */
 	const [loadingRateChart, setLoadingRateChart] = useState(true) // rate data is not loaded
 	const [loadingPoolDetails, setLoadingPoolDetails] = useState(true) // rate data is not loaded
@@ -324,23 +327,26 @@ const Pool = ({ showToast }) => {
 		updateTokenData(selectedTokens.one, selectedTokens.two, value)
 	}
 
+	const onChangeRangeVolume = async (value) => {
+		setRangeVolume(value)
+		let volume = await getVolumeChartPool({ poolId: pool.id, range: value })
+		setVolume(volume)
+		updateVolumeInfo(volume[volume.length - 1], value)
+	}
+
 	const onChangeTypeChart = (value) => {
 		setSelectTypeChart(value)
 		if (value === "price") {
 			updateTokenData(selectedTokens.one, selectedTokens.two, selectRange)
 		} else if (value === "volume" && volume.length > 0) {
-			let price = "$" + formaterNumber(volume[volume.length - 1].value, 2)
+			let lastElt = volume[volume.length - 1]
 			let date = ""
-			if (typeof volume[volume.length - 1].time === "string") {
-				date = new Date(volume[volume.length - 1].time)
+			if (lastElt.time.year) {
+				date = new Date(lastElt.time.year + "-" + twoNumber(lastElt.time.month) + "-" + twoNumber(lastElt.time.day))
 			} else {
-				date = new Date(
-					`${twoNumber(volume[volume.length - 1].time.year)}/${twoNumber(
-						volume[volume.length - 1].time.month
-					)}/${twoNumber(volume[volume.length - 1].time.day)}`
-				)
+				date = new Date(lastElt.time)
 			}
-			setPrice({ price, date: formatDate(date) })
+			updateVolumeInfo({ time: date, value: lastElt.value }, rangeVolume)
 		} else if (value === "liquidity" && liquidity.length > 0) {
 			let price = "$" + formaterNumber(liquidity[liquidity.length - 1].value, 2)
 			let date = ""
@@ -378,11 +384,13 @@ const Pool = ({ showToast }) => {
 				}
 			} else if (selectTypeChart === "volume") {
 				if (event.time) {
-					let price = "$" + formaterNumber(event.seriesPrices.get(serie), 2)
-					let date = new Date(
-						`${twoNumber(event.time.year)}/${twoNumber(event.time.month)}/${twoNumber(event.time.day)}`
+					updateVolumeInfo(
+						{
+							time: new Date(`${event.time.year}-${event.time.month}-${event.time.day}`),
+							value: event.seriesPrices.get(serie),
+						},
+						rangeVolume
 					)
-					setPrice({ price, date: formatDate(date) })
 				}
 			} else {
 				if (event.time) {
@@ -394,8 +402,21 @@ const Pool = ({ showToast }) => {
 				}
 			}
 		},
-		[selectTypeChart]
+		[selectTypeChart, rangeVolume]
 	)
+
+	const updateVolumeInfo = (item, range) => {
+		if (item && item.time) {
+			let date = new Date(item.time)
+			let price = "$" + formaterNumber(item.value, 2)
+			let dateStr = formatDate(date)
+			if (range && range != "d") {
+				let dates = getDates(date, range)
+				dateStr = `${formatDate(dates[0])} - ${formatDate(dates[1])}`
+			}
+			setPrice({ price, date: dateStr })
+		}
+	}
 
 	let chartRender = (
 		<div className={classes.containerErrorChart} key="noChart">
@@ -408,9 +429,7 @@ const Pool = ({ showToast }) => {
 	} else if (selectTypeChart === "volume" && volume.length > 0) {
 		chartRender = <PoolVolumeChart key={"PoolChartVolume" + selectRange} data={volume} crossMove={crossMove} />
 	} else if (selectTypeChart === "liquidity" && liquidity.length > 0) {
-		chartRender = (
-			<PoolLiquidityChart key={"PoolChartLiquidity" + selectRange} data={liquidity} crossMove={crossMove} />
-		)
+		chartRender = <PoolLiquidityChart key={"PoolChartLiquidity" + selectRange} data={liquidity} crossMove={crossMove} />
 	}
 
 	return (
@@ -561,6 +580,33 @@ const Pool = ({ showToast }) => {
 										},
 									]}
 									active={selectRange}
+								/>
+								<ButtonGroup
+									style={selectTypeChart !== "volume" ? { display: "none" } : {}}
+									buttons={[
+										{
+											id: "d",
+											name: "d",
+											onClick: () => {
+												onChangeRangeVolume("d")
+											},
+										},
+										{
+											id: "w",
+											name: "w",
+											onClick: () => {
+												onChangeRangeVolume("w")
+											},
+										},
+										{
+											id: "m",
+											name: "m",
+											onClick: () => {
+												onChangeRangeVolume("m")
+											},
+										},
+									]}
+									active={rangeVolume}
 								/>
 							</div>
 						</div>

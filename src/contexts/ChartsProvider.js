@@ -63,9 +63,9 @@ export const ChartsProvider = ({ children }) => {
 
 			// Aggregate by week and month for liquidity
 			let liquidityW = []
-			currentWeek = { time: liquidity[0].time, timeEnd: liquidity[0].time, value: 0 }
+			currentWeek = { time: liquidity[0].time, value: 0 }
 			let liquidityM = []
-			currentMonth = { time: liquidity[0].time, timeEnd: liquidity[0].time, value: 0 }
+			currentMonth = { time: liquidity[0].time, value: 0 }
 			liquidity.forEach((item) => {
 				let currentDate = new Date(item.time.year + "-" + item.time.month + "-" + item.time.day)
 				let dateMonth = new Date(currentMonth.time.year + "-" + currentMonth.time.month + "-" + currentMonth.time.day)
