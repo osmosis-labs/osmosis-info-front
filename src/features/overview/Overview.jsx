@@ -9,7 +9,9 @@ import Paper from "../../components/paper/Paper"
 import { useCharts } from "../../contexts/ChartsProvider"
 import { usePools } from "../../contexts/PoolsProvider"
 import { useTokens } from "../../contexts/TokensProvider"
-import { formatDate, formateNumberPrice, getDates, twoNumber } from "../../helpers/helpers"
+import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
+import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
+import { formatDate, formateNumberPrice, getDates, getInclude, twoNumber } from "../../helpers/helpers"
 import PoolsTable from "../pools/PoolsTable"
 import TokensTable from "../tokens/TokensTable"
 import LiquidityChart from "./LiquidityChart"
@@ -108,6 +110,11 @@ const Overview = () => {
 	const classes = useStyles()
 	const { dataLiquidityD, dataLiquidityW, dataLiquidityM, dataVolumeD, dataVolumeW, dataVolumeM, loadingData } =
 		useCharts()
+	const { watchlistTokens } = useWatchlistTokens()
+	const { watchlistPools } = useWatchlistPools()
+	const [tokensOnWatchlist, setTokensOnWatchlist] = useState([])
+	const [poolsOnWatchlist, setPoolsOnWatchlist] = useState([])
+
 	const [size, setSize] = useState("xl")
 	const matchXS = useMediaQuery((theme) => theme.breakpoints.down("xs"))
 	const matchSM = useMediaQuery((theme) => theme.breakpoints.down("sm"))
@@ -163,7 +170,7 @@ const Overview = () => {
 	)
 
 	const updateChartLiquidityInfo = (item, range) => {
-		console.log("Overview.jsx -> 166: item, range", item, range  )
+		console.log("Overview.jsx -> 166: item, range", item, range)
 		if (item && item.time) {
 			let date = new Date(item.time)
 			let price = formateNumberPrice(item.value)
@@ -308,6 +315,26 @@ const Overview = () => {
 		setDataLiquidity(liquidity)
 	}
 
+	useEffect(() => {
+		let tokensWL = tokens.filter((token) => {
+			let index = getInclude(watchlistTokens, (symbol) => {
+				return symbol === token.symbol
+			})
+			return index >= 0
+		})
+		setTokensOnWatchlist(tokensWL)
+	}, [watchlistTokens, tokens])
+
+	useEffect(() => {
+		let poolsWL = pools.filter((pool) => {
+			let index = getInclude(watchlistPools, (plId) => {
+				return plId === pool.id
+			})
+			return index >= 0
+		})
+		setPoolsOnWatchlist(poolsWL)
+	}, [watchlistPools, pools])
+
 	return (
 		<div className={classes.overviewRoot}>
 			<div className={classes.container}>
@@ -394,7 +421,34 @@ const Overview = () => {
 						<VolumeChart data={dataVolume} crossMove={crossMoveVolume} />
 					</Paper>
 				</div>
-
+				<p className={classes.subTitle}>Your token watchlist</p>
+				<Paper>
+					{watchlistTokens.length > 0 ? (
+						<TokensTable
+							data={tokensOnWatchlist}
+							textEmpty={"Any rows"}
+							size={size}
+							onClickToken={onClickToken}
+							sortable={true}
+						/>
+					) : (
+						<p>Saved tokens will appear here</p>
+					)}
+				</Paper>
+				<p className={classes.subTitle}>Your pool watchlist</p>
+				<Paper>
+					{watchlistPools.length > 0 ? (
+						<PoolsTable
+							data={poolsOnWatchlist}
+							textEmpty={"Any rows"}
+							size={size}
+							onClickPool={onClickPool}
+							sortable={true}
+						/>
+					) : (
+						<p>Saved pools will appear here</p>
+					)}
+				</Paper>
 				<p className={classes.subTitle}>Top tokens</p>
 				<Paper className={classes.containerLoading}>
 					<BlocLoaderOsmosis open={loadingTokens} borderRadius={true} />
