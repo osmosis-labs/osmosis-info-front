@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const VolumeChart = ({ data, crossMove }) => {
+const VolumeChart = ({ data, crossMove, onMouseLeave, onClick }) => {
 	const classes = useStyles()
 	const chartRef = useRef(null)
 	const containerRef = useRef(null)
@@ -106,14 +106,17 @@ const VolumeChart = ({ data, crossMove }) => {
 			serieRef.current = chart.addHistogramSeries({
 				color: "rgba(251, 192, 45, 0.9)",
 			})
+			
 			chartRef.current = chart
 		}
-
-		chartRef.current.subscribeCrosshairMove((event) => {
+		const hover = (event) => {
 			crossMove(event, serieRef.current)
-		})
+		}
+		chartRef.current.subscribeCrosshairMove(hover)
+		chartRef.current.subscribeClick(onClick)
 		return () => {
-			chartRef.current.unsubscribeCrosshairMove()
+			chartRef.current.unsubscribeCrosshairMove(hover)
+			chartRef.current.unsubscribeClick(onClick)
 		}
 	}, [crossMove])
 
@@ -123,7 +126,7 @@ const VolumeChart = ({ data, crossMove }) => {
 		chartRef.current.timeScale().fitContent()
 	}, [data])
 
-	return <div className={classes.volumeChartRoot} ref={containerRef}></div>
+	return <div onMouseLeave={onMouseLeave} className={classes.volumeChartRoot} ref={containerRef}></div>
 }
 
 export default VolumeChart

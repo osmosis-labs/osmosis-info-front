@@ -136,6 +136,9 @@ const Token = ({ showToast }) => {
 	const [loadingTokenDetails, setLoadingTokenDetails] = useState(true) // rate data is not loaded
 	const [loadingTokenInfo, setLoadingTokenInfo] = useState(true) // rate data is not loaded
 
+	const dataClickVolume = useRef({ time: { day: 1, month: 1, year: 1 }, value: 0, clickedTwice: true })
+	const volumeRef = useRef([])
+
 	useEffect(() => {
 		// get token from history state
 		if (!symbol) {
@@ -184,14 +187,15 @@ const Token = ({ showToast }) => {
 				priceDecimals.current = priceData.length > 0 ? detectBestDecimalsDisplay(priceData[0].open) : 2
 				setLiquidity(liquidityData)
 				setVolume(volumeData)
+				volumeRef.current = volumeData
 				let name = getName("price", "7d")
-				setToken({ ...tokenData })
+				setToken({ ...tokenData, price: priceData[priceData.length - 1].close })
 				setDataChart([...priceData])
 				setSavedData((ps) => {
 					return { ...ps, [name]: priceData }
 				})
 				setDataHover({
-					price: formateNumberPriceDecimals(priceData[priceData.length - 1].open, priceDecimals.current),
+					price: formateNumberPriceDecimals(priceData[priceData.length - 1].close, priceDecimals.current),
 					date: formatDateHours(new Date()),
 				})
 				setLoadingRateChart(false)
@@ -300,9 +304,12 @@ const Token = ({ showToast }) => {
 	}
 
 	const onChangeRangeVolume = async (value) => {
-		setRangeVolume(value)
 		let volume = await getVolumeChartToken({ symbol: token.symbol, range: value })
+		console.log("Token.jsx -> 307: volume", volume)
+		setRangeVolume(value)
 		setVolume(volume)
+		volumeRef.current = volume
+
 		updateVolumeInfo(volume[volume.length - 1], value)
 	}
 
@@ -319,6 +326,69 @@ const Token = ({ showToast }) => {
 		}
 	}
 
+	const onMouseLeaveVolume = (e) => {
+		let value = volume[volume.length - 1]
+		if (dataClickVolume.current.clickedTwice) {
+			if (value.time) {
+				updateVolumeInfo(
+					{
+						time: new Date(`${value.time.year}-${value.time.month}-${value.time.day}`),
+						value: value.value,
+					},
+					rangeVolume
+				)
+			}
+		} else {
+			if (dataClickVolume.current.time) {
+				updateVolumeInfo(
+					{
+						time: new Date(
+							`${dataClickVolume.current.time.year}-${dataClickVolume.current.time.month}-${dataClickVolume.current.time.day}`
+						),
+						value: dataClickVolume.current.value,
+					},
+					rangeVolume
+				)
+			}
+		}
+	}
+
+	const onMouseLeaveLiquidity = (e) => {
+		let value = liquidity[liquidity.length - 1]
+		if (value.time) {
+			let price = "$" + formaterNumber(value.value, 2)
+			setDataHover({ price, date: formatDate(new Date(`${value.time.year}-${value.time.month}-${value.time.day}`)) })
+		}
+	}
+
+	const onClickChartVolume = (e) => {
+		let index = getInclude(volumeRef.current, (item) => {
+			return item.time.year === e.time.year && item.time.month === e.time.month && item.time.day === e.time.day
+		})
+		if (index > -1) {
+			let same =
+				e.time.year === dataClickVolume.current.time.year &&
+				e.time.month === dataClickVolume.current.time.month &&
+				e.time.day === dataClickVolume.current.time.day
+			dataClickVolume.current = {
+				time: volumeRef.current[index].time,
+				value: volumeRef.current[index].value,
+				clickedTwice: same ? !dataClickVolume.current.clickedTwice : false,
+			}
+		}
+	}
+
+	const onMouseLeavePrice = (e) => {
+		let value = dataChart[dataChart.length - 1]
+		console.log("Token.jsx -> 383: value", value  )
+		if (value.time) {
+			setDataHover({
+				price: formateNumberPriceDecimals(value.close, priceDecimals.current),
+				date: formatDateHours(new Date()),
+			})
+		}
+	}
+
 	let chartRender = (
 		<div className={classes.containerErrorChart} key="noChart">
 			<p className={classes.errorChart}>Not enough liquidity to display chart price.</p>
@@ -326,12 +396,32 @@ const Token = ({ showToast }) => {
 	)
 
 	if (selectTypeChart === "price" && dataChart.length > 0) {
-		chartRender = <TokenChartPrice key={"TokenChartPrice" + selectedRange} data={dataChart} crossMove={crossMove} />
+		chartRender = (
+			<TokenChartPrice
+				onMouseLeave={onMouseLeavePrice}
+				key={"TokenChartPrice" + selectedRange}
+				data={dataChart}
+				crossMove={crossMove}
+			/>
+		)
 	} else if (selectTypeChart === "volume" && volume.length > 0) {
-		chartRender = <TokenVolumeChart key={"TokenVolumeChart" + selectedRange} data={volume} crossMove={crossMove} />
+		chartRender = (
+			<TokenVolumeChart
+				onClick={onClickChartVolume}
+				onMouseLeave={onMouseLeaveVolume}
+				key={"TokenVolumeChart" + selectedRange}
+				data={volume}
+				crossMove={crossMove}
+			/>
+		)
 	} else if (selectTypeChart === "liquidity" && liquidity.length > 0) {
 		chartRender = (
-			<TokenLiquidityChart key={"TokenLiquidityChart" + selectedRange} data={liquidity} crossMove={crossMove} />
+			<TokenLiquidityChart
+				onMouseLeave={onMouseLeaveLiquidity}
+				key={"TokenLiquidityChart" + selectedRange}
+				data={liquidity}
+				crossMove={crossMove}
+			/>
 		)
 	}
 	return (

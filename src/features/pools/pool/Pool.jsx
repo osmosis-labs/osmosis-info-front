@@ -189,6 +189,9 @@ const Pool = ({ showToast }) => {
 	const [loadingPoolDetails, setLoadingPoolDetails] = useState(true) // rate data is not loaded
 	const [loadingPoolInfo, setLoadingPoolInfo] = useState(true) // rate data is not loaded
 
+	const dataClickVolume = useRef({ time: { day: 1, month: 1, year: 1 }, value: 0, clickedTwice: true })
+	const volumeRef = useRef([])
+
 	useEffect(() => {
 		// get pool from history state
 		if (!id) {
@@ -260,11 +263,14 @@ const Pool = ({ showToast }) => {
 					return { ...ps, [namePair]: firstPair }
 				})
 				setCurrentPair(firstPair)
+				updateCoinPrice(firstPair)
 				setPrice({
-					price: formateNumberDecimals(firstPair[firstPair.length - 1].open, pairDecimals.current),
+					price: formateNumberDecimals(firstPair[firstPair.length - 1].close, pairDecimals.current),
 					date: formatDateHours(new Date()),
 				})
-				setVolume(await getVolumeChartPool({ poolId: pool.id }))
+				let volume = await getVolumeChartPool({ poolId: pool.id })
+				setVolume(volume)
+				volumeRef.current = volume
 				setLiquidity(await getLiquidityChartPool({ poolId: pool.id }))
 				setLoadingRateChart(false)
 				setLoadingPoolDetails(false)
@@ -275,7 +281,6 @@ const Pool = ({ showToast }) => {
 				setLoadingPoolDetails(false)
 				setLoadingPoolInfo(false)
 			}
-			convertCoin(tokens[0], tokens[1])
 			setSelectedTokens({ one: tokens[0], two: tokens[1] })
 		}
 		if (pool.id && tokens.length > 1) {
@@ -317,20 +322,22 @@ const Pool = ({ showToast }) => {
 				date: formatDateHours(new Date()),
 			})
 
-			convertCoin(one, two)
 			setCurrentPair(pair)
+			updateCoinPrice(pair)
 		}
 	}
 
 	const onChangeRange = (value) => {
 		setSelectRange(value)
 		updateTokenData(selectedTokens.one, selectedTokens.two, value)
+		volumeRef.current = volume
 	}
 
 	const onChangeRangeVolume = async (value) => {
 		setRangeVolume(value)
 		let volume = await getVolumeChartPool({ poolId: pool.id, range: value })
 		setVolume(volume)
+		volumeRef.current = volume
 		updateVolumeInfo(volume[volume.length - 1], value)
 	}
 
@@ -363,9 +370,9 @@ const Pool = ({ showToast }) => {
 		}
 	}
 
-	const convertCoin = (coinIn, coinOut) => {
-		let convert = coinOut.price / coinIn.price
-		setConvertData(formateNumberDecimals(convert, 4))
+	const updateCoinPrice = (pair) => {
+		let lastElt = pair[pair.length - 1]
+		setConvertData(formateNumberDecimals(lastElt.close, 4))
 	}
 
 	const onChangeSeletedToken = (selectedTokens) => {
@@ -418,6 +425,68 @@ const Pool = ({ showToast }) => {
 		}
 	}
 
+	const onMouseLeaveVolume = (e) => {
+		let value = volume[volume.length - 1]
+		if (dataClickVolume.current.clickedTwice) {
+			if (value.time) {
+				updateVolumeInfo(
+					{
+						time: new Date(`${value.time.year}-${value.time.month}-${value.time.day}`),
+						value: value.value,
+					},
+					rangeVolume
+				)
+			}
+		} else {
+			if (dataClickVolume.current.time) {
+				updateVolumeInfo(
+					{
+						time: new Date(
+							`${dataClickVolume.current.time.year}-${dataClickVolume.current.time.month}-${dataClickVolume.current.time.day}`
+						),
+						value: dataClickVolume.current.value,
+					},
+					rangeVolume
+				)
+			}
+		}
+	}
+
+	const onMouseLeaveLiquidity = (e) => {
+		let value = liquidity[liquidity.length - 1]
+		if (value.time) {
+			let price = "$" + formaterNumber(value.value, 2)
+			setPrice({ price, date: formatDate(new Date(`${value.time.year}-${value.time.month}-${value.time.day}`)) })
+		}
+	}
+
+	const onMouseLeavePrice = (e) => {
+		let value = currentPair[currentPair.length - 1]
+		if (value.time) {
+			let price = formateNumberDecimals(value.close, pairDecimals.current)
+
+			let currentDate = new Date(value.time * 1000)
+			setPrice({ price, date: formatDateHours(currentDate) })
+		}
+	}
+
+	const onClickChartVolume = (e) => {
+		let index = getInclude(volumeRef.current, (item) => {
+			return item.time.year === e.time.year && item.time.month === e.time.month && item.time.day === e.time.day
+		})
+		if (index > -1) {
+			let same =
+				e.time.year === dataClickVolume.current.time.year &&
+				e.time.month === dataClickVolume.current.time.month &&
+				e.time.day === dataClickVolume.current.time.day
+			dataClickVolume.current = {
+				time: volumeRef.current[index].time,
+				value: volumeRef.current[index].value,
+				clickedTwice: same ? !dataClickVolume.current.clickedTwice : false,
+			}
+		}
+	}
+
 	let chartRender = (
 		<div className={classes.containerErrorChart} key="noChart">
 			<p className={classes.errorChart}>Not enough liquidity to display chart price.</p>
@@ -425,11 +494,33 @@ const Pool = ({ showToast }) => {
 	)
 
 	if (selectTypeChart === "price" && currentPair.length > 0) {
-		chartRender = <PoolChart key={"PoolChartPrice" + selectRange} data={currentPair} crossMove={crossMove} />
+		chartRender = (
+			<PoolChart
+				onMouseLeave={onMouseLeavePrice}
+				key={"PoolChartPrice" + selectRange}
+				data={currentPair}
+				crossMove={crossMove}
+			/>
+		)
 	} else if (selectTypeChart === "volume" && volume.length > 0) {
-		chartRender = <PoolVolumeChart key={"PoolChartVolume" + selectRange} data={volume} crossMove={crossMove} />
+		chartRender = (
+			<PoolVolumeChart
+				onClick={onClickChartVolume}
+				onMouseLeave={onMouseLeaveVolume}
+				key={"PoolChartVolume" + selectRange}
+				data={volume}
+				crossMove={crossMove}
+			/>
+		)
 	} else if (selectTypeChart === "liquidity" && liquidity.length > 0) {
-		chartRender = <PoolLiquidityChart key={"PoolChartLiquidity" + selectRange} data={liquidity} crossMove={crossMove} />
+		chartRender = (
+			<PoolLiquidityChart
+				onMouseLeave={onMouseLeaveLiquidity}
+				key={"PoolChartLiquidity" + selectRange}
+				data={liquidity}
+				crossMove={crossMove}
+			/>
+		)
 	}
 
 	return (

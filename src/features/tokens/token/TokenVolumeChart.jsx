@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const TokenVolumeChart = ({ data, crossMove }) => {
+const TokenVolumeChart = ({ data, crossMove, onMouseLeave, onClick }) => {
 	const classes = useStyles()
 	const chartRef = useRef(null)
 	const containerRef = useRef(null)
@@ -120,11 +120,15 @@ const TokenVolumeChart = ({ data, crossMove }) => {
 			chartRef.current = chart
 		}
 
-		chartRef.current.subscribeCrosshairMove((event) => {
+		const hover = (event) => {
 			crossMove(event, serieRef.current)
-		})
+		}
+
+		chartRef.current.subscribeCrosshairMove(hover)
+		chartRef.current.subscribeClick(onClick)
 		return () => {
-			chartRef.current.unsubscribeCrosshairMove()
+			chartRef.current.unsubscribeCrosshairMove(hover)
+			chartRef.current.unsubscribeClick(onClick)
 		}
 	}, [crossMove])
 
@@ -136,7 +140,7 @@ const TokenVolumeChart = ({ data, crossMove }) => {
 
 	return (
 		<div className={classes.chartContainer}>
-			<div className={classes.volumeChartRoot} ref={containerRef} />
+			<div onMouseLeave={onMouseLeave} className={classes.volumeChartRoot} ref={containerRef} />
 		</div>
 	)
 }

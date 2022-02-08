@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const PoolChart = ({ data, crossMove }) => {
+const PoolChart = ({ data, crossMove, onMouseLeave }) => {
 	const classes = useStyles()
 	const chartRef = useRef(null)
 	const containerRef = useRef(null)
@@ -84,11 +84,12 @@ const PoolChart = ({ data, crossMove }) => {
 			serieRef.current = chart.addCandlestickSeries()
 			chartRef.current = chart
 		}
-		chartRef.current.subscribeCrosshairMove((event) => {
+		const hover = (event) => {
 			crossMove(event, serieRef.current)
-		})
+		}
+		chartRef.current.subscribeCrosshairMove(hover)
 		return () => {
-			chartRef.current.unsubscribeCrosshairMove()
+			chartRef.current.unsubscribeCrosshairMove(hover)
 		}
 	}, [crossMove])
 
@@ -100,7 +101,7 @@ const PoolChart = ({ data, crossMove }) => {
 
 	return (
 		<div className={classes.chartContainer}>
-			<div className={classes.liquidityChartRoot} ref={containerRef}></div>
+			<div onMouseLeave={onMouseLeave} className={classes.liquidityChartRoot} ref={containerRef}></div>
 		</div>
 	)
 }

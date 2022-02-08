@@ -1,5 +1,5 @@
 import { makeStyles, useMediaQuery } from "@material-ui/core"
-import { useCallback } from "react"
+import { useCallback, useRef } from "react"
 import { useEffect } from "react"
 import { useState } from "react"
 import { useHistory } from "react-router-dom"
@@ -139,6 +139,8 @@ const Overview = () => {
 	const [dataLiquidity, setDataLiquidity] = useState([])
 	const [dataVolume, setDataVolume] = useState([])
 
+	const dataClickVolume = useRef({ time: { day: 1, month: 1, year: 1 }, value: 0, clickedTwice: true })
+
 	const crossMoveLiquidity = useCallback(
 		(event, serie) => {
 			if (event.time) {
@@ -170,7 +172,6 @@ const Overview = () => {
 	)
 
 	const updateChartLiquidityInfo = (item, range) => {
-		console.log("Overview.jsx -> 166: item, range", item, range)
 		if (item && item.time) {
 			let date = new Date(item.time)
 			let price = formateNumberPrice(item.value)
@@ -193,6 +194,63 @@ const Overview = () => {
 				dateStr = `${formatDate(dates[0])} - ${formatDate(dates[1])}`
 			}
 			setChartVolumeInfo({ price, date: dateStr })
+		}
+	}
+
+	const onMouseLeaveVolume = (e) => {
+		let value = dataVolume[dataVolume.length - 1]
+		if (dataClickVolume.current.clickedTwice) {
+			if (value.time) {
+				updateChartVolumeInfo(
+					{
+						time: new Date(`${value.time.year}-${value.time.month}-${value.time.day}`),
+						value: value.value,
+					},
+					rangeVolume
+				)
+			}
+		} else {
+			if (dataClickVolume.current.time) {
+				updateChartVolumeInfo(
+					{
+						time: new Date(`${dataClickVolume.current.time.year}-${dataClickVolume.current.time.month}-${dataClickVolume.current.time.day}`),
+						value: dataClickVolume.current.value,
+					},
+					rangeVolume
+				)
+			}
+		}
+	}
+
+	const onMouseLeaveLiquidity = (e) => {
+		let value = dataLiquidity[dataLiquidity.length - 1]
+			if (value.time) {
+				updateChartLiquidityInfo(
+					{
+						time: new Date(`${value.time.year}-${value.time.month}-${value.time.day}`),
+						value: value.value,
+					},
+					rangeVolume
+				)
+			}
+		
+	}
+
+	const onClickChartVolume = (e) => {
+		
+		let index = getInclude(dataVolume, (item) => {
+			return item.time.year === e.time.year && item.time.month === e.time.month && item.time.day === e.time.day
+		})
+		if(index > -1) {
+			let same =
+			e.time.year === dataClickVolume.current.time.year &&
+			e.time.month === dataClickVolume.current.time.month &&
+			e.time.day === dataClickVolume.current.time.day
+			dataClickVolume.current = {
+				time: dataVolume[index].time,
+				value: dataVolume[index].value,
+				clickedTwice: same?!dataClickVolume.current.clickedTwice:false
+			}
 		}
 	}
 
@@ -378,7 +436,7 @@ const Overview = () => {
 								/>
 							</div>
 						</div>
-						<LiquidityChart data={dataLiquidity} crossMove={crossMoveLiquidity} />
+						<LiquidityChart data={dataLiquidity} crossMove={crossMoveLiquidity} onMouseLeave={onMouseLeaveLiquidity}/>
 					</Paper>
 					<Paper className={classes.chart}>
 						<BlocLoaderOsmosis open={loadingData} borderRadius={true} />
@@ -418,7 +476,12 @@ const Overview = () => {
 								/>
 							</div>
 						</div>
-						<VolumeChart data={dataVolume} crossMove={crossMoveVolume} />
+						<VolumeChart
+							data={dataVolume}
+							crossMove={crossMoveVolume}
+							onClick={onClickChartVolume}
+							onMouseLeave={onMouseLeaveVolume}
+						/>
 					</Paper>
 				</div>
 				<p className={classes.subTitle}>Your token watchlist</p>

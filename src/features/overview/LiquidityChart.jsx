@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const LiquidityChart = ({ data, crossMove }) => {
+const LiquidityChart = ({ data, crossMove, onMouseLeave }) => {
 	const classes = useStyles()
 	const chartRef = useRef(null)
 	const containerRef = useRef(null)
@@ -111,11 +111,12 @@ const LiquidityChart = ({ data, crossMove }) => {
 			chartRef.current = chart
 		}
 
-		chartRef.current.subscribeCrosshairMove((event) => {
+		const hover = (event) => {
 			crossMove(event, serieRef.current)
-		})
+		}
+		chartRef.current.subscribeCrosshairMove(hover)
 		return () => {
-			chartRef.current.unsubscribeCrosshairMove()
+			chartRef.current.unsubscribeCrosshairMove(hover)
 		}
 	}, [crossMove])
 
@@ -125,7 +126,7 @@ const LiquidityChart = ({ data, crossMove }) => {
 		chartRef.current.timeScale().fitContent()
 	}, [data])
 
-	return <div className={classes.liquidityChartRoot} ref={containerRef}></div>
+	return <div onMouseLeave={onMouseLeave} className={classes.liquidityChartRoot} ref={containerRef}></div>
 }
 
 export default LiquidityChart

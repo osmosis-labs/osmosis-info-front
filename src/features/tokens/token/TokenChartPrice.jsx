@@ -8,8 +8,8 @@ import { ResizeObserver } from "resize-observer"
 const useStyles = makeStyles((theme) => {
 	return {
 		liquidityChartRoot: {
-	display: "block",
-	position: "absolute",
+			display: "block",
+			position: "absolute",
 			top: "0",
 			right: "0",
 			bottom: "0",
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const TokenChartPrice = ({ data, crossMove }) => {
+const TokenChartPrice = ({ data, crossMove, onMouseLeave }) => {
 	const classes = useStyles()
 	const chartRef = useRef(null)
 	const containerRef = useRef(null)
@@ -86,11 +86,13 @@ const TokenChartPrice = ({ data, crossMove }) => {
 			serieRef.current = chart.addCandlestickSeries()
 			chartRef.current = chart
 		}
-		chartRef.current.subscribeCrosshairMove((event) => {
+
+		const hover = (event) => {
 			crossMove(event, serieRef.current)
-		})
+		}
+		chartRef.current.subscribeCrosshairMove(hover)
 		return () => {
-			chartRef.current.unsubscribeCrosshairMove()
+			chartRef.current.unsubscribeCrosshairMove(hover)
 		}
 	}, [crossMove, priceDecimals])
 
@@ -103,7 +105,7 @@ const TokenChartPrice = ({ data, crossMove }) => {
 
 	return (
 		<div className={classes.chartContainer}>
-			<div className={classes.liquidityChartRoot} ref={containerRef}></div>
+			<div onMouseLeave={onMouseLeave} className={classes.liquidityChartRoot} ref={containerRef}></div>
 		</div>
 	)
 }
