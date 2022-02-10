@@ -19,13 +19,13 @@ import {
 	twoNumber,
 	getDates,
 } from "../../../helpers/helpers"
-import PoolChart from "./PoolChart"
-import PoolLiquidityChart from "./PoolLiquidityChart"
 import PoolPath from "./PoolPath"
 import PoolSelect from "./PoolSelect"
 import PoolTitle from "./PoolTitle"
-import PoolVolumeChart from "./PoolVolumeChart"
 import { CSSTransitionGroup } from "react-transition-group"
+import ChartLiquidity from "../../../components/chart/ChartLiquidity"
+import ChartVolume from "../../../components/chart/ChartVolume"
+import ChartPrice from "../../../components/chart/ChartPrice"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -495,7 +495,7 @@ const Pool = ({ showToast }) => {
 
 	if (selectTypeChart === "price" && currentPair.length > 0) {
 		chartRender = (
-			<PoolChart
+			<ChartPrice
 				onMouseLeave={onMouseLeavePrice}
 				key={"PoolChartPrice" + selectRange}
 				data={currentPair}
@@ -504,7 +504,7 @@ const Pool = ({ showToast }) => {
 		)
 	} else if (selectTypeChart === "volume" && volume.length > 0) {
 		chartRender = (
-			<PoolVolumeChart
+			<ChartVolume
 				onClick={onClickChartVolume}
 				onMouseLeave={onMouseLeaveVolume}
 				key={"PoolChartVolume" + selectRange}
@@ -514,7 +514,7 @@ const Pool = ({ showToast }) => {
 		)
 	} else if (selectTypeChart === "liquidity" && liquidity.length > 0) {
 		chartRender = (
-			<PoolLiquidityChart
+			<ChartLiquidity
 				onMouseLeave={onMouseLeaveLiquidity}
 				key={"PoolChartLiquidity" + selectRange}
 				data={liquidity}

@@ -7,13 +7,24 @@ import { ResizeObserver } from "resize-observer"
 
 const useStyles = makeStyles((theme) => {
 	return {
-		liquidityChartRoot: {
-			minHeight: "250px",
+		chartContainer: {
+			position: "relative",
+			height: "100%",
+			width: "100%",
+		},
+		chartRoot: {
+			position: "absolute",
+			top: "0",
+			right: "0",
+			bottom: "0",
+			left: "0",
+			height: "100%",
+			width: "100%",
 		},
 	}
 })
 
-const LiquidityChart = ({ data, crossMove, onMouseLeave }) => {
+const ChartVolume = ({ data, crossMove, onMouseLeave, onClick }) => {
 	const classes = useStyles()
 	const chartRef = useRef(null)
 	const containerRef = useRef(null)
@@ -59,15 +70,16 @@ const LiquidityChart = ({ data, crossMove, onMouseLeave }) => {
 		// Initialization
 		if (chartRef.current === null) {
 			let chart = createChart(containerRef.current, {
-				rightPriceScale: {
-					scaleMargins: {
-						bottom: 0,
-					},
-				},
 				layout: {
 					backgroundColor: "rgba(31, 33, 40,0)",
 					textColor: "#c3c5cb",
 					fontFamily: "'Inter'",
+				},
+				rightPriceScale: {
+					scaleMargins: {
+						top: 0.1,
+						bottom: 0,
+					},
 				},
 				localization: {
 					priceFormatter: (price) => {
@@ -102,21 +114,20 @@ const LiquidityChart = ({ data, crossMove, onMouseLeave }) => {
 				},
 			})
 
-			serieRef.current = chart.addAreaSeries({
-				topColor: "rgba(196, 164, 106, 0.4)",
-				bottomColor: "rgba(196, 164, 106, 0.0)",
-				lineColor: "rgba(251, 192, 45, 1)",
-				lineWidth: 3,
+			serieRef.current = chart.addHistogramSeries({
+				color: "rgba(251, 192, 45, 0.9)",
 			})
+
 			chartRef.current = chart
 		}
-
 		const hover = (event) => {
 			crossMove(event, serieRef.current)
 		}
 		chartRef.current.subscribeCrosshairMove(hover)
+		chartRef.current.subscribeClick(onClick)
 		return () => {
 			chartRef.current.unsubscribeCrosshairMove(hover)
+			chartRef.current.unsubscribeClick(onClick)
 		}
 	}, [crossMove])
 
@@ -126,7 +137,11 @@ const LiquidityChart = ({ data, crossMove, onMouseLeave }) => {
 		chartRef.current.timeScale().fitContent()
 	}, [data])
 
-	return <div onMouseLeave={onMouseLeave} className={classes.liquidityChartRoot} ref={containerRef}></div>
+	return (
+		<div className={classes.chartContainer}>
+			<div onMouseLeave={onMouseLeave} className={classes.chartRoot} ref={containerRef}></div>
+		</div>
+	)
 }
 
-export default LiquidityChart
+export default ChartVolume

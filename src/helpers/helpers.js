@@ -120,3 +120,8 @@ export const getDates = (startDate, range) => {
 		return [startDate, lastday]
 	}
 }
+
+
+export const isValidDate = (d) => {
+	return d instanceof Date && !isNaN(d);
+  }

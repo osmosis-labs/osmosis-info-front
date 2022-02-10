@@ -1,9 +1,10 @@
+
 import { makeStyles, useMediaQuery } from "@material-ui/core"
 import { useEffect } from "react"
 import { useRef } from "react"
 import { createChart, CrosshairMode } from "lightweight-charts"
-import { float2Numbers } from "../../../helpers/helpers"
 import { ResizeObserver } from "resize-observer"
+import { float2Numbers } from "../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const PoolChart = ({ data, crossMove, onMouseLeave }) => {
+const ChartPrice = ({ data, crossMove, onMouseLeave }) => {
 	const classes = useStyles()
 	const chartRef = useRef(null)
 	const containerRef = useRef(null)
@@ -106,4 +107,4 @@ const PoolChart = ({ data, crossMove, onMouseLeave }) => {
 	)
 }
 
-export default PoolChart
+export default ChartPrice

@@ -16,12 +16,12 @@ import {
 	getInclude,
 	twoNumber,
 } from "../../../helpers/helpers"
-import TokenChartPrice from "./TokenChartPrice"
-import TokenLiquidityChart from "./TokenLiquidityChart"
 import TokenPath from "./TokenPath"
 import TokenTitle from "./TokenTitle"
-import TokenVolumeChart from "./TokenVolumeChart"
 import { CSSTransitionGroup } from "react-transition-group"
+import ChartPrice from "../../../components/chart/ChartPrice"
+import ChartVolume from "../../../components/chart/ChartVolume"
+import ChartLiquidity from "../../../components/chart/ChartLiquidity"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -305,7 +305,6 @@ const Token = ({ showToast }) => {
 
 	const onChangeRangeVolume = async (value) => {
 		let volume = await getVolumeChartToken({ symbol: token.symbol, range: value })
-		console.log("Token.jsx -> 307: volume", volume)
 		setRangeVolume(value)
 		setVolume(volume)
 		volumeRef.current = volume
@@ -397,7 +396,7 @@ const Token = ({ showToast }) => {
 
 	if (selectTypeChart === "price" && dataChart.length > 0) {
 		chartRender = (
-			<TokenChartPrice
+			<ChartPrice
 				onMouseLeave={onMouseLeavePrice}
 				key={"TokenChartPrice" + selectedRange}
 				data={dataChart}
@@ -406,7 +405,7 @@ const Token = ({ showToast }) => {
 		)
 	} else if (selectTypeChart === "volume" && volume.length > 0) {
 		chartRender = (
-			<TokenVolumeChart
+			<ChartVolume
 				onClick={onClickChartVolume}
 				onMouseLeave={onMouseLeaveVolume}
 				key={"TokenVolumeChart" + selectedRange}
@@ -416,7 +415,7 @@ const Token = ({ showToast }) => {
 		)
 	} else if (selectTypeChart === "liquidity" && liquidity.length > 0) {
 		chartRender = (
-			<TokenLiquidityChart
+			<ChartLiquidity
 				onMouseLeave={onMouseLeaveLiquidity}
 				key={"TokenLiquidityChart" + selectedRange}
 				data={liquidity}

@@ -2,12 +2,17 @@ import { makeStyles, useMediaQuery } from "@material-ui/core"
 import { useEffect } from "react"
 import { useRef } from "react"
 import { createChart } from "lightweight-charts"
-import { formaterNumber } from "../../../helpers/helpers"
+import { formaterNumber } from "../../helpers/helpers"
 import { ResizeObserver } from "resize-observer"
 
 const useStyles = makeStyles((theme) => {
 	return {
-		liquidityChartRoot: {
+		chartContainer: {
+			position: "relative",
+			height: "100%",
+			width: "100%",
+		},
+		chartRoot: {
 			position: "absolute",
 			top: "0",
 			right: "0",
@@ -16,15 +21,10 @@ const useStyles = makeStyles((theme) => {
 			height: "100%",
 			width: "100%",
 		},
-		chartContainer: {
-			position: "relative",
-			height: "100%",
-			width: "100%",
-		},
 	}
 })
 
-const PoolLiquidityChart = ({ data, crossMove, onMouseLeave}) => {
+const ChartLiquidity = ({ data, crossMove, onMouseLeave }) => {
 	const classes = useStyles()
 	const chartRef = useRef(null)
 	const containerRef = useRef(null)
@@ -72,8 +72,7 @@ const PoolLiquidityChart = ({ data, crossMove, onMouseLeave}) => {
 			let chart = createChart(containerRef.current, {
 				rightPriceScale: {
 					scaleMargins: {
-						top: 0.1,
-						bottom: 0.1,
+						bottom: 0,
 					},
 				},
 				layout: {
@@ -140,9 +139,9 @@ const PoolLiquidityChart = ({ data, crossMove, onMouseLeave}) => {
 
 	return (
 		<div className={classes.chartContainer}>
-			<div onMouseLeave={onMouseLeave} className={classes.liquidityChartRoot} ref={containerRef} />
+			<div onMouseLeave={onMouseLeave} className={classes.chartRoot} ref={containerRef} />
 		</div>
 	)
 }
 
-export default PoolLiquidityChart
+export default ChartLiquidity

@@ -1,4 +1,4 @@
-import { makeStyles, useMediaQuery } from "@material-ui/core"
+import { Container, makeStyles, useMediaQuery } from "@material-ui/core"
 import { useCallback, useRef } from "react"
 import { useEffect } from "react"
 import { useState } from "react"
@@ -14,8 +14,10 @@ import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
 import { formatDate, formateNumberPrice, getDates, getInclude, twoNumber } from "../../helpers/helpers"
 import PoolsTable from "../pools/PoolsTable"
 import TokensTable from "../tokens/TokensTable"
-import LiquidityChart from "./LiquidityChart"
-import VolumeChart from "./VolumeChart"
+import ChartVolume from "../../components/chart/ChartVolume"
+import ChartLiquidity from "../../components/chart/ChartLiquidity"
+import ContainerChartLiquidity from "../../components/chart/ContainerChartLiquidity"
+import ContainerChartVolume from "../../components/chart/ContainerChartVolume"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -59,10 +61,13 @@ const useStyles = makeStyles((theme) => {
 			position: "relative",
 			width: "49%",
 			zIndex: "0",
+			minHeight: "360px",
 			[theme.breakpoints.down("xs")]: {
 				width: "100%",
+				minHeight: "410px",
 			},
 		},
+		containerChart: { height: "250px" },
 		chartTitle: {
 			padding: `2px 0`,
 		},
@@ -120,165 +125,13 @@ const Overview = () => {
 	const matchSM = useMediaQuery((theme) => theme.breakpoints.down("sm"))
 	const matchMD = useMediaQuery((theme) => theme.breakpoints.down("md"))
 	const matchLD = useMediaQuery((theme) => theme.breakpoints.down("ld"))
-	const [chartLiquidityInfo, setChartLiquidityInfo] = useState({
-		price: "0",
-		date: "-",
-	})
-	const [chartVolumeInfo, setChartVolumeInfo] = useState({
-		price: "0",
-		date: "-",
-	})
+
 	const { pools, loadingPools } = usePools()
 	const { tokens, loadingTokens } = useTokens()
 	const [dataPools, setDataPools] = useState([])
 	const [dataTokens, setDataTokens] = useState([])
-	const [rangeVolume, setRangeVolume] = useState("d")
-	const [rangeLiquidity, setRangeLiquidity] = useState("d")
 	const history = useHistory()
 
-	const [dataLiquidity, setDataLiquidity] = useState([])
-	const [dataVolume, setDataVolume] = useState([])
-
-	const dataClickVolume = useRef({ time: { day: 1, month: 1, year: 1 }, value: 0, clickedTwice: true })
-
-	const crossMoveLiquidity = useCallback(
-		(event, serie) => {
-			if (event.time) {
-				updateChartLiquidityInfo(
-					{
-						time: new Date(`${event.time.year}-${event.time.month}-${event.time.day}`),
-						value: event.seriesPrices.get(serie),
-					},
-					rangeLiquidity
-				)
-			}
-		},
-		[rangeLiquidity]
-	)
-
-	const crossMoveVolume = useCallback(
-		(event, serie) => {
-			if (event.time) {
-				updateChartVolumeInfo(
-					{
-						time: new Date(`${event.time.year}-${event.time.month}-${event.time.day}`),
-						value: event.seriesPrices.get(serie),
-					},
-					rangeVolume
-				)
-			}
-		},
-		[rangeVolume]
-	)
-
-	const updateChartLiquidityInfo = (item, range) => {
-		if (item && item.time) {
-			let date = new Date(item.time)
-			let price = formateNumberPrice(item.value)
-			let dateStr = formatDate(date)
-			if (range && range != "d") {
-				let dates = getDates(date, range)
-				dateStr = `${formatDate(dates[0])} - ${formatDate(dates[1])}`
-			}
-			setChartLiquidityInfo({ price, date: dateStr })
-		}
-	}
-
-	const updateChartVolumeInfo = (item, range) => {
-		if (item && item.time) {
-			let date = new Date(item.time)
-			let price = formateNumberPrice(item.value)
-			let dateStr = formatDate(date)
-			if (range && range != "d") {
-				let dates = getDates(date, range)
-				dateStr = `${formatDate(dates[0])} - ${formatDate(dates[1])}`
-			}
-			setChartVolumeInfo({ price, date: dateStr })
-		}
-	}
-
-	const onMouseLeaveVolume = (e) => {
-		let value = dataVolume[dataVolume.length - 1]
-		if (dataClickVolume.current.clickedTwice) {
-			if (value.time) {
-				updateChartVolumeInfo(
-					{
-						time: new Date(`${value.time.year}-${value.time.month}-${value.time.day}`),
-						value: value.value,
-					},
-					rangeVolume
-				)
-			}
-		} else {
-			if (dataClickVolume.current.time) {
-				updateChartVolumeInfo(
-					{
-						time: new Date(`${dataClickVolume.current.time.year}-${dataClickVolume.current.time.month}-${dataClickVolume.current.time.day}`),
-						value: dataClickVolume.current.value,
-					},
-					rangeVolume
-				)
-			}
-		}
-	}
-
-	const onMouseLeaveLiquidity = (e) => {
-		let value = dataLiquidity[dataLiquidity.length - 1]
-			if (value.time) {
-				updateChartLiquidityInfo(
-					{
-						time: new Date(`${value.time.year}-${value.time.month}-${value.time.day}`),
-						value: value.value,
-					},
-					rangeVolume
-				)
-			}
-		
-	}
-
-	const onClickChartVolume = (e) => {
-		
-		let index = getInclude(dataVolume, (item) => {
-			return item.time.year === e.time.year && item.time.month === e.time.month && item.time.day === e.time.day
-		})
-		if(index > -1) {
-			let same =
-			e.time.year === dataClickVolume.current.time.year &&
-			e.time.month === dataClickVolume.current.time.month &&
-			e.time.day === dataClickVolume.current.time.day
-			dataClickVolume.current = {
-				time: dataVolume[index].time,
-				value: dataVolume[index].value,
-				clickedTwice: same?!dataClickVolume.current.clickedTwice:false
-			}
-		}
-	}
-
-	useEffect(() => {
-		// set default data
-		if (dataLiquidityD.length > 0) {
-			let lastElt = dataLiquidityD[dataLiquidityD.length - 1]
-			let date = ""
-			if (lastElt.time.year) {
-				date = new Date(lastElt.time.year + "-" + twoNumber(lastElt.time.month) + "-" + twoNumber(lastElt.time.day))
-			} else {
-				date = new Date(lastElt.time)
-			}
-			updateChartLiquidityInfo({ time: date, value: lastElt.value })
-		}
-		if (dataVolumeD.length > 0) {
-			let lastElt = dataVolumeD[dataVolumeD.length - 1]
-			let date = ""
-			if (lastElt.time.year) {
-				date = new Date(lastElt.time.year + "-" + twoNumber(lastElt.time.month) + "-" + twoNumber(lastElt.time.day))
-			} else {
-				date = new Date(lastElt.time)
-			}
-			updateChartVolumeInfo({ time: date, value: lastElt.value })
-		}
-		setDataLiquidity(dataLiquidityD)
-		setDataVolume(dataVolumeD)
-	}, [dataLiquidityD, dataVolumeD])
 
 	useEffect(() => {
 		// sort pools on the first time is fetched
@@ -332,47 +185,6 @@ const Overview = () => {
 		history.push(`/token/${token.symbol}`)
 	}
 
-	const onChangeRangeVolume = (value) => {
-		setRangeVolume(value)
-		let volume = []
-		if (value === "d") volume = dataVolumeD
-		else if (value === "w") volume = dataVolumeW
-		else if (value === "m") volume = dataVolumeM
-		if (volume.length > 0) {
-			let lastElt = volume[volume.length - 1]
-			let date = ""
-			if (lastElt.time.year) {
-				// If time can be use to get date or need to be modified
-				date = new Date(lastElt.time.year + "-" + lastElt.time.month + "-" + lastElt.time.day)
-			} else {
-				date = new Date(lastElt.time)
-			}
-			updateChartVolumeInfo({ time: date, value: lastElt.value }, value)
-		}
-		setDataVolume(volume)
-	}
-
-	const onChangeRangeLiquidity = (value) => {
-		setRangeLiquidity(value)
-		let liquidity = []
-		if (value === "d") liquidity = dataLiquidityD
-		else if (value === "w") liquidity = dataLiquidityW
-		else if (value === "m") liquidity = dataLiquidityM
-		if (liquidity.length > 0) {
-			let lastElt = liquidity[liquidity.length - 1]
-			let date = ""
-			if (lastElt.time.year) {
-				// If time can be use to get date or need to be modified
-				date = new Date(lastElt.time.year + "-" + lastElt.time.month + "-" + lastElt.time.day)
-			} else {
-				date = new Date(lastElt.time)
-			}
-			console.log("Overview.jsx -> 284: date", date)
-			updateChartLiquidityInfo({ time: date, value: lastElt.value }, value)
-		}
-		setDataLiquidity(liquidity)
-	}
-
 	useEffect(() => {
 		let tokensWL = tokens.filter((token) => {
 			let index = getInclude(watchlistTokens, (symbol) => {
@@ -400,88 +212,25 @@ const Overview = () => {
 				<div className={classes.charts}>
 					<Paper className={classes.chart}>
 						<BlocLoaderOsmosis open={loadingData} borderRadius={true} />
-						<div className={classes.chartHeader}>
-							<div className={classes.chartHeaderData}>
-								<p className={classes.chartTitle}>Liquidity</p>
-								<p className={classes.chartTextBig}>{chartLiquidityInfo.price}</p>
-								<p className={classes.chartTextSmall}>{chartLiquidityInfo.date}</p>
-							</div>
-							<div className={classes.chartHeaderButton}>
-								<ButtonGroup
-									className={classes.groupButton}
-									buttons={[
-										{
-											id: "d",
-											name: "D",
-											onClick: () => {
-												onChangeRangeLiquidity("d")
-											},
-										},
-										{
-											id: "w",
-											name: "W",
-											onClick: () => {
-												onChangeRangeLiquidity("w")
-											},
-										},
-										{
-											id: "m",
-											name: "M",
-											onClick: () => {
-												onChangeRangeLiquidity("m")
-											},
-										},
-									]}
-									active={rangeLiquidity}
-								/>
-							</div>
+						<div className={classes.containerChart}>
+							<ContainerChartLiquidity
+								dataDay={dataLiquidityD}
+								dataWeek={dataLiquidityW}
+								dataMonth={dataLiquidityM}
+								title="Liquidity"
+							/>
 						</div>
-						<LiquidityChart data={dataLiquidity} crossMove={crossMoveLiquidity} onMouseLeave={onMouseLeaveLiquidity}/>
 					</Paper>
 					<Paper className={classes.chart}>
 						<BlocLoaderOsmosis open={loadingData} borderRadius={true} />
-						<div className={classes.chartHeader}>
-							<div className={classes.chartHeaderData}>
-								<p className={classes.chartTitle}>Volume</p>
-								<p className={classes.chartTextBig}>{chartVolumeInfo.price}</p>
-								<p className={classes.chartTextSmall}>{chartVolumeInfo.date}</p>
-							</div>
-							<div className={classes.chartHeaderButton}>
-								<ButtonGroup
-									className={classes.groupButton}
-									buttons={[
-										{
-											id: "d",
-											name: "D",
-											onClick: () => {
-												onChangeRangeVolume("d")
-											},
-										},
-										{
-											id: "w",
-											name: "W",
-											onClick: () => {
-												onChangeRangeVolume("w")
-											},
-										},
-										{
-											id: "m",
-											name: "M",
-											onClick: () => {
-												onChangeRangeVolume("m")
-											},
-										},
-									]}
-									active={rangeVolume}
-								/>
-							</div>
+						<div className={classes.containerChart}>
+							<ContainerChartVolume
+								dataDay={dataVolumeD}
+								dataWeek={dataVolumeW}
+								dataMonth={dataVolumeM}
+								title="Volume"
+							/>
 						</div>
-						<VolumeChart
-							data={dataVolume}
-							crossMove={crossMoveVolume}
-							onClick={onClickChartVolume}
-							onMouseLeave={onMouseLeaveVolume}
-						/>
 					</Paper>
 				</div>
 				<p className={classes.subTitle}>Your token watchlist</p>
