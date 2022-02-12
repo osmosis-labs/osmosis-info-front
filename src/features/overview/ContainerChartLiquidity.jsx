@@ -1,0 +1,114 @@
+import { makeStyles } from "@material-ui/core"
+import { useEffect, useState } from "react"
+import ButtonsLiquidity from "../../components/chart/liquidity/ButtonsLiquidity"
+import ChartLiquidity from "../../components/chart/liquidity/ChartLiquidity"
+import InfoLiquidity from "../../components/chart/liquidity/InfoLiquidity"
+
+const useStyles = makeStyles((theme) => {
+	return {
+		chartContainer: {
+			position: "relative",
+			height: "100%",
+			width: "100%",
+		},
+		chartRoot: {
+			position: "absolute",
+			top: "0",
+			right: "0",
+			bottom: "0",
+			left: "0",
+			height: "100%",
+			width: "100%",
+		},
+		header: {
+			display: "flex",
+			flexDirection: "row",
+			justifyContent: "space-between",
+			alignItems: "center",
+			[theme.breakpoints.down("xs")]: {
+				flexDirection: "column",
+				alignItems: "flex-start",
+			},
+		},
+		headerInfo: {
+			padding: "0 0 0 2px",
+			display: "flex",
+			flexDirection: "column",
+		},
+		currentTitle: {},
+		currentInfo: {
+			fontSize: theme.fontSize.veryBig,
+			color: theme.palette.gray.contrastText,
+			fontVariantNumeric: "tabular-nums",
+			margin: "4px 0",
+		},
+		currentSubInfo: {
+			fontSize: "12px",
+		},
+		headerActions: {
+			alignSelf: "flex-end",
+			display: "flex",
+			alignItems: "flex-end",
+			flexDirection: "column",
+			justifyContent: "flex-end",
+			padding: theme.spacing(1),
+		},
+		groupButton: {
+			marginBottom: theme.spacing(1),
+		},
+	}
+})
+
+const ContainerChartLiquidity = ({ dataDay, dataWeek, dataMonth, title }) => {
+	const classes = useStyles()
+
+	const [currentData, setCurrantData] = useState([])
+
+	const [currentItem, setCurrentItem] = useState({ price: 0, date: "-" })
+
+	const [range, setRange] = useState("d")
+
+	useEffect(() => {
+		if (dataDay.length > 0) changeRange("d")
+	}, [dataDay])
+
+	const changeRange = (value) => {
+		let data = []
+		if (value === "d") {
+			data = [...dataDay]
+		} else if (value === "w") {
+			data = [...dataWeek]
+		} else if (value === "m") {
+			data = [...dataMonth]
+		}
+		setCurrantData(data)
+		setCurrentItem({...data[data.length - 1]})
+		setRange(value)
+	}
+
+	const onMove = (item) => {
+		setCurrentItem(item, range)
+	}
+
+	const onLeave = () => {
+		if (currentData.length > 0)
+			setCurrentItem(
+				{ time: currentData[currentData.length - 1].time, value: currentData[currentData.length - 1].value },
+				range
+			)
+	}
+
+	return (
+		<div className={classes.chartContainer}>
+			<div className={classes.header}>
+				<InfoLiquidity title={title} range={range} data={currentItem} />
+				<div className={classes.headerActions}>
+					<ButtonsLiquidity onChangeRange={changeRange} range={range} data={currentData} />
+				</div>
+			</div>
+			<ChartLiquidity data={currentData} crossMove={onMove} onMouseLeave={onLeave} />
+		</div>
+	)
+}
+
+export default ContainerChartLiquidity

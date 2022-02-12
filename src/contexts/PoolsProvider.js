@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react"
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
 import API from "../helpers/API"
 import { getWeekNumber } from "../helpers/helpers"
 const PoolsContext = createContext()
@@ -13,6 +13,16 @@ export const PoolsProvider = ({ children }) => {
 	const [loadingLiquidityPool, setLoadingLiquidityPool] = useState(false)
 	const [loadingVolumePool, setLoadingVolumePool] = useState(false)
 
+	const saveDataChart = useRef({})
+
+	const getName = (chartType, range = "-", poolId = "-") => {
+		return chartType + "-" + range + "-" + poolId
+	}
+
+	const getNamePrice = (chartType, poolId = "-", denomIn = "-", denomOut = "-", range = "-") => {
+		return chartType + "-" + poolId + "-" + denomIn + "-" + denomOut + "-" + range
+	}
+
 	const getPoolData = useCallback(async (poolId) => {
 		setLoadingPool(true)
 		let response = await API.request({
@@ -26,64 +36,125 @@ export const PoolsProvider = ({ children }) => {
 	const getChartPool = useCallback(async ({ poolId, denomIn, denomOut, range }) => {
 		if (range === "all") range = "50y"
 		setLoadingChartPool(true)
-		let response = await API.request({
-			url: `pairs/v1/historical/${poolId}/chart?asset_in=${denomIn}&asset_out=${denomOut}&range=${range}&asset_type=denom`,
-			type: "get",
-		})
-		setLoadingChartPool(false)
-		return response.data
+		if (
+			saveDataChart.current[getNamePrice("price", poolId, denomIn, denomOut, range)] &&
+			saveDataChart.current[getNamePrice("price", poolId, denomIn, denomOut, range)].length > 0
+		) {
+			setLoadingChartPool(false)
+			return saveDataChart.current[getNamePrice("price", poolId, denomIn, denomOut, range)]
+		} else {
+			let response = await API.request({
+				url: `pairs/v1/historical/${poolId}/chart?asset_in=${denomIn}&asset_out=${denomOut}&range=${range}&asset_type=denom`,
+				type: "get",
+			})
+			saveDataChart.current = {
+				...saveDataChart.current,
+				[getNamePrice("price", poolId, denomIn, denomOut, range)]: response.data,
+			}
+			setLoadingChartPool(false)
+			return response.data
+		}
 	}, [])
 
-	const getLiquidityChartPool = useCallback(async ({ poolId }) => {
+	const getLiquidityChartPool = useCallback(async ({ poolId, range = "d" }) => {
 		setLoadingLiquidityPool(true)
-		let response = await API.request({
-			url: `pools/v1/liquidity/${poolId}/chart`,
-			type: "get",
-		})
-		setLoadingLiquidityPool(false)
-		return response.data
+		if (
+			saveDataChart.current[getName("liquidity", range, poolId)] &&
+			saveDataChart.current[getName("liquidity", range, poolId)].length > 0
+		) {
+			setLoadingLiquidityPool(false)
+			return saveDataChart.current[getName("liquidity", range, poolId)]
+		} else {
+			let response = await API.request({
+				url: `pools/v1/liquidity/${poolId}/chart`,
+				type: "get",
+			})
+			let data = response.data
+
+			let dataW = []
+			let currentWeek = { time: data[0].time, value: 0 }
+			let dataM = []
+			let currentMonth = { time: data[0].time, value: 0 }
+			data.forEach((item) => {
+				let currentDate = new Date(item.time)
+				let dateMonth = new Date(currentMonth.time)
+				if (currentDate.getMonth() === dateMonth.getMonth()) {
+					currentMonth.value = item.value
+				} else {
+					dataM.push(currentMonth)
+					currentMonth = { time: item.time, value: item.value }
+				}
+				let dateOfCurrentWeek = new Date(currentWeek.time)
+				let numberOfWeek = getWeekNumber(currentDate)
+				let numberOfWeekOfCurrentWeek = getWeekNumber(dateOfCurrentWeek)
+				if (numberOfWeek === numberOfWeekOfCurrentWeek) {
+					currentWeek.value = item.value
+				} else {
+					dataW.push(currentWeek)
+					currentWeek = { time: item.time, value: item.value }
+				}
+			})
+			dataW.push(currentWeek)
+			dataM.push(currentMonth)
+
+			saveDataChart.current = { ...saveDataChart.current, [getName("liquidity", "d", poolId)]: data }
+			saveDataChart.current = { ...saveDataChart.current, [getName("liquidity", "w", poolId)]: dataW }
+			saveDataChart.current = { ...saveDataChart.current, [getName("liquidity", "m", poolId)]: dataM }
+			setLoadingLiquidityPool(false)
+			if (range === "d") return data
+			else if (range === "w") return dataW
+			else if (range === "m") return dataM
+		}
 	}, [])
 
 	const getVolumeChartPool = useCallback(async ({ poolId, range = "d" }) => {
 		setLoadingVolumePool(true)
-		let response = await API.request({
-			url: `pools/v1/volume/${poolId}/chart`,
-			type: "get",
-		})
-		let res = response.data
-		if (range === "m") {
-			let resMonth = []
-			let current = { time: res[0].time, value: 0 }
-			res.forEach((item) => {
-				if (new Date(item.time).getMonth() === new Date(current.time).getMonth()) {
-					current.value += item.value
-				} else {
-					resMonth.push(current)
-					current = { time: item.time, value: item.value }
-				}
+		if (
+			saveDataChart.current[getName("volume", range, poolId)] &&
+			saveDataChart.current[getName("volume", range, poolId)].length > 0
+		) {
+			setLoadingVolumePool(false)
+			return saveDataChart.current[getName("volume", range, poolId)]
+		} else {
+			let response = await API.request({
+				url: `pools/v1/volume/${poolId}/chart`,
+				type: "get",
 			})
-			resMonth.push(current)
-			res = resMonth
-		}else if (range === "w") {
-			let resWeek = []
-			let current = { time: res[0].time, value: 0 }
-			res.forEach((item) => {
+			let data = response.data
+
+			let dataW = []
+			let currentWeek = { time: data[0].time, value: 0 }
+			let dataM = []
+			let currentMonth = { time: data[0].time, value: 0 }
+			data.forEach((item) => {
 				let currentDate = new Date(item.time)
-				let dateOfCurrentWeek = new Date(current.time)
+				let dateMonth = new Date(currentMonth.time)
+				if (currentDate.getMonth() === dateMonth.getMonth()) {
+					currentMonth.value += item.value
+				} else {
+					dataM.push(currentMonth)
+					currentMonth = { time: item.time, value: item.value }
+				}
+				let dateOfCurrentWeek = new Date(currentWeek.time)
 				let numberOfWeek = getWeekNumber(currentDate)
 				let numberOfWeekOfCurrentWeek = getWeekNumber(dateOfCurrentWeek)
 				if (numberOfWeek === numberOfWeekOfCurrentWeek) {
-					current.value += item.value
+					currentWeek.value += item.value
 				} else {
-					resWeek.push(current)
-					current = { time: item.time, value: item.value }
+					dataW.push(currentWeek)
+					currentWeek = { time: item.time, value: item.value }
 				}
 			})
-			resWeek.push(current)
-			res = resWeek
+			dataW.push(currentWeek)
+			dataM.push(currentMonth)
+			saveDataChart.current = { ...saveDataChart.current, [getName("volume", "d", poolId)]: data }
+			saveDataChart.current = { ...saveDataChart.current, [getName("volume", "w", poolId)]: dataW }
+			saveDataChart.current = { ...saveDataChart.current, [getName("volume", "m", poolId)]: dataM }
+			setLoadingVolumePool(false)
+			if (range === "d") return data
+			else if (range === "w") return dataW
+			else if (range === "m") return dataM
 		}
-		setLoadingVolumePool(false)
-		return res
 	}, [])
 
 	useEffect(() => {

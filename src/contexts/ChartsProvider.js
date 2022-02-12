@@ -71,10 +71,9 @@ export const ChartsProvider = ({ children }) => {
 				let dateMonth = new Date(currentMonth.time.year + "-" + currentMonth.time.month + "-" + currentMonth.time.day)
 				if (currentDate.getMonth() === dateMonth.getMonth()) {
 					currentMonth.value = item.value
-					currentMonth.timeEnd = item.time
 				} else {
 					liquidityM.push(currentMonth)
-					currentMonth = { time: item.time, timeEnd: item.time, value: item.value }
+					currentMonth = { time: item.time, value: item.value }
 				}
 				let dateOfCurrentWeek = new Date(
 					currentWeek.time.year + "-" + currentWeek.time.month + "-" + currentWeek.time.day
@@ -83,10 +82,9 @@ export const ChartsProvider = ({ children }) => {
 				let numberOfWeekOfCurrentWeek = getWeekNumber(dateOfCurrentWeek)
 				if (numberOfWeek === numberOfWeekOfCurrentWeek) {
 					currentWeek.value = item.value
-					currentWeek.timeEnd = item.time
 				} else {
 					liquidityW.push(currentWeek)
-					currentWeek = { time: item.time, timeEnd: item.time, value: item.value }
+					currentWeek = { time: item.time,  value: item.value }
 				}
 			})
 			liquidityW.push(currentWeek)

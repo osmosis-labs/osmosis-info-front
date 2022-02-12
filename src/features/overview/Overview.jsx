@@ -1,9 +1,7 @@
 import { Container, makeStyles, useMediaQuery } from "@material-ui/core"
-import { useCallback, useRef } from "react"
 import { useEffect } from "react"
 import { useState } from "react"
 import { useHistory } from "react-router-dom"
-import ButtonGroup from "../../components/buttonGroup/ButtonGroup"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
 import { useCharts } from "../../contexts/ChartsProvider"
@@ -11,13 +9,11 @@ import { usePools } from "../../contexts/PoolsProvider"
 import { useTokens } from "../../contexts/TokensProvider"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
-import { formatDate, formateNumberPrice, getDates, getInclude, twoNumber } from "../../helpers/helpers"
+import { getInclude} from "../../helpers/helpers"
 import PoolsTable from "../pools/PoolsTable"
 import TokensTable from "../tokens/TokensTable"
-import ChartVolume from "../../components/chart/ChartVolume"
-import ChartLiquidity from "../../components/chart/ChartLiquidity"
-import ContainerChartLiquidity from "../../components/chart/ContainerChartLiquidity"
-import ContainerChartVolume from "../../components/chart/ContainerChartVolume"
+import ContainerChartLiquidity from "./ContainerChartLiquidity"
+import ContainerChartVolume from "./ContainerChartVolume"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -68,45 +64,10 @@ const useStyles = makeStyles((theme) => {
 			},
 		},
 		containerChart: { height: "250px" },
-		chartTitle: {
-			padding: `2px 0`,
-		},
-		chartTextBig: {
-			fontSize: theme.fontSize.veryBig,
-			color: theme.palette.gray.contrastText,
-			padding: `2px 0`,
-			fontVariantNumeric: "tabular-nums",
-		},
-		chartTextSmall: {
-			fontSize: "12px",
-			padding: `2px 0`,
-		},
 		containerLoading: {
 			position: "relative",
 			minWidth: "200px",
 			minHeight: "200px",
-		},
-		chartHeader: {
-			display: "flex",
-			flexDirection: "row",
-			justifyContent: "space-between",
-			alignItems: "center",
-			[theme.breakpoints.down("xs")]: {
-				flexDirection: "column",
-				alignItems: "flex-start",
-			},
-		},
-		chartHeaderData: {},
-		chartHeaderButton: {
-			alignSelf: "flex-end",
-			display: "flex",
-			alignItems: "flex-end",
-			flexDirection: "column",
-			justifyContent: "flex-end",
-			padding: theme.spacing(1),
-		},
-		groupButton: {
-			marginBottom: theme.spacing(1),
 		},
 	}
 })

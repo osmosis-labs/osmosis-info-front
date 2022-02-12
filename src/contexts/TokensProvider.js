@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react"
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
 import API from "../helpers/API"
 import { getWeekNumber } from "../helpers/helpers"
 const TokensContext = createContext()
@@ -12,6 +12,12 @@ export const TokensProvider = ({ children }) => {
 	const [loadingChartToken, setLoadingChartToken] = useState(false)
 	const [loadingLiquidityToken, setLoadingLiquidityToken] = useState(false)
 	const [loadingVolumeToken, setLoadingVolumeToken] = useState(false)
+
+	const saveDataChart = useRef({})
+
+	const getName = (chartType, range = "-", symbol = "-") => {
+		return chartType + "-" + range + "-" + symbol
+	}
 
 	const getTokenData = useCallback(async (symbol) => {
 		setLoadingToken(true)
@@ -32,67 +38,126 @@ export const TokensProvider = ({ children }) => {
 		return token
 	}, [])
 
-	const getChartToken = useCallback(async ({ symbol, range }) => {
+	const getChartToken = useCallback(async ({ symbol, range = "7d" }) => {
 		setLoadingChartToken(true)
 		if (range === "all") range = "50y"
-		let response = await API.request({
-			url: `tokens/v1/historical/${symbol}/chart?range=${range}`,
-			type: "get",
-		})
-		setLoadingChartToken(false)
-		return response.data
+		if (
+			saveDataChart.current[getName("price", range, symbol)] &&
+			saveDataChart.current[getName("price", range, symbol)].length > 0
+		) {
+			setLoadingChartToken(false)
+			return saveDataChart.current[getName("price", range, symbol)]
+		} else {
+			let response = await API.request({
+				url: `tokens/v1/historical/${symbol}/chart?range=${range}`,
+				type: "get",
+			})
+			saveDataChart.current = { ...saveDataChart.current, [getName("price", range, symbol)]: response.data }
+			setLoadingChartToken(false)
+			return response.data
+		}
 	}, [])
 
-	const getLiquidityChartToken = useCallback(async ({ symbol }) => {
+	const getLiquidityChartToken = useCallback(async ({ symbol, range = "d" }) => {
 		setLoadingLiquidityToken(true)
-		let response = await API.request({
-			url: `tokens/v1/liquidity/${symbol}/chart`,
-			type: "get",
-		})
-		setLoadingLiquidityToken(false)
-		return response.data
+		if (
+			saveDataChart.current[getName("liquidity", range, symbol)] &&
+			saveDataChart.current[getName("liquidity", range, symbol)].length > 0
+		) {
+			setLoadingLiquidityToken(false)
+			return saveDataChart.current[getName("liquidity", range, symbol)]
+		} else {
+			let response = await API.request({
+				url: `tokens/v1/liquidity/${symbol}/chart`,
+				type: "get",
+			})
+
+			let data = response.data
+
+			let dataW = []
+			let currentWeek = { time: data[0].time, value: 0 }
+			let dataM = []
+			let currentMonth = { time: data[0].time, value: 0 }
+			data.forEach((item) => {
+				let currentDate = new Date(item.time)
+				let dateMonth = new Date(currentMonth.time)
+				if (currentDate.getMonth() === dateMonth.getMonth()) {
+					currentMonth.value = item.value
+				} else {
+					dataM.push(currentMonth)
+					currentMonth = { time: item.time, value: item.value }
+				}
+				let dateOfCurrentWeek = new Date(currentWeek.time)
+				let numberOfWeek = getWeekNumber(currentDate)
+				let numberOfWeekOfCurrentWeek = getWeekNumber(dateOfCurrentWeek)
+				if (numberOfWeek === numberOfWeekOfCurrentWeek) {
+					currentWeek.value = item.value
+				} else {
+					dataW.push(currentWeek)
+					currentWeek = { time: item.time, value: item.value }
+				}
+			})
+			dataW.push(currentWeek)
+			dataM.push(currentMonth)
+
+			saveDataChart.current = { ...saveDataChart.current, [getName("liquidity", "d", symbol)]: data }
+			saveDataChart.current = { ...saveDataChart.current, [getName("liquidity", "w", symbol)]: dataW }
+			saveDataChart.current = { ...saveDataChart.current, [getName("liquidity", "m", symbol)]: dataM }
+			setLoadingLiquidityToken(false)
+			if (range === "d") return data
+			else if (range === "w") return dataW
+			else if (range === "m") return dataM
+		}
 	}, [])
 
 	const getVolumeChartToken = useCallback(async ({ symbol, range = "d" }) => {
 		setLoadingVolumeToken(true)
-		let response = await API.request({
-			url: `tokens/v1/volume/${symbol}/chart`,
-			type: "get",
-		})
-		let res = response.data
-		if (range === "m") {
-			let resMonth = []
-			let current = { time: res[0].time, value: 0 }
-			res.forEach((item) => {
-				if (new Date(item.time).getMonth() === new Date(current.time).getMonth()) {
-					current.value += item.value
-				} else {
-					resMonth.push(current)
-					current = { time: item.time, value: item.value }
-				}
+		if (
+			saveDataChart.current[getName("volume", range, symbol)] &&
+			saveDataChart.current[getName("volume", range, symbol)].length > 0
+		) {
+			setLoadingVolumeToken(false)
+			return saveDataChart.current[getName("volume", range, symbol)]
+		} else {
+			let response = await API.request({
+				url: `tokens/v1/volume/${symbol}/chart`,
+				type: "get",
 			})
-			resMonth.push(current)
-			res = resMonth
-		} else if (range === "w") {
-			let resWeek = []
-			let current = { time: res[0].time, value: 0 }
-			res.forEach((item) => {
+			let data = response.data
+
+			let dataW = []
+			let currentWeek = { time: data[0].time, value: 0 }
+			let dataM = []
+			let currentMonth = { time: data[0].time, value: 0 }
+			data.forEach((item) => {
 				let currentDate = new Date(item.time)
-				let dateOfCurrentWeek = new Date(current.time)
+				let dateMonth = new Date(currentMonth.time)
+				if (currentDate.getMonth() === dateMonth.getMonth()) {
+					currentMonth.value += item.value
+				} else {
+					dataM.push(currentMonth)
+					currentMonth = { time: item.time, value: item.value }
+				}
+				let dateOfCurrentWeek = new Date(currentWeek.time)
 				let numberOfWeek = getWeekNumber(currentDate)
 				let numberOfWeekOfCurrentWeek = getWeekNumber(dateOfCurrentWeek)
 				if (numberOfWeek === numberOfWeekOfCurrentWeek) {
-					current.value += item.value
+					currentWeek.value += item.value
 				} else {
-					resWeek.push(current)
-					current = { time: item.time, value: item.value }
+					dataW.push(currentWeek)
+					currentWeek = { time: item.time, value: item.value }
 				}
 			})
-			resWeek.push(current)
-			res = resWeek
+			dataW.push(currentWeek)
+			dataM.push(currentMonth)
+			saveDataChart.current = { ...saveDataChart.current, [getName("volume", "d", symbol)]: data }
+			saveDataChart.current = { ...saveDataChart.current, [getName("volume", "w", symbol)]: dataW }
+			saveDataChart.current = { ...saveDataChart.current, [getName("volume", "m", symbol)]: dataM }
+			setLoadingVolumeToken(false)
+			if (range === "d") return data
+			else if (range === "w") return dataW
+			else if (range === "m") return dataM
 		}
-		setLoadingVolumeToken(false)
-		return res
 	}, [])
 
 	useEffect(() => {

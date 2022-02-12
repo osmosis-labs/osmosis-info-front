@@ -1,9 +1,9 @@
 import { makeStyles } from "@material-ui/core"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { formatDate, formateNumberPrice, getDates, getInclude, isValidDate, twoNumber } from "../../helpers/helpers"
-import ButtonGroup from "../buttonGroup/ButtonGroup"
-import ChartVolume from "./ChartVolume"
-
+import { getInclude} from "../../helpers/helpers"
+import ButtonsVolume from "../../components/chart/volume/ButtonsVolume"
+import ChartVolume from "../../components/chart/volume/ChartVolume"
+import InfoVolume from "../../components/chart/volume/InfoVolume"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -60,14 +60,13 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const ContainerChartVolume = ({ dataDay, dataWeek, dataMonth, title, typeButtonGroupe }) => {
+const ContainerChartVolume = ({ dataDay, dataWeek, dataMonth, title }) => {
 	const classes = useStyles()
 
 	const [currentData, setCurrantData] = useState([])
-	const [currentInfo, setCurrentInfo] = useState({
-		price: 0,
-		date: "-",
-	})
+
+	const [currentItem, setCurrentItem] = useState({ price: 0, date: "-" })
+
 	const [range, setRange] = useState("d")
 
 	const dataClick = useRef({ time: { day: 1, month: 1, year: 1 }, value: 0, clickedTwice: true })
@@ -86,47 +85,13 @@ const ContainerChartVolume = ({ dataDay, dataWeek, dataMonth, title, typeButtonG
 			data = [...dataMonth]
 		}
 		setCurrantData(data)
-		formatItem(data[data.length - 1], range)
-
+		setCurrentItem({ ...data[data.length - 1] })
 		setRange(value)
 	}
 
-	const formatItem = (item, range) => {
-		if (item.time) {
-			let formated = { price: item.value }
-			let date = new Date(item.time)
-			if (!isValidDate(date)) {
-				date = new Date(
-					new Date(`${twoNumber(item.time.year)}/${twoNumber(item.time.month)}/${twoNumber(item.time.day)}`)
-				)
-			}
-			formated.date = date
-			setInfo(formated, range)
-		}
-	}
-
-	const setInfo = (item, range) => {
-		setCurrentInfo({
-			price: formatPriceForDisplay(item.price),
-			date: formatDateForDisplay(item.date, range),
-		})
-	}
-
-	const formatPriceForDisplay = (price) => {
-		return formateNumberPrice(price)
-	}
-
-	const formatDateForDisplay = (date, range) => {
-		if (range && range !== "d") {
-			let dates = getDates(date, range)
-			return `${formatDate(dates[0])} - ${formatDate(dates[1])}`
-		}
-		return formatDate(date)
-	}
-
 	const onMove = useCallback(
-		(event, serie) => {
-			formatItem({ time: event.time, value: event.seriesPrices.get(serie) }, range)
+		(item) => {
+			setCurrentItem(item, range)
 		},
 		[range]
 	)
@@ -153,49 +118,18 @@ const ContainerChartVolume = ({ dataDay, dataWeek, dataMonth, title, typeButtonG
 		if (currentData.length > 0)
 			if (dataClick.current.clickedTwice) {
 				let lastElt = currentData[currentData.length - 1]
-				formatItem({ time: lastElt.time, value: lastElt.value }, range)
+				setCurrentItem({ time: lastElt.time, value: lastElt.value }, range)
 			} else {
-				formatItem({ time: dataClick.current.time, value: dataClick.current.value }, range)
+				setCurrentItem({ time: dataClick.current.time, value: dataClick.current.value }, range)
 			}
 	}
 
 	return (
 		<div className={classes.chartContainer}>
 			<div className={classes.header}>
-				<div className={classes.headerInfo}>
-					<p className={classes.title}>{title}</p>
-					<p className={classes.currentInfo}>{currentInfo.price}</p>
-					<p className={classes.currentSubInfo}>{currentInfo.date}</p>
-				</div>
+				<InfoVolume title={title} range={range} data={currentItem} />
 				<div className={classes.headerActions}>
-					{typeButtonGroupe}
-					<ButtonGroup
-						className={classes.groupButton}
-						buttons={[
-							{
-								id: "d",
-								name: "D",
-								onClick: () => {
-									changeRange("d")
-								},
-							},
-							{
-								id: "w",
-								name: "W",
-								onClick: () => {
-									changeRange("w")
-								},
-							},
-							{
-								id: "m",
-								name: "M",
-								onClick: () => {
-									changeRange("m")
-								},
-							},
-						]}
-						active={range}
-					/>
+					<ButtonsVolume onChangeRange={changeRange} range={range} data={currentData} />
 				</div>
 			</div>
 			<ChartVolume data={currentData} crossMove={onMove} onMouseLeave={onLeave} onClick={onClick} />

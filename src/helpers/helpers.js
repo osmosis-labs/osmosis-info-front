@@ -107,7 +107,7 @@ export const getWeekNumber = (date) => {
 
 export const getDates = (startDate, range) => {
 	if (range === "m") {
-		let firstDay = new Date(startDate.getFullYear(), startDate.getMonth(), 1)
+		// let firstDay = new Date(startDate.getFullYear(), startDate.getMonth(), 1)
 		let lastDay = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0)
 		return [startDate, lastDay]
 	}
@@ -121,7 +121,19 @@ export const getDates = (startDate, range) => {
 	}
 }
 
-
 export const isValidDate = (d) => {
-	return d instanceof Date && !isNaN(d);
-  }
+	return d instanceof Date && !isNaN(d)
+}
+
+export const timeToDate = (time) => {
+	switch (typeof time) {
+		case "string":
+			return new Date(time)
+		case "number":
+			return new Date(time * 1_000)
+		case "object":
+			return new Date(`${twoNumber(time.year)}/${twoNumber(time.month)}/${twoNumber(time.day)}`)
+		default:
+			return new Date(time)
+	}
+}

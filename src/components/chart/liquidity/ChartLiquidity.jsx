@@ -2,8 +2,8 @@ import { makeStyles, useMediaQuery } from "@material-ui/core"
 import { useEffect } from "react"
 import { useRef } from "react"
 import { createChart } from "lightweight-charts"
-import { formaterNumber } from "../../helpers/helpers"
 import { ResizeObserver } from "resize-observer"
+import { formaterNumber } from "../../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const ChartVolume = ({ data, crossMove, onMouseLeave, onClick }) => {
+const ChartLiquidity = ({ data, crossMove, onMouseLeave }) => {
 	const classes = useStyles()
 	const chartRef = useRef(null)
 	const containerRef = useRef(null)
@@ -70,16 +70,15 @@ const ChartVolume = ({ data, crossMove, onMouseLeave, onClick }) => {
 		// Initialization
 		if (chartRef.current === null) {
 			let chart = createChart(containerRef.current, {
+				rightPriceScale: {
+					scaleMargins: {
+						bottom: 0,
+					},
+				},
 				layout: {
 					backgroundColor: "rgba(31, 33, 40,0)",
 					textColor: "#c3c5cb",
 					fontFamily: "'Inter'",
-				},
-				rightPriceScale: {
-					scaleMargins: {
-						top: 0.1,
-						bottom: 0,
-					},
 				},
 				localization: {
 					priceFormatter: (price) => {
@@ -114,20 +113,22 @@ const ChartVolume = ({ data, crossMove, onMouseLeave, onClick }) => {
 				},
 			})
 
-			serieRef.current = chart.addHistogramSeries({
-				color: "rgba(251, 192, 45, 0.9)",
+			serieRef.current = chart.addAreaSeries({
+				topColor: "rgba(196, 164, 106, 0.4)",
+				bottomColor: "rgba(196, 164, 106, 0.0)",
+				lineColor: "rgba(251, 192, 45, 1)",
+				lineWidth: 3,
 			})
-
 			chartRef.current = chart
 		}
+
 		const hover = (event) => {
-			crossMove(event, serieRef.current)
+			let item = {time: event.time, value: event.seriesPrices.get(serieRef.current)}
+			crossMove(item)
 		}
 		chartRef.current.subscribeCrosshairMove(hover)
-		chartRef.current.subscribeClick(onClick)
 		return () => {
 			chartRef.current.unsubscribeCrosshairMove(hover)
-			chartRef.current.unsubscribeClick(onClick)
 		}
 	}, [crossMove])
 
@@ -139,9 +140,9 @@ const ChartVolume = ({ data, crossMove, onMouseLeave, onClick }) => {
 
 	return (
 		<div className={classes.chartContainer}>
-			<div onMouseLeave={onMouseLeave} className={classes.chartRoot} ref={containerRef}></div>
+			<div onMouseLeave={onMouseLeave} className={classes.chartRoot} ref={containerRef} />
 		</div>
 	)
 }
 
-export default ChartVolume
+export default ChartLiquidity

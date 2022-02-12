@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import { useRef } from "react"
 import { createChart, CrosshairMode } from "lightweight-charts"
 import { ResizeObserver } from "resize-observer"
-import { float2Numbers } from "../../helpers/helpers"
+import { float2Numbers } from "../../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -86,7 +86,8 @@ const ChartPrice = ({ data, crossMove, onMouseLeave }) => {
 			chartRef.current = chart
 		}
 		const hover = (event) => {
-			crossMove(event, serieRef.current)
+			let item = {time: event.time, value: event.seriesPrices.get(serieRef.current)}
+			crossMove(item)
 		}
 		chartRef.current.subscribeCrosshairMove(hover)
 		return () => {
