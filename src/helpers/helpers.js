@@ -137,3 +137,17 @@ export const timeToDate = (time) => {
 			return new Date(time)
 	}
 }
+
+export const timeToDateUTC = (time) => {
+	switch (typeof time) {
+		case "string":
+			let split = time.split("-")
+			return new Date(Date.UTC(split[0], parseInt(split[1]) - 1, split[2]))
+		case "number":
+			return new Date(Date.UTC(time * 1_000))
+		case "object":
+			return new Date(Date.UTC(time.year, time.month - 1, time.day))
+		default:
+			return new Date(Date.UTC(time))
+	}
+}

@@ -4,10 +4,10 @@ import { useHistory, useParams } from "react-router-dom"
 import ContainerLoader from "../../../components/loader/ContainerLoader"
 import Paper from "../../../components/paper/Paper"
 import { useTokens } from "../../../contexts/TokensProvider"
-import { formateNumberPrice, formateNumberPriceDecimals, getInclude } from "../../../helpers/helpers"
+import { detectBestDecimalsDisplay, formateNumberPrice, formateNumberPriceDecimals, getInclude } from "../../../helpers/helpers"
 import TokenPath from "./TokenPath"
 import TokenTitle from "./TokenTitle"
-import ContainerCharts from "../../pools/pool/ContainerCharts"
+import ContainerCharts from "./ContainerCharts"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const Token = ({ showToast }) => { // TO DO: Detect optimal decimals
+const Token = ({ showToast }) => {
 	const classes = useStyles()
 	const history = useHistory()
 	const { symbol } = useParams()
@@ -108,6 +108,7 @@ const Token = ({ showToast }) => { // TO DO: Detect optimal decimals
 				setDataIsLoaded(false)
 				let tokenData = await getTokenData(token.symbol)
 				let dataPrice = await getDataPrice("7d")
+				priceDecimals.current = dataPrice.length > 0 ? detectBestDecimalsDisplay(dataPrice[0].close) : 2;
 				setToken({ ...tokenData, price: dataPrice[dataPrice.length - 1].close })
 				setDataIsLoaded(true)
 			} catch (e) {

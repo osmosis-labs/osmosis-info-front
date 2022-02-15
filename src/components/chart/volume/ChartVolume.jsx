@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => {
 			height: "100%",
 			width: "100%",
 		},
-		chartRoot: {
+		chart: {
 			position: "absolute",
 			top: "0",
 			right: "0",
@@ -33,34 +33,16 @@ const ChartVolume = ({ data, crossMove, onMouseLeave, onClick }) => {
 	const matchXS = useMediaQuery((theme) => theme.breakpoints.down("xs"))
 
 	useEffect(() => {
-		// Used to resize chart.
-
-		// Need to change observer because the break point break the observer
-		if (matchXS) {
-			if (resizeObserver.current) resizeObserver.current.disconnect()
-			resizeObserver.current = new ResizeObserver((entries, b) => {
-				chartRef.current.applyOptions({ width: window.innerWidth - 100 })
-				setTimeout(() => {
-					chartRef.current.timeScale().fitContent()
-				}, 0)
-			})
-			resizeObserver.current.observe(document.body, { box: "content-box" })
-			resizeObserver.current.observe(containerRef.current, {
-				box: "content-box",
-			})
-		} else {
-			if (resizeObserver.current) resizeObserver.current.disconnect()
-			resizeObserver.current = new ResizeObserver((entries, b) => {
-				const { width, height } = entries[0].contentRect
-				chartRef.current.applyOptions({ width, height })
-				setTimeout(() => {
-					chartRef.current.timeScale().fitContent()
-				}, 0)
-			})
-			resizeObserver.current.observe(containerRef.current, {
-				box: "content-box",
-			})
-		}
+		resizeObserver.current = new ResizeObserver((entries, b) => {
+			const { width, height } = entries[0].contentRect
+			chartRef.current.applyOptions({ width, height })
+			setTimeout(() => {
+				chartRef.current.timeScale().fitContent()
+			}, 0)
+		})
+		resizeObserver.current.observe(containerRef.current, {
+			box: "content-box",
+		})
 		return () => {
 			resizeObserver.current.disconnect()
 		}
@@ -140,7 +122,7 @@ const ChartVolume = ({ data, crossMove, onMouseLeave, onClick }) => {
 
 	return (
 		<div className={classes.chartContainer}>
-			<div onMouseLeave={onMouseLeave} className={classes.chartRoot} ref={containerRef}></div>
+			<div onMouseLeave={onMouseLeave} className={classes.chart} ref={containerRef}></div>
 		</div>
 	)
 }

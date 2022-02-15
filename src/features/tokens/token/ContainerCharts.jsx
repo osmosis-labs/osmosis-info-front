@@ -33,8 +33,9 @@ const useStyles = makeStyles((theme) => {
 			[theme.breakpoints.down("xs")]: {
 				flexDirection: "column",
 				alignItems: "flex-start",
-			height: "35%",
-		},
+				justifyContent: "flex-start",
+				height: "35%",
+			},
 		},
 		charts: {
 			height: "75%",
@@ -71,12 +72,14 @@ const useStyles = makeStyles((theme) => {
 				width: "100%",
 			},
 		},
+		loader: {
+			height: "100%",
+		},
 	}
 })
 
 const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIsLoaded }) => {
 	const classes = useStyles()
-
 	const [typeChart, setTypeChart] = useState("price") // price, volume, liquidity
 
 	const [rangePrice, setRangePrice] = useState("7d") // 7d, 1m, 1y, all
@@ -172,7 +175,6 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 		try {
 			setIsLoading(true)
 			let data = await getDataPrice(value)
-			console.log("ContainerCharts.jsx -> 175: data[0]", data[0]  )
 			setCurrentDataPrice(data)
 			let lastItem = data[data.length - 1]
 			setCurrentItem({ time: lastItem.time, value: lastItem })
@@ -196,7 +198,11 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 	}
 
 	return (
-		<ContainerLoader className={classes.chartContainer} isLoading={!dataIsLoaded}>
+		<ContainerLoader
+			className={classes.chartContainer}
+			isLoading={!dataIsLoaded || isLoading}
+			classChildren={classes.loader}
+		>
 			<div className={classes.header}>
 				<InfoCharts
 					data={currentItem}

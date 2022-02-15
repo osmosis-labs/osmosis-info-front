@@ -1,36 +1,18 @@
 import { makeStyles } from "@material-ui/core"
-import { useCallback, useState, useRef, forwardRef } from "react"
+import { useState, useRef } from "react"
 import { useEffect } from "react"
 import { useHistory, useParams } from "react-router-dom"
-import ButtonGroup from "../../../components/buttonGroup/ButtonGroup"
-import Image from "../../../components/image/Image"
 import ContainerLoader from "../../../components/loader/ContainerLoader"
 import Paper from "../../../components/paper/Paper"
 import { usePools } from "../../../contexts/PoolsProvider"
-import {
-	formatDate,
-	formatDateHours,
-	formateNumberDecimals,
-	formateNumberPrice,
-	formateNumberPriceDecimals,
-	detectBestDecimalsDisplay,
-	formaterNumber,
-	getInclude,
-	twoNumber,
-	getDates,
-} from "../../../helpers/helpers"
-import PoolPath from "./PoolPath"
-import PoolSelect from "./PoolSelect"
-import PoolTitle from "./PoolTitle"
-import { CSSTransitionGroup } from "react-transition-group"
-import ChartLiquidity from "../../../components/chart/liquidity/ChartLiquidity"
-import ChartVolume from "../../../components/chart/volume/ChartVolume"
-import ChartPrice from "../../../components/chart/price/ChartPrice"
-import ContainerCharts from "./ContainerCharts"
+import { formateNumberDecimals, detectBestDecimalsDisplay, getInclude } from "../../../helpers/helpers"
 import Charts from "../../../components/chart/charts/Charts"
 import ButtonsCharts from "../../../components/chart/charts/ButtonsCharts"
 import ButtonsTypeChart from "../../../components/chart/charts/ButtonsTypeChart"
 import InfoCharts from "../../../components/chart/charts/InfoCharts"
+import PoolHeader from "./PoolHeader"
+import PoolInfo from "./PoolInfo"
+import { useCallback } from "react"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -39,12 +21,7 @@ const useStyles = makeStyles((theme) => {
 			gridAutoRows: "auto",
 			rowGap: theme.spacing(2),
 		},
-		containerInfo: {
-			display: "grid",
-			gridAutoRows: "auto",
-			rowGap: theme.spacing(2),
-			minHeight: "180px",
-		},
+
 		charts: {
 			display: "grid",
 			gridTemplateColumns: "300px 1fr",
@@ -55,29 +32,6 @@ const useStyles = makeStyles((theme) => {
 				gridTemplateRows: "1fr 1fr",
 			},
 		},
-		details: {
-			display: "flex",
-			flexDirection: "column",
-			[theme.breakpoints.down("xs")]: {
-				width: "100%",
-			},
-		},
-		detail: {
-			padding: theme.spacing(2),
-		},
-		textBig: {
-			fontSize: theme.fontSize.big,
-			color: theme.palette.gray.contrastText,
-			fontVariantNumeric: "tabular-nums",
-		},
-		detailPaper: {},
-		dataDetail: {
-			fontSize: theme.fontSize.big,
-			color: theme.palette.gray.contrastText,
-		},
-		titleDetail: {
-			fontWeight: "600",
-		},
 		right: {
 			zIndex: "0",
 			height: "100%",
@@ -85,92 +39,8 @@ const useStyles = makeStyles((theme) => {
 				width: "100%",
 			},
 		},
-		chart: {
-			width: "100%",
-			height: "80%",
-		},
-		groupButtons: {
-			display: "flex",
-			alignItems: "flex-end",
-			flexDirection: "column",
-			justifyContent: "flex-end",
-			padding: theme.spacing(1),
-		},
-		groupButton: {
-			marginBottom: theme.spacing(1),
-		},
-		token: {
-			display: "grid",
-			padding: `${theme.spacing(1)}px 0 `,
-			gridTemplateColumns: "repeat(auto-fit, minmax(20px, 1fr))",
-			rowGap: theme.spacing(2),
-			color: theme.palette.gray.contrastText,
-			alignItems: "center",
-		},
-		image: {
-			width: "30px",
-			marginRight: theme.spacing(1),
-		},
-		tokenName: {
-			display: "flex",
-			flexDirection: "row",
-			alignItems: "center",
-		},
-		poolName: {
-			display: "flex",
-			flexDirection: "row",
-			alignItems: "center",
-		},
-		convertContainer: {
-			display: "flex",
-			flexDirection: "row",
-			alignItems: "center",
-			width: "fit-content",
-			padding: "6px 10px",
-		},
-		pooledTokens: {
-			backgroundColor: theme.palette.primary.dark2,
-			fontSize: theme.fontSize.small,
-			padding: theme.spacing(2),
-			borderRadius: theme.spacing(2),
-		},
-		pooledTokensTitle: {
-			fontWeight: "600",
-		},
-		pooledTokensImages: {
-			width: "25px",
-		},
-		pooledTokensNumber: {
-			textAlign: "right",
-		},
-		chartHeader: {
-			display: "flex",
-			flexDirection: "row",
-			justifyContent: "space-between",
-			alignItems: "center",
-		},
-		chartData: {},
-		containerErrorChart: {
-			height: "100%",
-			width: "100%",
-			display: "flex",
-			alignItems: "center",
-			justifyContent: "center",
-		},
-		errorChart: {
-			margin: "auto",
-		},
 		chartContainer: {
 			position: "relative",
-			height: "100%",
-			width: "100%",
-		},
-		chartRoot: {
-			position: "absolute",
-			top: "0",
-			right: "0",
-			bottom: "0",
-			left: "0",
 			height: "100%",
 			width: "100%",
 		},
@@ -183,29 +53,14 @@ const useStyles = makeStyles((theme) => {
 			[theme.breakpoints.down("xs")]: {
 				flexDirection: "column",
 				alignItems: "flex-start",
-				height: "35%",
+				justifyContent: "flex-start",
 			},
 		},
-		charts: {
+		chartsContainer: {
 			height: "75%",
 			[theme.breakpoints.down("xs")]: {
-				height: "65%",
+				height: "75%",
 			},
-		},
-		headerInfo: {
-			padding: "0 0 0 2px",
-			display: "flex",
-			flexDirection: "column",
-		},
-		currentTitle: {},
-		currentInfo: {
-			fontSize: theme.fontSize.veryBig,
-			color: theme.palette.gray.contrastText,
-			fontVariantNumeric: "tabular-nums",
-			margin: "4px 0",
-		},
-		currentSubInfo: {
-			fontSize: "12px",
 		},
 		headerActions: {
 			alignSelf: "flex-end",
@@ -232,7 +87,31 @@ const Pool = ({ showToast }) => {
 
 	//save data here to avoid to re fetching data if is already fetched
 	const [pool, setPool] = useState({})
-	
+	const [tokens, setTokens] = useState([])
+	const [selectedTokens, setSelectedTokens] = useState({ one: {}, two: {} })
+	const [pricesInfo, setPriceInfo] = useState(0)
+	const [fees, setFees] = useState("0.0%")
+
+	const [loadingDataChart, setLoadingDataChart] = useState(true)
+	const [loadingPoolDetails, setLoadingPoolDetails] = useState(true)
+	const [loadingPoolInfo, setLoadingPoolInfo] = useState(true)
+
+	const pairDecimals = useRef(3)
+	const pricesDecimals = useRef([2, 2])
+
+	/* CHARTS */
+	const [currentItem, setCurrentItem] = useState({ value: 0, date: "-" })
+	const dataClick = useRef({ time: { day: 1, month: 1, year: 1 }, value: 0, clickedTwice: true })
+	const [typeChart, setTypeChart] = useState("price") // price, volume, liquidity
+
+	const [rangePrice, setRangePrice] = useState("7d") // 7d, 1m, 1y, all
+	const [rangeVolume, setRangeVolume] = useState("d") // d, w, m
+	const [rangeLiquidity, setRangeLiquidity] = useState("d") // d, w, m
+
+	const [currentDataPrice, setCurrentDataPrice] = useState([])
+	const [currentDataVolume, setCurrentDataVolume] = useState([])
+	const [currentDataLiquidity, setCurrentDataLiquidity] = useState([])
+
 	useEffect(() => {
 		// get pool from history state
 		if (!id) {
@@ -257,87 +136,195 @@ const Pool = ({ showToast }) => {
 		}
 	}, [id, showToast, history, pools])
 
+	useEffect(() => {
+		// fetch pool details from server
+		const fetch = async () => {
+			let tokensPool = await getPoolData(pool.id)
+			setFees(tokensPool[0].fees)
+			setTokens([...tokensPool])
+		}
+		if (pool.id) {
+			fetch()
+		}
+	}, [pool, getPoolData])
+
+	useEffect(() => {
+		const fetch = async () => {
+			setLoadingPoolDetails(true)
+			setLoadingPoolInfo(true)
+			setLoadingDataChart(true)
+			let firstPair = await getChartPool({
+				poolId: pool.id,
+				denomIn: tokens[0].denom,
+				denomOut: tokens[1].denom,
+				range: "7d",
+			})
+			if (typeof firstPair === "string") {
+				throw new Error(firstPair)
+			}
+			// Update pair token decimal
+			pairDecimals.current = firstPair.length > 0 ? detectBestDecimalsDisplay(firstPair[firstPair.length - 1].open) : 3
+			// Update both token price decimals
+			let tmpPricesDecimals = [2, 2]
+			for (let i = 0; i < tokens.length; i++) {
+				tmpPricesDecimals[i] = detectBestDecimalsDisplay(tokens[i].price)
+			}
+			pricesDecimals.current = tmpPricesDecimals
+			setSelectedTokens({ one: tokens[0], two: tokens[1] })
+			updatePriceInfo(firstPair)
+
+			onChangeRangePrice(rangePrice, tokens[0].denom, tokens[1].denom)
+			setLoadingPoolDetails(false)
+			setLoadingPoolInfo(false)
+			setLoadingDataChart(false)
+		}
+		if (pool.id && tokens.length > 0) {
+			fetch()
+		}
+	}, [pool, tokens, getChartPool])
+
+	const onChangeSeletedTokens = useCallback(
+		(selectedTokens) => {
+			setSelectedTokens(selectedTokens)
+			if (typeChart === "price")
+				onChangeRangePrice(rangePrice, selectedTokens.one.denom, selectedTokens.two.denom, updatePriceInfo)
+		},
+		[selectedTokens, typeChart]
+	)
+
+	const updatePriceInfo = (data) => {
+		let lastItem = data[data.length - 1]
+		pairDecimals.current = detectBestDecimalsDisplay(lastItem.close)
+		setPriceInfo(formateNumberDecimals(lastItem.close, pairDecimals.current))
+	}
+
+	const onMouseLeave = (e) => {
+		if (typeChart === "volume") {
+			if (currentDataVolume.length > 0)
+				if (dataClick.current.clickedTwice) {
+					let lastElt = currentDataVolume[currentDataVolume.length - 1]
+					setCurrentItem({ time: lastElt.time, value: lastElt.value })
+				} else {
+					setCurrentItem({ time: dataClick.current.time, value: dataClick.current.value })
+				}
+		} else if (typeChart === "liquidity") {
+			if (currentDataLiquidity.length > 0) {
+				setCurrentItem(currentDataLiquidity[currentDataLiquidity.length - 1])
+			}
+		} else if (typeChart === "price") {
+			if (currentDataPrice.length > 0) {
+				let lastItem = currentDataPrice[currentDataPrice.length - 1]
+				setCurrentItem({ time: lastItem.time, value: lastItem })
+			}
+		}
+	}
+	const onClick = (e) => {
+		let index = getInclude(currentDataVolume, (item) => {
+			return item.time.year === e.time.year && item.time.month === e.time.month && item.time.day === e.time.day
+		})
+		if (index > -1) {
+			let same =
+				e.time.year === dataClick.current.time.year &&
+				e.time.month === dataClick.current.time.month &&
+				e.time.day === dataClick.current.time.day
+
+			dataClick.current = {
+				time: currentDataVolume[index].time,
+				value: currentDataVolume[index].value,
+				clickedTwice: same ? !dataClick.current.clickedTwice : false,
+			}
+		}
+	}
+
+	const crossMove = useCallback((item) => {
+		setCurrentItem(item)
+	}, [])
+
+	const onChangeRangeVolume = async (value) => {
+		try {
+			setLoadingDataChart(true)
+			let data = await getVolumeChartPool({ poolId: pool.id, range: value })
+			setCurrentDataVolume(data)
+			setCurrentItem(data[data.length - 1])
+			setRangeVolume(value)
+			setLoadingDataChart(false)
+		} catch (e) {
+			console.log("%cContainerCharts.jsx -> 124 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
+			setLoadingDataChart(false)
+		}
+	}
+
+	const onChangeRangeLiquidity = async (value) => {
+		try {
+			setLoadingDataChart(true)
+			let data = await getLiquidityChartPool({ poolId: pool.id, range: value })
+			setCurrentDataLiquidity(data)
+			setCurrentItem(data[data.length - 1])
+			setRangeLiquidity(value)
+			setLoadingDataChart(false)
+		} catch (e) {
+			console.log("%cContainerCharts.jsx -> 124 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
+			setLoadingDataChart(false)
+		}
+	}
+
+	const onChangeRangePrice = async (value, denomIn, denomOut, cb) => {
+		try {
+			setLoadingDataChart(true)
+			let data = await getChartPool({
+				poolId: pool.id,
+				denomIn: denomIn ? denomIn : selectedTokens.one.denom,
+				denomOut: denomOut ? denomOut : selectedTokens.two.denom,
+				range: value,
+			})
+			if (cb) cb(data)
+			setCurrentDataPrice(data)
+			let lastItem = data[data.length - 1]
+			setCurrentItem({ time: lastItem.time, value: lastItem })
+			setRangePrice(value)
+			setLoadingDataChart(false)
+		} catch (e) {
+			console.log("%cContainerCharts.jsx -> 124 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
+			setLoadingDataChart(false)
+		}
+	}
+
+	const onChangeTypeChart = (value) => {
+		if (value === "price") {
+			onChangeRangePrice(rangePrice)
+		} else if (value === "volume") {
+			onChangeRangeVolume(rangeVolume)
+		} else if (value === "liquidity") {
+			onChangeRangeLiquidity(rangeLiquidity)
+		}
+		setTypeChart(value)
+	}
 
 	return (
 		<div className={classes.poolRoot}>
-			<ContainerLoader className={classes.containerInfo} isLoading={loadingPoolDetails}>
-				<PoolPath pool={pool} />
-				<PoolTitle pool={pool} tokens={tokens} />
-
-				<Paper className={classes.convertContainer}>
-					<Image
-						className={`${classes.image}`}
-						assets={true}
-						alt={`${selectedTokens.two.symbol}`}
-						src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${selectedTokens.two?.symbol?.toLowerCase()}.png`}
-						srcFallback="../assets/default.png"
-						pathAssets=""
-					/>
-					<p>
-						1 {selectedTokens.two.symbol} = {convertData} {selectedTokens.one.symbol}{" "}
-					</p>
-				</Paper>
-				<PoolSelect tokens={tokens} setSelectedTokens={onChangeSeletedToken} selectedTokens={selectedTokens} />
-			</ContainerLoader>
+			<PoolHeader
+				pool={pool}
+				tokens={tokens}
+				selectedTokens={selectedTokens}
+				onChangeSeletedTokens={onChangeSeletedTokens}
+				loadingPoolDetails={loadingPoolDetails}
+				pricesInfo={pricesInfo}
+				key="la"
+			/>
 			<div className={classes.charts}>
-				<ContainerLoader isLoading={loadingPoolInfo}>
-					<div className={classes.details}>
-						<Paper className={classes.detailPaper}>
-							<div className={classes.pooledTokens}>
-								<p className={classes.pooledTokensTitle}>Pooled tokens</p>
-								<div className={classes.tokensContainer}>
-									{tokens.map((token, i) => {
-										return (
-											<div className={classes.token} key={token.denom}>
-												<div className={classes.tokenName}>
-													<Image
-														className={`${classes.image} ${classes.pooledTokensImages}`}
-														assets={true}
-														alt={`${token.symbol}`}
-														src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${token.symbol.toLowerCase()}.png`}
-														srcFallback="../assets/default.png"
-														pathAssets=""
-													/>
-													<p>{token.symbol}</p>
-												</div>
-												<p className={classes.pooledTokensNumber}>{formaterNumber(token.amount, 0)}</p>
-												<p className={classes.pooledTokensNumber}>
-													{formateNumberPriceDecimals(token.price, pricesDecimals.current[i])}
-												</p>
-											</div>
-										)
-									})}
-								</div>
-							</div>
-							<div className={classes.detail}>
-								<p className={classes.titleDetail}>Liquidity</p>
-								<p variant="body2" className={classes.dataDetail}>
-									{formateNumberPrice(pool.liquidity)}
-								</p>
-							</div>
-							<div className={classes.detail}>
-								<p className={classes.titleDetail}>Volume (24hrs)</p>
-								<p variant="body2" className={classes.dataDetail}>
-									{formateNumberPrice(pool.volume_24h)}
-								</p>
-							</div>
-							<div className={classes.detail}>
-								<p className={classes.titleDetail}>Volume (7d)</p>
-								<p variant="body2" className={classes.dataDetail}>
-									{formateNumberPrice(pool.volume_7d)}
-								</p>
-							</div>
-							<div className={classes.detail}>
-								<p className={classes.titleDetail}>Fees</p>
-								<p variant="body2" className={classes.dataDetail}>
-									{fees}
-								</p>
-							</div>
-						</Paper>
-					</div>
-				</ContainerLoader>
+				<PoolInfo
+					loadingPoolInfo={loadingPoolInfo}
+					tokens={tokens}
+					pool={pool}
+					fees={fees}
+					pricesDecimals={pricesDecimals}
+				/>
 				<Paper className={classes.right}>
-					<ContainerLoader className={classes.chartContainer} isLoading={!dataIsLoaded}>
+					<ContainerLoader
+						className={classes.chartContainer}
+						classChildren={classes.right}
+						isLoading={loadingDataChart}
+					>
 						<div className={classes.header}>
 							<InfoCharts
 								data={currentItem}
@@ -359,7 +346,7 @@ const Pool = ({ showToast }) => {
 								/>
 							</div>
 						</div>
-						<div className={classes.charts}>
+						<div className={classes.chartsContainer}>
 							<Charts
 								dataPrice={currentDataPrice}
 								dataVolume={currentDataVolume}
@@ -371,7 +358,7 @@ const Pool = ({ showToast }) => {
 								rangeLiquidity={rangeLiquidity}
 								rangeVolume={rangeVolume}
 								rangePrice={rangePrice}
-								isLoading={isLoading}
+								isLoading={loadingDataChart}
 							/>
 						</div>
 					</ContainerLoader>

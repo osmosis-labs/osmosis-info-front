@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
 import API from "../helpers/API"
-import { getWeekNumber } from "../helpers/helpers"
+import { getWeekNumber, timeToDateUTC } from "../helpers/helpers"
 const PoolsContext = createContext()
 
 export const usePools = () => useContext(PoolsContext)
@@ -76,15 +76,15 @@ export const PoolsProvider = ({ children }) => {
 			let dataM = []
 			let currentMonth = { time: data[0].time, value: 0 }
 			data.forEach((item) => {
-				let currentDate = new Date(item.time)
-				let dateMonth = new Date(currentMonth.time)
+				let currentDate = timeToDateUTC(item.time)
+				let dateMonth = timeToDateUTC(currentMonth.time)
 				if (currentDate.getMonth() === dateMonth.getMonth()) {
 					currentMonth.value = item.value
 				} else {
 					dataM.push(currentMonth)
 					currentMonth = { time: item.time, value: item.value }
 				}
-				let dateOfCurrentWeek = new Date(currentWeek.time)
+				let dateOfCurrentWeek = timeToDateUTC(currentWeek.time)
 				let numberOfWeek = getWeekNumber(currentDate)
 				let numberOfWeekOfCurrentWeek = getWeekNumber(dateOfCurrentWeek)
 				if (numberOfWeek === numberOfWeekOfCurrentWeek) {
@@ -127,15 +127,15 @@ export const PoolsProvider = ({ children }) => {
 			let dataM = []
 			let currentMonth = { time: data[0].time, value: 0 }
 			data.forEach((item) => {
-				let currentDate = new Date(item.time)
-				let dateMonth = new Date(currentMonth.time)
+				let currentDate = timeToDateUTC(item.time)
+				let dateMonth = timeToDateUTC(currentMonth.time)
 				if (currentDate.getMonth() === dateMonth.getMonth()) {
 					currentMonth.value += item.value
 				} else {
 					dataM.push(currentMonth)
 					currentMonth = { time: item.time, value: item.value }
 				}
-				let dateOfCurrentWeek = new Date(currentWeek.time)
+				let dateOfCurrentWeek = timeToDateUTC(currentWeek.time)
 				let numberOfWeek = getWeekNumber(currentDate)
 				let numberOfWeekOfCurrentWeek = getWeekNumber(dateOfCurrentWeek)
 				if (numberOfWeek === numberOfWeekOfCurrentWeek) {

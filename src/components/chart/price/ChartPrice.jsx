@@ -1,4 +1,3 @@
-
 import { makeStyles, useMediaQuery } from "@material-ui/core"
 import { useEffect } from "react"
 import { useRef } from "react"
@@ -8,17 +7,17 @@ import { float2Numbers } from "../../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {
-		liquidityChartRoot: {
+		chartContainer: {
+			position: "relative",
+			height: "100%",
+			width: "100%",
+		},
+		chart: {
 			position: "absolute",
 			top: "0",
 			right: "0",
 			bottom: "0",
 			left: "0",
-			height: "100%",
-			width: "100%",
-		},
-		chartContainer: {
-			position: "relative",
 			height: "100%",
 			width: "100%",
 		},
@@ -86,7 +85,7 @@ const ChartPrice = ({ data, crossMove, onMouseLeave }) => {
 			chartRef.current = chart
 		}
 		const hover = (event) => {
-			let item = {time: event.time, value: event.seriesPrices.get(serieRef.current)}
+			let item = { time: event.time, value: event.seriesPrices.get(serieRef.current) }
 			crossMove(item)
 		}
 		chartRef.current.subscribeCrosshairMove(hover)
@@ -103,7 +102,7 @@ const ChartPrice = ({ data, crossMove, onMouseLeave }) => {
 
 	return (
 		<div className={classes.chartContainer}>
-			<div onMouseLeave={onMouseLeave} className={classes.liquidityChartRoot} ref={containerRef}></div>
+			<div onMouseLeave={onMouseLeave} className={classes.chart} ref={containerRef}></div>
 		</div>
 	)
 }

@@ -3,6 +3,7 @@ import InfoPrice from "../price/InfoPrice"
 import InfoVolume from "../volume/InfoVolume"
 
 const InfoCharts = ({ data, rangePrice, rangeVolume, rangeLiquidity, typeChart }) => {
+	
 	if (typeChart === "price") {
 		return <InfoPrice data={data} range={rangePrice} />
 	} else if (typeChart === "volume") {

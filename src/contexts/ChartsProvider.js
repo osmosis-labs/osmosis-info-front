@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import API from "../helpers/API"
-import { getWeekNumber } from "../helpers/helpers"
+import { getWeekNumber, timeToDateUTC } from "../helpers/helpers"
 const ChartsContext = createContext()
 
 export const useCharts = () => useContext(ChartsContext)
@@ -38,14 +38,15 @@ export const ChartsProvider = ({ children }) => {
 			let volumeM = []
 			let currentMonth = { time: volume[0].time, value: 0 }
 			volume.forEach((item) => {
-				if (new Date(item.time).getMonth() === new Date(currentMonth.time).getMonth()) {
+				
+				if (timeToDateUTC(item.time).getMonth() === timeToDateUTC(currentMonth.time).getMonth()) {
 					currentMonth.value += item.value
 				} else {
 					volumeM.push(currentMonth)
 					currentMonth = { time: item.time, value: item.value }
 				}
-				let currentDate = new Date(item.time)
-				let dateOfCurrentWeek = new Date(currentWeek.time)
+				let currentDate = timeToDateUTC(item.time)
+				let dateOfCurrentWeek = timeToDateUTC(currentWeek.time)
 				let numberOfWeek = getWeekNumber(currentDate)
 				let numberOfWeekOfCurrentWeek = getWeekNumber(dateOfCurrentWeek)
 				if (numberOfWeek === numberOfWeekOfCurrentWeek) {
@@ -67,24 +68,22 @@ export const ChartsProvider = ({ children }) => {
 			let liquidityM = []
 			currentMonth = { time: liquidity[0].time, value: 0 }
 			liquidity.forEach((item) => {
-				let currentDate = new Date(item.time.year + "-" + item.time.month + "-" + item.time.day)
-				let dateMonth = new Date(currentMonth.time.year + "-" + currentMonth.time.month + "-" + currentMonth.time.day)
+				let currentDate = timeToDateUTC(item.time)
+				let dateMonth = timeToDateUTC(currentMonth.time)
 				if (currentDate.getMonth() === dateMonth.getMonth()) {
 					currentMonth.value = item.value
 				} else {
 					liquidityM.push(currentMonth)
 					currentMonth = { time: item.time, value: item.value }
 				}
-				let dateOfCurrentWeek = new Date(
-					currentWeek.time.year + "-" + currentWeek.time.month + "-" + currentWeek.time.day
-				)
+				let dateOfCurrentWeek = timeToDateUTC(currentWeek.time)
 				let numberOfWeek = getWeekNumber(currentDate)
 				let numberOfWeekOfCurrentWeek = getWeekNumber(dateOfCurrentWeek)
 				if (numberOfWeek === numberOfWeekOfCurrentWeek) {
 					currentWeek.value = item.value
 				} else {
 					liquidityW.push(currentWeek)
-					currentWeek = { time: item.time,  value: item.value }
+					currentWeek = { time: item.time, value: item.value }
 				}
 			})
 			liquidityW.push(currentWeek)
