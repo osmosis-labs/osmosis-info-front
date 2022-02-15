@@ -73,7 +73,7 @@ const TablePagination = ({ rowsPerPageOptions, count, rowsPerPage, page, onPageC
 					<NavigateBeforeIcon />
 				</IconButton>
 				<p>
-					{page + 1}/{Math.round(count / rowsPerPage + 1)}
+					{page + 1}/{Math.round(count / rowsPerPage )}
 				</p>
 				<IconButton
 					onClick={() => {
