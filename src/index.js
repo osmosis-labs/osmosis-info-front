@@ -61,6 +61,7 @@ let colors = {
 			light: "#40444f",
 			main: "#c3c5cb",
 			dark: "#6c7284",
+			textLight: "rgba(255, 255, 255, 0.7)",
 			contrastText: "#FFFFFF",
 		},
 		yellow: {

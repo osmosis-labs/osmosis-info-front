@@ -1,13 +1,17 @@
-import { makeStyles, Table, TableBody, TableCell, TableRow, Tooltip } from "@material-ui/core"
+import { IconButton, makeStyles, Popover, Table, TableBody, TableCell, TableRow, Tooltip } from "@material-ui/core"
 import { useState } from "react"
 import Image from "../../components/image/Image"
 import TablePagination from "../../components/tablePagination/TablePagination"
+import { useSettings } from "../../contexts/SettingsProvider"
 import { formateNumberPrice, formateNumberPriceDecimalsAuto, formaterNumber } from "../../helpers/helpers"
 import TokensHeaderTable from "./TokensHearderTable"
+import TableSettings from "../../components/tableSettings/TableSettings"
 
 const useStyles = makeStyles((theme) => {
 	return {
-		tokensTableRoot: {},
+		tokensTableRoot: {
+			overflowX: "auto",
+		},
 		visuallyHidden: {
 			border: 0,
 			clip: "rect(0 0 0 0)",
@@ -117,6 +121,11 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 	const [orderBy, setOrderBy] = useState("liquidity")
 	const [page, setPage] = useState(0)
 	const [rowsPerPage, setRowsPerPage] = useState(10)
+	const { settings, updateSettings } = useSettings()
+
+	const setSettings = (settings) => {
+		updateSettings({ tokenTable: settings })
+	}
 
 	const handleChangeRowsPerPage = (event, value) => {
 		setRowsPerPage(event.target.value)
@@ -228,16 +237,26 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 			head[2].transform = (price) => {
 				return `$${formaterNumber(price)}`
 			}
-			return [head[0], head[1], head[2]]
-		} else if (size === "sm") {
-			return [head[0], head[1], head[2]]
-		} else if (size === "md") {
-			return [head[0], head[1], head[2], head[3]]
-		} else if (size === "ld") {
-			return head
-		} else {
-			return head
 		}
+
+		let headToDisplay = []
+
+		if (settings.tokenTable.id) {
+			headToDisplay.push(head[0])
+		}
+		if (settings.tokenTable.name) {
+			headToDisplay.push(head[1])
+		}
+		if (settings.tokenTable.liquidity) {
+			headToDisplay.push(head[2])
+		}
+		if (settings.tokenTable.price) {
+			headToDisplay.push(head[3])
+		}
+		if (settings.tokenTable.volume24h) {
+			headToDisplay.push(head[4])
+		}
+		return headToDisplay
 	}
 
 	const sortData = (data) => {
@@ -272,98 +291,105 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 		)
 
 	return (
-		<div className={classes.tokensTableRoot}>
-			<Table>
-				<TokensHeaderTable
-					headCells={getHeadCells()}
-					size={size}
-					order={order}
-					orderBy={orderBy}
-					handleRequestSort={handleRequestSort}
-					sortable={sortable}
-				/>
-				<TableBody>
-					{sortData(data)
-						.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-						.map((row, index) => {
-							let cells = []
-							headCells.forEach((headCell, index) => {
-								let cell = {}
-								if (headCell.id === "name") {
-									cell = (
-										<TableCell
-											key={headCell.id + row.id}
-											className={headCell.cellClasses}
-											component={headCell.component}
-											align={headCell.align}
-											padding={headCell.padding}
-										>
-											<Tooltip title={row.name}>
-												<div className={classes.cellName}>
-													<div className={classes.images}>
-														{row.symbol
-															.split("-")
-															.slice(0, 2)
-															.map((symbol, index) => {
-																return (
-																	<Image
-																		style={{ left: index * 18 + "px" }}
-																		key={headCell.id + row.id + symbol}
-																		className={classes.image}
-																		assets={true}
-																		pathAssets=""
-																		src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${symbol.toLowerCase()}.png`}
-																		srcFallback="../assets/default.png"
-																		alt={`${symbol}`}
-																	/>
-																)
-															})}
+		<div>
+			<TableSettings
+				settings={settings.tokenTable}
+				setSettings={setSettings}
+				match={{ id: "Id", name: "Name", liquidity: "Liquidity", price: "Price", volume24h: "Volume (24h)" }}
+			/>
+			<div className={classes.tokensTableRoot}>
+				<Table>
+					<TokensHeaderTable
+						headCells={getHeadCells()}
+						size={size}
+						order={order}
+						orderBy={orderBy}
+						handleRequestSort={handleRequestSort}
+						sortable={sortable}
+					/>
+					<TableBody>
+						{sortData(data)
+							.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+							.map((row, index) => {
+								let cells = []
+								headCells.forEach((headCell, index) => {
+									let cell = {}
+									if (headCell.id === "name") {
+										cell = (
+											<TableCell
+												key={headCell.id + row.id}
+												className={headCell.cellClasses}
+												component={headCell.component}
+												align={headCell.align}
+												padding={headCell.padding}
+											>
+												<Tooltip title={row.name}>
+													<div className={classes.cellName}>
+														<div className={classes.images}>
+															{row.symbol
+																.split("-")
+																.slice(0, 2)
+																.map((symbol, index) => {
+																	return (
+																		<Image
+																			style={{ left: index * 18 + "px" }}
+																			key={headCell.id + row.id + symbol}
+																			className={classes.image}
+																			assets={true}
+																			pathAssets=""
+																			src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${symbol.toLowerCase()}.png`}
+																			srcFallback="../assets/default.png"
+																			alt={`${symbol}`}
+																		/>
+																	)
+																})}
+														</div>
+														<p className={classes.name}>
+															{row.name}
+															<em className={classes.symbolName}>({row.symbol})</em>
+														</p>
 													</div>
-													<p className={classes.name}>
-														{row.name}
-														<em className={classes.symbolName}>({row.symbol})</em>
-													</p>
-												</div>
-											</Tooltip>
-										</TableCell>
-									)
-								} else {
-									cell = (
-										<TableCell
-											size={headCell.size}
-											key={headCell.id + row.id}
-											className={headCell.cellClasses}
-											component={headCell.component}
-											align={headCell.align}
-											padding={headCell.padding}
-										>
-											{headCell.transform ? headCell.transform(row[headCell.id]) : row[headCell.id]}
-										</TableCell>
-									)
-								}
-								cells.push(cell)
-							})
-							return (
-								<TableRow
-									hover
-									tabIndex={-1}
-									key={row.id}
-									onClick={(event) => {
-										if (onClickToken) onClickToken(row, event)
-									}}
-									className={!!onClickToken ? `${classes.clickable}` : ""}
-								>
-									{cells}
-								</TableRow>
-							)
-						})}
-					{data.length > rowsPerPage && emptyRows > 0 && (
-						<TableRow style={{ height: 53 * emptyRows }}>
-							<TableCell colSpan={6} />
-						</TableRow>
-					)}
-				</TableBody>
-			</Table>
+												</Tooltip>
+											</TableCell>
+										)
+									} else {
+										cell = (
+											<TableCell
+												size={headCell.size}
+												key={headCell.id + row.id}
+												className={headCell.cellClasses}
+												component={headCell.component}
+												align={headCell.align}
+												padding={headCell.padding}
+											>
+												{headCell.transform ? headCell.transform(row[headCell.id]) : row[headCell.id]}
+											</TableCell>
+										)
+									}
+									cells.push(cell)
+								})
+								return (
+									<TableRow
+										hover
+										tabIndex={-1}
+										key={row.id}
+										onClick={(event) => {
+											if (onClickToken) onClickToken(row, event)
+										}}
+										className={!!onClickToken ? `${classes.clickable}` : ""}
+									>
+										{cells}
+									</TableRow>
+								)
+							})}
+						{data.length > rowsPerPage && emptyRows > 0 && (
+							<TableRow style={{ height: 53 * emptyRows }}>
+								<TableCell colSpan={6} />
+							</TableRow>
+						)}
+					</TableBody>
+				</Table>
+			</div>
 			{data.length > rowsPerPage && (
 				<TablePagination
 					rowsPerPageOptions={[5, 10, 25, 50]}
