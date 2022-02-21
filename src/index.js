@@ -27,7 +27,7 @@ let colors = {
 		},
 		error: {
 			light: "#ff8080",
-			main: "#ff5c5c",
+			main: "#EF3456",
 			dark: "#ff3b3b",
 			contrastText: "#f2f2f5",
 		},
@@ -67,6 +67,13 @@ let colors = {
 		yellow: {
 			main: "#dddf39",
 			rgb: "221, 223, 57",
+		},
+		green: {
+			first: "#52EB7D73",
+			second: "#52EB7D4D",
+			third: "#52EB7D26",
+			text: "#52EB7D",
+			subText: "#00CEBA",
 		},
 	},
 }

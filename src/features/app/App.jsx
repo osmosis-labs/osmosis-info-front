@@ -18,6 +18,8 @@ import Token from "../tokens/token/Token"
 import LoaderOsmosis from "../../components/loader/LoaderOsmosis"
 import { LoaderProvider } from "../../contexts/LoaderProvider"
 import { SettingsProviders } from "../../contexts/SettingsProvider"
+import { MetricsProvider } from "../../contexts/MetricsProvider"
+import OverviewMetrics from "../overview/metrics/OverviewMetrics"
 const useStyles = makeStyles((theme) => {
 	return {
 		appRoot: {
@@ -31,14 +33,14 @@ const useStyles = makeStyles((theme) => {
 			fontSize: theme.fontSize.medium,
 		},
 		container: {
-			paddingTop: "140px",
+			paddingTop: "124px",
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "center",
-			minHeight: "calc(100vh - 140px)",
+			minHeight: "calc(100vh - 126px)",
 			overflow: "auto",
 			[theme.breakpoints.down("sm")]: {
-				paddingTop: "170px",
+				paddingTop: "157px",
 			},
 		},
 		content: {
@@ -87,23 +89,34 @@ const App = () => {
 													</PricesProvider>
 													<AppBar />
 													<div className={classes.container}>
-														<div className={classes.content}>
-															<Route path="/" exact={true}>
-																<Overview showToast={showToast} />
-															</Route>
-															<Route path="/pools">
+														<Route path="/" exact={true}>
+															<MetricsProvider>
+																<OverviewMetrics />
+																<div className={classes.content}>
+																	<Overview showToast={showToast} />
+																</div>
+															</MetricsProvider>
+														</Route>
+														<Route path="/pools">
+															<div className={classes.content}>
 																<Pools showToast={showToast} />
-															</Route>
-															<Route path="/pool/:id">
+															</div>
+														</Route>
+														<Route path="/pool/:id">
+															<div className={classes.content}>
 																<Pool showToast={showToast} />
-															</Route>
-															<Route path="/tokens">
+															</div>
+														</Route>
+														<Route path="/tokens">
+															<div className={classes.content}>
 																<Tokens showToast={showToast} />
-															</Route>
-															<Route path="/token/:symbol">
+															</div>
+														</Route>
+														<Route path="/token/:symbol">
+															<div className={classes.content}>
 																<Token showToast={showToast} />
-															</Route>
-														</div>
+															</div>
+														</Route>
 													</div>
 												</div>
 											</LoaderProvider>
