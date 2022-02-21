@@ -19,7 +19,7 @@ export const MetricsProvider = ({ children }) => {
 
 	const [dominance, setDominance] = useState([])
 
-	const [ganers, setGaners] = useState([])
+	const [gainers, setGainers] = useState([])
 	const [losers, setLosers] = useState([])
 
 	useEffect(() => {
@@ -39,7 +39,7 @@ export const MetricsProvider = ({ children }) => {
 				setLiquidityOsmo24h(data.liquidity_osmo_24h)
 			})
 			API.request({ url: "tokens/v2/top/gainers", type: "get" }).then((res) => {
-				setGaners(res.data)
+				setGainers(res.data)
 			})
 			API.request({ url: "tokens/v2/top/losers", type: "get" }).then((res) => {
 				setLosers(res.data)
@@ -79,7 +79,7 @@ export const MetricsProvider = ({ children }) => {
 				liquidityOsmo,
 				liquidityOsmo24h,
 				dominance,
-				ganers,
+				gainers,
 				losers,
 			}}
 		>

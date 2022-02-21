@@ -70,11 +70,17 @@ let colors = {
 			gold:"#C4A46A",
 		},
 		green: {
-			first: "#52EB7D73",
-			second: "#52EB7D4D",
-			third: "#52EB7D26",
+			first: "#52EB7D63",
+			second: "#52EB7D3D",
+			third: "#52EB7D16",
 			text: "#52EB7D",
 			subText: "#00CEBA",
+		},
+		red: {
+			first: "#ef535063",
+			second: "#ef53503D",
+			third: "#ef535016",
+			subText: "#EF3456",
 		},
 	},
 }
