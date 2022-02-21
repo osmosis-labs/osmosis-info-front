@@ -26,7 +26,6 @@ export const MetricsProvider = ({ children }) => {
 		let fetch = async () => {
 			API.request({ url: "overview/v1/metrics", type: "get" }).then((res) => {
 				let data = res.data
-				console.log("MetricsProvider.js -> 28: data", data)
 				setOsmosPrice(data.osmo_price)
 				setOsmosChange24h(data.osmo_change_24h)
 				setNbToken(data.nb_tokens)
@@ -39,9 +38,28 @@ export const MetricsProvider = ({ children }) => {
 				setLiquidityOsmo(data.liquidity_osmo)
 				setLiquidityOsmo24h(data.liquidity_osmo_24h)
 			})
-			API.request({ url: "tokens/v2/top/gainers", type: "get" }).then((res) => {})
-			API.request({ url: "tokens/v2/top/losers", type: "get" }).then((res) => {})
-			API.request({ url: "tokens/v2/dominance/all", type: "get" }).then((res) => {})
+			API.request({ url: "tokens/v2/top/gainers", type: "get" }).then((res) => {
+				setGaners(res.data)
+			})
+			API.request({ url: "tokens/v2/top/losers", type: "get" }).then((res) => {
+				setLosers(res.data)
+			})
+			API.request({ url: "tokens/v2/dominance/all", type: "get" }).then((res) => {
+				let dominances = []
+				let others = {
+					symbol: "Others",
+					dominance: 0,
+				}
+				res.data.forEach((dominance, index) => {
+					if (index < 4) {
+						dominances.push(dominance)
+					} else {
+						others.dominance += dominance.dominance
+					}
+				})
+				dominances.push(others)
+				setDominance(dominances)
+			})
 		}
 		fetch()
 	}, [])

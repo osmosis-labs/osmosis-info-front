@@ -67,6 +67,7 @@ let colors = {
 		yellow: {
 			main: "#dddf39",
 			rgb: "221, 223, 57",
+			gold:"#C4A46A",
 		},
 		green: {
 			first: "#52EB7D73",
