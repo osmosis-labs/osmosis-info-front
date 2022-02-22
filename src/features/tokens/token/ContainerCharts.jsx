@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => {
 			position: "relative",
 			height: "100%",
 			width: "100%",
+			display: "flex",
 		},
 		chartRoot: {
 			position: "absolute",
@@ -74,6 +75,7 @@ const useStyles = makeStyles((theme) => {
 		},
 		loader: {
 			height: "100%",
+			width: "100%",
 		},
 	}
 })

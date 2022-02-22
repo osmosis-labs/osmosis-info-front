@@ -12,6 +12,7 @@ import TokensTable from "./TokensTable"
 const useStyles = makeStyles((theme) => {
 	return {
 		tokensRoot: {
+			margin: `${theme.spacing(2)}px 0`,
 			display: "grid",
 			gridAutoRows: "auto",
 			rowGap: theme.spacing(2),

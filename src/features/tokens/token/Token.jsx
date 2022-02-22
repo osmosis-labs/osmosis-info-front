@@ -4,7 +4,12 @@ import { useHistory, useParams } from "react-router-dom"
 import ContainerLoader from "../../../components/loader/ContainerLoader"
 import Paper from "../../../components/paper/Paper"
 import { useTokens } from "../../../contexts/TokensProvider"
-import { detectBestDecimalsDisplay, formateNumberPrice, formateNumberPriceDecimals, getInclude } from "../../../helpers/helpers"
+import {
+	detectBestDecimalsDisplay,
+	formateNumberPrice,
+	formateNumberPriceDecimals,
+	getInclude,
+} from "../../../helpers/helpers"
 import TokenPath from "./TokenPath"
 import TokenTitle from "./TokenTitle"
 import ContainerCharts from "./ContainerCharts"
@@ -12,6 +17,7 @@ import ContainerCharts from "./ContainerCharts"
 const useStyles = makeStyles((theme) => {
 	return {
 		tokenRoot: {
+			margin: `${theme.spacing(2)}px 0`,
 			display: "grid",
 			gridAutoRows: "auto",
 			rowGap: theme.spacing(2),
@@ -29,9 +35,7 @@ const useStyles = makeStyles((theme) => {
 		right: {
 			zIndex: "0",
 			height: "100%",
-			[theme.breakpoints.down("xs")]: {
-				width: "100%",
-			},
+			width: "100%",
 		},
 
 		details: {
@@ -44,6 +48,7 @@ const useStyles = makeStyles((theme) => {
 		},
 		detail: {
 			padding: theme.spacing(2),
+			width: "100%",
 		},
 		dataDetail: {
 			fontSize: theme.fontSize.big,
@@ -53,6 +58,7 @@ const useStyles = makeStyles((theme) => {
 			fontWeight: "600",
 		},
 		tokenPrice: {
+			marginTop: "20px",
 			fontWeight: "500",
 			fontSize: "36px",
 			paddingLeft: "10px",
@@ -63,7 +69,13 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			flexDirection: "column",
 			justifyContent: "space-around",
+			alignItems: "flex-start",
 			minHeight: "180px",
+		},
+		loaderDetails: {
+			height: "100%",
+			width: "100%",
+			display: "flex",
 		},
 	}
 })
@@ -108,7 +120,7 @@ const Token = ({ showToast }) => {
 				setDataIsLoaded(false)
 				let tokenData = await getTokenData(token.symbol)
 				let dataPrice = await getDataPrice("7d")
-				priceDecimals.current = dataPrice.length > 0 ? detectBestDecimalsDisplay(dataPrice[0].close) : 2;
+				priceDecimals.current = dataPrice.length > 0 ? detectBestDecimalsDisplay(dataPrice[0].close) : 2
 				setToken({ ...tokenData, price: dataPrice[dataPrice.length - 1].close })
 				setDataIsLoaded(true)
 			} catch (e) {
@@ -145,7 +157,7 @@ const Token = ({ showToast }) => {
 			</ContainerLoader>
 			<div className={classes.charts}>
 				<Paper>
-					<ContainerLoader isLoading={!dataIsLoaded}>
+					<ContainerLoader classChildren={classes.loaderDetails} isLoading={!dataIsLoaded}>
 						<div className={classes.details}>
 							<div className={classes.detail}>
 								<p className={classes.titleDetail}>Liquidity</p>

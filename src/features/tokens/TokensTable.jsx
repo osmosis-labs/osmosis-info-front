@@ -323,7 +323,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 												align={headCell.align}
 												padding={headCell.padding}
 											>
-												<Tooltip title={row.name}>
+												{/* <Tooltip title={row.name}> */}
 													<div className={classes.cellName}>
 														<div className={classes.images}>
 															{row.symbol
@@ -349,7 +349,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 															<em className={classes.symbolName}>({row.symbol})</em>
 														</p>
 													</div>
-												</Tooltip>
+												{/* </Tooltip> */}
 											</TableCell>
 										)
 									} else {

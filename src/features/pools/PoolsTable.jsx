@@ -317,7 +317,7 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 												align={headCell.align}
 												padding={headCell.padding}
 											>
-												<Tooltip title={row.name}>
+												{/* <Tooltip title={row.name}> */}
 													<div className={classes.cellName}>
 														<div className={classes.images}>
 															{row.name
@@ -340,7 +340,7 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 														</div>
 														<p className={classes.name}>{row.name}</p>
 													</div>
-												</Tooltip>
+												{/* </Tooltip> */}
 											</TableCell>
 										)
 									} else {

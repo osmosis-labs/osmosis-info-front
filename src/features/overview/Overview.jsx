@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => {
 	return {
 		overviewRoot: {
 			marginTop: "30px",
+			marginBottom: "30px",
 			overflowX: "hidden",
 		},
 		radiant: {

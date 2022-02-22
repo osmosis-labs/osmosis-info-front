@@ -17,6 +17,7 @@ import { useCallback } from "react"
 const useStyles = makeStyles((theme) => {
 	return {
 		poolRoot: {
+			margin: `${theme.spacing(2)}px 0`,
 			display: "grid",
 			gridAutoRows: "auto",
 			rowGap: theme.spacing(2),
@@ -35,6 +36,7 @@ const useStyles = makeStyles((theme) => {
 		right: {
 			zIndex: "0",
 			height: "100%",
+			width: "100%",
 			[theme.breakpoints.down("xs")]: {
 				width: "100%",
 			},

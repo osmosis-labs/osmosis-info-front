@@ -1,7 +1,8 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import * as serviceWorker from "./serviceWorker"
-import { createMuiTheme, ThemeProvider } from "@material-ui/core"
+import {ThemeProvider } from "@material-ui/core"
+import { createTheme } from '@material-ui/core/styles'
 import "./styles/index.css"
 import "./styles/loader.css"
 import "./styles/transitions.css"
@@ -92,7 +93,7 @@ const fontSize = {
 	big: "24px",
 	veryBig: "32px",
 }
-const theme = createMuiTheme({
+const theme = createTheme({
 	...colors,
 	fontSize,
 	breakpoints: {
