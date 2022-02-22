@@ -5,9 +5,13 @@ import TopItem from "./TopItem"
 import ShowChartIcon from "@material-ui/icons/ShowChart"
 import { useEffect, useState } from "react"
 import ButtonGroup from "../../../components/buttonGroup/ButtonGroup"
+import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 const useStyles = makeStyles((theme) => {
 	return {
-		topRoot: {},
+		topRoot: {
+			position: "relative",
+			minHeight: "200px",
+		},
 		titleContainer: {
 			display: "flex",
 			alignItems: "center",
@@ -30,7 +34,7 @@ const useStyles = makeStyles((theme) => {
 
 const Top = () => {
 	const classes = useStyles()
-	const { losers, gainers } = useMetrics()
+	const { losers, gainers, loadingTop } = useMetrics()
 
 	const [typeTop, setTypeTop] = useState("gainers")
 	const [currentTop, setCurrentTop] = useState([])
@@ -47,6 +51,7 @@ const Top = () => {
 	}
 	return (
 		<Paper className={classes.topRoot}>
+			<BlocLoaderOsmosis open={loadingTop} />
 			<div className={classes.titleContainer}>
 				<p>Top</p>
 				<ButtonGroup

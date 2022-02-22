@@ -22,6 +22,9 @@ export const MetricsProvider = ({ children }) => {
 	const [gainers, setGainers] = useState([])
 	const [losers, setLosers] = useState([])
 
+	const [loadingDominance, setLoadingDominance] = useState(true)
+	const [loadingTop, setLoadingTop] = useState(true)
+
 	useEffect(() => {
 		let fetch = async () => {
 			API.request({ url: "overview/v1/metrics", type: "get" }).then((res) => {
@@ -38,28 +41,42 @@ export const MetricsProvider = ({ children }) => {
 				setLiquidityOsmo(data.liquidity_osmo)
 				setLiquidityOsmo24h(data.liquidity_osmo_24h)
 			})
-			API.request({ url: "tokens/v2/top/gainers", type: "get" }).then((res) => {
-				setGainers(res.data)
-			})
+			setLoadingTop(true)
+			API.request({ url: "tokens/v2/top/gainers", type: "get" })
+				.then((res) => {
+					setGainers(res.data)
+					setLoadingTop(false)
+				})
+				.catch((err) => {
+					console.log("%cMetricsProvider.js -> 49 ERROR: err", "background: #FF0000; color:#FFFFFF", err)
+					setLoadingTop(false)
+				})
 			API.request({ url: "tokens/v2/top/losers", type: "get" }).then((res) => {
 				setLosers(res.data)
 			})
-			API.request({ url: "tokens/v2/dominance/all", type: "get" }).then((res) => {
-				let dominances = []
-				let others = {
-					symbol: "Others",
-					dominance: 0,
-				}
-				res.data.forEach((dominance, index) => {
-					if (index < 4) {
-						dominances.push(dominance)
-					} else {
-						others.dominance += dominance.dominance
+			setLoadingDominance(true)
+			API.request({ url: "tokens/v2/dominance/all", type: "get" })
+				.then((res) => {
+					let dominances = []
+					let others = {
+						symbol: "Others",
+						dominance: 0,
 					}
+					res.data.forEach((dominance, index) => {
+						if (index < 4) {
+							dominances.push(dominance)
+						} else {
+							others.dominance += dominance.dominance
+						}
+					})
+					dominances.push(others)
+					setDominance(dominances)
+					setLoadingDominance(false)
 				})
-				dominances.push(others)
-				setDominance(dominances)
-			})
+				.catch((err) => {
+					console.log("%cMetricsProvider.js -> 70 ERROR: err", "background: #FF0000; color:#FFFFFF", err)
+					setLoadingDominance(false)
+				})
 		}
 		fetch()
 	}, [])
@@ -81,6 +98,8 @@ export const MetricsProvider = ({ children }) => {
 				dominance,
 				gainers,
 				losers,
+				loadingDominance,
+				loadingTop
 			}}
 		>
 			{children}
