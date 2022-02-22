@@ -86,11 +86,11 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const BlocLoaderOsmosis = ({ open, borderRadius = false }) => {
+const BlocLoaderOsmosis = ({ open, borderRadius = false, classNameLoading }) => {
 	const classes = useStyles()
-	let className = borderRadius? `${classes.loaderRoot} ${classes.loaderRootBorderRadius}` : classes.loaderRoot
+	let className = borderRadius? `${classes.loaderRoot} ${classes.loaderRootBorderRadius} ` : classes.loaderRoot
 	return (
-		<div className={open ? `${className} ${classes.loaderRootDisplayed}` : className}>
+		<div className={open ? `${className} ${classes.loaderRootDisplayed} ${classNameLoading}` : className}>
 			<div className={classes.osmosisContainer}>
 				<OsmosisSVG className={classes.svgLogo} />
 				<p className={classes.loading}>

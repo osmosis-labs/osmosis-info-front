@@ -53,6 +53,8 @@ const useStyles = makeStyles((theme) => {
 
 		menu: {
 			margin: `${theme.spacing(3)}px ${theme.spacing(3)}px ${theme.spacing(3)}px ${theme.spacing(2)}px`,
+			display: "flex",
+			flexWrap: "wrap",
 			[theme.breakpoints.down("sm")]: {
 				margin: `${theme.spacing(3)}px ${theme.spacing(3)}px ${theme.spacing(1)}px ${theme.spacing(4)}px`,
 			},
@@ -116,6 +118,12 @@ const AppBar = () => {
 							className={currentPath === "/tokens" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
 						>
 							Tokens
+						</Link>
+						<Link
+							to="/ibc"
+							className={currentPath === "/ibc" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
+						>
+							IBC Status
 						</Link>
 					</div>
 				</div>

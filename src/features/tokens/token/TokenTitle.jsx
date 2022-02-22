@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => {
 			},
 		},
 		tokenName: {
+			marginTop: theme.spacing(1),
 			display: "flex",
 			flexDirection: "row",
 			alignItems: "center",

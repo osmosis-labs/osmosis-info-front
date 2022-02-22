@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => {
 			},
 		},
 		poolName: {
+			marginTop: theme.spacing(2),
 			display: "flex",
 			flexDirection: "row",
 			alignItems: "center",
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme) => {
 			whiteSpace: "nowrap",
 		},
 		titleIcon: {
+			marginTop: theme.spacing(1),
 			display: "flex",
 			flexDirection: "row",
 			alignItems: "center",
