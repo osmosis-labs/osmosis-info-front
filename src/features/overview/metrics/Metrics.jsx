@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			alignItems: "center",
 		},
-		osmosPricePrice: { color: theme.palette.green.text, marginRight: theme.spacing(1.5), fontWeight: "600" },
+		osmosPricePrice: { marginRight: theme.spacing(1.5), fontWeight: "600" },
 		osmosPriceVolume: { marginRight: theme.spacing(1.5), fontWeight: "600" },
 		osmosPriceChange: {},
 		osmosPriceChangeUp: { color: theme.palette.green.text },
@@ -87,7 +87,6 @@ const Metrics = () => {
 	const onChangeTypeLiquidity = (type) => {
 		setTypeLiquidity(type)
 	}
-
 	return (
 		<div className={classes.metricsRoot}>
 			<div className={classes.metrics}>
@@ -95,7 +94,15 @@ const Metrics = () => {
 					<div className={classes.infoContainer}>
 						<p className={classes.title}>OSMO</p>
 						<div className={classes.osmosPrice}>
-							<span className={classes.osmosPricePrice}>${formateNumberDecimals(osmosPrice)}</span>
+							<span
+								className={
+									osmosChange24h < 0
+										? `${classes.osmosPriceChangeDown} ${classes.osmosPricePrice}`
+										: `${classes.osmosPriceChangeUp} ${classes.osmosPricePrice}`
+								}
+							>
+								${formateNumberDecimals(osmosPrice)}
+							</span>
 							<span
 								className={
 									osmosChange24h < 0
@@ -119,7 +126,15 @@ const Metrics = () => {
 					<div className={classes.infoContainer}>
 						<p className={classes.title}>24H VOLUME</p>
 						<div className={classes.osmosPrice}>
-							<span className={classes.osmosPriceVolume}>${formateNumberDecimals(volume24h, 0)}</span>
+							<span
+								className={
+									volume24hChange < 0
+										? `${classes.osmosPriceChangeDown} ${classes.osmosPriceVolume}`
+										: `${classes.osmosPriceChangeUp} ${classes.osmosPriceVolume}`
+								}
+							>
+								${formateNumberDecimals(volume24h, 0)}
+							</span>
 							<span
 								className={
 									volume24hChange < 0
@@ -128,7 +143,7 @@ const Metrics = () => {
 								}
 							>
 								{volume24hChange > 0 ? "+" : ""}
-								{formateNumberDecimals(volume24hChange, 3)}%
+								{formateNumberDecimals(volume24hChange, 2)}%
 							</span>
 							{volume24hChange > 0 ? (
 								<ArrowDropUpIcon className={classes.iconUp} />
@@ -174,7 +189,15 @@ const Metrics = () => {
 						<div className={classes.infoContainerButton}>
 							{typeLiquidity === "USD" ? (
 								<div className={classes.osmosPrice}>
-									<span className={classes.osmosPriceVolume}>${formateNumberDecimals(liquidityUSD, 0)}</span>
+									<span
+										className={
+											liquidityUSD24h < 0
+												? `${classes.osmosPriceChangeDown} ${classes.osmosPriceVolume}`
+												: `${classes.osmosPriceChangeUp} ${classes.osmosPriceVolume}`
+										}
+									>
+										${formateNumberDecimals(liquidityUSD, 0)}
+									</span>
 									<span
 										className={
 											liquidityUSD24h < 0
@@ -183,7 +206,7 @@ const Metrics = () => {
 										}
 									>
 										{liquidityUSD24h > 0 ? "+" : ""}
-										{formateNumberDecimals(liquidityUSD24h, 3)}%
+										{formateNumberDecimals(liquidityUSD24h, 2)}%
 									</span>
 									{liquidityUSD24h > 0 ? (
 										<ArrowDropUpIcon className={classes.iconUp} />
@@ -193,7 +216,15 @@ const Metrics = () => {
 								</div>
 							) : typeLiquidity === "ATOM" ? (
 								<div className={classes.osmosPrice}>
-									<span className={classes.osmosPriceVolume}>${formateNumberDecimals(liquidityAtom, 0)}</span>
+									<span
+										className={
+											liquidityAtom24h < 0
+												? `${classes.osmosPriceChangeDown} ${classes.osmosPriceVolume}`
+												: `${classes.osmosPriceChangeUp} ${classes.osmosPriceVolume}`
+										}
+									>
+										{formateNumberDecimals(liquidityAtom, 0)}
+									</span>
 									<span
 										className={
 											liquidityAtom24h < 0
@@ -212,7 +243,15 @@ const Metrics = () => {
 								</div>
 							) : typeLiquidity === "OSMO" ? (
 								<div className={classes.osmosPrice}>
-									<span className={classes.osmosPriceVolume}>${formateNumberDecimals(liquidityOsmo, 0)}</span>
+									<span
+										className={
+											liquidityOsmo24h < 0
+												? `${classes.osmosPriceChangeDown} ${classes.osmosPriceVolume}`
+												: `${classes.osmosPriceChangeUp} ${classes.osmosPriceVolume}`
+										}
+									>
+										{formateNumberDecimals(liquidityOsmo, 0)}
+									</span>
 									<span
 										className={
 											liquidityOsmo24h < 0
@@ -238,7 +277,7 @@ const Metrics = () => {
 					<div className={classes.infoContainer}>
 						<p className={classes.title}>TOKEN NUMBER</p>
 						<div className={classes.osmosPrice}>
-						<span className={classes.osmosPriceVolume}>{nbToken}</span>
+							<span className={classes.osmosPriceVolume}>{nbToken}</span>
 						</div>
 					</div>
 					<AccountBalanceWalletIcon />

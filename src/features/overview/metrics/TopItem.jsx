@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core"
 import Image from "../../../components/image/Image"
 import PieChartIcon from "@material-ui/icons/PieChart"
-import { formateNumberDecimals } from "../../../helpers/helpers"
+import { formateNumberDecimals, formateNumberDecimalsAuto } from "../../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -110,8 +110,8 @@ const TopItem = ({ item, index, type }) => {
 				<span className={classes.name}>{item.name}</span>
 			</div>
 			<div className={classes.container}>
-				<span className={`${classes.price} ${type==="gainers"?classes.priceUp:classes.priceDown}`}>${formateNumberDecimals(item.price, 2)}</span>
-				<span className={`${classes.price} ${type==="gainers"?classes.priceUp:classes.priceDown}`}>{formateNumberDecimals(item.price_24h_change, 2)}%</span>
+				<span className={`${classes.price} ${type==="gainers"?classes.priceUp:classes.priceDown}`}>${formateNumberDecimalsAuto(item.price)}</span>
+				<span className={`${classes.price} ${type==="gainers"?classes.priceUp:classes.priceDown}`}>{formateNumberDecimalsAuto(item.price_24h_change)}%</span>
 			</div>
 		</div>
 	)

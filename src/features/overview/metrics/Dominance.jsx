@@ -3,9 +3,12 @@ import Paper from "../../../components/paper/Paper"
 import { useMetrics } from "../../../contexts/MetricsProvider"
 import PieChartIcon from "@material-ui/icons/PieChart"
 import DominanceItem from "./DominanceItem"
+import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 const useStyles = makeStyles((theme) => {
 	return {
-		dominanceRoot: {},
+		dominanceRoot: {
+			position: "relative",
+		},
 		titleContainer: {
 			display: "flex",
 			alignItems: "center",
@@ -19,10 +22,11 @@ const useStyles = makeStyles((theme) => {
 
 const Dominance = () => {
 	const classes = useStyles()
-	const { dominance } = useMetrics()
+	const { dominance, loadingDominance } = useMetrics()
 
 	return (
 		<Paper className={classes.dominanceRoot}>
+			<BlocLoaderOsmosis open={loadingDominance} />
 			<div className={classes.titleContainer}>
 				<p>Dominance</p>
 				<PieChartIcon />

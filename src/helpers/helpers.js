@@ -51,6 +51,10 @@ export const formateNumberPriceDecimalsAuto = (price) => {
 	return formateNumberPriceDecimals(price, detectBestDecimalsDisplay(price))
 }
 
+export const formateNumberDecimalsAuto = (price) => {
+	return formateNumberDecimals(price, detectBestDecimalsDisplay(price))
+}
+
 export const formateNumberDecimals = (price, decimals = 2) => {
 	return new Intl.NumberFormat("en-US", {
 		currency: "USD",

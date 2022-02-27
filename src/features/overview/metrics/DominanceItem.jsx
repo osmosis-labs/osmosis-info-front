@@ -68,8 +68,8 @@ const useStyles = makeStyles((theme) => {
 const DominanceItem = ({ item, index }) => {
 	const classes = useStyles()
 	let barClasse = ""
-	if(index === 0) barClasse = classes.percentBarBlue
-	else if(index === 1) barClasse = classes.percentBarPurple
+	if(index === 0) barClasse = classes.percentBarPurple
+	else if(index === 1) barClasse = classes.percentBarBlue
 	else if(index === 2) barClasse = classes.percentBarRed
 	else if(index === 3) barClasse = classes.percentBarGreen
 	return (
