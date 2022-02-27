@@ -37,11 +37,19 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "center",
-			minHeight: "calc(100vh - 126px)",
-			overflow: "auto",
+			height: "100vh",
+			overflow: "hidden",
 			[theme.breakpoints.down("sm")]: {
-				paddingTop: "157px",
+				paddingTop: "235px",
 			},
+		},
+		contentContainer: {
+			overflow: "auto",
+			display: "flex",
+			flexDirection: "column",
+			alignItems: "center",
+			minWidth: "100%",
+			flexGrow: 1,
 		},
 		content: {
 			maxWidth: "1200px",
@@ -89,34 +97,36 @@ const App = () => {
 													</PricesProvider>
 													<AppBar />
 													<div className={classes.container}>
-														<Route path="/" exact={true}>
-															<MetricsProvider>
-																<OverviewMetrics />
+														<div className={classes.contentContainer}>
+															<Route path="/" exact={true}>
+																<MetricsProvider>
+																	<OverviewMetrics />
+																	<div className={classes.content}>
+																		<Overview showToast={showToast} />
+																	</div>
+																</MetricsProvider>
+															</Route>
+															<Route path="/pools">
 																<div className={classes.content}>
-																	<Overview showToast={showToast} />
+																	<Pools showToast={showToast} />
 																</div>
-															</MetricsProvider>
-														</Route>
-														<Route path="/pools">
-															<div className={classes.content}>
-																<Pools showToast={showToast} />
-															</div>
-														</Route>
-														<Route path="/pool/:id">
-															<div className={classes.content}>
-																<Pool showToast={showToast} />
-															</div>
-														</Route>
-														<Route path="/tokens">
-															<div className={classes.content}>
-																<Tokens showToast={showToast} />
-															</div>
-														</Route>
-														<Route path="/token/:symbol">
-															<div className={classes.content}>
-																<Token showToast={showToast} />
-															</div>
-														</Route>
+															</Route>
+															<Route path="/pool/:id">
+																<div className={classes.content}>
+																	<Pool showToast={showToast} />
+																</div>
+															</Route>
+															<Route path="/tokens">
+																<div className={classes.content}>
+																	<Tokens showToast={showToast} />
+																</div>
+															</Route>
+															<Route path="/token/:symbol">
+																<div className={classes.content}>
+																	<Token showToast={showToast} />
+																</div>
+															</Route>
+														</div>
 													</div>
 												</div>
 											</LoaderProvider>
