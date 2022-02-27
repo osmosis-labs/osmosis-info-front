@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme) => {
 	return {
 		appRoot: {
 			fontFamily: "'Inter', sans-serif",
-			padding: `0 0 ${theme.spacing(4)}px 0`,
 			minHeight: "100vh",
 			// width: "100vw",
 			color: theme.palette.gray.main,
