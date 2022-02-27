@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => {
 			display: "grid",
 			gridAutoRows: "auto",
 			rowGap: theme.spacing(2),
+			margin: `${theme.spacing(2)}px 0`,
 		},
 		charts: {
 			display: "grid",
