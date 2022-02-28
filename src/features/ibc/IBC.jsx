@@ -4,8 +4,10 @@ import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
 import { useIBC } from "../../contexts/IBCProvier"
 import { useWatchlistIBC } from "../../contexts/WatchlistIBCProvider"
+import { getInclude } from "../../helpers/helpers"
 import IBCInfo from "./IBCInfo"
 import IBCList from "./IBCList"
+import IBCSearch from "./IBCSearch"
 import IBCwatchlist from "./IBCwatchlist"
 const useStyles = makeStyles((theme) => {
 	return {
@@ -40,6 +42,19 @@ const IBC = () => {
 
 	const [timeLastUpdate, setTimeLastUpdate] = useState(0)
 	const { updateWatchlistIBC, isInWatchlist } = useWatchlistIBC()
+	const [ibcSearch, setIbcSearch] = useState("")
+	const [ibcSearchList, setIbcSearchList] = useState([])
+
+	useEffect(() => {
+		if (!ibcSearch || ibcSearch.length < 3) {
+			setIbcSearchList(ibcCouple)
+		} else {
+			let list = ibcCouple.filter((ibc) => {
+				return getInclude(ibc, (item) => item.token_name.toLowerCase().includes(ibcSearch.toLowerCase())) !== -1
+			})
+			setIbcSearchList(list)
+		}
+	}, [ibcSearch, ibcCouple])
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
@@ -67,8 +82,8 @@ const IBC = () => {
 			<div className={classes.content}>
 				<p className={classes.subTitle}>IBC list</p>
 			</div>
-
-			<IBCList ibcCouple={ibcCouple} updateWatchlistIBC={updateWatchlistIBC} isInWatchlist={isInWatchlist} />
+			<IBCSearch ibcSearch={ibcSearch} setIbcSearch={setIbcSearch} />
+			<IBCList ibcCouple={ibcSearchList} updateWatchlistIBC={updateWatchlistIBC} isInWatchlist={isInWatchlist} />
 		</div>
 	)
 }

@@ -13,11 +13,9 @@ const useStyles = makeStyles((theme) => {
 		IBCItem: {
 			display: "flex",
 			flexDirection: "row",
-			justifySelf: "center",
 			justifyContent: "center",
 			alignItems: "center",
 			position: "relative",
-			width: "360px"
 		},
 		arrowUp: {
 			transform: "rotate(180deg)",
