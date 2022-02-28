@@ -19,19 +19,22 @@ const useStyles = makeStyles((theme) => {
 		},
 		name: {
 			color: theme.palette.gray.contrastText,
+			textAlign: "center",
 			fontSize: "1.5rem",
 		},
 		source: {
 			fontSize: "0.9rem",
+			textAlign: "center",
 			color: theme.palette.gray.dark,
 		},
-        channel:{
-            marginTop: "2px",
-            fontSize: "0.8rem",
+		channel: {
+			marginTop: "2px",
+			fontSize: "0.8rem",
+			textAlign: "center",
 			color: theme.palette.gray.dark,
-        },
+		},
 		buble: {
-            marginTop: "10px",
+			marginTop: "10px",
 			borderRadius: "50px",
 			padding: "4px 14px",
 			display: "flex",
@@ -82,7 +85,7 @@ const IBCItem = ({ network, className }) => {
 				className={`${classes.image}`}
 				assets={true}
 				pathAssets=""
-				src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${network?.symbol?.toLowerCase()}.png`}
+				src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${network?.token_symbol?.toLowerCase()}.png`}
 				srcFallback="../assets/default.png"
 				alt={`${network.symbol}`}
 			/>

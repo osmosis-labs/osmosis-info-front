@@ -1,9 +1,12 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
+import Paper from "../../components/paper/Paper"
 import { useIBC } from "../../contexts/IBCProvier"
+import { useWatchlistIBC } from "../../contexts/WatchlistIBCProvider"
 import IBCInfo from "./IBCInfo"
 import IBCList from "./IBCList"
+import IBCwatchlist from "./IBCwatchlist"
 const useStyles = makeStyles((theme) => {
 	return {
 		IBCRoot: {
@@ -13,10 +16,21 @@ const useStyles = makeStyles((theme) => {
 			flexGrow: 1,
 			minHeight: "200px",
 			width: "100vw",
+			alignItems: "center",
 		},
-		loading:{
+		loading: {
 			backgroundColor: theme.palette.primary.dark2,
-		}
+		},
+
+		subTitle: {
+			alignSelf: "flex-start",
+			margin: `${theme.spacing(2)}px 0`,
+			fontSize: "1.5rem",
+		},
+		content: {
+			maxWidth: "1200px",
+			width: "90%",
+		},
 	}
 })
 
@@ -25,6 +39,7 @@ const IBC = () => {
 	const { ibcCouple, statusNormal, statusCongested, statusBlocked, getData, loaderIBC } = useIBC()
 
 	const [timeLastUpdate, setTimeLastUpdate] = useState(0)
+	const { updateWatchlistIBC, isInWatchlist } = useWatchlistIBC()
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
@@ -40,8 +55,7 @@ const IBC = () => {
 	})
 	return (
 		<div className={classes.IBCRoot}>
-
-			<BlocLoaderOsmosis open={loaderIBC} classNameLoading={classes.loading}/>
+			<BlocLoaderOsmosis open={loaderIBC} classNameLoading={classes.loading} />
 			<IBCInfo
 				timeLastUpdate={timeLastUpdate}
 				statusNormal={statusNormal}
@@ -49,7 +63,12 @@ const IBC = () => {
 				statusBlocked={statusBlocked}
 				nbNetwork={ibcCouple.length}
 			/>
-			<IBCList ibcCouple={ibcCouple} />
+			<IBCwatchlist ibcCouple={ibcCouple} />
+			<div className={classes.content}>
+				<p className={classes.subTitle}>IBC list</p>
+			</div>
+
+			<IBCList ibcCouple={ibcCouple} updateWatchlistIBC={updateWatchlistIBC} isInWatchlist={isInWatchlist} />
 		</div>
 	)
 }
