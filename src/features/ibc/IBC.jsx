@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
-import { useIBC } from "../../contexts/IBCProvier"
+import { MIN_BLOCKED, MIN_CONGESTED, useIBC } from "../../contexts/IBCProvier"
 import { useWatchlistIBC } from "../../contexts/WatchlistIBCProvider"
 import { getInclude } from "../../helpers/helpers"
 import IBCInfo from "./IBCInfo"
@@ -33,6 +33,10 @@ const useStyles = makeStyles((theme) => {
 			maxWidth: "1200px",
 			width: "90%",
 		},
+		info:{
+			margin: `${theme.spacing(2)}px 0`,
+
+		}
 	}
 })
 
@@ -45,16 +49,49 @@ const IBC = () => {
 	const [ibcSearch, setIbcSearch] = useState("")
 	const [ibcSearchList, setIbcSearchList] = useState([])
 
-	useEffect(() => {
-		if (!ibcSearch || ibcSearch.length < 3) {
-			setIbcSearchList(ibcCouple)
+	const [ibcFilter, setIbcFilter] = useState("")
+
+	const filterSearch = (list, value) => {
+		let res = []
+		if (!value || value.length < 3) {
+			res = list
 		} else {
-			let list = ibcCouple.filter((ibc) => {
-				return getInclude(ibc, (item) => item.token_name.toLowerCase().includes(ibcSearch.toLowerCase())) !== -1
+			res = list.filter((ibc) => {
+				return getInclude(ibc, (item) => item.token_name.toLowerCase().includes(value.toLowerCase())) !== -1
 			})
-			setIbcSearchList(list)
 		}
-	}, [ibcSearch, ibcCouple])
+		return res
+	}
+
+	const updateFilter = (value) => {
+		if(value === ibcFilter) setIbcFilter("")
+		else setIbcFilter(value)
+	}
+
+	const filterStatus = (list, value) => {
+		let res = []
+		if (!value || value.length === 0) {
+			res = list
+		} else {
+			res = list.filter((ibc) => {
+				if (value === "normal")
+					return ibc[0].duration_minutes < MIN_CONGESTED || ibc[1].duration_minutes < MIN_CONGESTED
+				if (value === "congested")
+					return (
+						(ibc[0].duration_minutes < MIN_BLOCKED && ibc[0].duration_minutes > MIN_CONGESTED) ||
+						(ibc[1].duration_minutes < MIN_BLOCKED && ibc[1].duration_minutes > MIN_CONGESTED)
+					)
+				if (value === "blocked") return ibc[0].duration_minutes >= MIN_BLOCKED || ibc[1].duration_minutes >= MIN_BLOCKED
+			})
+		}
+		return res
+	}
+
+	useEffect(() => {
+		let list = filterSearch(ibcCouple, ibcSearch)
+		list = filterStatus(list, ibcFilter)
+		setIbcSearchList(list)
+	}, [ibcSearch, ibcCouple, ibcFilter])
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
@@ -77,13 +114,21 @@ const IBC = () => {
 				statusCongested={statusCongested}
 				statusBlocked={statusBlocked}
 				nbNetwork={ibcCouple.length}
+				setIbcFilter={updateFilter}
+				ibcFilter={ibcFilter}
 			/>
 			<IBCwatchlist ibcCouple={ibcCouple} />
 			<div className={classes.content}>
 				<p className={classes.subTitle}>IBC list</p>
 			</div>
 			<IBCSearch ibcSearch={ibcSearch} setIbcSearch={setIbcSearch} />
-			<IBCList ibcCouple={ibcSearchList} updateWatchlistIBC={updateWatchlistIBC} isInWatchlist={isInWatchlist} />
+			{ibcSearchList.length === 0 ? (
+				<div className={classes.content}>
+					<p className={classes.info}>No result</p>
+				</div>
+			) : (
+				<IBCList ibcCouple={ibcSearchList} updateWatchlistIBC={updateWatchlistIBC} isInWatchlist={isInWatchlist} />
+			)}
 		</div>
 	)
 }

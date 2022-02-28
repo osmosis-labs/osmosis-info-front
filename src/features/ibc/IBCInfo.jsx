@@ -8,7 +8,6 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "center",
-
 		},
 		content: {
 			maxWidth: "1200px",
@@ -33,8 +32,8 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			flexDirection: "row",
 			[theme.breakpoints.down("xs")]: {
-                marginTop: "20px",
-            }
+				marginTop: "20px",
+			},
 		},
 		buble: {
 			marginRight: "15px",
@@ -44,18 +43,26 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "center",
 			justifyContent: "center",
 			fontSize: "0.7rem",
+			cursor: "pointer",
+		},
+		bubleSelected: {
+			borderWidth: "1px",
+			borderStyle: "solid",
 		},
 		bubleGreen: {
 			backgroundColor: "#52EB7D1F",
 			color: "#52EB7D",
+			borderColor: "#52EB7D",
 		},
 		bubleOrange: {
 			backgroundColor: "#FF82001F",
 			color: "#FF8200",
+			borderColor: "#FF8200",
 		},
 		bubleRed: {
 			backgroundColor: "#EF34561F",
 			color: "#EF3456",
+			borderColor: "#EF3456",
 		},
 		dot: {
 			height: "8px",
@@ -93,7 +100,15 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const IBCInfo = ({ timeLastUpdate, statusNormal, statusCongested, statusBlocked, nbNetwork }) => {
+const IBCInfo = ({
+	timeLastUpdate,
+	statusNormal,
+	statusCongested,
+	statusBlocked,
+	nbNetwork,
+	setIbcFilter,
+	ibcFilter,
+}) => {
 	const classes = useStyles()
 	return (
 		<div className={classes.IBCInfoRoot}>
@@ -101,15 +116,36 @@ const IBCInfo = ({ timeLastUpdate, statusNormal, statusCongested, statusBlocked,
 				<div className={classes.header}>
 					<span className={classes.title}>IBC Status</span>
 					<div className={classes.bubles}>
-						<span className={`${classes.buble} ${classes.bubleGreen}`}>
+						<span
+						onClick={()=>setIbcFilter("normal")}
+							className={
+								ibcFilter === "normal"
+									? `${classes.buble} ${classes.bubleGreen} ${classes.bubleSelected}`
+									: `${classes.buble} ${classes.bubleGreen}`
+							}
+						>
 							<span className={`${classes.dot} ${classes.dotGreen}`} />
 							<span>{`${statusNormal} Normal`}</span>
 						</span>
-						<span className={`${classes.buble} ${classes.bubleOrange}`}>
+						<span
+						onClick={()=>setIbcFilter("congested")}
+							className={
+								ibcFilter === "congested"
+									? `${classes.buble} ${classes.bubleOrange} ${classes.bubleSelected}`
+									: `${classes.buble} ${classes.bubleOrange}`
+							}
+						>
 							<span className={`${classes.dot} ${classes.dotOrange}`} />
 							<span>{`${statusCongested} Congested`}</span>
 						</span>
-						<span className={`${classes.buble} ${classes.bubleRed}`}>
+						<span
+						onClick={()=>setIbcFilter("blocked")}
+							className={
+								ibcFilter === "blocked"
+									? `${classes.buble} ${classes.bubleRed} ${classes.bubleSelected}`
+									: `${classes.buble} ${classes.bubleRed}`
+							}
+						>
 							<span className={`${classes.dot} ${classes.dotRed}`} />
 							<span>{`${statusBlocked} Blocked`}</span>
 						</span>
