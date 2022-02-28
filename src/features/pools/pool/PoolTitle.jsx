@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => {
 		poolName: {
 			display: "flex",
 			flexDirection: "row",
+			margin: `${theme.spacing(2)}px 0`,
 			alignItems: "center",
 			[theme.breakpoints.down("md")]: {
 				flexDirection: "column",

@@ -210,6 +210,7 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 					rangeLiquidity={rangeLiquidity}
 					rangeVolume={rangeVolume}
 					rangePrice={rangePrice}
+					currency={{ before: true, value: "$" }}
 				/>
 				<div className={classes.headerActions}>
 					<ButtonsTypeChart type={typeChart} onChangeType={onChangeTypeChart} />
