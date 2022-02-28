@@ -1,6 +1,15 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
-import { formatDateHours, formateNumberDecimals, formateNumberPrice, getDates, isValidDate, timeToDate, twoNumber } from "../../../helpers/helpers"
+import {
+	formatDateHours,
+	formateNumberDecimals,
+	formateNumberDecimalsAuto,
+	formateNumberPrice,
+	getDates,
+	isValidDate,
+	timeToDate,
+	twoNumber,
+} from "../../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -22,7 +31,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const InfoPrice = ({ title, data, range }) => {
+const InfoPrice = ({ title, data, range, currency = { before: true, value: "$" } }) => {
 	const classes = useStyles()
 	const [currentInfo, setCurrentInfo] = useState({
 		value: 0,
@@ -32,7 +41,7 @@ const InfoPrice = ({ title, data, range }) => {
 	useEffect(() => {
 		formatItem(data, range)
 	}, [data, range])
-	
+
 	const formatItem = (item, range) => {
 		if (item.time) {
 			let formated = { value: item.value?.close, date: timeToDate(item.time) }
@@ -41,14 +50,20 @@ const InfoPrice = ({ title, data, range }) => {
 	}
 
 	const setInfo = (item) => {
+		let value = `${formatPriceForDisplay(item.value)}`
+		if (currency.before) {
+			value = `${currency.value}${value}`
+		} else {
+			value = `${value} ${currency.value}`
+		}
 		setCurrentInfo({
-			value: "$"+formatPriceForDisplay(item.value),
+			value,
 			date: formatDateForDisplay(item.date),
 		})
 	}
 
 	const formatPriceForDisplay = (price) => {
-		return formateNumberDecimals(price, 2)
+		return formateNumberDecimalsAuto(price, 2)
 	}
 
 	const formatDateForDisplay = (date) => {

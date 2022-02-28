@@ -113,6 +113,8 @@ const Pool = ({ showToast }) => {
 	const [currentDataVolume, setCurrentDataVolume] = useState([])
 	const [currentDataLiquidity, setCurrentDataLiquidity] = useState([])
 
+	const [currency, setCurrency] = useState({ before: true, value: "$" })
+
 	useEffect(() => {
 		// get pool from history state
 		if (!id) {
@@ -173,6 +175,7 @@ const Pool = ({ showToast }) => {
 			pricesDecimals.current = tmpPricesDecimals
 			setSelectedTokens({ one: tokens[0], two: tokens[1] })
 			updatePriceInfo(firstPair)
+			setCurrency({ before: false, value: tokens[0].symbol })
 
 			onChangeRangePrice(rangePrice, tokens[0].denom, tokens[1].denom)
 			setLoadingPoolDetails(false)
@@ -187,8 +190,12 @@ const Pool = ({ showToast }) => {
 	const onChangeSeletedTokens = useCallback(
 		(selectedTokens) => {
 			setSelectedTokens(selectedTokens)
-			if (typeChart === "price")
+			if (typeChart === "price") {
+				setCurrency({ before: false, value: selectedTokens.one.symbol })
 				onChangeRangePrice(rangePrice, selectedTokens.one.denom, selectedTokens.two.denom, updatePriceInfo)
+			} else {
+				setCurrency({ before: true, value: "$" })
+			}
 		},
 		[selectedTokens, typeChart]
 	)
@@ -333,6 +340,7 @@ const Pool = ({ showToast }) => {
 								rangeLiquidity={rangeLiquidity}
 								rangeVolume={rangeVolume}
 								rangePrice={rangePrice}
+								currency={currency}
 							/>
 							<div className={classes.headerActions}>
 								<ButtonsTypeChart type={typeChart} onChangeType={onChangeTypeChart} />

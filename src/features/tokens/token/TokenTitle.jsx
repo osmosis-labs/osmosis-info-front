@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => {
 		},
 		tokenName: {
 			display: "flex",
+			margin: `${theme.spacing(2)}px 0`,
 			flexDirection: "row",
 			alignItems: "center",
 		},
