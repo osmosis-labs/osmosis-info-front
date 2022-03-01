@@ -14,9 +14,9 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "center",
 			justifyContent: "space-between",
 		},
-        items:{
-            paddingTop: theme.spacing(1),
-        }
+		items: {
+			paddingTop: theme.spacing(1),
+		},
 	}
 })
 
@@ -33,7 +33,7 @@ const Dominance = () => {
 			</div>
 			<div className={classes.items}>
 				{dominance.map((item, index) => {
-					return <DominanceItem key={index} item={item} index={index}/>
+					return <DominanceItem key={index} item={item} index={index} />
 				})}
 			</div>
 		</Paper>

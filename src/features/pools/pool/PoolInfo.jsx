@@ -17,7 +17,12 @@ const useStyles = makeStyles((theme) => {
 		detail: {
 			padding: theme.spacing(2),
 		},
-		detailPaper: {},
+		loaderDetails: {
+			height: "100%",
+			width: "100%",
+			display: "flex",
+			flexDirection: "column",
+		},
 		pooledTokens: {
 			backgroundColor: theme.palette.primary.dark2,
 			fontSize: theme.fontSize.small,
@@ -65,7 +70,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool, fees, pricesDecimals }) => {
 	return (
 		<div className={classes.details}>
 			<Paper className={classes.detailPaper}>
-				<ContainerLoader isLoading={loadingPoolInfo}>
+				<ContainerLoader classChildren={classes.loaderDetails} isLoading={loadingPoolInfo}>
 					<div className={classes.pooledTokens}>
 						<p className={classes.pooledTokensTitle}>Pooled tokens</p>
 						<div className={classes.tokensContainer}>

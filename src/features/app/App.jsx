@@ -20,6 +20,9 @@ import { LoaderProvider } from "../../contexts/LoaderProvider"
 import { SettingsProviders } from "../../contexts/SettingsProvider"
 import { MetricsProvider } from "../../contexts/MetricsProvider"
 import OverviewMetrics from "../overview/metrics/OverviewMetrics"
+import IBC from "../ibc/IBC"
+import { IBCProvider } from "../../contexts/IBCProvier"
+import { WatchlistIBCProvider } from "../../contexts/WatchlistIBCProvider"
 const useStyles = makeStyles((theme) => {
 	return {
 		appRoot: {
@@ -32,7 +35,7 @@ const useStyles = makeStyles((theme) => {
 			fontSize: theme.fontSize.medium,
 		},
 		container: {
-			paddingTop: "124px",
+			paddingTop: "140px",
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "center",
@@ -82,53 +85,60 @@ const App = () => {
 								<ChartsProvider>
 									<WatchlistPoolsProvider>
 										<WatchlistTokensProvider>
-											<LoaderProvider>
-												<LoaderOsmosis />
-												<div className={classes.appRoot}>
-													<Toast
-														open={stateToast.open}
-														severity={stateToast.severity}
-														message={stateToast.text}
-														handleClose={closeToast}
-													/>
-													<PricesProvider>
-														<InfoBar />
-													</PricesProvider>
-													<AppBar />
-													<div className={classes.container}>
-														<div className={classes.contentContainer}>
-															<Route path="/" exact={true}>
-																<MetricsProvider>
-																	<OverviewMetrics />
+											<WatchlistIBCProvider>
+												<LoaderProvider>
+													<LoaderOsmosis />
+													<div className={classes.appRoot}>
+														<Toast
+															open={stateToast.open}
+															severity={stateToast.severity}
+															message={stateToast.text}
+															handleClose={closeToast}
+														/>
+														<PricesProvider>
+															<InfoBar />
+														</PricesProvider>
+														<AppBar />
+														<div className={classes.container}>
+															<div className={classes.contentContainer}>
+																<Route path="/" exact={true}>
+																	<MetricsProvider>
+																		<OverviewMetrics />
+																		<div className={classes.content}>
+																			<Overview showToast={showToast} />
+																		</div>
+																	</MetricsProvider>
+																</Route>
+																<Route path="/pools">
 																	<div className={classes.content}>
-																		<Overview showToast={showToast} />
+																		<Pools showToast={showToast} />
 																	</div>
-																</MetricsProvider>
-															</Route>
-															<Route path="/pools">
-																<div className={classes.content}>
-																	<Pools showToast={showToast} />
-																</div>
-															</Route>
-															<Route path="/pool/:id">
-																<div className={classes.content}>
-																	<Pool showToast={showToast} />
-																</div>
-															</Route>
-															<Route path="/tokens">
-																<div className={classes.content}>
-																	<Tokens showToast={showToast} />
-																</div>
-															</Route>
-															<Route path="/token/:symbol">
-																<div className={classes.content}>
-																	<Token showToast={showToast} />
-																</div>
-															</Route>
+																</Route>
+																<Route path="/pool/:id">
+																	<div className={classes.content}>
+																		<Pool showToast={showToast} />
+																	</div>
+																</Route>
+																<Route path="/tokens">
+																	<div className={classes.content}>
+																		<Tokens showToast={showToast} />
+																	</div>
+																</Route>
+																<Route path="/token/:symbol">
+																	<div className={classes.content}>
+																		<Token showToast={showToast} />
+																	</div>
+																</Route>
+																<Route path="/ibc">
+																	<IBCProvider>
+																		<IBC showToast={showToast} />
+																	</IBCProvider>
+																</Route>
+															</div>
 														</div>
 													</div>
-												</div>
-											</LoaderProvider>
+												</LoaderProvider>
+											</WatchlistIBCProvider>
 										</WatchlistTokensProvider>
 									</WatchlistPoolsProvider>
 								</ChartsProvider>

@@ -1,8 +1,8 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import * as serviceWorker from "./serviceWorker"
-import { ThemeProvider } from "@material-ui/core"
-import { createTheme } from "@material-ui/core/styles"
+import {ThemeProvider } from "@material-ui/core"
+import { createTheme } from '@material-ui/core/styles'
 import "./styles/index.css"
 import "./styles/loader.css"
 import "./styles/transitions.css"

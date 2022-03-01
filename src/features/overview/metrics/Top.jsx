@@ -26,15 +26,15 @@ const useStyles = makeStyles((theme) => {
 			transform: "rotateX(180deg)",
 			transition: "all 0.3s ease-in-out",
 		},
-		items:{
+		items: {
 			marginTop: "10px",
-		}
+		},
 	}
 })
 
 const Top = () => {
 	const classes = useStyles()
-	const { losers, gainers, loadingTop} = useMetrics()
+	const { losers, gainers, loadingTop } = useMetrics()
 
 	const [typeTop, setTypeTop] = useState("gainers")
 	const [currentTop, setCurrentTop] = useState([])
@@ -74,11 +74,11 @@ const Top = () => {
 					]}
 					active={typeTop}
 				/>
-				<ShowChartIcon className={typeTop==="gainers"?classes.iconUp:classes.iconDown} />
+				<ShowChartIcon className={typeTop === "gainers" ? classes.iconUp : classes.iconDown} />
 			</div>
 			<div className={classes.items}>
 				{currentTop.slice(0, 5).map((item, index) => {
-					return <TopItem key={index} item={item} index={index} type={typeTop}/>
+					return <TopItem key={index} item={item} index={index} type={typeTop} />
 				})}
 			</div>
 		</Paper>

@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => {
 			},
 		},
 		tokenName: {
+			marginTop: theme.spacing(1),
 			display: "flex",
 			margin: `${theme.spacing(2)}px 0`,
 			flexDirection: "row",

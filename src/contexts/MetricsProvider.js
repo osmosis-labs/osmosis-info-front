@@ -42,37 +42,41 @@ export const MetricsProvider = ({ children }) => {
 				setLiquidityOsmo24h(data.liquidity_osmo_24h)
 			})
 			setLoadingTop(true)
-			API.request({ url: "tokens/v2/top/gainers", type: "get" }).then((res) => {
-				setGainers(res.data)
-				setLoadingTop(false)
-			}).catch((err) => {
-				console.log("%cMetricsProvider.js -> 49 ERROR: err",'background: #FF0000; color:#FFFFFF', err  )
-				setLoadingTop(false)
-			})
+			API.request({ url: "tokens/v2/top/gainers", type: "get" })
+				.then((res) => {
+					setGainers(res.data)
+					setLoadingTop(false)
+				})
+				.catch((err) => {
+					console.log("%cMetricsProvider.js -> 49 ERROR: err", "background: #FF0000; color:#FFFFFF", err)
+					setLoadingTop(false)
+				})
 			API.request({ url: "tokens/v2/top/losers", type: "get" }).then((res) => {
 				setLosers(res.data)
 			})
 			setLoadingDominance(true)
-			API.request({ url: "tokens/v2/dominance/all", type: "get" }).then((res) => {
-				let dominances = []
-				let others = {
-					symbol: "Others",
-					dominance: 0,
-				}
-				res.data.forEach((dominance, index) => {
-					if (index < 4) {
-						dominances.push(dominance)
-					} else {
-						others.dominance += dominance.dominance
+			API.request({ url: "tokens/v2/dominance/all", type: "get" })
+				.then((res) => {
+					let dominances = []
+					let others = {
+						symbol: "Others",
+						dominance: 0,
 					}
+					res.data.forEach((dominance, index) => {
+						if (index < 4) {
+							dominances.push(dominance)
+						} else {
+							others.dominance += dominance.dominance
+						}
+					})
+					dominances.push(others)
+					setDominance(dominances)
+					setLoadingDominance(false)
 				})
-				dominances.push(others)
-				setDominance(dominances)
-				setLoadingDominance(false)
-			}).catch((err) => {
-				console.log("%cMetricsProvider.js -> 73 ERROR: err",'background: #FF0000; color:#FFFFFF', err  )
-				setLoadingDominance(false)
-			})
+				.catch((err) => {
+					console.log("%cMetricsProvider.js -> 70 ERROR: err", "background: #FF0000; color:#FFFFFF", err)
+					setLoadingDominance(false)
+				})
 		}
 		fetch()
 	}, [])
