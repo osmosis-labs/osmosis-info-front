@@ -15,11 +15,14 @@ const useStyles = makeStyles((theme) => {
 		},
 		items: {
 			display: "grid",
-			gridTemplateColumns: "1fr 1fr 1fr",
-			columnGap: "20px",
-			rowGap: "20px",
+
+			gridTemplateColumns: "1fr 1fr 1fr ",
+			columnGap: "40px",
+			rowGap: "40px",
 			marginTop: "20px",
 			overflow: "hidden",
+			alignContent: "center",
+			justifyContent: "stretch",
 			marginBottom: theme.spacing(2),
 			[theme.breakpoints.down("xs")]: {
 				gridTemplateColumns: "1fr ",
