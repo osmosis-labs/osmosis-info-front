@@ -3,9 +3,9 @@ import { useEffect, useState, useRef } from "react"
 import { useHistory, useParams } from "react-router-dom"
 import ContainerLoader from "../../../components/loader/ContainerLoader"
 import Paper from "../../../components/paper/Paper"
-import { useTokens } from "../../../contexts/TokensProvider"
 import {
 	detectBestDecimalsDisplay,
+	formateNumberPercentDecimalsAuto,
 	formateNumberPrice,
 	formateNumberPriceDecimals,
 	getInclude,
@@ -13,6 +13,8 @@ import {
 import TokenPath from "./TokenPath"
 import TokenTitle from "./TokenTitle"
 import ContainerCharts from "./ContainerCharts"
+import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
+import { useTokensV2 } from "../../../contexts/TokensV2.provider"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -21,7 +23,6 @@ const useStyles = makeStyles((theme) => {
 			display: "grid",
 			gridAutoRows: "auto",
 			rowGap: theme.spacing(2),
-			margin: `${theme.spacing(2)}px 0`,
 		},
 		charts: {
 			display: "grid",
@@ -34,9 +35,13 @@ const useStyles = makeStyles((theme) => {
 			},
 		},
 		right: {
+			position: "relative",
 			zIndex: "0",
 			height: "100%",
 			width: "100%",
+			display: "flex",
+			flexDirection: "column",
+			flexGrow: "1",
 		},
 
 		details: {
@@ -74,9 +79,38 @@ const useStyles = makeStyles((theme) => {
 			minHeight: "180px",
 		},
 		loaderDetails: {
+			position: "relative",
 			height: "100%",
 			width: "100%",
 			display: "flex",
+		},
+		actions: {
+			display: "flex",
+			justifyContent: "flex-end",
+			alignItems: "center",
+			marginBottom: theme.spacing(1),
+		},
+		actionLabel: {
+			paddingRight: "10px",
+			fontSize: "0.9rem",
+		},
+		loading: {
+			backgroundColor: `${theme.palette.primary.dark}`,
+			borderRadius: theme.spacing(2),
+		},
+		containerHideShow: {
+			overflow: "hidden",
+			display: "flex",
+			flexGrow: "1",
+			flexDirection: "column",
+		},
+		hide: {
+			display: "none",
+		},
+		show: {
+			display: "flex",
+			flexGrow: "1",
+			flexDirection: "column",
 		},
 	}
 })
@@ -85,9 +119,18 @@ const Token = ({ showToast }) => {
 	const classes = useStyles()
 	const history = useHistory()
 	const { symbol } = useParams()
-	const { getTokenData, getChartToken, tokens, getVolumeChartToken, getLiquidityChartToken } = useTokens()
+	const {
+		getTokenData,
+		tokens,
+		loadingToken,
+		loadingCharts,
+		getHistoricalChartToken,
+		getVolumeChartToken,
+		getLiquidityChartToken,
+	} = useTokensV2()
 	const [token, setToken] = useState({})
 	const priceDecimals = useRef(2)
+	const [expert, setExpert] = useState("simplified")
 
 	const [dataIsLoaded, setDataIsLoaded] = useState(false) // data is loaded
 
@@ -120,7 +163,7 @@ const Token = ({ showToast }) => {
 			try {
 				setDataIsLoaded(false)
 				let tokenData = await getTokenData(token.symbol)
-				let dataPrice = await getDataPrice("7d")
+				let dataPrice = await getDataPrice(10080)
 				priceDecimals.current = dataPrice.length > 0 ? detectBestDecimalsDisplay(dataPrice[0].close) : 2
 				setToken({ ...tokenData, price: dataPrice[dataPrice.length - 1].close })
 				setDataIsLoaded(true)
@@ -134,8 +177,8 @@ const Token = ({ showToast }) => {
 		}
 	}, [token, getTokenData])
 
-	const getDataPrice = async (range) => {
-		let data = await getChartToken({ symbol: token.symbol, range })
+	const getDataPrice = async (tf) => {
+		let data = await getHistoricalChartToken({ symbol: token.symbol, tf })
 		return data
 	}
 
@@ -157,37 +200,60 @@ const Token = ({ showToast }) => {
 				<p className={classes.tokenPrice}>{formateNumberPriceDecimals(token.price, priceDecimals.current)}</p>
 			</ContainerLoader>
 			<div className={classes.charts}>
-				<Paper>
-					<ContainerLoader classChildren={classes.loaderDetails} isLoading={!dataIsLoaded}>
-						<div className={classes.details}>
-							<div className={classes.detail}>
-								<p className={classes.titleDetail}>Liquidity</p>
-								<p variant="body2" className={classes.dataDetail}>
-									{formateNumberPrice(token.liquidity)}
-								</p>
-							</div>
-							<div className={classes.detail}>
-								<p className={classes.titleDetail}>Volume (24hrs)</p>
-								<p variant="body2" className={classes.dataDetail}>
-									{formateNumberPrice(token.volume_24h)}
-								</p>
-							</div>
-							<div className={classes.detail}>
-								<p className={classes.titleDetail}>Price</p>
-								<p variant="body2" className={classes.dataDetail}>
-									{formateNumberPriceDecimals(token.price, priceDecimals.current)}
-								</p>
-							</div>
+				<Paper className={classes.loaderDetails}>
+					<BlocLoaderOsmosis open={!dataIsLoaded} classNameLoading={classes.loading} />
+					<div className={classes.details}>
+						<div className={classes.detail}>
+							<p className={classes.titleDetail}>Liquidity</p>
+							<p variant="body2" className={classes.dataDetail}>
+								{formateNumberPrice(token.liquidity)}
+							</p>
 						</div>
-					</ContainerLoader>
+						<div className={classes.detail}>
+							<p className={classes.titleDetail}>Liquidity 24hrs change</p>
+							<p variant="body2" className={classes.dataDetail}>
+								{formateNumberPercentDecimalsAuto(token.liquidity24hChange)}
+							</p>
+						</div>
+						<div className={classes.detail}>
+							<p className={classes.titleDetail}>Volume (24hrs)</p>
+							<p variant="body2" className={classes.dataDetail}>
+								{formateNumberPrice(token.volume24h)}
+							</p>
+						</div>
+						<div className={classes.detail}>
+							<p className={classes.titleDetail}>Volume 24hrs change</p>
+							<p variant="body2" className={classes.dataDetail}>
+								{formateNumberPercentDecimalsAuto(token.volume24hChange)}
+							</p>
+						</div>
+						<div className={classes.detail}>
+							<p className={classes.titleDetail}>Price</p>
+							<p variant="body2" className={classes.dataDetail}>
+								{formateNumberPriceDecimals(token.price, priceDecimals.current)}
+							</p>
+						</div>
+						<div className={classes.detail}>
+							<p className={classes.titleDetail}>Price 24hrs change</p>
+							<p variant="body2" className={classes.dataDetail}>
+								{formateNumberPrice(token.price24hChange)}
+							</p>
+						</div>
+					</div>
 				</Paper>
 				<Paper className={classes.right}>
-					<ContainerCharts
-						getDataPrice={getDataPrice}
-						getDataVolume={getDataVolume}
-						getDataLiquidity={getDataLiquidity}
-						dataIsLoaded={dataIsLoaded}
-					/>
+					<BlocLoaderOsmosis open={!dataIsLoaded || loadingCharts} classNameLoading={classes.loading} />
+					<div className={classes.containerHideShow}>
+						<div className={expert === "expert" ? classes.hide : classes.show}>
+							<ContainerCharts
+								token={token}
+								getDataPrice={getDataPrice}
+								getDataVolume={getDataVolume}
+								getDataLiquidity={getDataLiquidity}
+								dataIsLoaded={dataIsLoaded || loadingCharts}
+							/>
+						</div>
+					</div>
 				</Paper>
 			</div>
 		</div>

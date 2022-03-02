@@ -4,14 +4,15 @@ import PoolsTable from "../../features/pools/PoolsTable"
 import useFocus from "../../hooks/FocusHook"
 import DialogSearch from "./DialogSearch"
 import { getInclude, normalize } from "../../helpers/helpers"
-import { usePools } from "../../contexts/PoolsProvider"
 import { useEffect } from "react"
 import { useCallback } from "react"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
 import { useHistory } from "react-router-dom"
-import { useTokens } from "../../contexts/TokensProvider"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import TokensTable from "../../features/tokens/TokensTable"
+import { usePoolsV2 } from "../../contexts/PoolsV2.provier"
+import { useTokensV2 } from "../../contexts/TokensV2.provider"
+
 const useStyles = makeStyles((theme) => {
 	return {
 		searchRoot: {
@@ -82,8 +83,8 @@ const Search = () => {
 	const [inputSearch, setInputSearch] = useState("")
 	const matchXS = useMediaQuery((theme) => theme.breakpoints.down("xs"))
 	const matchSM = useMediaQuery((theme) => theme.breakpoints.down("sm"))
-	const { pools } = usePools()
-	const { tokens } = useTokens()
+	const { pools } = usePoolsV2()
+	const { tokens } = useTokensV2()
 	const { watchlistPools } = useWatchlistPools()
 	const { watchlistTokens } = useWatchlistTokens()
 	const [dataShowPools, setDataShowPools] = useState([])

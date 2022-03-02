@@ -3,7 +3,12 @@ import { makeStyles } from "@material-ui/core"
 import Image from "../../../components/image/Image"
 import ContainerLoader from "../../../components/loader/ContainerLoader"
 import Paper from "../../../components/paper/Paper"
-import { formateNumberPrice, formateNumberPriceDecimals, formaterNumber } from "../../../helpers/helpers"
+import {
+	formateNumberPercentDecimalsAuto,
+	formateNumberPrice,
+	formateNumberPriceDecimals,
+	formaterNumber,
+} from "../../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -65,7 +70,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const PoolInfo = ({ loadingPoolInfo, tokens, pool, fees, pricesDecimals }) => {
+const PoolInfo = ({ loadingPoolInfo, tokens, pool, pricesDecimals }) => {
 	const classes = useStyles()
 	return (
 		<div className={classes.details}>
@@ -104,21 +109,34 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool, fees, pricesDecimals }) => {
 						</p>
 					</div>
 					<div className={classes.detail}>
+						<p className={classes.titleDetail}>Liquidity 24hrs change</p>
+						<p variant="body2" className={classes.dataDetail}>
+							{formateNumberPercentDecimalsAuto(pool.liquidity24hChange)}
+						</p>
+					</div>
+
+					<div className={classes.detail}>
 						<p className={classes.titleDetail}>Volume (24hrs)</p>
 						<p variant="body2" className={classes.dataDetail}>
-							{formateNumberPrice(pool.volume_24h)}
+							{formateNumberPrice(pool.volume24h)}
+						</p>
+					</div>
+					<div className={classes.detail}>
+						<p className={classes.titleDetail}>Volume 24hrs change</p>
+						<p variant="body2" className={classes.dataDetail}>
+							{formateNumberPercentDecimalsAuto(pool.volume24hChange)}
 						</p>
 					</div>
 					<div className={classes.detail}>
 						<p className={classes.titleDetail}>Volume (7d)</p>
 						<p variant="body2" className={classes.dataDetail}>
-							{formateNumberPrice(pool.volume_7d)}
+							{formateNumberPrice(pool.volume7d)}
 						</p>
 					</div>
 					<div className={classes.detail}>
 						<p className={classes.titleDetail}>Fees</p>
 						<p variant="body2" className={classes.dataDetail}>
-							{fees}
+							{pool.fees}
 						</p>
 					</div>
 				</ContainerLoader>

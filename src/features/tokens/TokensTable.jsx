@@ -3,7 +3,12 @@ import { useState } from "react"
 import Image from "../../components/image/Image"
 import TablePagination from "../../components/tablePagination/TablePagination"
 import { useSettings } from "../../contexts/SettingsProvider"
-import { formateNumberPrice, formateNumberPriceDecimalsAuto, formaterNumber } from "../../helpers/helpers"
+import {
+	formateNumberPercentDecimalsAuto,
+	formateNumberPrice,
+	formateNumberPriceDecimalsAuto,
+	formaterNumber,
+} from "../../helpers/helpers"
 import TokensHeaderTable from "./TokensHearderTable"
 import TableSettings from "../../components/tableSettings/TableSettings"
 
@@ -181,11 +186,15 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 	}
 
 	const getHeadCells = () => {
+		const priceXs = (price) => {
+			return `$${formaterNumber(price)}`
+		}
+		const isXs = size === "xs"
 		let head = [
 			{
 				id: "id",
-				cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
-				classes: size === "xs" ? classes.hCellsExtraSmall : classes.hCellsSmall,
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsSmall,
 				sortable: sortable,
 				disablePadding: false,
 				label: "#",
@@ -193,8 +202,8 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 			},
 			{
 				id: "name",
-				cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
-				classes: size === "xs" ? classes.hCellsExtraSmallName : classes.hCellsLg,
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmallName : classes.hCellsLg,
 				sortable: sortable,
 				disablePadding: false,
 				label: "Tokens",
@@ -204,8 +213,8 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 			},
 			{
 				id: "liquidity",
-				cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
-				classes: size === "xs" ? classes.hCellsExtraSmall : classes.hCellsLg,
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
 				transform: formateNumberPrice,
 				disablePadding: false,
@@ -213,49 +222,67 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 				align: "right",
 			},
 			{
-				id: "price",
-				cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
-				classes: size === "xs" ? classes.hCellsExtraSmall : classes.hCellsLg,
+				id: "liquidity24hChange",
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: formateNumberPriceDecimalsAuto,
+				transform: (value)=>formateNumberPercentDecimalsAuto(value, 0),
+				disablePadding: false,
+				label: "Liquidity (24h) change",
+				align: "right",
+			},
+			{
+				id: "price",
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
+				sortable: sortable,
+				transform: isXs ? priceXs : formateNumberPriceDecimalsAuto,
 				disablePadding: false,
 				label: "Price",
 				align: "right",
 			},
 			{
-				id: "volume_24h",
-				cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
-				classes: size === "xs" ? classes.hCellsExtraSmall : classes.hCellsLg,
+				id: "price24hChange",
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
+				sortable: sortable,
+				transform: (value)=>formateNumberPercentDecimalsAuto(value, 0),
+				disablePadding: false,
+				label: "Price (24h) change",
+				align: "right",
+			},
+			{
+				id: "volume24h",
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
 				transform: formateNumberPrice,
 				disablePadding: false,
 				label: "Volume (24h)",
 				align: "right",
 			},
+			{
+				id: "volume24hChange",
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
+				sortable: sortable,
+				transform: formateNumberPrice,
+				disablePadding: false,
+				label: "Volume (24h) change",
+				align: "right",
+			},
 		]
-		if (size === "xs") {
-			head[2].transform = (price) => {
-				return `$${formaterNumber(price)}`
-			}
-		}
 
 		let headToDisplay = []
+		Object.keys(settings.tokenTable).forEach((key) => {
+			if (settings.tokenTable[key]) {
+				let header = head.filter((item) => item.id === key)
+				if (header.length > 0) {
+					headToDisplay.push(header[0])
+				}
+			}
+		})
 
-		if (settings.tokenTable.id) {
-			headToDisplay.push(head[0])
-		}
-		if (settings.tokenTable.name) {
-			headToDisplay.push(head[1])
-		}
-		if (settings.tokenTable.liquidity) {
-			headToDisplay.push(head[2])
-		}
-		if (settings.tokenTable.price) {
-			headToDisplay.push(head[3])
-		}
-		if (settings.tokenTable.volume24h) {
-			headToDisplay.push(head[4])
-		}
 		return headToDisplay
 	}
 
@@ -295,7 +322,16 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 			<TableSettings
 				settings={settings.tokenTable}
 				setSettings={setSettings}
-				match={{ id: "Id", name: "Name", liquidity: "Liquidity", price: "Price", volume24h: "Volume (24h)" }}
+				match={{
+					id: "Id",
+					name: "Name",
+					liquidity: "Liquidity",
+					price: "Price",
+					volume24h: "Volume (24h)",
+					liquidity24hChange: "Liquidity (24h) change",
+					price24hChange: "Price (24h) change",
+					volume24hChange: "Volume (24h) change",
+				}}
 			/>
 			<div className={classes.tokensTableRoot}>
 				<Table>
@@ -324,31 +360,31 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 												padding={headCell.padding}
 											>
 												{/* <Tooltip title={row.name}> */}
-													<div className={classes.cellName}>
-														<div className={classes.images}>
-															{row.symbol
-																.split("-")
-																.slice(0, 2)
-																.map((symbol, index) => {
-																	return (
-																		<Image
-																			style={{ left: index * 18 + "px" }}
-																			key={headCell.id + row.id + symbol}
-																			className={classes.image}
-																			assets={true}
-																			pathAssets=""
-																			src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${symbol.toLowerCase()}.png`}
-																			srcFallback="../assets/default.png"
-																			alt={`${symbol}`}
-																		/>
-																	)
-																})}
-														</div>
-														<p className={classes.name}>
-															{row.name}
-															<em className={classes.symbolName}>({row.symbol})</em>
-														</p>
+												<div className={classes.cellName}>
+													<div className={classes.images}>
+														{row.symbol
+															.split("-")
+															.slice(0, 2)
+															.map((symbol, index) => {
+																return (
+																	<Image
+																		style={{ left: index * 18 + "px" }}
+																		key={headCell.id + row.id + symbol}
+																		className={classes.image}
+																		assets={true}
+																		pathAssets=""
+																		src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${symbol.toLowerCase()}.png`}
+																		srcFallback="../assets/default.png"
+																		alt={`${symbol}`}
+																	/>
+																)
+															})}
 													</div>
+													<p className={classes.name}>
+														{row.name}
+														<em className={classes.symbolName}>({row.symbol})</em>
+													</p>
+												</div>
 												{/* </Tooltip> */}
 											</TableCell>
 										)

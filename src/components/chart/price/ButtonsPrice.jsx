@@ -17,32 +17,32 @@ const ButtonsPrice = ({ onChangeRange, range }) => {
 			className={classes.groupButton}
 			buttons={[
 				{
-					id: "7d",
-					name: "7D",
+					id: 60,
+					name: "1H",
 					onClick: () => {
-						onChangeRange("7d")
+						onChangeRange(60)
 					},
 				},
 
 				{
-					id: "1mo",
+					id: 1440,
+					name: "1D",
+					onClick: () => {
+						onChangeRange(1440)
+					},
+				},
+				{
+					id: 10800,
+					name: "1W",
+					onClick: () => {
+						onChangeRange(10080)
+					},
+				},
+				{
+					id: 43800,
 					name: "1M",
 					onClick: () => {
-						onChangeRange("1mo")
-					},
-				},
-				{
-					id: "1y",
-					name: "1Y",
-					onClick: () => {
-						onChangeRange("1y")
-					},
-				},
-				{
-					id: "all",
-					name: "All",
-					onClick: () => {
-						onChangeRange("all")
+						onChangeRange(43800)
 					},
 				},
 			]}
