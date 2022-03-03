@@ -2,6 +2,7 @@ import { makeStyles } from "@material-ui/core"
 import Image from "../../../components/image/Image"
 import PieChartIcon from "@material-ui/icons/PieChart"
 import { formateNumberDecimals, formateNumberDecimalsAuto } from "../../../helpers/helpers"
+import { useHistory } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -13,6 +14,7 @@ const useStyles = makeStyles((theme) => {
 			padding: "6px 6px",
 			margin: "4px 0",
 			borderRadius: "5px",
+			cursor: "pointer",
 		},
 		image: {
 			height: "30px",
@@ -81,6 +83,7 @@ const useStyles = makeStyles((theme) => {
 
 const TopItem = ({ item, index, type }) => {
 	const classes = useStyles()
+	const history = useHistory()
 	let itemClass = ""
 	if (type === "gainers") {
 		if (index === 0) itemClass = classes.first
@@ -91,8 +94,13 @@ const TopItem = ({ item, index, type }) => {
 		else if (index === 1) itemClass = classes.secondDown
 		else if (index === 2) itemClass = classes.thirdDown
 	}
+
+	const onClick = () => {
+		history.push(`/token/${item.symbol}`)
+	}
+
 	return (
-		<div className={`${classes.topItemRoot} ${itemClass}`}>
+		<div className={`${classes.topItemRoot} ${itemClass}`} onClick={onClick}>
 			{item.symbol === "Others" ? (
 				<PieChartIcon className={`${classes.icon}`} />
 			) : (
