@@ -18,7 +18,7 @@ export const ChartsProvider = ({ children }) => {
 		let fetch = async () => {
 			// get all Charts from server API
 			let promises = [
-				API.request({ url: "liquidity/v1/historical/chart", type: "get" }),
+				API.request({ url: "liquidity/v2/historical/chart", type: "get" }),
 				API.request({ url: "volume/v1/historical/chart", type: "get" }),
 				API.request({ url: "volume/v1/actual", type: "get" }),
 				API.request({ url: "liquidity/v1/actual", type: "get" }),
@@ -26,7 +26,6 @@ export const ChartsProvider = ({ children }) => {
 			let results = await Promise.all(promises)
 			let liquidity = results[0].data
 			let volume = results[1].data
-			liquidity.push(results[3].data)
 			volume.push(results[2].data)
 			setLoadingData(false)
 			setDataLiquidityD(liquidity)
@@ -38,7 +37,6 @@ export const ChartsProvider = ({ children }) => {
 			let volumeM = []
 			let currentMonth = { time: volume[0].time, value: 0 }
 			volume.forEach((item) => {
-				
 				if (timeToDateUTC(item.time).getMonth() === timeToDateUTC(currentMonth.time).getMonth()) {
 					currentMonth.value += item.value
 				} else {
@@ -64,26 +62,35 @@ export const ChartsProvider = ({ children }) => {
 
 			// Aggregate by week and month for liquidity
 			let liquidityW = []
-			currentWeek = { time: liquidity[0].time, value: 0 }
+			currentWeek = { time: liquidity[0].time, value: 0, value_atom: 0, value_osmo: 0 }
 			let liquidityM = []
-			currentMonth = { time: liquidity[0].time, value: 0 }
+			currentMonth = { time: liquidity[0].time, value: 0, value_atom: 0, value_osmo: 0 }
 			liquidity.forEach((item) => {
 				let currentDate = timeToDateUTC(item.time)
 				let dateMonth = timeToDateUTC(currentMonth.time)
 				if (currentDate.getMonth() === dateMonth.getMonth()) {
 					currentMonth.value = item.value
+					currentMonth.value_atom = item.value_atom
+					currentMonth.value_osmo = item.value_osmo
 				} else {
 					liquidityM.push(currentMonth)
-					currentMonth = { time: item.time, value: item.value }
+					currentMonth = {
+						time: item.time,
+						value: item.value,
+						value_atom: item.value_atom,
+						value_osmo: item.value_osmo,
+					}
 				}
 				let dateOfCurrentWeek = timeToDateUTC(currentWeek.time)
 				let numberOfWeek = getWeekNumber(currentDate)
 				let numberOfWeekOfCurrentWeek = getWeekNumber(dateOfCurrentWeek)
 				if (numberOfWeek === numberOfWeekOfCurrentWeek) {
 					currentWeek.value = item.value
+					currentWeek.value_atom = item.value_atom
+					currentWeek.value_osmo = item.value_osmo
 				} else {
 					liquidityW.push(currentWeek)
-					currentWeek = { time: item.time, value: item.value }
+					currentWeek = { time: item.time, value: item.value, value_atom: item.value_atom, value_osmo: item.value_osmo }
 				}
 			})
 			liquidityW.push(currentWeek)
