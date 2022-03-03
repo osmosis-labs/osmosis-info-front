@@ -2,6 +2,7 @@ import { makeStyles } from "@material-ui/core"
 import Image from "../../../components/image/Image"
 import PieChartIcon from "@material-ui/icons/PieChart"
 import { formateNumberDecimals } from "../../../helpers/helpers"
+import { useHistory } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -11,6 +12,8 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "center",
 			columnGap: "2px",
 			padding: "6px 0",
+			cursor: "pointer",
+
 		},
 		image: {
 			height: "30px",
@@ -67,13 +70,19 @@ const useStyles = makeStyles((theme) => {
 
 const DominanceItem = ({ item, index }) => {
 	const classes = useStyles()
+	const history = useHistory()
 	let barClasse = ""
 	if(index === 0) barClasse = classes.percentBarPurple
 	else if(index === 1) barClasse = classes.percentBarBlue
 	else if(index === 2) barClasse = classes.percentBarRed
 	else if(index === 3) barClasse = classes.percentBarGreen
+
+	const onClick = () => {
+		history.push(`/token/${item.symbol}`)
+	}
+
 	return (
-		<div className={classes.dominanceItemRoot}>
+		<div className={classes.dominanceItemRoot} onClick={onClick}>
 			{item.symbol === "Others" ? (
 				<PieChartIcon className={`${classes.icon}`} />
 			) : (

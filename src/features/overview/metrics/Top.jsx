@@ -53,7 +53,7 @@ const Top = () => {
 		<Paper className={classes.topRoot}>
 			<BlocLoaderOsmosis open={loadingTop} />
 			<div className={classes.titleContainer}>
-				<p>Top</p>
+				<p>Top (-24h)</p>
 				<ButtonGroup
 					className={classes.groupButton}
 					buttons={[

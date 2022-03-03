@@ -181,10 +181,10 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 	}
 
 	const getHeadCells = () => {
-		const priceXs = (price) => {
+		const isXs = size === "xs"
+		const transformPriceMK = (price) => {
 			return `$${formaterNumber(price)}`
 		}
-		const isXs = size === "xs"
 		let head = [
 			{
 				id: "id",
@@ -211,7 +211,7 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: isXs ? priceXs : formateNumberPriceDecimalsAuto,
+				transform: transformPriceMK,
 				disablePadding: false,
 				label: "Liquidity",
 				align: "right",
@@ -231,7 +231,7 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: formateNumberPrice,
+				transform: transformPriceMK,
 				disablePadding: false,
 				label: "Volume (7d)",
 				align: "right",
@@ -241,7 +241,7 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: formateNumberPrice,
+				transform: transformPriceMK,
 				disablePadding: false,
 				label: "Volume (24h)",
 				align: "right",

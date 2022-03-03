@@ -186,10 +186,10 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 	}
 
 	const getHeadCells = () => {
-		const priceXs = (price) => {
+		const isXs = size === "xs"
+		const transformPriceMK = (price) => {
 			return `$${formaterNumber(price)}`
 		}
-		const isXs = size === "xs"
 		let head = [
 			{
 				id: "id",
@@ -216,7 +216,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: formateNumberPrice,
+				transform: transformPriceMK,
 				disablePadding: false,
 				label: "Liquidity",
 				align: "right",
@@ -236,7 +236,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: isXs ? priceXs : formateNumberPriceDecimalsAuto,
+				transform: formateNumberPriceDecimalsAuto,
 				disablePadding: false,
 				label: "Price",
 				align: "right",
@@ -256,7 +256,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: formateNumberPrice,
+				transform: transformPriceMK,
 				disablePadding: false,
 				label: "Volume (24h)",
 				align: "right",
@@ -266,7 +266,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: formateNumberPrice,
+				transform: transformPriceMK,
 				disablePadding: false,
 				label: "Volume (24h) change",
 				align: "right",

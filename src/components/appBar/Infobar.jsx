@@ -105,10 +105,10 @@ const InfoBar = () => {
 					</p>
 				</div>
 				<div className={classes.right}>
-					<a className={classes.link} href="https://github.com/osmosis-labs">
+					<a className={classes.link} href="https://github.com/osmosis-labs" target="_blank">
 						Github
 					</a>
-					<a className={classes.link} href="https://app.osmosis.zone/">
+					<a className={classes.link} href="https://app.osmosis.zone/" target="_blank">
 						App
 					</a>
 				</div>

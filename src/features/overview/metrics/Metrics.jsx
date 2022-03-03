@@ -92,7 +92,7 @@ const Metrics = () => {
 			<div className={classes.metrics}>
 				<Paper className={classes.metric}>
 					<div className={classes.infoContainer}>
-						<p className={classes.title}>OSMO</p>
+						<p className={classes.title}>OSMO (-24h)</p>
 						<div className={classes.osmosPrice}>
 							<span
 								className={
