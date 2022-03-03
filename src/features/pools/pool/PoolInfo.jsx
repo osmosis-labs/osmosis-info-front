@@ -4,11 +4,14 @@ import Image from "../../../components/image/Image"
 import ContainerLoader from "../../../components/loader/ContainerLoader"
 import Paper from "../../../components/paper/Paper"
 import {
-	formateNumberPercentDecimalsAuto,
+	formateNumberDecimalsAuto,
 	formateNumberPrice,
 	formateNumberPriceDecimals,
 	formaterNumber,
 } from "../../../helpers/helpers"
+
+import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -67,11 +70,22 @@ const useStyles = makeStyles((theme) => {
 			fontSize: theme.fontSize.big,
 			color: theme.palette.gray.contrastText,
 		},
+
+		colorUp: { color: theme.palette.green.text },
+		colorDown: { color: theme.palette.error.main },
+		containerUpDown: {
+			display: "flex",
+			flexDirection: "row",
+			alignItems: "center",
+		},
 	}
 })
 
 const PoolInfo = ({ loadingPoolInfo, tokens, pool, pricesDecimals }) => {
 	const classes = useStyles()
+	const formatPercent = (value) => {
+		return formateNumberDecimalsAuto({ price: value, minDecimal: 0, minPrice: 1, maxDecimal: 2, unit: "%" })
+	}
 	return (
 		<div className={classes.details}>
 			<Paper className={classes.detailPaper}>
@@ -110,8 +124,24 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool, pricesDecimals }) => {
 					</div>
 					<div className={classes.detail}>
 						<p className={classes.titleDetail}>Liquidity 24hrs change</p>
-						<p variant="body2" className={classes.dataDetail}>
-							{formateNumberPercentDecimalsAuto(pool.liquidity24hChange)}
+						<p
+							variant="body2"
+							className={
+								pool.liquidity24hChange === 0
+									? classes.dataDetail
+									: pool.liquidity24hChange > 0
+									? `${classes.dataDetail} ${classes.colorUp} ${classes.containerUpDown}`
+									: `${classes.dataDetail} ${classes.coloDown} ${classes.containerUpDown}`
+							}
+						>
+							{pool.liquidity24hChange > 0 ? (
+								<ArrowDropUpIcon className={classes.colorUp} />
+							) : pool.liquidity24hChange < 0 ? (
+								<ArrowDropDownIcon className={classes.colorDown} />
+							) : (
+								<span />
+							)}
+							{formatPercent(pool.liquidity24hChange)}
 						</p>
 					</div>
 
@@ -123,8 +153,24 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool, pricesDecimals }) => {
 					</div>
 					<div className={classes.detail}>
 						<p className={classes.titleDetail}>Volume 24hrs change</p>
-						<p variant="body2" className={classes.dataDetail}>
-							{formateNumberPercentDecimalsAuto(pool.volume24hChange)}
+						<p
+							variant="body2"
+							className={
+								pool.volume24hChange === 0
+									? classes.dataDetail
+									: pool.volume24hChange > 0
+									? `${classes.dataDetail} ${classes.colorUp} ${classes.containerUpDown}`
+									: `${classes.dataDetail} ${classes.coloDown} ${classes.containerUpDown}`
+							}
+						>
+							{pool.volume24hChange > 0 ? (
+								<ArrowDropUpIcon className={classes.colorUp} />
+							) : pool.volume24hChange < 0 ? (
+								<ArrowDropDownIcon className={classes.colorDown} />
+							) : (
+								<span />
+							)}
+							{formatPercent(pool.volume24hChange)}
 						</p>
 					</div>
 					<div className={classes.detail}>
@@ -136,7 +182,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool, pricesDecimals }) => {
 					<div className={classes.detail}>
 						<p className={classes.titleDetail}>Fees</p>
 						<p variant="body2" className={classes.dataDetail}>
-							{pool.fees}
+							{formatPercent(parseFloat(pool.fees))}
 						</p>
 					</div>
 				</ContainerLoader>

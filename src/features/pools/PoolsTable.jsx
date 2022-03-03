@@ -5,11 +5,11 @@ import TablePagination from "../../components/tablePagination/TablePagination"
 import TableSettings from "../../components/tableSettings/TableSettings"
 import { useSettings } from "../../contexts/SettingsProvider"
 import {
-	formateNumberPercentDecimalsAuto,
-	formateNumberPrice,
-	formateNumberPriceDecimalsAuto,
+	formateNumberDecimalsAuto,
 	formaterNumber,
 } from "../../helpers/helpers"
+import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import PoolsHeaderTable from "./PoolsHeaderTable"
 
 const useStyles = makeStyles((theme) => {
@@ -111,6 +111,13 @@ const useStyles = makeStyles((theme) => {
 			borderColor: theme.palette.primary.main,
 		},
 		rows: {},
+		cellUpDown: {
+			display: "flex",
+			justifyContent: "flex-end",
+			alignItems: "center",
+		},
+		cellUp: { color: theme.palette.green.text },
+		cellDown: { color: theme.palette.error.main },
 	}
 })
 
@@ -185,6 +192,9 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 		const transformPriceMK = (price) => {
 			return `$${formaterNumber(price)}`
 		}
+		const formatPercent = (value) => {
+			return formateNumberDecimalsAuto({price: value, minDecimal: 0, minPrice: 1, maxDecimal:2, unit: "%"})
+		}
 		let head = [
 			{
 				id: "id",
@@ -221,19 +231,9 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: (value) => formateNumberPercentDecimalsAuto(value, 0),
+				transform: formatPercent,
 				disablePadding: false,
 				label: "Liquidity (24h) change",
-				align: "right",
-			},
-			{
-				id: "volume7d",
-				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
-				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
-				sortable: sortable,
-				transform: transformPriceMK,
-				disablePadding: false,
-				label: "Volume (7d)",
 				align: "right",
 			},
 			{
@@ -251,9 +251,19 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: formateNumberPrice,
+				transform: formatPercent,
 				disablePadding: false,
 				label: "Volume (24h) change",
+				align: "right",
+			},
+			{
+				id: "volume7d",
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
+				sortable: sortable,
+				transform: transformPriceMK,
+				disablePadding: false,
+				label: "Volume (7d)",
 				align: "right",
 			},
 			{
@@ -261,7 +271,7 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: (value) => formateNumberPercentDecimalsAuto(parseFloat(value), 0),
+				transform: (value) => formatPercent(parseFloat(value), 0),
 				disablePadding: false,
 				label: "Fees",
 				align: "right",
@@ -269,15 +279,14 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 		]
 
 		let headToDisplay = []
-		Object.keys(settings.poolTable).forEach((key) => {
-			if (settings.poolTable[key]) {
-				let header = head.filter((item) => item.id === key)
+		settings.poolTable.sort((a, b) =>  a.order - b.order).forEach((setting=>{
+			if(setting.display){
+				let header = head.filter((item) => item.id === setting.key)
 				if (header.length > 0) {
 					headToDisplay.push(header[0])
 				}
 			}
-		})
-
+		}))
 		return headToDisplay
 	}
 
@@ -295,6 +304,45 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 
 	const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
 	const headCells = getHeadCells()
+
+	const formatChange = (headCell, row) => {
+		let value = row[headCell.id]
+		let className = `${headCell.cellClasses}`
+		let body = headCell.transform ? headCell.transform(value) : value
+		if (value > 0) {
+			className = `${headCell.cellClasses} ${classes.cellUpDown} ${classes.cellUp}`
+			body = (
+				<div className={className}>
+					<>
+						<ArrowDropUpIcon className={classes.cellUp} />
+						{headCell.transform ? headCell.transform(value) : value}
+					</>
+				</div>
+			)
+		} else if (value < 0) {
+			className = `${headCell.cellClasses} ${classes.cellUpDown} ${classes.cellDown}`
+			body = (
+				<div className={className}>
+					<>
+						<ArrowDropDownIcon className={classes.cellDown} />
+						{headCell.transform ? headCell.transform(value) : value}
+					</>
+				</div>
+			)
+		}
+		return (
+			<TableCell
+				key={headCell.id + row.id}
+				className={headCell.cellClasses}
+				component={headCell.component}
+				align={headCell.align}
+				padding={headCell.padding}
+			>
+				{body}
+			</TableCell>
+		)
+	}
+
 	if (data.length === 0)
 		return (
 			<div className={classes.poolsTableRoot}>
@@ -312,21 +360,12 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 			</div>
 		)
 
+
 	return (
 		<div>
 			<TableSettings
 				settings={settings.poolTable}
 				setSettings={setSettings}
-				match={{
-					id: "Id",
-					name: "Name",
-					liquidity: "Liquidity",
-					volume7d: "Volume (7d)",
-					volume24h: "Volume (24h)",
-					liquidity24hChange: "Liquidity (24h) change",
-					fees: "Fees",
-					volume24hChange: "Volume (24h) change",
-				}}
 			/>
 			<div className={classes.poolsTableRoot}>
 				<Table>
@@ -380,6 +419,8 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 												{/* </Tooltip> */}
 											</TableCell>
 										)
+									} else if (headCell.id === "volume24hChange" || headCell.id === "liquidity24hChange") {
+										cell = formatChange(headCell, row)
 									} else {
 										cell = (
 											<TableCell
@@ -412,7 +453,7 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 							})}
 						{data.length > rowsPerPage && emptyRows > 0 && (
 							<TableRow style={{ height: 53 * emptyRows }}>
-								<TableCell colSpan={6} />
+								<TableCell colSpan={headCells.length} />
 							</TableRow>
 						)}
 					</TableBody>

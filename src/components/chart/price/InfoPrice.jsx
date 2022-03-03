@@ -63,7 +63,7 @@ const InfoPrice = ({ title, data, range, currency = { before: true, value: "$" }
 	}
 
 	const formatPriceForDisplay = (price) => {
-		return formateNumberDecimalsAuto(price, 2)
+		return formateNumberDecimalsAuto({price})
 	}
 
 	const formatDateForDisplay = (date) => {

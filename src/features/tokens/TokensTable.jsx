@@ -4,12 +4,12 @@ import Image from "../../components/image/Image"
 import TablePagination from "../../components/tablePagination/TablePagination"
 import { useSettings } from "../../contexts/SettingsProvider"
 import {
-	formateNumberPercentDecimalsAuto,
-	formateNumberPrice,
-	formateNumberPriceDecimalsAuto,
+	formateNumberDecimalsAuto,
 	formaterNumber,
 } from "../../helpers/helpers"
 import TokensHeaderTable from "./TokensHearderTable"
+import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import TableSettings from "../../components/tableSettings/TableSettings"
 
 const useStyles = makeStyles((theme) => {
@@ -116,6 +116,13 @@ const useStyles = makeStyles((theme) => {
 			color: theme.palette.gray.dark,
 			paddingLeft: theme.spacing(1),
 		},
+		cellUpDown: {
+			display: "flex",
+			justifyContent: "flex-end",
+			alignItems: "center",
+		},
+		cellUp: { color: theme.palette.green.text },
+		cellDown: { color: theme.palette.error.main },
 	}
 })
 
@@ -190,6 +197,9 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 		const transformPriceMK = (price) => {
 			return `$${formaterNumber(price)}`
 		}
+		const formatPercent = (value) => {
+			return formateNumberDecimalsAuto({price: value, minDecimal: 0, minPrice: 1, maxDecimal:2, unit: "%"})
+		}
 		let head = [
 			{
 				id: "id",
@@ -226,7 +236,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: (value)=>formateNumberPercentDecimalsAuto(value, 0),
+				transform: formatPercent,
 				disablePadding: false,
 				label: "Liquidity (24h) change",
 				align: "right",
@@ -236,7 +246,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: formateNumberPriceDecimalsAuto,
+				transform: value => formateNumberDecimalsAuto({price: value}),
 				disablePadding: false,
 				label: "Price",
 				align: "right",
@@ -246,7 +256,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: (value)=>formateNumberPercentDecimalsAuto(value, 0),
+				transform: formatPercent,
 				disablePadding: false,
 				label: "Price (24h) change",
 				align: "right",
@@ -274,14 +284,14 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 		]
 
 		let headToDisplay = []
-		Object.keys(settings.tokenTable).forEach((key) => {
-			if (settings.tokenTable[key]) {
-				let header = head.filter((item) => item.id === key)
+		settings.tokenTable.sort((a, b) =>  a.order - b.order).forEach((setting=>{
+			if(setting.display){
+				let header = head.filter((item) => item.id === setting.key)
 				if (header.length > 0) {
 					headToDisplay.push(header[0])
 				}
 			}
-		})
+		}))
 
 		return headToDisplay
 	}
@@ -300,6 +310,45 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 
 	const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
 	const headCells = getHeadCells()
+
+	const formatChange = (headCell, row) => {
+		let value = row[headCell.id]
+		let className = `${headCell.cellClasses}`
+		let body = headCell.transform ? headCell.transform(value) : value
+		if (value > 0) {
+			className = `${headCell.cellClasses} ${classes.cellUpDown} ${classes.cellUp}`
+			body = (
+				<div className={className}>
+					<>
+						<ArrowDropUpIcon className={classes.cellUp} />
+						{headCell.transform ? headCell.transform(value) : value}
+					</>
+				</div>
+			)
+		} else if (value < 0) {
+			className = `${headCell.cellClasses} ${classes.cellUpDown} ${classes.cellDown}`
+			body = (
+				<div className={className}>
+					<>
+						<ArrowDropDownIcon className={classes.cellDown} />
+						{headCell.transform ? headCell.transform(value) : value}
+					</>
+				</div>
+			)
+		}
+
+		return (
+			<TableCell
+				key={headCell.id + row.id}
+				className={headCell.cellClasses}
+				component={headCell.component}
+				align={headCell.align}
+				padding={headCell.padding}
+			>
+				{body}
+			</TableCell>
+		)
+	}
 	if (data.length === 0)
 		return (
 			<div className={classes.tokensTableRoot}>
@@ -322,16 +371,6 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 			<TableSettings
 				settings={settings.tokenTable}
 				setSettings={setSettings}
-				match={{
-					id: "Id",
-					name: "Name",
-					liquidity: "Liquidity",
-					price: "Price",
-					volume24h: "Volume (24h)",
-					liquidity24hChange: "Liquidity (24h) change",
-					price24hChange: "Price (24h) change",
-					volume24hChange: "Volume (24h) change",
-				}}
 			/>
 			<div className={classes.tokensTableRoot}>
 				<Table>
@@ -388,6 +427,8 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 												{/* </Tooltip> */}
 											</TableCell>
 										)
+									} else if (headCell.id === "price24hChange" || headCell.id === "liquidity24hChange") {
+										cell = formatChange(headCell, row)
 									} else {
 										cell = (
 											<TableCell
@@ -420,7 +461,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 							})}
 						{data.length > rowsPerPage && emptyRows > 0 && (
 							<TableRow style={{ height: 53 * emptyRows }}>
-								<TableCell colSpan={6} />
+								<TableCell colSpan={headCells.length} />
 							</TableRow>
 						)}
 					</TableBody>
