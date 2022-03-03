@@ -181,6 +181,9 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 	}
 
 	const getHeadCells = () => {
+		const transformPriceMK = (price) => {
+			return `$${formaterNumber(price)}`
+		}
 		let head = [
 			{
 				id: "id",
@@ -207,7 +210,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 				cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
 				classes: size === "xs" ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: formateNumberPrice,
+				transform: transformPriceMK,
 				disablePadding: false,
 				label: "Liquidity",
 				align: "right",
@@ -227,17 +230,12 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 				cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
 				classes: size === "xs" ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: formateNumberPrice,
+				transform: transformPriceMK,
 				disablePadding: false,
 				label: "Volume (24h)",
 				align: "right",
 			},
 		]
-		if (size === "xs") {
-			head[2].transform = (price) => {
-				return `$${formaterNumber(price)}`
-			}
-		}
 
 		let headToDisplay = []
 
