@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => {
 			margin: `${theme.spacing(2)}px 0`,
 		},
 		containerLoader:{
+			overflowX: "hidden",
 			position: "relative",
 			minHeight: "200px"
 		}

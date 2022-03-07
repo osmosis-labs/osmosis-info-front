@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => {
 		},
 		containerLoader:{
 			position: "relative",
+			overflowX: "hidden",
 			minHeight: "200px"
 		}
 	}

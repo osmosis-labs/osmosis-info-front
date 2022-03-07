@@ -9,7 +9,8 @@ import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import ButtonGroup from "../../../components/buttonGroup/ButtonGroup"
 import { useState } from "react"
-import { formateNumberDecimals } from "../../../helpers/helpers"
+import { formateNumberDecimals, formatPercent } from "../../../helpers/helpers"
+import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 const useStyles = makeStyles((theme) => {
 	return {
 		metricsRoot: {},
@@ -23,6 +24,7 @@ const useStyles = makeStyles((theme) => {
 			},
 		},
 		metric: {
+			position: "relative",
 			display: "flex",
 			alignItems: "center",
 			justifyContent: "space-between",
@@ -63,6 +65,12 @@ const useStyles = makeStyles((theme) => {
 		iconDown: {
 			color: theme.palette.error.main,
 		},
+		classNameLogoLoading: {
+			maxHeight: "130px",
+		},
+		classNameLoading: {
+			backgroundColor: theme.palette.primary.light,
+		},
 	}
 })
 
@@ -80,6 +88,7 @@ const Metrics = () => {
 		liquidityAtom24h,
 		liquidityOsmo,
 		liquidityOsmo24h,
+		loadingMetrics,
 	} = useMetrics()
 
 	const [typeLiquidity, setTypeLiquidity] = useState("USD")
@@ -91,6 +100,12 @@ const Metrics = () => {
 		<div className={classes.metricsRoot}>
 			<div className={classes.metrics}>
 				<Paper className={classes.metric}>
+					<BlocLoaderOsmosis
+						open={loadingMetrics}
+						classNameLogoLoading={classes.classNameLogoLoading}
+						classNameLoading={classes.classNameLoading}
+						borderRadius={true}
+					/>
 					<div className={classes.infoContainer}>
 						<p className={classes.title}>OSMO (-24h)</p>
 						<div className={classes.osmosPrice}>
@@ -111,7 +126,7 @@ const Metrics = () => {
 								}
 							>
 								{osmosChange24h > 0 ? "+" : ""}
-								{formateNumberDecimals(osmosChange24h, 3)}%
+								{formatPercent(osmosChange24h, 3)}
 							</span>
 							{osmosChange24h > 0 ? (
 								<ArrowDropUpIcon className={classes.iconUp} />
@@ -123,6 +138,12 @@ const Metrics = () => {
 					<img src={logo} alt="logo" className={classes.logo} />
 				</Paper>
 				<Paper className={classes.metric}>
+					<BlocLoaderOsmosis
+						open={loadingMetrics}
+						classNameLogoLoading={classes.classNameLogoLoading}
+						classNameLoading={classes.classNameLoading}
+						borderRadius={true}
+					/>
 					<div className={classes.infoContainer}>
 						<p className={classes.title}>24H VOLUME</p>
 						<div className={classes.osmosPrice}>
@@ -143,7 +164,7 @@ const Metrics = () => {
 								}
 							>
 								{volume24hChange > 0 ? "+" : ""}
-								{formateNumberDecimals(volume24hChange, 2)}%
+								{formatPercent(volume24hChange, 2)}
 							</span>
 							{volume24hChange > 0 ? (
 								<ArrowDropUpIcon className={classes.iconUp} />
@@ -155,6 +176,12 @@ const Metrics = () => {
 					<InsertChartIcon />
 				</Paper>
 				<Paper className={classes.metric}>
+					<BlocLoaderOsmosis
+						open={loadingMetrics}
+						classNameLogoLoading={classes.classNameLogoLoading}
+						classNameLoading={classes.classNameLoading}
+						borderRadius={true}
+					/>
 					<div className={classes.infoContainer}>
 						<div className={classes.titleButton}>
 							<span className={classes.title}>24H LIQUIDITY</span>
@@ -206,7 +233,7 @@ const Metrics = () => {
 										}
 									>
 										{liquidityUSD24h > 0 ? "+" : ""}
-										{formateNumberDecimals(liquidityUSD24h, 2)}%
+										{formatPercent(liquidityUSD24h, 2)}
 									</span>
 									{liquidityUSD24h > 0 ? (
 										<ArrowDropUpIcon className={classes.iconUp} />
@@ -233,7 +260,7 @@ const Metrics = () => {
 										}
 									>
 										{liquidityAtom24h > 0 ? "+" : ""}
-										{formateNumberDecimals(liquidityAtom24h, 3)}%
+										{formatPercent(liquidityAtom24h, 3)}
 									</span>
 									{liquidityAtom24h > 0 ? (
 										<ArrowDropUpIcon className={classes.iconUp} />
@@ -260,7 +287,7 @@ const Metrics = () => {
 										}
 									>
 										{liquidityOsmo24h > 0 ? "+" : ""}
-										{formateNumberDecimals(liquidityOsmo24h, 3)}%
+										{formatPercent(liquidityOsmo24h, 3)}
 									</span>
 									{liquidityOsmo24h > 0 ? (
 										<ArrowDropUpIcon className={classes.iconUp} />
@@ -274,6 +301,12 @@ const Metrics = () => {
 					</div>
 				</Paper>
 				<Paper className={classes.metric}>
+					<BlocLoaderOsmosis
+						open={loadingMetrics}
+						classNameLogoLoading={classes.classNameLogoLoading}
+						classNameLoading={classes.classNameLoading}
+						borderRadius={true}
+					/>
 					<div className={classes.infoContainer}>
 						<p className={classes.title}>TOKEN NUMBER</p>
 						<div className={classes.osmosPrice}>

@@ -24,9 +24,11 @@ export const MetricsProvider = ({ children }) => {
 
 	const [loadingDominance, setLoadingDominance] = useState(true)
 	const [loadingTop, setLoadingTop] = useState(true)
+	const [loadingMetrics, setLoadingMetrics] = useState(true)
 
 	useEffect(() => {
 		let fetch = async () => {
+			setLoadingMetrics(true)
 			API.request({ url: "overview/v1/metrics", type: "get" }).then((res) => {
 				let data = res.data
 				setOsmosPrice(data.osmo_price)
@@ -40,6 +42,7 @@ export const MetricsProvider = ({ children }) => {
 				setLiquidityAtom24h(data.liquidity_atom_24h)
 				setLiquidityOsmo(data.liquidity_osmo)
 				setLiquidityOsmo24h(data.liquidity_osmo_24h)
+				setLoadingMetrics(false)
 			})
 			setLoadingTop(true)
 			API.request({ url: "tokens/v2/top/gainers", type: "get" })
@@ -99,7 +102,8 @@ export const MetricsProvider = ({ children }) => {
 				gainers,
 				losers,
 				loadingDominance,
-				loadingTop
+				loadingTop,
+				loadingMetrics
 			}}
 		>
 			{children}

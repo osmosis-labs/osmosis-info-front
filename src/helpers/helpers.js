@@ -55,6 +55,19 @@ export const formateNumberDecimalsAuto = (price) => {
 	return formateNumberDecimals(price, detectBestDecimalsDisplay(price))
 }
 
+export const formateNumberDecimalsAutoV2 = ({ price, maxDecimal, unit, minDecimal, minPrice }) => {
+	minDecimal = minDecimal ? minDecimal : 2
+	minPrice = minPrice ? minPrice : 1
+	let res = formateNumberDecimals(price, detectBestDecimalsDisplay(price, minDecimal, minPrice, maxDecimal)) + (unit
+	? unit
+	: "")
+	return res
+}
+
+export const formatPercent = (price) => {
+	return formateNumberDecimalsAutoV2({price, minDecimal: 0, minPrice: 1, maxDecimal:2, unit: "%"})
+}
+
 export const formateNumberDecimals = (price, decimals = 2) => {
 	return new Intl.NumberFormat("en-US", {
 		currency: "USD",
