@@ -33,10 +33,9 @@ const useStyles = makeStyles((theme) => {
 			maxWidth: "1200px",
 			width: "90%",
 		},
-		info:{
+		info: {
 			margin: `${theme.spacing(2)}px 0`,
-
-		}
+		},
 	}
 })
 
@@ -57,14 +56,16 @@ const IBC = () => {
 			res = list
 		} else {
 			res = list.filter((ibc) => {
-				return getInclude(ibc, (item) => item.token_name.toLowerCase().includes(value.toLowerCase())) !== -1
+				return getInclude(ibc, (item) => {
+					return item.token_name.toLowerCase().includes(value.toLowerCase())
+				}) !== -1
 			})
 		}
 		return res
 	}
 
 	const updateFilter = (value) => {
-		if(value === ibcFilter) setIbcFilter("")
+		if (value === ibcFilter) setIbcFilter("")
 		else setIbcFilter(value)
 	}
 
