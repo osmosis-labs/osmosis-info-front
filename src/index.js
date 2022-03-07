@@ -21,6 +21,7 @@ let colors = {
 		// },
 		primary: {
 			light: "rgb(45, 39, 85)",
+			lightLowOpacity: "rgba(45, 39, 85, 0.9)",
 			main: "rgb(35, 29, 75)",
 			dark: "rgb(28, 23, 60)",
 			dark2: "rgb(23, 15, 52)",

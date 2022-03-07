@@ -22,17 +22,29 @@ const useStyles = makeStyles((theme) => {
 			color: theme.palette.gray.contrastText,
 			textAlign: "center",
 			fontSize: "1.5rem",
+			textOverflow: "ellipsis",
+			overflow: "hidden",
+			whiteSpace: "nowrap",
+			maxWidth: "130px",
 		},
 		source: {
 			fontSize: "0.9rem",
 			textAlign: "center",
 			color: theme.palette.gray.dark,
+			textOverflow: "ellipsis",
+			overflow: "hidden",
+			whiteSpace: "nowrap",
+			maxWidth: "130px",
 		},
 		channel: {
 			marginTop: "2px",
 			fontSize: "0.8rem",
 			textAlign: "center",
 			color: theme.palette.gray.dark,
+			textOverflow: "ellipsis",
+			overflow: "hidden",
+			whiteSpace: "nowrap",
+			maxWidth: "130px",
 		},
 		buble: {
 			marginTop: "10px",
@@ -90,7 +102,7 @@ const IBCItem = ({ network, className }) => {
 				srcFallback="../assets/default.png"
 				alt={`${network.symbol}`}
 			/>
-			<p className={classes.name}>{network.channel_id}</p>
+			<p className={classes.name}>{network.token_name}</p>
 			<p className={classes.source}>{network.source}</p>
 			<p className={classes.channel}>{network.channel_id}</p>
 			<span className={`${classes.buble} ${classes.bubleGreen}`}>

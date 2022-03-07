@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => {
 				display: "flex",
 				alignItem: "center",
 				justifyContent: "center",
-				margin: `${theme.spacing(1)}px ${theme.spacing(3)}px ${theme.spacing(2)}px ${theme.spacing(3)}px`,
+				margin: `${theme.spacing(2)}px `,
 			},
 		},
 

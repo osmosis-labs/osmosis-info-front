@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => {
 			height: "100vh",
 			overflow: "hidden",
 			[theme.breakpoints.down("sm")]: {
-				paddingTop: "235px",
+				paddingTop: "108px",
 			},
 		},
 		contentContainer: {
