@@ -96,7 +96,7 @@ const Token = ({ showToast }) => {
 		if (!symbol) {
 			showToast({
 				severity: "warning",
-				text: "Token not find, you are redirected to tokens page.",
+				text: "Token not found, you are redirected to tokens page.",
 			})
 			history.push("/tokens")
 		} else {
@@ -107,7 +107,7 @@ const Token = ({ showToast }) => {
 				} else {
 					showToast({
 						severity: "warning",
-						text: "Token not find, you are redirected to tokens page.",
+						text: "Token not found, you are redirected to tokens page.",
 					})
 					history.push("/tokens")
 				}
