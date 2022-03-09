@@ -86,58 +86,58 @@ const App = () => {
 									<WatchlistPoolsProvider>
 										<WatchlistTokensProvider>
 											<WatchlistIBCProvider>
-												<LoaderProvider>
-													<LoaderOsmosis />
-													<div className={classes.appRoot}>
-														<Toast
-															open={stateToast.open}
-															severity={stateToast.severity}
-															message={stateToast.text}
-															handleClose={closeToast}
-														/>
-														<PricesProvider>
+												<PricesProvider>
+													<LoaderProvider>
+														<LoaderOsmosis />
+														<div className={classes.appRoot}>
+															<Toast
+																open={stateToast.open}
+																severity={stateToast.severity}
+																message={stateToast.text}
+																handleClose={closeToast}
+															/>
 															<InfoBar />
-														</PricesProvider>
-														<AppBar />
-														<div className={classes.container}>
-															<div className={classes.contentContainer}>
-																<Route path="/" exact={true}>
-																	<MetricsProvider>
-																		<OverviewMetrics />
+															<AppBar />
+															<div className={classes.container}>
+																<div className={classes.contentContainer}>
+																	<Route path="/" exact={true}>
+																		<MetricsProvider>
+																			<OverviewMetrics />
+																			<div className={classes.content}>
+																				<Overview showToast={showToast} />
+																			</div>
+																		</MetricsProvider>
+																	</Route>
+																	<Route path="/pools">
 																		<div className={classes.content}>
-																			<Overview showToast={showToast} />
+																			<Pools showToast={showToast} />
 																		</div>
-																	</MetricsProvider>
-																</Route>
-																<Route path="/pools">
-																	<div className={classes.content}>
-																		<Pools showToast={showToast} />
-																	</div>
-																</Route>
-																<Route path="/pool/:id">
-																	<div className={classes.content}>
-																		<Pool showToast={showToast} />
-																	</div>
-																</Route>
-																<Route path="/tokens">
-																	<div className={classes.content}>
-																		<Tokens showToast={showToast} />
-																	</div>
-																</Route>
-																<Route path="/token/:symbol">
-																	<div className={classes.content}>
-																		<Token showToast={showToast} />
-																	</div>
-																</Route>
-																<Route path="/ibc">
-																	<IBCProvider>
-																		<IBC showToast={showToast} />
-																	</IBCProvider>
-																</Route>
+																	</Route>
+																	<Route path="/pool/:id">
+																		<div className={classes.content}>
+																			<Pool showToast={showToast} />
+																		</div>
+																	</Route>
+																	<Route path="/tokens">
+																		<div className={classes.content}>
+																			<Tokens showToast={showToast} />
+																		</div>
+																	</Route>
+																	<Route path="/token/:symbol">
+																		<div className={classes.content}>
+																			<Token showToast={showToast} />
+																		</div>
+																	</Route>
+																	<Route path="/ibc">
+																		<IBCProvider>
+																			<IBC showToast={showToast} />
+																		</IBCProvider>
+																	</Route>
+																</div>
 															</div>
 														</div>
-													</div>
-												</LoaderProvider>
+													</LoaderProvider>
+												</PricesProvider>
 											</WatchlistIBCProvider>
 										</WatchlistTokensProvider>
 									</WatchlistPoolsProvider>

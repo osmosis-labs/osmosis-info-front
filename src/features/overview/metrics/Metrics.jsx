@@ -11,6 +11,7 @@ import ButtonGroup from "../../../components/buttonGroup/ButtonGroup"
 import { useState } from "react"
 import { formateNumberDecimals, formatPercent } from "../../../helpers/helpers"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
+import { usePrices } from "../../../contexts/PricesProvider"
 const useStyles = makeStyles((theme) => {
 	return {
 		metricsRoot: {},
@@ -90,6 +91,8 @@ const Metrics = () => {
 		liquidityOsmo24h,
 		loadingMetrics,
 	} = useMetrics()
+	const { priceOsmoBrut } = usePrices()
+
 
 	const [typeLiquidity, setTypeLiquidity] = useState("USD")
 
@@ -116,7 +119,7 @@ const Metrics = () => {
 										: `${classes.osmosPriceChangeUp} ${classes.osmosPricePrice}`
 								}
 							>
-								${formateNumberDecimals(osmosPrice)}
+								${formateNumberDecimals(priceOsmoBrut)}
 							</span>
 							<span
 								className={

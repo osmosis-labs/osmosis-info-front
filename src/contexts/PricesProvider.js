@@ -7,6 +7,7 @@ export const usePrices = () => useContext(PricesContext)
 
 export const PricesProvider = ({ children }) => {
 	const [priceOsmo, setPriceOsmo] = useState(0)
+	const [priceOsmoBrut, setPriceOsmoBrut] = useState(0)
 	const [priceIon, setPriceIon] = useState(0)
 
 	useEffect(() => {
@@ -17,11 +18,12 @@ export const PricesProvider = ({ children }) => {
 				API.request({ url: "search/v1/price/ion", type: "get" }),
 			]
 			let results = await Promise.all(promises)
+			setPriceOsmoBrut(parseFloat(results[0].data.price))
 			setPriceOsmo(formateNumberPriceDecimals(parseFloat(results[0].data.price)))
 			setPriceIon(formateNumberPriceDecimals(parseFloat(results[1].data.price)))
 		}
 		fetch()
 	}, [])
 
-	return <PricesContext.Provider value={{ priceOsmo, priceIon }}>{children}</PricesContext.Provider>
+	return <PricesContext.Provider value={{ priceOsmo, priceIon, priceOsmoBrut}}>{children}</PricesContext.Provider>
 }
