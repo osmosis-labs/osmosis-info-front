@@ -5860,9 +5860,9 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-lightweight-charts@^3.7.0:
+lightweight-charts@^3.8.0:
   version "3.8.0"
-  resolved "https://registry.npmjs.org/lightweight-charts/-/lightweight-charts-3.8.0.tgz"
+  resolved "https://registry.yarnpkg.com/lightweight-charts/-/lightweight-charts-3.8.0.tgz#8c41ad7c1c083f18621f11ece7fc1096e131a0d3"
   integrity sha512-7yFGnYuE1RjRJG9RwUTBz5wvF1QtjBOSW4FFlikr8Dh+/TDNt4ci+HsWSYmStgQUpawpvkCJ3j5/W25GppGj9Q==
   dependencies:
     fancy-canvas "0.2.2"

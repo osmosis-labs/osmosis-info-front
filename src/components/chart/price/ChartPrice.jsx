@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import { useRef } from "react"
 import { createChart, CrosshairMode } from "lightweight-charts"
 import { ResizeObserver } from "resize-observer"
-import { float2Numbers } from "../../../helpers/helpers"
+import { float2Numbers, formateNumberDecimalsAutoV2 } from "../../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -59,7 +59,7 @@ const ChartPrice = ({ data, crossMove, onMouseLeave }) => {
 				},
 				localization: {
 					priceFormatter: (price) => {
-						return float2Numbers(price)
+						return formateNumberDecimalsAutoV2({ price: price })
 					},
 				},
 				grid: {
@@ -81,6 +81,7 @@ const ChartPrice = ({ data, crossMove, onMouseLeave }) => {
 				},
 			})
 
+		
 			serieRef.current = chart.addCandlestickSeries()
 			chartRef.current = chart
 		}

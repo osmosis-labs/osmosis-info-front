@@ -26,8 +26,9 @@ export const formatDateHours = (date) => {
 	return `${month} ${day}, ${year}, ${hour}:00 ${mer}`
 }
 
-export const detectBestDecimalsDisplay = (price) => {
-	let decimals = 2
+export const detectBestDecimalsDisplay = (price, minDecimal = 2, minPrice = 1, maxDecimal) => {
+	if (price && price > minPrice) return minDecimal
+	let decimals = minDecimal
 	if (price !== undefined) {
 		// Find out the number of leading floating zeros via regex
 		const priceSplit = price.toString().split(".")
@@ -36,6 +37,7 @@ export const detectBestDecimalsDisplay = (price) => {
 			decimals += leadingZeros ? leadingZeros[0].length + 1 : 1
 		}
 	}
+	if (maxDecimal && decimals > maxDecimal) decimals = maxDecimal
 	return decimals
 }
 
@@ -58,14 +60,14 @@ export const formateNumberDecimalsAuto = (price) => {
 export const formateNumberDecimalsAutoV2 = ({ price, maxDecimal, unit, minDecimal, minPrice }) => {
 	minDecimal = minDecimal ? minDecimal : 2
 	minPrice = minPrice ? minPrice : 1
-	let res = formateNumberDecimals(price, detectBestDecimalsDisplay(price, minDecimal, minPrice, maxDecimal)) + (unit
-	? unit
-	: "")
+	let res =
+		formateNumberDecimals(price, detectBestDecimalsDisplay(price, minDecimal, minPrice, maxDecimal)) +
+		(unit ? unit : "")
 	return res
 }
 
 export const formatPercent = (price) => {
-	return formateNumberDecimalsAutoV2({price, minDecimal: 0, minPrice: 1, maxDecimal:2, unit: "%"})
+	return formateNumberDecimalsAutoV2({ price, minDecimal: 0, minPrice: 1, maxDecimal: 2, unit: "%" })
 }
 
 export const formateNumberDecimals = (price, decimals = 2) => {
