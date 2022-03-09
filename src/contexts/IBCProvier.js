@@ -47,6 +47,11 @@ export const IBCProvider = ({ children }) => {
 				setStatusNormal(statusNormal)
 				setStatusCongested(statusCongested)
 				setStatusBlocked(statusBlocked)
+				ibcCouple.sort((a, b) => {
+					let aLiquidity = a[0].token_liquidity + a[1].token_liquidity
+					let bLiquidity = b[0].token_liquidity + b[1].token_liquidity
+					return bLiquidity - aLiquidity
+				})
 				setIBCCOuple(ibcCouple)
 				setLoaderIBC(false)
 			})
