@@ -4,7 +4,12 @@ import Image from "../../components/image/Image"
 import TablePagination from "../../components/tablePagination/TablePagination"
 import TableSettings from "../../components/tableSettings/TableSettings"
 import { useSettings } from "../../contexts/SettingsProvider"
-import { formateNumberPrice, formaterNumber } from "../../helpers/helpers"
+import {
+	formateNumberDecimalsAuto,
+	formaterNumber,
+} from "../../helpers/helpers"
+import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import PoolsHeaderTable from "./PoolsHeaderTable"
 
 const useStyles = makeStyles((theme) => {
@@ -106,6 +111,13 @@ const useStyles = makeStyles((theme) => {
 			borderColor: theme.palette.primary.main,
 		},
 		rows: {},
+		cellUpDown: {
+			display: "flex",
+			justifyContent: "flex-end",
+			alignItems: "center",
+		},
+		cellUp: { color: theme.palette.green.text },
+		cellDown: { color: theme.palette.error.main },
 	}
 })
 
@@ -176,14 +188,18 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 	}
 
 	const getHeadCells = () => {
+		const isXs = size === "xs"
 		const transformPriceMK = (price) => {
 			return `$${formaterNumber(price)}`
+		}
+		const formatPercent = (value) => {
+			return formateNumberDecimalsAuto({price: value, minDecimal: 0, minPrice: 1, maxDecimal:2, unit: "%"})
 		}
 		let head = [
 			{
 				id: "id",
-				cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
-				classes: size === "xs" ? classes.hCellsExtraSmall : classes.hCellsSmall,
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsSmall,
 				sortable: sortable,
 				disablePadding: false,
 				label: "#",
@@ -191,8 +207,8 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 			},
 			{
 				id: "name",
-				cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
-				classes: size === "xs" ? classes.hCellsExtraSmallName : classes.hCellsLg,
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmallName : classes.hCellsLg,
 				sortable: sortable,
 				disablePadding: false,
 				label: "Pools",
@@ -202,8 +218,8 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 			},
 			{
 				id: "liquidity",
-				cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
-				classes: size === "xs" ? classes.hCellsExtraSmall : classes.hCellsLg,
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
 				transform: transformPriceMK,
 				disablePadding: false,
@@ -211,9 +227,39 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 				align: "right",
 			},
 			{
-				id: "volume_7d",
-				cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
-				classes: size === "xs" ? classes.hCellsExtraSmall : classes.hCellsLg,
+				id: "liquidity24hChange",
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
+				sortable: sortable,
+				transform: formatPercent,
+				disablePadding: false,
+				label: "Liquidity (24h) change",
+				align: "right",
+			},
+			{
+				id: "volume24h",
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
+				sortable: sortable,
+				transform: transformPriceMK,
+				disablePadding: false,
+				label: "Volume (24h)",
+				align: "right",
+			},
+			{
+				id: "volume24hChange",
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
+				sortable: sortable,
+				transform: formatPercent,
+				disablePadding: false,
+				label: "Volume (24h) change",
+				align: "right",
+			},
+			{
+				id: "volume7d",
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
 				transform: transformPriceMK,
 				disablePadding: false,
@@ -221,34 +267,26 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 				align: "right",
 			},
 			{
-				id: "volume_24h",
-				cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
-				classes: size === "xs" ? classes.hCellsExtraSmall : classes.hCellsLg,
+				id: "fees",
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: transformPriceMK,
+				transform: (value) => formatPercent(parseFloat(value), 0),
 				disablePadding: false,
-				label: "Volume (24h)",
+				label: "Fees",
 				align: "right",
 			},
 		]
 
 		let headToDisplay = []
-
-		if (settings.poolTable.id) {
-			headToDisplay.push(head[0])
-		}
-		if (settings.poolTable.name) {
-			headToDisplay.push(head[1])
-		}
-		if (settings.poolTable.liquidity) {
-			headToDisplay.push(head[2])
-		}
-		if (settings.poolTable.volume7d) {
-			headToDisplay.push(head[3])
-		}
-		if (settings.poolTable.volume24h) {
-			headToDisplay.push(head[4])
-		}
+		settings.poolTable.sort((a, b) =>  a.order - b.order).forEach((setting=>{
+			if(setting.display){
+				let header = head.filter((item) => item.id === setting.key)
+				if (header.length > 0) {
+					headToDisplay.push(header[0])
+				}
+			}
+		}))
 		return headToDisplay
 	}
 
@@ -266,6 +304,45 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 
 	const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
 	const headCells = getHeadCells()
+
+	const formatChange = (headCell, row) => {
+		let value = row[headCell.id]
+		let className = `${headCell.cellClasses}`
+		let body = headCell.transform ? headCell.transform(value) : value
+		if (value > 0) {
+			className = `${headCell.cellClasses} ${classes.cellUpDown} ${classes.cellUp}`
+			body = (
+				<div className={className}>
+					<>
+						<ArrowDropUpIcon className={classes.cellUp} />
+						{headCell.transform ? headCell.transform(value) : value}
+					</>
+				</div>
+			)
+		} else if (value < 0) {
+			className = `${headCell.cellClasses} ${classes.cellUpDown} ${classes.cellDown}`
+			body = (
+				<div className={className}>
+					<>
+						<ArrowDropDownIcon className={classes.cellDown} />
+						{headCell.transform ? headCell.transform(value) : value}
+					</>
+				</div>
+			)
+		}
+		return (
+			<TableCell
+				key={headCell.id + row.id}
+				className={headCell.cellClasses}
+				component={headCell.component}
+				align={headCell.align}
+				padding={headCell.padding}
+			>
+				{body}
+			</TableCell>
+		)
+	}
+
 	if (data.length === 0)
 		return (
 			<div className={classes.poolsTableRoot}>
@@ -283,11 +360,12 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 			</div>
 		)
 
+
 	return (
 		<div>
-			<TableSettings settings={settings.poolTable} setSettings={setSettings} 
-				match={{ id: "Id", name: "Name", liquidity: "Liquidity", volume7d: "Volume (7d)", volume24h: "Volume (24h)" }}
-			
+			<TableSettings
+				settings={settings.poolTable}
+				setSettings={setSettings}
 			/>
 			<div className={classes.poolsTableRoot}>
 				<Table>
@@ -316,31 +394,33 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 												padding={headCell.padding}
 											>
 												{/* <Tooltip title={row.name}> */}
-													<div className={classes.cellName}>
-														<div className={classes.images}>
-															{row.name
-																.split("-")
-																.slice(0, 2)
-																.map((name, index) => {
-																	return (
-																		<Image
-																			style={{ left: index * 18 + "px" }}
-																			key={headCell.id + row.id + name}
-																			className={classes.image}
-																			assets={true}
-																			alt={`${name}`}
-																			src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${name.toLowerCase()}.png`}
-																			srcFallback="../assets/default.png"
-																			pathAssets=""
-																		/>
-																	)
-																})}
-														</div>
-														<p className={classes.name}>{row.name}</p>
+												<div className={classes.cellName}>
+													<div className={classes.images}>
+														{row.name
+															.split("-")
+															.slice(0, 2)
+															.map((name, index) => {
+																return (
+																	<Image
+																		style={{ left: index * 18 + "px" }}
+																		key={headCell.id + row.id + name}
+																		className={classes.image}
+																		assets={true}
+																		alt={`${name}`}
+																		src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${name.toLowerCase()}.png`}
+																		srcFallback="../assets/default.png"
+																		pathAssets=""
+																	/>
+																)
+															})}
 													</div>
+													<p className={classes.name}>{row.name}</p>
+												</div>
 												{/* </Tooltip> */}
 											</TableCell>
 										)
+									} else if (headCell.id === "volume24hChange" || headCell.id === "liquidity24hChange") {
+										cell = formatChange(headCell, row)
 									} else {
 										cell = (
 											<TableCell
@@ -373,7 +453,7 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 							})}
 						{data.length > rowsPerPage && emptyRows > 0 && (
 							<TableRow style={{ height: 53 * emptyRows }}>
-								<TableCell colSpan={6} />
+								<TableCell colSpan={headCells.length} />
 							</TableRow>
 						)}
 					</TableBody>

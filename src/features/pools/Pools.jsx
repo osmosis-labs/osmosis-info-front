@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useHistory } from "react-router-dom"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
-import { usePools } from "../../contexts/PoolsProvider"
+import { usePoolsV2 } from "../../contexts/PoolsV2.provier"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
 import { getInclude } from "../../helpers/helpers"
 import PoolsTable from "./PoolsTable"
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => {
 
 const Pools = () => {
 	const classes = useStyles()
-	const { pools, loadingPools} = usePools()
+	const { pools, loadingPools} = usePoolsV2()
 	// get pools from watch list
 	const { watchlistPools } = useWatchlistPools()
 	const [poolsOnWatchlist, setPoolsOnWatchlist] = useState([])

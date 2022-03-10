@@ -5,8 +5,6 @@ import { useHistory } from "react-router-dom"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
 import { useCharts } from "../../contexts/ChartsProvider"
-import { usePools } from "../../contexts/PoolsProvider"
-import { useTokens } from "../../contexts/TokensProvider"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
 import { getInclude} from "../../helpers/helpers"
@@ -14,6 +12,8 @@ import PoolsTable from "../pools/PoolsTable"
 import TokensTable from "../tokens/TokensTable"
 import ContainerChartLiquidity from "./ContainerChartLiquidity"
 import ContainerChartVolume from "./ContainerChartVolume"
+import { usePoolsV2 } from "../../contexts/PoolsV2.provier"
+import { useTokensV2 } from "../../contexts/TokensV2.provider"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -90,8 +90,8 @@ const Overview = () => {
 	const matchMD = useMediaQuery((theme) => theme.breakpoints.down("md"))
 	const matchLD = useMediaQuery((theme) => theme.breakpoints.down("ld"))
 
-	const { pools, loadingPools } = usePools()
-	const { tokens, loadingTokens } = useTokens()
+	const { pools, loadingPools } = usePoolsV2()
+	const { tokens, loadingTokens } = useTokensV2()
 	const [dataPools, setDataPools] = useState([])
 	const [dataTokens, setDataTokens] = useState([])
 	const history = useHistory()
