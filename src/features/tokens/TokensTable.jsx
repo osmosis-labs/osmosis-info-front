@@ -153,10 +153,10 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 
 	const orderNumber = (a, b, orderBy) => {
 		let res = 0
-		if (parseInt(b[orderBy]) < parseInt(a[orderBy])) {
+		if (b[orderBy] < a[orderBy]) {
 			res = 1
 		}
-		if (parseInt(b[orderBy]) > parseInt(a[orderBy])) {
+		if (b[orderBy] > a[orderBy]) {
 			res = -1
 		}
 		return res
@@ -178,8 +178,20 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 		return res
 	}
 
+	const orderNumberInt = (a, b, orderBy) => {
+		let res = 0
+		if (parseInt(b[orderBy]) < parseInt(a[orderBy])) {
+			res = 1
+		}
+		if (parseInt(b[orderBy]) > parseInt(a[orderBy])) {
+			res = -1
+		}
+		return res
+	}
+
 	const descendingComparator = (a, b, orderBy) => {
 		if (orderBy === "name") return orderString(a, b, orderBy)
+		if (orderBy === "id") return orderNumberInt(a, b, orderBy)
 		return orderNumber(a, b, orderBy)
 	}
 

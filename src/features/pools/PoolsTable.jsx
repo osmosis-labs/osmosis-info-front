@@ -148,6 +148,17 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 
 	const orderNumber = (a, b, orderBy) => {
 		let res = 0
+		if (b[orderBy] < a[orderBy]) {
+			res = 1
+		}
+		if (b[orderBy] > a[orderBy]) {
+			res = -1
+		}
+		return res
+	}
+
+	const orderNumberInt = (a, b, orderBy) => {
+		let res = 0
 		if (parseInt(b[orderBy]) < parseInt(a[orderBy])) {
 			res = 1
 		}
@@ -175,6 +186,7 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 
 	const descendingComparator = (a, b, orderBy) => {
 		if (orderBy === "name") return orderString(a, b, orderBy)
+		if (orderBy === "id") return orderNumberInt(a, b, orderBy)
 		return orderNumber(a, b, orderBy)
 	}
 
