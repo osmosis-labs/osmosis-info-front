@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react"
 import useLocalStorage from "../hooks/LocalStorageHook"
-const version = "1.2"
+const version = "1.0"
 const defaultSettings = {
 	tokenTable: [
 		{ name: "Id", display: true, order: 1, key: "id" },
@@ -31,7 +31,6 @@ export const useSettings = () => useContext(SettingsContext)
 
 export const SettingsProviders = ({ children }) => {
 	const [settings, setSettings] = useLocalStorage("Settings", defaultSettings, version)
-
 	const updateSettings = (newSettings) => {
 		setSettings({
 			...settings,

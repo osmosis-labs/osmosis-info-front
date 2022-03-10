@@ -3,10 +3,7 @@ import { useState } from "react"
 import Image from "../../components/image/Image"
 import TablePagination from "../../components/tablePagination/TablePagination"
 import { useSettings } from "../../contexts/SettingsProvider"
-import {
-	formateNumberDecimalsAuto,
-	formaterNumber,
-} from "../../helpers/helpers"
+import { formateNumberDecimalsAuto, formaterNumber } from "../../helpers/helpers"
 import TokensHeaderTable from "./TokensHearderTable"
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
@@ -198,7 +195,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 			return `$${formaterNumber(price)}`
 		}
 		const formatPercent = (value) => {
-			return formateNumberDecimalsAuto({price: value, minDecimal: 0, minPrice: 1, maxDecimal:2, unit: "%"})
+			return formateNumberDecimalsAuto({ price: value, minDecimal: 0, minPrice: 1, maxDecimal: 2, unit: "%" })
 		}
 		let head = [
 			{
@@ -246,7 +243,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: value => formateNumberDecimalsAuto({price: value}),
+				transform: (value) => formateNumberDecimalsAuto({ price: value }),
 				disablePadding: false,
 				label: "Price",
 				align: "right",
@@ -284,15 +281,20 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 		]
 
 		let headToDisplay = []
-		settings.tokenTable.sort((a, b) =>  a.order - b.order).forEach((setting=>{
-			if(setting.display){
-				let header = head.filter((item) => item.id === setting.key)
-				if (header.length > 0) {
-					headToDisplay.push(header[0])
-				}
-			}
-		}))
-
+		if (settings && settings.poolTable && Array.isArray(settings.poolTable)) {
+			settings.tokenTable
+				.sort((a, b) => a.order - b.order)
+				.forEach((setting) => {
+					if (setting.display) {
+						let header = head.filter((item) => item.id === setting.key)
+						if (header.length > 0) {
+							headToDisplay.push(header[0])
+						}
+					}
+				})
+		} else {
+			headToDisplay = [...head]
+		}
 		return headToDisplay
 	}
 
@@ -368,10 +370,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 
 	return (
 		<div>
-			<TableSettings
-				settings={settings.tokenTable}
-				setSettings={setSettings}
-			/>
+			<TableSettings settings={settings.tokenTable} setSettings={setSettings} />
 			<div className={classes.tokensTableRoot}>
 				<Table>
 					<TokensHeaderTable

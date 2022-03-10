@@ -4,10 +4,7 @@ import Image from "../../components/image/Image"
 import TablePagination from "../../components/tablePagination/TablePagination"
 import TableSettings from "../../components/tableSettings/TableSettings"
 import { useSettings } from "../../contexts/SettingsProvider"
-import {
-	formateNumberDecimalsAuto,
-	formaterNumber,
-} from "../../helpers/helpers"
+import { formateNumberDecimalsAuto, formaterNumber } from "../../helpers/helpers"
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import PoolsHeaderTable from "./PoolsHeaderTable"
@@ -193,7 +190,7 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 			return `$${formaterNumber(price)}`
 		}
 		const formatPercent = (value) => {
-			return formateNumberDecimalsAuto({price: value, minDecimal: 0, minPrice: 1, maxDecimal:2, unit: "%"})
+			return formateNumberDecimalsAuto({ price: value, minDecimal: 0, minPrice: 1, maxDecimal: 2, unit: "%" })
 		}
 		let head = [
 			{
@@ -279,14 +276,20 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 		]
 
 		let headToDisplay = []
-		settings.poolTable.sort((a, b) =>  a.order - b.order).forEach((setting=>{
-			if(setting.display){
-				let header = head.filter((item) => item.id === setting.key)
-				if (header.length > 0) {
-					headToDisplay.push(header[0])
-				}
-			}
-		}))
+		if (settings && settings.poolTable && Array.isArray(settings.poolTable)) {
+			settings.poolTable
+				.sort((a, b) => a.order - b.order)
+				.forEach((setting) => {
+					if (setting.display) {
+						let header = head.filter((item) => item.id === setting.key)
+						if (header.length > 0) {
+							headToDisplay.push(header[0])
+						}
+					}
+				})
+		} else {
+			headToDisplay = [...head]
+		}
 		return headToDisplay
 	}
 
@@ -360,13 +363,9 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 			</div>
 		)
 
-
 	return (
 		<div>
-			<TableSettings
-				settings={settings.poolTable}
-				setSettings={setSettings}
-			/>
+			<TableSettings settings={settings.poolTable} setSettings={setSettings} />
 			<div className={classes.poolsTableRoot}>
 				<Table>
 					<PoolsHeaderTable
