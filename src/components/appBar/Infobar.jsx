@@ -1,6 +1,8 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
 import { usePrices } from "../../contexts/PricesProvider"
+import { infoBarUseEffect } from "../../patrickTheme/script"
+import SoundPlay from "../../patrickTheme/soundPlay"
 const useStyles = makeStyles((theme) => {
 	return {
 		infoBarRoot: {
@@ -29,6 +31,8 @@ const useStyles = makeStyles((theme) => {
 			paddingLeft: theme.spacing(2),
 		},
 		right: {
+			display: "flex",
+			alignItems: "center",
 			paddingRight: theme.spacing(3),
 			[theme.breakpoints.down("xs")]: {
 				display: "none",
@@ -83,6 +87,7 @@ const InfoBar = () => {
 	useEffect(() => {
 		const timer = setInterval(() => {
 			setTime((ps) => ps + 1)
+			infoBarUseEffect()
 		}, 1000)
 		return () => clearInterval(timer)
 	}, [])
@@ -94,7 +99,7 @@ const InfoBar = () => {
 		<div className={classes.infoBarRoot}>
 			<div className={classes.appBarContent}>
 				<div className={classes.left}>
-					<div className={classes.timer} onClick={reload}>
+					<div className={classes.timer} onClick={reload} id="infoBar">
 						Uploaded {time}s ago
 					</div>
 					<p className={classes.prices}>
@@ -104,6 +109,7 @@ const InfoBar = () => {
 						ION: <em className={classes.price}>{priceIon}</em>
 					</p>
 				</div>
+				<SoundPlay />
 				<div className={classes.right}>
 					<a className={classes.link} href="https://github.com/osmosis-labs" target="_blank">
 						Github
