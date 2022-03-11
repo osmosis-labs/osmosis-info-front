@@ -87,7 +87,6 @@ const InfoBar = () => {
 	useEffect(() => {
 		const timer = setInterval(() => {
 			setTime((ps) => ps + 1)
-			infoBarUseEffect()
 		}, 1000)
 		return () => clearInterval(timer)
 	}, [])
