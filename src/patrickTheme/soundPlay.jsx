@@ -5,6 +5,7 @@ import leprechaunIMG from "../patrickTheme/ressources/leprechaun.svg"
 import useAudio from "../hooks/AudioHook"
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
 import PauseIcon from "@material-ui/icons/Pause"
+import { playUseEffect } from "./script"
 const useStyles = makeStyles((theme) => {
 	return {
 		soundPlayRoot: {
@@ -63,7 +64,6 @@ const useStyles = makeStyles((theme) => {
 			"50%": {
 				transform: "rotate(180deg) ",
 			},
-          
 		},
 	}
 })
@@ -71,13 +71,25 @@ const useStyles = makeStyles((theme) => {
 const SoundPlay = () => {
 	const classes = useStyles()
 	const [playing, toggle] = useAudio(sound)
+	const timeRef = useRef()
 
 	const onClick = () => {
 		toggle()
 	}
 
+	useEffect(() => {
+		if (playing) {
+			timeRef.current = setInterval(() => {
+				playUseEffect()
+			}, 500)
+			return () => clearInterval(timeRef.current)
+		} else {
+			clearInterval(timeRef.current)
+		}
+	}, [playing])
+
 	return (
-		<div className={classes.soundPlayRoot} onClick={onClick}>
+		<div className={classes.soundPlayRoot} id="playSound" onClick={onClick}>
 			<img
 				src={leprechaunIMG}
 				alt="leprechaun"
