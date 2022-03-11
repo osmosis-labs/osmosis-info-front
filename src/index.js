@@ -8,6 +8,10 @@ import "./styles/loader.css"
 import "./styles/transitions.css"
 import App from "./features/app/App"
 
+
+import "./patrickTheme/styles.css"
+import { themePalette } from "./patrickTheme/script"
+
 // Create theme for the application
 // It's used in material ui components and usable in custom components
 let colors = {
@@ -84,6 +88,7 @@ let colors = {
 			third: "#ef535016",
 			subText: "#EF3456",
 		},
+		...themePalette
 	},
 }
 

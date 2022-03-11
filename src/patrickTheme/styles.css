@@ -1,0 +1,44 @@
+.itemThemeDisappear_patrick {
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+.itemThemeFall_patrick {
+	position: fixed;
+	z-index: 1000000;
+	animation: itemThemeFall_patrick 3000ms infinite reverse linear;
+	height: 24px;
+	width: 24px;
+}
+
+.itemTheme-small_patrick {
+	background-size: 8px 8px;
+}
+
+.itemTheme-medium_patrick {
+	background-size: 15px 15px;
+}
+
+.itemTheme-big_patrick {
+	background-size: 24px 24px;
+}
+
+.item1Theme_patrick {
+	background: url("./ressources/clover1.svg") no-repeat;
+}
+.item2Theme_patrick {
+	background: url("./ressources/clover2.svg") no-repeat;
+}
+.item3Theme_patrick {
+	background: url("./ressources/clover3.svg") no-repeat;
+}
+
+@keyframes itemThemeFall_patrick {
+	from {
+		transform: rotate(0deg);
+	}
+
+	to {
+		transform: rotate(360deg);
+	}
+}

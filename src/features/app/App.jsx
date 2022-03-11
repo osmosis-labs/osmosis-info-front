@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { BrowserRouter, Switch, Route } from "react-router-dom"
 import Toast from "../../components/toast/Toast"
 import Overview from "../overview/Overview"
@@ -23,6 +23,7 @@ import { IBCProvider } from "../../contexts/IBCProvier"
 import { WatchlistIBCProvider } from "../../contexts/WatchlistIBCProvider"
 import { TokensV2Provider } from "../../contexts/TokensV2.provider"
 import { PoolsV2Provider } from "../../contexts/PoolsV2.provier"
+import { appUseEffect } from "../../patrickTheme/script"
 const useStyles = makeStyles((theme) => {
 	return {
 		appRoot: {
@@ -74,6 +75,8 @@ const App = () => {
 	const showToast = useCallback(({ text, severity }) => {
 		setOpenToast((prev) => ({ ...prev, open: true, text, severity }))
 	}, [])
+
+	useEffect(appUseEffect,[])
 
 	return (
 		<BrowserRouter basename=".">
