@@ -14,6 +14,9 @@ import PoolInfo from "./PoolInfo"
 import { useCallback } from "react"
 import { usePoolsV2 } from "../../../contexts/PoolsV2.provier"
 
+import lpwSVG from "../../../patrickTheme/ressources/lpwomen.svg"
+import lpgroupSVG from "../../../patrickTheme/ressources/lpGroup.svg"
+
 const useStyles = makeStyles((theme) => {
 	return {
 		poolRoot: {
@@ -39,6 +42,34 @@ const useStyles = makeStyles((theme) => {
 			width: "100%",
 			display: "flex",
 			flexDirection: "column",
+			"&:after": {
+				content: "''",
+				zIndex: "999",
+				position: "absolute",
+				top: "-59px",
+				left: "60px",
+				height: "50px",
+				width: "50px",
+				display: "block",
+				background: `url(${lpwSVG}) no-repeat center`,
+				[theme.breakpoints.down("xs")]: {
+					left: "180px",
+				},
+			},
+			"&:before": {
+				content: "''",
+				zIndex: "999",
+				position: "absolute",
+				top: "-87px",
+				right: "50px",
+				height: "100px",
+				width: "100px",
+				display: "block",
+				background: `url(${lpgroupSVG}) no-repeat center`,
+				[theme.breakpoints.down("xs")]: {
+					left: "-0px",
+				},
+			},
 			[theme.breakpoints.down("xs")]: {
 				width: "100%",
 			},
@@ -65,8 +96,7 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			flexDirection: "column",
 			flexGrow: "1",
-			[theme.breakpoints.down("xs")]: {
-			},
+			[theme.breakpoints.down("xs")]: {},
 		},
 		headerActions: {
 			alignSelf: "flex-end",

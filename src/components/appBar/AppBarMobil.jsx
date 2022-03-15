@@ -8,6 +8,8 @@ import CloseIcon from "@material-ui/icons/Close"
 import Paper from "../paper/Paper"
 import PaperDialog from "./PaperDialog"
 
+import lpCloverSVG from '../../patrickTheme/ressources/lpclover.svg'
+import lpbeerSVG from '../../patrickTheme/ressources/lpbeer.svg'
 const useStyles = makeStyles((theme) => {
 	return {
 		appBarMobileRoot: {
@@ -24,6 +26,27 @@ const useStyles = makeStyles((theme) => {
 			justifyContent: "space-between",
 			backgroundColor: theme.palette.primary.dark,
 			width: "100vw",
+			"&:after":{
+				content: "''",
+				zIndex: "1",
+				position: "absolute",
+				bottom: "0px",
+				right: "40px",
+				height: "45px",
+				width: "45px",
+				display: "block",
+				background: `url(${lpbeerSVG}) no-repeat center`,
+			},
+			"&:before":{
+				content: "''",
+				position: "absolute",
+				bottom: "0px",
+				left: "40px",
+				height: "50px",
+				width: "50px",
+				display: "block",
+				background: `url(${lpCloverSVG}) no-repeat center`,
+			},
 		},
 		logo: {
 			height: "25px",

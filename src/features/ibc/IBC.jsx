@@ -9,6 +9,7 @@ import IBCInfo from "./IBCInfo"
 import IBCList from "./IBCList"
 import IBCSearch from "./IBCSearch"
 import IBCwatchlist from "./IBCwatchlist"
+
 const useStyles = makeStyles((theme) => {
 	return {
 		IBCRoot: {

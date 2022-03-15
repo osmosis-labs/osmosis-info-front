@@ -15,9 +15,9 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "center",
 			justifyContent: "center",
 			borderRadius: "10px",
-			border: `1px solid ${theme.palette.greenPatrick.dark}`,
+			border: `2px solid ${theme.palette.greenPatrick.dark}`,
 			color: theme.palette.greenPatrick.light,
-			padding: "5px",
+			padding: "4px",
 			transition: "all 0.5s ease",
 			"&:hover": {
 				backgroundColor: theme.palette.greenPatrick.light,

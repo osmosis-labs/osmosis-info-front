@@ -1,5 +1,6 @@
 import React from "react"
 import { makeStyles } from "@material-ui/core"
+import cloversPNG from "../../patrickTheme/ressources/clovers4.png"
 const useStyles = makeStyles((theme) => {
 	return {
 		IBCInfoRoot: {
@@ -8,10 +9,24 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "center",
+			position: "relative",
+			zIndex: 1,
+			"&:after": {
+				position: "absolute",
+				content: "''",
+				top: "0",
+				zIndex: -1,
+				left: "0",
+				width: "100%",
+				height: "100%",
+				opacity: "0.4",
+				background: `url(${cloversPNG}) `,
+			},
 		},
 		content: {
 			maxWidth: "1200px",
 			width: "90%",
+			zIndex: 1,
 		},
 		header: {
 			margin: "40px 0",
@@ -117,7 +132,7 @@ const IBCInfo = ({
 					<span className={classes.title}>IBC Status</span>
 					<div className={classes.bubles}>
 						<span
-						onClick={()=>setIbcFilter("normal")}
+							onClick={() => setIbcFilter("normal")}
 							className={
 								ibcFilter === "normal"
 									? `${classes.buble} ${classes.bubleGreen} ${classes.bubleSelected}`
@@ -128,7 +143,7 @@ const IBCInfo = ({
 							<span>{`${statusNormal} Normal`}</span>
 						</span>
 						<span
-						onClick={()=>setIbcFilter("congested")}
+							onClick={() => setIbcFilter("congested")}
 							className={
 								ibcFilter === "congested"
 									? `${classes.buble} ${classes.bubleOrange} ${classes.bubleSelected}`
@@ -139,7 +154,7 @@ const IBCInfo = ({
 							<span>{`${statusCongested} Congested`}</span>
 						</span>
 						<span
-						onClick={()=>setIbcFilter("blocked")}
+							onClick={() => setIbcFilter("blocked")}
 							className={
 								ibcFilter === "blocked"
 									? `${classes.buble} ${classes.bubleRed} ${classes.bubleSelected}`
