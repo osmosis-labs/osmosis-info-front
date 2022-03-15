@@ -93,7 +93,8 @@ const useStyles = makeStyles((theme) => {
 			},
 		},
 		menuItemActive: {
-			color: theme.palette.gray.contrastText,
+			color: theme.palette.greenPatrick.light,
+			// color: theme.palette.gray.contrastText,
 			backgroundColor: theme.palette.primary.light,
 			margin: theme.spacing(1),
 			padding: theme.spacing(1),
