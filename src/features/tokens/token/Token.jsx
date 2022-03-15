@@ -46,7 +46,6 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			flexDirection: "column",
 			flexGrow: "1",
-
 			"&:after": {
 				content: "''",
 				zIndex: "999",

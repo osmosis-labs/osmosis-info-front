@@ -24,6 +24,7 @@ import { WatchlistIBCProvider } from "../../contexts/WatchlistIBCProvider"
 import { TokensV2Provider } from "../../contexts/TokensV2.provider"
 import { PoolsV2Provider } from "../../contexts/PoolsV2.provier"
 import { appUseEffect } from "../../patrickTheme/script"
+import cloversPNG from "../../patrickTheme/ressources/clovers4.png"
 const useStyles = makeStyles((theme) => {
 	return {
 		appRoot: {
@@ -34,6 +35,19 @@ const useStyles = makeStyles((theme) => {
 			backgroundColor: theme.palette.primary.main,
 			overflow: "hidden",
 			fontSize: theme.fontSize.medium,
+			position: "relative",
+			zIndex: 1,
+			"&:after": {
+				position: "absolute",
+				content: "''",
+				top: "0",
+				left: "0",
+				width: "100%",
+				height: "100%",
+				zIndex:"-1",
+				opacity: "0.2",
+				background: `url(${cloversPNG}) `,
+			},
 		},
 		container: {
 			paddingTop: "140px",

@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => {
 			marginBottom: "30px",
 			overflowX: "hidden",
 			margin: `${theme.spacing(2)}px 0`,
+			
 		},
 		radiant: {
 			position: "absolute",
