@@ -62,7 +62,7 @@ export const TokensV2Provider = ({ children }) => {
 			saveDataChart.current = { ...saveDataChart.current, [getName("liquidity", "w", symbol)]: dataW }
 			saveDataChart.current = { ...saveDataChart.current, [getName("liquidity", "m", symbol)]: dataM }
 			setLoadingCharts(false)
-			if (range === "d" ) return data
+			if (range === "d") return data
 			else if (range === "w") return dataW
 			else if (range === "m") return dataM
 		}
@@ -112,29 +112,33 @@ export const TokensV2Provider = ({ children }) => {
 			saveDataChart.current = { ...saveDataChart.current, [getName("volume", "w", symbol)]: dataW }
 			saveDataChart.current = { ...saveDataChart.current, [getName("volume", "m", symbol)]: dataM }
 			setLoadingCharts(false)
-			if (range === "d" ) return data
+			if (range === "d") return data
 			else if (range === "w") return dataW
 			else if (range === "m") return dataM
 		}
 	}, [])
 
 	const getHistoricalChartToken = useCallback(async ({ symbol, tf = "5" }) => {
-		setLoadingCharts(true)
-		if (
-			saveDataChart.current[getName("historical", tf, symbol)] &&
-			saveDataChart.current[getName("historical", tf, symbol)].length > 0
-		) {
-			setLoadingCharts(false)
-			return saveDataChart.current[getName("historical", tf, symbol)]
-		} else {
-			let response = await API.request({
-				url: `tokens/v2/historical/${symbol}/chart?tf=${tf}`,
-				type: "get",
-			})
-			let data = response.data
-			setLoadingCharts(false)
+		if (symbol) {
+			setLoadingCharts(true)
+			if (
+				saveDataChart.current[getName("historical", tf, symbol)] &&
+				saveDataChart.current[getName("historical", tf, symbol)].length > 0
+			) {
+				setLoadingCharts(false)
+				return saveDataChart.current[getName("historical", tf, symbol)]
+			} else {
+				let response = await API.request({
+					url: `tokens/v2/historical/${symbol}/chart?tf=${tf}`,
+					type: "get",
+				})
+				let data = response.data
+				setLoadingCharts(false)
 
-			return data
+				return data
+			}
+		}else{
+			return []
 		}
 	}, [])
 
