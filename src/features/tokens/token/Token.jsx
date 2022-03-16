@@ -151,7 +151,6 @@ const Token = ({ showToast }) => {
 	} = useTokensV2()
 	const [token, setToken] = useState({})
 	const priceDecimals = useRef(2)
-	const [expert, setExpert] = useState("simplified")
 
 	const [dataIsLoaded, setDataIsLoaded] = useState(false) // data is loaded
 
@@ -301,15 +300,13 @@ const Token = ({ showToast }) => {
 				<Paper className={classes.right}>
 					<BlocLoaderOsmosis open={!dataIsLoaded || loadingCharts} classNameLoading={classes.loading} />
 					<div className={classes.containerHideShow}>
-						<div className={expert === "expert" ? classes.hide : classes.show}>
-							<ContainerCharts
-								token={token}
-								getDataPrice={getDataPrice}
-								getDataVolume={getDataVolume}
-								getDataLiquidity={getDataLiquidity}
-								dataIsLoaded={dataIsLoaded || loadingCharts}
-							/>
-						</div>
+						<ContainerCharts
+							token={token}
+							getDataPrice={getDataPrice}
+							getDataVolume={getDataVolume}
+							getDataLiquidity={getDataLiquidity}
+							dataIsLoaded={dataIsLoaded || loadingCharts}
+						/>
 					</div>
 				</Paper>
 			</div>
