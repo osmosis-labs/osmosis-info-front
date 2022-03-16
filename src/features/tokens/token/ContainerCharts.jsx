@@ -84,9 +84,9 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 	const classes = useStyles()
 	const [typeChart, setTypeChart] = useState("price") // price, volume, liquidity
 
-	const [rangePrice, setRangePrice] = useState(1440) 
-	const [rangeVolume, setRangeVolume] = useState("d") 
-	const [rangeLiquidity, setRangeLiquidity] = useState("d") 
+	const [rangePrice, setRangePrice] = useState(1440)
+	const [rangeVolume, setRangeVolume] = useState("d")
+	const [rangeLiquidity, setRangeLiquidity] = useState("d")
 
 	const [currentDataPrice, setCurrentDataPrice] = useState([])
 	const [currentDataVolume, setCurrentDataVolume] = useState([])
@@ -154,7 +154,7 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 			setRangeVolume(value)
 			setIsLoading(false)
 		} catch (e) {
-			console.log("%cContainerCharts.jsx -> 124 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
+			console.log("%cContainerCharts.jsx -> 157 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
 			setIsLoading(false)
 		}
 	}
@@ -168,7 +168,7 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 			setRangeLiquidity(value)
 			setIsLoading(false)
 		} catch (e) {
-			console.log("%cContainerCharts.jsx -> 124 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
+			console.log("%cContainerCharts.jsx -> 171 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
 			setIsLoading(false)
 		}
 	}
@@ -178,12 +178,14 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 			setIsLoading(true)
 			let data = await getDataPrice(value)
 			setCurrentDataPrice(data)
-			let lastItem = data[data.length - 1]
-			setCurrentItem({ time: lastItem.time, value: lastItem })
-			setRangePrice(value)
+			if (data.length > 0) {
+				let lastItem = data[data.length - 1]
+				setCurrentItem({ time: lastItem.time, value: lastItem })
+				setRangePrice(value)
+			}
 			setIsLoading(false)
 		} catch (e) {
-			console.log("%cContainerCharts.jsx -> 124 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
+			console.log("%cContainerCharts.jsx -> 186 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
 			setIsLoading(false)
 		}
 	}
@@ -200,9 +202,7 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 	}
 
 	return (
-		<div
-			className={classes.chartContainer}
-		>
+		<div className={classes.chartContainer}>
 			<div className={classes.header}>
 				<InfoCharts
 					data={currentItem}

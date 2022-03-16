@@ -257,11 +257,11 @@ const Token = ({ showToast }) => {
 							<p
 								variant="body2"
 								className={
-									token.liquidity24hChange === 0
-										? classes.dataDetail
+									token.liquidity24hChange < 0
+										? `${classes.dataDetail} ${classes.colorDown} ${classes.containerUpDown}`
 										: token.liquidity24hChange > 0
 										? `${classes.dataDetail} ${classes.colorUp} ${classes.containerUpDown}`
-										: `${classes.dataDetail} ${classes.coloDown} ${classes.containerUpDown}`
+										: classes.dataDetail
 								}
 							>
 								{token.liquidity24hChange > 0 ? (
@@ -285,11 +285,11 @@ const Token = ({ showToast }) => {
 							<p
 								variant="body2"
 								className={
-									token.volume24hChange === 0
-										? classes.dataDetail
-										: token.volume24hChange > 0
+									token.volume24hChange > 0
 										? `${classes.dataDetail} ${classes.colorUp} ${classes.containerUpDown}`
-										: `${classes.dataDetail} ${classes.coloDown} ${classes.containerUpDown}`
+										: token.volume24hChange > 0
+										? `${classes.dataDetail} ${classes.colorDown} ${classes.containerUpDown}`
+										: classes.dataDetail
 								}
 							>
 								{token.volume24hChange > 0 ? (
@@ -317,7 +317,7 @@ const Token = ({ showToast }) => {
 										? classes.dataDetail
 										: token.price24hChange > 0
 										? `${classes.dataDetail} ${classes.colorUp} ${classes.containerUpDown}`
-										: `${classes.dataDetail} ${classes.coloDown} ${classes.containerUpDown}`
+										: `${classes.dataDetail} ${classes.colorDown} ${classes.containerUpDown}`
 								}
 							>
 								{token.price24hChange > 0 ? (
