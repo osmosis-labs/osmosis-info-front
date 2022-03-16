@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIsLoaded, token }) => {
+const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIsLoaded, token, onOpenExpertChart }) => {
 	const classes = useStyles()
 	const [typeChart, setTypeChart] = useState("price") // price, volume, liquidity
 
@@ -97,21 +97,11 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 	const [currentDataVolume, setCurrentDataVolume] = useState([])
 	const [currentDataLiquidity, setCurrentDataLiquidity] = useState([])
 
-	const [openExpertChart, setOpenExpertChart] = useState(false)
-
 	const [isLoading, setIsLoading] = useState(false)
 
 	const [currentItem, setCurrentItem] = useState({ value: 0, date: "-" })
 
 	const dataClick = useRef({ time: { day: 1, month: 1, year: 1 }, value: 0, clickedTwice: true })
-
-	const onOpenExpertChart = () => {
-		setOpenExpertChart(true)
-	}
-	
-	const onCloseExpertChart = () => {
-		setOpenExpertChart(false)
-	}
 
 	useEffect(() => {
 		if (dataIsLoaded) {
@@ -220,7 +210,6 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 		<div
 			className={classes.chartContainer}
 		>
-			<ExpertChartDialog open={openExpertChart} onClose={onCloseExpertChart} token={token}/>
 			<div className={classes.header}>
 				<InfoCharts
 					data={currentItem}

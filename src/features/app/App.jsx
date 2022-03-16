@@ -133,9 +133,7 @@ const App = () => {
 																			</div>
 																		</Route>
 																		<Route path="/token/:symbol">
-																			<div className={classes.content}>
-																				<Token showToast={showToast} />
-																			</div>
+																			<Token showToast={showToast} />
 																		</Route>
 																		<Route path="/ibc">
 																			<IBCProvider>
