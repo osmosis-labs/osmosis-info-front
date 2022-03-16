@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme) => {
 			width: "100%",
 			display: "flex",
 			[theme.breakpoints.down("xs")]: {
-				height: "55%",
 			},
 		},
 		headerInfo: {

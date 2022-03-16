@@ -131,7 +131,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool, pricesDecimals }) => {
 									? classes.dataDetail
 									: pool.liquidity24hChange > 0
 									? `${classes.dataDetail} ${classes.colorUp} ${classes.containerUpDown}`
-									: `${classes.dataDetail} ${classes.coloDown} ${classes.containerUpDown}`
+									: `${classes.dataDetail} ${classes.colorDown} ${classes.containerUpDown}`
 							}
 						>
 							{pool.liquidity24hChange > 0 ? (
@@ -160,7 +160,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool, pricesDecimals }) => {
 									? classes.dataDetail
 									: pool.volume24hChange > 0
 									? `${classes.dataDetail} ${classes.colorUp} ${classes.containerUpDown}`
-									: `${classes.dataDetail} ${classes.coloDown} ${classes.containerUpDown}`
+									: `${classes.dataDetail} ${classes.colorDown} ${classes.containerUpDown}`
 							}
 						>
 							{pool.volume24hChange > 0 ? (

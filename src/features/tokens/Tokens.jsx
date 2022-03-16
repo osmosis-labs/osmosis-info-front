@@ -69,7 +69,7 @@ const Tokens = () => {
 	return (
 		<div className={classes.tokensRoot}>
 			<p className={classes.subTitle}>Your watchlist</p>
-			<Paper>
+			<Paper className={classes.containerLoader}>
 				{watchlistTokens.length > 0 ? (
 					<TokensTable
 						data={tokensOnWatchlist}
