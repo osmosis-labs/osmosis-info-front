@@ -285,7 +285,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: transformPriceMK,
+				transform: formatPercent,
 				disablePadding: false,
 				label: "Volume (24h) change",
 				align: "right",
@@ -438,7 +438,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 												{/* </Tooltip> */}
 											</TableCell>
 										)
-									} else if (headCell.id === "price24hChange" || headCell.id === "liquidity24hChange") {
+									} else if (headCell.id === "price24hChange" || headCell.id === "liquidity24hChange" || headCell.id === "volume24hChange") {
 										cell = formatChange(headCell, row)
 									} else {
 										cell = (
