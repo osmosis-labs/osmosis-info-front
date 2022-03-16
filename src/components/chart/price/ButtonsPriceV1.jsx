@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const ButtonsPrice = ({ onChangeRange, range }) => {
+const ButtonsPriceV1 = ({ onChangeRange, range }) => {
 	const classes = useStyles()
 
 	return (
@@ -17,32 +17,32 @@ const ButtonsPrice = ({ onChangeRange, range }) => {
 			className={classes.groupButton}
 			buttons={[
 				{
-					id: 60,
-					name: "1H",
+					id: "7d",
+					name: "7D",
 					onClick: () => {
-						onChangeRange(60)
+						onChangeRange("7d")
 					},
 				},
 
 				{
-					id: 1440,
-					name: "1D",
-					onClick: () => {
-						onChangeRange(1440)
-					},
-				},
-				{
-					id: 10080,
-					name: "1W",
-					onClick: () => {
-						onChangeRange(10080)
-					},
-				},
-				{
-					id: 43800,
+					id: "1mo",
 					name: "1M",
 					onClick: () => {
-						onChangeRange(43800)
+						onChangeRange("1mo")
+					},
+				},
+				{
+					id: "1y",
+					name: "1Y",
+					onClick: () => {
+						onChangeRange("1y")
+					},
+				},
+				{
+					id: "all",
+					name: "All",
+					onClick: () => {
+						onChangeRange("all")
 					},
 				},
 			]}
@@ -51,4 +51,4 @@ const ButtonsPrice = ({ onChangeRange, range }) => {
 	)
 }
 
-export default ButtonsPrice
+export default ButtonsPriceV1

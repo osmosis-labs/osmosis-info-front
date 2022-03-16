@@ -69,7 +69,7 @@ const Pools = () => {
 	return (
 		<div className={classes.poolsRoot}>
 			<p className={classes.subTitle}>Your watchlist</p>
-			<Paper>
+			<Paper className={classes.containerLoader}>
 				{watchlistPools.length > 0 ? (
 					<PoolsTable
 						data={poolsOnWatchlist}

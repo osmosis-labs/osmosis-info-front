@@ -1,5 +1,6 @@
 import ButtonsLiquidity from "../liquidity/ButtonsLiquidity"
 import ButtonsPrice from "../price/ButtonsPrice"
+import ButtonsPriceV1 from "../price/ButtonsPriceV1"
 import ButtonsVolume from "../volume/ButtonsVolume"
 
 const ButtonsCharts = ({
@@ -10,9 +11,16 @@ const ButtonsCharts = ({
 	rangeVolume,
 	rangeLiquidity,
 	typeChart,
+	priceV1
 }) => {
 	if (typeChart === "price") {
-		return <ButtonsPrice onChangeRange={onChangeRangePrice} range={rangePrice} />
+		if(priceV1){
+
+			return <ButtonsPriceV1 onChangeRange={onChangeRangePrice} range={rangePrice} />
+		}else{
+			return <ButtonsPrice onChangeRange={onChangeRangePrice} range={rangePrice} />
+
+		}
 	} else if (typeChart === "volume") {
 		return <ButtonsVolume onChangeRange={onChangeRangeVolume} range={rangeVolume} />
 	} else {

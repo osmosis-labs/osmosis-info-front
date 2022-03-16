@@ -288,7 +288,7 @@ const Token = ({ showToast }) => {
 								className={
 									token.volume24hChange > 0
 										? `${classes.dataDetail} ${classes.colorUp} ${classes.containerUpDown}`
-										: token.volume24hChange > 0
+										: token.volume24hChange < 0
 										? `${classes.dataDetail} ${classes.colorDown} ${classes.containerUpDown}`
 										: classes.dataDetail
 								}
