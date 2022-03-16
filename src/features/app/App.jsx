@@ -76,7 +76,7 @@ const App = () => {
 	}, [])
 
 	return (
-		<BrowserRouter>
+		<BrowserRouter basename=".">
 			<Switch>
 				<>
 					<SettingsProviders>
