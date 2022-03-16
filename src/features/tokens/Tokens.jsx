@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) => {
 			position: "relative",
 			overflowX: "hidden",
 			minHeight: "200px"
+		},
+		containerWatchlist:{
+			position: "relative",
+			minWidth: "200px",
 		}
 	}
 })
@@ -69,7 +73,7 @@ const Tokens = () => {
 	return (
 		<div className={classes.tokensRoot}>
 			<p className={classes.subTitle}>Your watchlist</p>
-			<Paper className={classes.containerLoader}>
+			<Paper className={classes.containerWatchlist}>
 				{watchlistTokens.length > 0 ? (
 					<TokensTable
 						data={tokensOnWatchlist}

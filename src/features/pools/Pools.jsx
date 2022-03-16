@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) => {
 			overflowX: "hidden",
 			position: "relative",
 			minHeight: "200px"
+		},
+		containerWatchlist:{
+			position: "relative",
+			minWidth: "200px",
 		}
 	}
 })
@@ -69,7 +73,7 @@ const Pools = () => {
 	return (
 		<div className={classes.poolsRoot}>
 			<p className={classes.subTitle}>Your watchlist</p>
-			<Paper className={classes.containerLoader}>
+			<Paper className={classes.containerWatchlist}>
 				{watchlistPools.length > 0 ? (
 					<PoolsTable
 						data={poolsOnWatchlist}

@@ -73,6 +73,10 @@ const useStyles = makeStyles((theme) => {
 			minWidth: "200px",
 			minHeight: "200px",
 		},
+		containerWatchlist:{
+			position: "relative",
+			minWidth: "200px",
+		}
 	}
 })
 
@@ -199,7 +203,7 @@ const Overview = () => {
 					</Paper>
 				</div>
 				<p className={classes.subTitle}>Your token watchlist</p>
-				<Paper className={classes.containerLoading}>
+				<Paper className={classes.containerWatchlist}>
 					{watchlistTokens.length > 0 ? (
 						<TokensTable
 							data={tokensOnWatchlist}
@@ -213,7 +217,7 @@ const Overview = () => {
 					)}
 				</Paper>
 				<p className={classes.subTitle}>Your pool watchlist</p>
-				<Paper className={classes.containerLoading}>
+				<Paper className={classes.containerWatchlist}>
 					{watchlistPools.length > 0 ? (
 						<PoolsTable
 							data={poolsOnWatchlist}
