@@ -6,6 +6,8 @@ import ButtonsCharts from "../../../components/chart/charts/ButtonsCharts"
 import ButtonsTypeChart from "../../../components/chart/charts/ButtonsTypeChart"
 import Charts from "../../../components/chart/charts/Charts"
 import InfoCharts from "../../../components/chart/charts/InfoCharts"
+import Button from "../../../components/button/Button"
+import ExpertChartDialog from './expertChart/ExpertChartDialog'
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -91,11 +93,21 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 	const [currentDataVolume, setCurrentDataVolume] = useState([])
 	const [currentDataLiquidity, setCurrentDataLiquidity] = useState([])
 
+	const [openExpertChart, setOpenExpertChart] = useState(false)
+
 	const [isLoading, setIsLoading] = useState(false)
 
 	const [currentItem, setCurrentItem] = useState({ value: 0, date: "-" })
 
 	const dataClick = useRef({ time: { day: 1, month: 1, year: 1 }, value: 0, clickedTwice: true })
+
+	const onOpenExpertChart = () => {
+		setOpenExpertChart(true)
+	}
+	
+	const onCloseExpertChart = () => {
+		setOpenExpertChart(false)
+	}
 
 	useEffect(() => {
 		if (dataIsLoaded) {
@@ -201,7 +213,10 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 	}
 
 	return (
-		<div className={classes.chartContainer}>
+		<div
+			className={classes.chartContainer}
+		>
+			<ExpertChartDialog open={openExpertChart} onClose={onCloseExpertChart}/>
 			<div className={classes.header}>
 				<InfoCharts
 					data={currentItem}
@@ -211,6 +226,7 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 					rangePrice={rangePrice}
 				/>
 				<div className={classes.headerActions}>
+					<Button onclick={onOpenExpertChart}>Open expert chart</Button>
 					<ButtonsTypeChart type={typeChart} onChangeType={onChangeTypeChart} />
 					<ButtonsCharts
 						typeChart={typeChart}
