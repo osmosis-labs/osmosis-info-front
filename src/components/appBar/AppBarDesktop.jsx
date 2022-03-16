@@ -3,6 +3,9 @@ import { useEffect, useState } from "react"
 import { Link, useHistory, useLocation } from "react-router-dom"
 import logo from "./logo.png"
 import Search from "./Search"
+import hatSVG from '../../patrickTheme/ressources/hat.svg'
+import lpCloverSVG from '../../patrickTheme/ressources/lpclover.svg'
+import lpbeerSVG from '../../patrickTheme/ressources/lpbeer.svg'
 const useStyles = makeStyles((theme) => {
 	return {
 		appBarDesktopRoot: {
@@ -18,6 +21,26 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "center",
 			backgroundColor: theme.palette.primary.dark,
 			width: "100vw",
+			"&:after":{
+				content: "''",
+				position: "absolute",
+				bottom: "0px",
+				left: "600px",
+				height: "50px",
+				width: "50px",
+				display: "block",
+				background: `url(${lpbeerSVG}) no-repeat center`,
+			},
+			"&:before":{
+				content: "''",
+				position: "absolute",
+				bottom: "0px",
+				right: "600px",
+				height: "50px",
+				width: "50px",
+				display: "block",
+				background: `url(${lpCloverSVG}) no-repeat center`,
+			},
 			[theme.breakpoints.down("sm")]: {
 				flexDirection: "column",
 			},
@@ -75,6 +98,19 @@ const useStyles = makeStyles((theme) => {
 			margin: theme.spacing(1),
 			padding: theme.spacing(1),
 			borderRadius: theme.spacing(1),
+			position: "relative",
+
+			"&:after":{
+				content: "''",
+				zIndex: "-1",
+				position: "absolute",
+				top: "-35px",
+				right: "-20px",
+				height: "50px",
+				width: "50px",
+				display: "block",
+				background: `url(${hatSVG}) no-repeat center`,
+			}
 		},
 	}
 })

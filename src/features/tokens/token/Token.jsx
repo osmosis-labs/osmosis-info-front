@@ -18,7 +18,8 @@ import { useTokensV2 } from "../../../contexts/TokensV2.provider"
 
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
-
+import lpwSVG from "../../../patrickTheme/ressources/lpwomen.svg"
+import lpgroupSVG from "../../../patrickTheme/ressources/lpGroup.svg"
 const useStyles = makeStyles((theme) => {
 	return {
 		tokenRoot: {
@@ -45,12 +46,42 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			flexDirection: "column",
 			flexGrow: "1",
+
+			"&:after": {
+				content: "''",
+				zIndex: "999",
+				position: "absolute",
+				top: "-42px",
+				left: "50px",
+				height: "50px",
+				width: "50px",
+				display: "block",
+				background: `url(${lpwSVG}) no-repeat center`,
+				[theme.breakpoints.down("xs")]: {
+				left: "150px",
+				},
+			},
+			"&:before": {
+				content: "''",
+				zIndex: "999",
+				position: "absolute",
+				top: "-72px",
+				right: "50px",
+				height: "100px",
+				width: "100px",
+				display: "block",
+				background: `url(${lpgroupSVG}) no-repeat center`,
+				[theme.breakpoints.down("xs")]: {
+					left: "-0px",
+				},
+			},
 		},
 
 		details: {
 			display: "flex",
 			flexDirection: "column",
 			minHeight: "350px",
+
 			[theme.breakpoints.down("xs")]: {
 				width: "100%",
 			},
@@ -227,11 +258,19 @@ const Token = ({ showToast }) => {
 							<p
 								variant="body2"
 								className={
+<<<<<<< HEAD
 									token.liquidity24hChange < 0
 										? `${classes.dataDetail} ${classes.colorDown} ${classes.containerUpDown}`
 										: token.liquidity24hChange > 0
 										? `${classes.dataDetail} ${classes.colorUp} ${classes.containerUpDown}`
 										: classes.dataDetail
+=======
+									token.liquidity24hChange === 0
+										? classes.dataDetail
+										: token.liquidity24hChange > 0
+										? `${classes.dataDetail} ${classes.colorUp} ${classes.containerUpDown}`
+										: `${classes.dataDetail} ${classes.coloDown} ${classes.containerUpDown}`
+>>>>>>> 78d63e2 (update theme)
 								}
 							>
 								{token.liquidity24hChange > 0 ? (
@@ -255,11 +294,19 @@ const Token = ({ showToast }) => {
 							<p
 								variant="body2"
 								className={
+<<<<<<< HEAD
 									token.volume24hChange > 0
 										? `${classes.dataDetail} ${classes.colorUp} ${classes.containerUpDown}`
 										: token.volume24hChange > 0
 										? `${classes.dataDetail} ${classes.colorDown} ${classes.containerUpDown}`
 										: classes.dataDetail
+=======
+									token.volume24hChange === 0
+										? classes.dataDetail
+										: token.volume24hChange > 0
+										? `${classes.dataDetail} ${classes.colorUp} ${classes.containerUpDown}`
+										: `${classes.dataDetail} ${classes.coloDown} ${classes.containerUpDown}`
+>>>>>>> 78d63e2 (update theme)
 								}
 							>
 								{token.volume24hChange > 0 ? (
@@ -287,7 +334,11 @@ const Token = ({ showToast }) => {
 										? classes.dataDetail
 										: token.price24hChange > 0
 										? `${classes.dataDetail} ${classes.colorUp} ${classes.containerUpDown}`
+<<<<<<< HEAD
 										: `${classes.dataDetail} ${classes.colorDown} ${classes.containerUpDown}`
+=======
+										: `${classes.dataDetail} ${classes.coloDown} ${classes.containerUpDown}`
+>>>>>>> 78d63e2 (update theme)
 								}
 							>
 								{token.price24hChange > 0 ? (

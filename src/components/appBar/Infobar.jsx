@@ -1,7 +1,6 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
 import { usePrices } from "../../contexts/PricesProvider"
-import { infoBarUseEffect } from "../../patrickTheme/script"
 import SoundPlay from "../../patrickTheme/soundPlay"
 const useStyles = makeStyles((theme) => {
 	return {
@@ -15,6 +14,7 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			flexDirection: "row",
 			alignItems: "center",
+			justifyContent: "space-between",
 			height: "100%",
 			backgroundColor: theme.palette.primary.dark2,
 			maxWidth: "100%",
@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme) => {
 		left: {
 			display: "flex",
 			flexDirection: "row",
-			flexGrow: "2",
 			alignItems: "center",
 			paddingLeft: theme.spacing(2),
 		},
