@@ -25,9 +25,11 @@ const useStyles = makeStyles((theme) => {
 	return {
 		tokenRoot: {
 			width: "100vw",
+			minHeight: "100%",
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "center",
+			position: "relative", 
 		},
 		tokenContainer: {
 			margin: `${theme.spacing(2)}px 0`,

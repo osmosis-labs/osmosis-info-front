@@ -14,11 +14,11 @@ const useStyles = makeStyles((theme) => {
 			overflowY: "auto",
 		},
 		content: {
+			zIndex: theme.zIndex.appBar,
 			position: "absolute",
 			top: "100px",
 			right: "50px",
 			backgroundColor: theme.palette.primary.dark,
-			zIndex: "1",
 			border: `1px solid ${theme.palette.primary.main}`,
 			maxHeight: "600px",
 			width: "800px",
@@ -36,19 +36,13 @@ const useStyles = makeStyles((theme) => {
 			backgroundColor: "#000000",
 			height: "100vh",
 			width: "100vw",
-			top: "0",
-			left: "0",
-			bottom: "0",
-			right: "0",
-			zIndex: "-1",
 		},
 		opened: {
 			display: "block",
 			opacity: "1",
-			zIndex: "-1",
 		},
 		closed: {
-			opacity: "0",
+			opacity: -1,
 			transform: "translateX(100%)",
 		},
 		overlayClosed: {
@@ -57,6 +51,7 @@ const useStyles = makeStyles((theme) => {
 		},
 		overlayOpened: {
 			display: "block",
+			position: "fixed",
 		},
 	}
 })

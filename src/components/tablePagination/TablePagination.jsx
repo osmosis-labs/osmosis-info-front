@@ -36,12 +36,23 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const TablePagination = ({ rowsPerPageOptions, count, rowsPerPage, page, onPageChange, onRowsPerPageChange }) => {
+const TablePagination = ({
+	rowsPerPageOptions,
+	count,
+	rowsPerPage,
+	page,
+	onPageChange,
+	onRowsPerPageChange,
+	cbMax = null,
+}) => {
 	const classes = useStyles()
 	const onChangePage = (next) => {
 		if (next) {
-			if ((page + 1) * rowsPerPage < count) {
+			if ((page + 1) * rowsPerPage <= count) {
 				onPageChange(page + 1)
+				if ((page + 2) * rowsPerPage === count) {
+					if (cbMax) cbMax()
+				}
 			}
 		} else {
 			if (page > 0) {
@@ -73,7 +84,7 @@ const TablePagination = ({ rowsPerPageOptions, count, rowsPerPage, page, onPageC
 					<NavigateBeforeIcon />
 				</IconButton>
 				<p>
-					{page + 1}/{Math.floor(count / rowsPerPage) + 1}
+					{page + 1}/{Math.ceil(count / rowsPerPage)}
 				</p>
 				<IconButton
 					onClick={() => {
