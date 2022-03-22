@@ -1,105 +1,78 @@
-import { Dialog, makeStyles, Slide } from "@material-ui/core"
-import React, { useEffect, useRef, useState } from "react"
-import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
+import { makeStyles } from "@material-ui/core"
+import React, { memo } from "react"
 import { useTokenChartV2 } from "../../../../contexts/TokenChartV2"
 import AppBarExpertChart from "./AppBarExpertChart"
-import getDataFeed from "./getDataFeed"
+import ExpertChart from "./ExpertChart"
+import TransactionTable from "./TransactionsTable"
 const useStyles = makeStyles((theme) => {
 	return {
+		expertDialogContainer: {
+			position: "fixed",
+			width: "100%",
+			height: "calc(100% - 141px)",
+			display: "flex",
+			flexDirection: "column",
+			zIndex: "1000",
+			transition: "all 0.3s ease-in-out",
+			[theme.breakpoints.down("xs")]: {
+				height: "calc(100% - 109px)",
+			},
+		},
+		expertDialogContainerOpened: {
+			zIndex: theme.zIndex.dialog,
+			opacity: 1,
+			transform: "translateY(0%)",
+		},
+		expertDialogContainerClosed: {
+			opacity: 0,
+			zIndex: -1,
+			transform: "translateY(100%)",
+		},
 		expertContainer: {
-			height: "100%",
+			overflow: "auto",
 			width: "100%",
+			display: "flex",
+			flexDirection: "column",
+			flexGrow: "1",
 			backgroundColor: theme.palette.primary.light,
-			padding: theme.spacing(2),
 		},
-		chartContainer: {
-			paddingTop: theme.spacing(1),
-			display: "flex",
-			flexGrow: "1",
-		},
-		chartExpert: {
-			height: "100%",
-			width: "100%",
-			backgroundColor: theme.palette.primary.main,
-		},
-		tableContainer: {
-			backgroundColor: theme.palette.primary.dark,
-
-			paddingTop: theme.spacing(1),
-			display: "flex",
-			flexGrow: "1",
+		expertChart: { height: "66%" },
+		table: {
+			height: "34%",
 		},
 	}
-})
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-	return <Slide direction="up" ref={ref} {...props} />
 })
 
 const ExpertChartDialog = ({ open, onClose, token }) => {
 	const classes = useStyles()
-	const { getVolumeChartToken, getHistoricalChartToken, getLiquidityChartToken, loadingTokens } = useTokenChartV2()
-
-	const [chartIsReady, setChartIsReady] = useState(false)
-
-	const chartRef = useRef(null)
-
-	const chartReady = () => {
-		console.log("ExpertChartDialog.jsx -> 45: here")
-		setChartIsReady(true)
-	}
-
-	useEffect(() => {
-		console.log("ExpertChartDialog.jsx -> 53: chartRef", chartRef)
-		const fetch = async () => {
-			window.tvWidget = new window.TradingView.widget({
-				symbol: token.symbol, // default symbol
-				fullscreen: false, // displays the chart in the fullscreen mode
-				interval: 60 * 24, // default interval
-				datafeed: getDataFeed({
-					token,
-					getVolumeChartToken,
-					getHistoricalChartToken,
-					getLiquidityChartToken,
-					chartReady,
-				}),
-				container: "chartExpert",
-				library_path: "/charting_library/",
-				autosize: true,
-				intervals: [],
-				time_frames: [],
-				theme: "dark",
-			})
-		}
-		if (token.symbol && chartRef.current) {
-			console.log("ExpertChartDialog.jsx -> 70: token", token)
-			fetch()
-		}
-	}, [token, chartRef.current])
+	const { getVolumeChartToken, getHistoricalChartToken, getLiquidityChartToken, getTrxToken, loadingTrx } =
+		useTokenChartV2()
 
 	const handleClose = () => {
 		onClose()
 	}
 
-	useEffect(() => {
-		console.log("ExpertChartDialog.jsx -> 85: chartRef", chartRef)
-	}, [chartRef])
-	console.log("ExpertChartDialog.jsx -> 83: charReft", chartRef)
-
 	return (
-		<Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+		<div
+			className={
+				open
+					? `${classes.expertDialogContainer} ${classes.expertDialogContainerOpened}`
+					: `${classes.expertDialogContainer} ${classes.expertDialogContainerClosed}`
+			}
+		>
 			<AppBarExpertChart onClose={handleClose} token={token} />
 			<div className={classes.expertContainer}>
-				<BlocLoaderOsmosis open={!chartIsReady} classNameLoading={classes.loading} />
-				<div className={classes.chartContainer}>
-					<div className={classes.chartExpert} id="chartExpert" ref={chartRef}>
-						dsqcxc
-					</div>
-				</div>
-				<div className={classes.tableContainer}></div>
+				<ExpertChart
+					getVolumeChartToken={getVolumeChartToken}
+					getHistoricalChartToken={getHistoricalChartToken}
+					getLiquidityChartToken={getLiquidityChartToken}
+					token={token}
+					className={classes.expertChart}
+				/>
+				<TransactionTable getTrxToken={getTrxToken} loadingTrx={loadingTrx} token={token} className={classes.table} />
 			</div>
-		</Dialog>
+		</div>
 	)
 }
 
-export default ExpertChartDialog
+export default memo(ExpertChartDialog)

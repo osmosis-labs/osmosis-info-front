@@ -9,10 +9,46 @@ export const TokenChartV2Provider = ({ children }) => {
 	const saveDataChart = useRef({})
 	const [loadingTokens, setLoadingTokens] = useState(true)
 	const [loadingCharts, setLoadingCharts] = useState(true)
+	const [loadingTrx, setLoadingTrx] = useState(true)
 
 	const getName = (chartType, tf = "-", symbol = "-") => {
 		return chartType + "-" + tf + "-" + symbol
 	}
+
+	const getTrxToken = useCallback(async ({ symbol, limit = 10, offset = 0 }) => {
+		setLoadingTrx(true)
+		let data = []
+		if (
+			saveDataChart.current[getName("trx", symbol)] &&
+			saveDataChart.current[getName("trx", symbol, limit, offset)].length > 0
+		) {
+			data = saveDataChart.current[getName("trx", symbol, limit, offset)]
+			return data
+		} else {
+			let response = await API.request({
+				url: `https://api-osmosis-chain.imperator.co/swap/v1/token/${symbol}?only_success=true&limit=${limit}&offset=${offset}`,
+				type: "get",
+				useCompleteURL: true,
+			})
+			data = response.data.map((trx) => {
+				let time = new Date(trx.time_tx)
+				let options = { month: "short", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric" }
+				let timeDisplay = new Intl.DateTimeFormat("en-US", options).format(time)
+
+				return {
+					type: trx.symbol_out === symbol ? "Buy" : "Sell",
+					time: { value: time, display: timeDisplay },
+					hash: { value: trx.tx_hash, display: trx.tx_hash },
+					address: { value: trx.address, display: trx.address },
+					tokenIn: { value: trx.amount_in, symbol: trx.symbol_in },
+					tokenOut: { value: trx.amount_out, symbol: trx.symbol_out },
+				}
+			})
+			saveDataChart.current = { ...saveDataChart.current, [getName("trx", symbol, limit, offset)]: data }
+		}
+		setLoadingTrx(false)
+		return data
+	})
 
 	const getVolumeChartToken = useCallback(async ({ symbol }) => {
 		setLoadingCharts(true)
@@ -56,22 +92,23 @@ export const TokenChartV2Provider = ({ children }) => {
 
 	const getHistoricalChartToken = useCallback(async ({ symbol, tf = "5" }) => {
 		setLoadingCharts(true)
+		let data = []
 		if (
 			saveDataChart.current[getName("historical", tf, symbol)] &&
 			saveDataChart.current[getName("historical", tf, symbol)].length > 0
 		) {
 			setLoadingCharts(false)
-			return saveDataChart.current[getName("historical", tf, symbol)]
+			data = saveDataChart.current[getName("historical", tf, symbol)]
 		} else {
 			let response = await API.request({
 				url: `tokens/v2/historical/${symbol}/chart?tf=${tf}`,
 				type: "get",
 			})
-			let data = response.data
-			setLoadingCharts(false)
 
-			return data
+			data = response.data
+			setLoadingCharts(false)
 		}
+		return data
 	}, [])
 
 	useEffect(() => {
@@ -112,6 +149,8 @@ export const TokenChartV2Provider = ({ children }) => {
 				getLiquidityChartToken,
 				getHistoricalChartToken,
 				loadingTokens,
+				getTrxToken,
+				loadingTrx,
 			}}
 		>
 			{children}

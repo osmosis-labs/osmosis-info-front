@@ -19,7 +19,7 @@ const AppBarExpertChart = ({ onClose, token }) => {
 	const classes = useStyles()
 	return (
 		<AppBar className={classes.appBarExpertChartRoot}>
-			<Toolbar>
+			<Toolbar variant="dense">
 				<IconButton edge="start" color="inherit" onClick={onClose} aria-label="close">
 					<CloseIcon />
 				</IconButton>

@@ -12,11 +12,11 @@ const useStyles = makeStyles((theme) => {
 	return {
 		appBarMobileRoot: {
 			position: "fixed",
-			zIndex: "1",
+			zIndex: theme.zIndex.appBar,
 			marginTop: "40px",
+			zIndex: theme.zIndex.appBar - 2,
 		},
 		appBarMobileContent: {
-			zIndex: "-2",
 			position: "relative",
 			display: "flex",
 			flexDirection: "row",
@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => {
 			width: "25px",
 			cursor: "pointer",
 			transition: "all 0.3s",
+			zIndex: theme.zIndex.appBar,
 			"&:hover": {
 				transform: "rotate(-20deg)",
 			},
@@ -60,6 +61,9 @@ const useStyles = makeStyles((theme) => {
 			borderRadius: theme.spacing(1),
 		},
 		menuItemClose: {},
+		iconMenu: {
+			zIndex: theme.zIndex.appBar,
+		},
 	}
 })
 
@@ -169,7 +173,7 @@ const AppBarMobile = () => {
 
 				<Search />
 
-				<IconButton aria-label="Open menu" onClick={handleClick}>
+				<IconButton aria-label="Open menu" onClick={handleClick} className={classes.iconMenu}>
 					<MenuIcon />
 				</IconButton>
 			</div>

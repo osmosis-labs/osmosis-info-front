@@ -137,7 +137,7 @@ export const TokensV2Provider = ({ children }) => {
 
 				return data
 			}
-		}else{
+		} else {
 			return []
 		}
 	}, [])
@@ -204,7 +204,7 @@ export const TokensV2Provider = ({ children }) => {
 				loadingTokens,
 				getTokenData,
 				loadingToken,
-				loadingCharts,
+				loadingCharts
 			}}
 		>
 			{children}

@@ -7,11 +7,10 @@ const useStyles = makeStyles((theme) => {
 	return {
 		appBarDesktopRoot: {
 			position: "fixed",
-			zIndex: "1",
 			marginTop: "40px",
+			zIndex: theme.zIndex.appBar-2,
 		},
 		appBarDesktopContent: {
-			zIndex: "-2",
 			position: "relative",
 			display: "flex",
 			flexDirection: "row",
@@ -27,6 +26,7 @@ const useStyles = makeStyles((theme) => {
 			width: "25px",
 			cursor: "pointer",
 			margin: `${theme.spacing(3)}px ${theme.spacing(1)}px ${theme.spacing(3)}px ${theme.spacing(3)}px`,
+			zIndex: theme.zIndex.appBar,
 			transition: "all 0.3s",
 			"&:hover": {
 				transform: "rotate(-20deg)",
@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme) => {
 			},
 		},
 		right: {
+			zIndex: theme.zIndex.appBar,
 			[theme.breakpoints.down("sm")]: {
 				width: "100%",
 			},
@@ -65,6 +66,7 @@ const useStyles = makeStyles((theme) => {
 			padding: theme.spacing(1),
 			textDecoration: "none",
 			transition: "all 0.2s",
+			zIndex: theme.zIndex.appBar,
 			"&:hover": {
 				color: theme.palette.gray.contrastText,
 			},

@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => {
 	return {
 		searchRoot: {
 			margin: `${theme.spacing(3)}px ${theme.spacing(4)}px ${theme.spacing(3)}px ${theme.spacing(2)}px`,
+			zIndex: theme.zIndex.appBar-2,
 			[theme.breakpoints.down("sm")]: {
 				display: "flex",
 				alignItem: "center",
@@ -30,7 +31,6 @@ const useStyles = makeStyles((theme) => {
 			color: theme.palette.gray.contrastText,
 			outline: "none",
 			border: "none",
-			zIndex: "1000",
 			padding: theme.spacing(1),
 			borderRadius: theme.spacing(2),
 			width: "500px",
