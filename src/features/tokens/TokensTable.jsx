@@ -3,7 +3,7 @@ import { useState } from "react"
 import Image from "../../components/image/Image"
 import TablePagination from "../../components/tablePagination/TablePagination"
 import { useSettings } from "../../contexts/SettingsProvider"
-import { formateNumberDecimalsAuto, formaterNumber } from "../../helpers/helpers"
+import { formateNumberDecimalsAuto, formaterNumber, getPercent } from "../../helpers/helpers"
 import TokensHeaderTable from "./TokensHearderTable"
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
@@ -206,8 +206,9 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 		const transformPriceMK = (price) => {
 			return `$${formaterNumber(price)}`
 		}
-		const formatPercent = (value) => {
-			return formateNumberDecimalsAuto({ price: value, minDecimal: 0, minPrice: 1, maxDecimal: 2, unit: "%" })
+
+		const formatTokenPrice = (value) => {
+			return "$" + formateNumberDecimalsAuto({ price: value })
 		}
 		let head = [
 			{
@@ -245,7 +246,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: formatPercent,
+				transform: getPercent,
 				disablePadding: false,
 				label: "Liquidity (24h) change",
 				align: "right",
@@ -255,7 +256,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: (value) => formateNumberDecimalsAuto({ price: value }),
+				transform: formatTokenPrice,
 				disablePadding: false,
 				label: "Price",
 				align: "right",
@@ -265,7 +266,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: formatPercent,
+				transform: getPercent,
 				disablePadding: false,
 				label: "Price (24h) change",
 				align: "right",
@@ -285,7 +286,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: formatPercent,
+				transform: getPercent,
 				disablePadding: false,
 				label: "Volume (24h) change",
 				align: "right",
@@ -438,7 +439,11 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 												{/* </Tooltip> */}
 											</TableCell>
 										)
-									} else if (headCell.id === "price24hChange" || headCell.id === "liquidity24hChange" || headCell.id === "volume24hChange") {
+									} else if (
+										headCell.id === "price24hChange" ||
+										headCell.id === "liquidity24hChange" ||
+										headCell.id === "volume24hChange"
+									) {
 										cell = formatChange(headCell, row)
 									} else {
 										cell = (

@@ -57,12 +57,22 @@ export const formateNumberPriceDecimals = (price, decimals = 2) => {
 	}).format(price)
 }
 
+export const getPercent = (value, unit = true) => {
+	let res = parseFloat(formateNumberDecimalsAuto({ price: value, minDecimal: 2, minPrice: 1, maxDecimal: 2 })).toFixed(
+		2
+	)
+	if (unit) {
+		return res + "%"
+	}
+	return res
+}
+
 export const formateNumberDecimalsAuto = ({ price, maxDecimal, unit, minDecimal, minPrice }) => {
 	minDecimal = minDecimal ? minDecimal : 2
 	minPrice = minPrice ? minPrice : 1
-	let res = formateNumberDecimals(price, detectBestDecimalsDisplay(price, minDecimal, minPrice, maxDecimal)) + (unit
-	? unit
-	: "")
+	let res =
+		formateNumberDecimals(price, detectBestDecimalsDisplay(price, minDecimal, minPrice, maxDecimal)) +
+		(unit ? unit : "")
 	return res
 }
 
