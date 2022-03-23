@@ -86,9 +86,9 @@ const AppBarMobile = () => {
 	}, [location.pathname, setCurrentPath])
 
 	const clickItem = (path) => {
-        history.push(path)
-        handleClose()
-    }
+		history.push(path)
+		handleClose()
+	}
 	return (
 		<div className={classes.appBarMobileRoot}>
 			<div className={classes.appBarMobileContent}>
@@ -109,23 +109,23 @@ const AppBarMobile = () => {
 					PaperComponent={PaperDialog}
 				>
 					<div className={classes.contentDialog}>
-						<div className={currentPath === "/" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}>
-							<p
-								onClick={() => {
-									clickItem("/")
-								}}
-								className={currentPath === "/" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
-							>
+						<div
+							onClick={() => {
+								clickItem("/")
+							}}
+							className={currentPath === "/" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
+						>
+							<p className={currentPath === "/" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}>
 								Overview
 							</p>
 						</div>
 						<div
+							onClick={() => {
+								clickItem("/pools")
+							}}
 							className={currentPath === "/pools" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
 						>
 							<p
-								onClick={() => {
-									clickItem("/pools")
-								}}
 								className={
 									currentPath === "/pools" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem
 								}
@@ -134,12 +134,12 @@ const AppBarMobile = () => {
 							</p>
 						</div>
 						<div
+							onClick={() => {
+								clickItem("/tokens")
+							}}
 							className={currentPath === "/tokens" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
 						>
 							<p
-								onClick={() => {
-									clickItem("/tokens")
-								}}
 								className={
 									currentPath === "/tokens" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem
 								}
@@ -149,11 +149,11 @@ const AppBarMobile = () => {
 						</div>
 						<div
 							className={currentPath === "/ibc" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
+							onClick={() => {
+								clickItem("/ibc")
+							}}
 						>
 							<p
-								onClick={() => {
-									clickItem("/ibc")
-								}}
 								className={currentPath === "/ibc" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
 							>
 								IBC Status
