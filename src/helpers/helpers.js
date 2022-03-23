@@ -7,6 +7,14 @@ export const formateNumberPrice = (price) => {
 	}).format(price)
 }
 
+export const formateNumber = (price) => {
+	return new Intl.NumberFormat("en-US", {
+		currency: "USD",
+		minimumFractionDigits: 0,
+		maximumFractionDigits: 0,
+	}).format(price)
+}
+
 export const formatDate = (date) => {
 	let options = { month: "short", day: "numeric", year: "numeric" }
 	return new Intl.DateTimeFormat("en-US", options).format(date)
