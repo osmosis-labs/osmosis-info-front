@@ -9,7 +9,7 @@ import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import ButtonGroup from "../../../components/buttonGroup/ButtonGroup"
 import { useState } from "react"
-import { formateNumberDecimals, formatPercent } from "../../../helpers/helpers"
+import { formateNumberDecimals, getPercent } from "../../../helpers/helpers"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 import { usePrices } from "../../../contexts/PricesProvider"
 const useStyles = makeStyles((theme) => {
@@ -129,7 +129,7 @@ const Metrics = () => {
 								}
 							>
 								{osmosChange24h > 0 ? "+" : ""}
-								{formatPercent(osmosChange24h, 3)}
+								{getPercent(osmosChange24h)}
 							</span>
 							{osmosChange24h > 0 ? (
 								<ArrowDropUpIcon className={classes.iconUp} />
@@ -167,7 +167,7 @@ const Metrics = () => {
 								}
 							>
 								{volume24hChange > 0 ? "+" : ""}
-								{formatPercent(volume24hChange, 2)}
+								{getPercent(volume24hChange)}
 							</span>
 							{volume24hChange > 0 ? (
 								<ArrowDropUpIcon className={classes.iconUp} />
@@ -236,7 +236,7 @@ const Metrics = () => {
 										}
 									>
 										{liquidityUSD24h > 0 ? "+" : ""}
-										{formatPercent(liquidityUSD24h, 2)}
+										{getPercent(liquidityUSD24h)}
 									</span>
 									{liquidityUSD24h > 0 ? (
 										<ArrowDropUpIcon className={classes.iconUp} />
@@ -263,7 +263,7 @@ const Metrics = () => {
 										}
 									>
 										{liquidityAtom24h > 0 ? "+" : ""}
-										{formatPercent(liquidityAtom24h, 3)}
+										{getPercent(liquidityAtom24h)}
 									</span>
 									{liquidityAtom24h > 0 ? (
 										<ArrowDropUpIcon className={classes.iconUp} />
@@ -290,7 +290,7 @@ const Metrics = () => {
 										}
 									>
 										{liquidityOsmo24h > 0 ? "+" : ""}
-										{formatPercent(liquidityOsmo24h, 3)}
+										{getPercent(liquidityOsmo24h)}
 									</span>
 									{liquidityOsmo24h > 0 ? (
 										<ArrowDropUpIcon className={classes.iconUp} />

@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core"
 import Image from "../../../components/image/Image"
 import PieChartIcon from "@material-ui/icons/PieChart"
-import { formateNumberDecimals } from "../../../helpers/helpers"
+import { formateNumberDecimals, getPercent } from "../../../helpers/helpers"
 import { useHistory } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => {
@@ -105,7 +105,7 @@ const DominanceItem = ({ item, index }) => {
 					style={{ width: `${formateNumberDecimals(item.dominance, 0)}%` }}
 				></div>
 			</div>
-			<p className={classes.dominance}>{formateNumberDecimals(item.dominance, 2)}%</p>
+			<p className={classes.dominance}>{getPercent(item.dominance)}</p>
 		</div>
 	)
 }

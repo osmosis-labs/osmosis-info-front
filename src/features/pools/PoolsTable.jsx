@@ -4,7 +4,7 @@ import Image from "../../components/image/Image"
 import TablePagination from "../../components/tablePagination/TablePagination"
 import TableSettings from "../../components/tableSettings/TableSettings"
 import { useSettings } from "../../contexts/SettingsProvider"
-import { formateNumberDecimalsAuto, formaterNumber } from "../../helpers/helpers"
+import { formateNumberDecimalsAuto, formaterNumber, getPercent } from "../../helpers/helpers"
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import PoolsHeaderTable from "./PoolsHeaderTable"
@@ -201,9 +201,7 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 		const transformPriceMK = (price) => {
 			return `$${formaterNumber(price)}`
 		}
-		const formatPercent = (value) => {
-			return formateNumberDecimalsAuto({ price: value, minDecimal: 0, minPrice: 1, maxDecimal: 2, unit: "%" })
-		}
+		
 		let head = [
 			{
 				id: "id",
@@ -240,7 +238,7 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: formatPercent,
+				transform: getPercent,
 				disablePadding: false,
 				label: "Liquidity (24h) change",
 				align: "right",
@@ -260,7 +258,7 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: formatPercent,
+				transform: getPercent,
 				disablePadding: false,
 				label: "Volume (24h) change",
 				align: "right",
@@ -280,7 +278,7 @@ const PoolsTable = ({ data, textEmpty, size = "ld", sortable = true, onClickPool
 				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
 				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: (value) => formatPercent(parseFloat(value), 0),
+				transform: (value) => getPercent(parseFloat(value)),
 				disablePadding: false,
 				label: "Fees",
 				align: "right",

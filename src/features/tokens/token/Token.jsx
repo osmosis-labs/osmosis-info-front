@@ -9,6 +9,7 @@ import {
 	formateNumberPrice,
 	formateNumberPriceDecimals,
 	getInclude,
+	getPercent,
 } from "../../../helpers/helpers"
 import TokenPath from "./TokenPath"
 import TokenTitle from "./TokenTitle"
@@ -212,9 +213,6 @@ const Token = ({ showToast }) => {
 		let data = await getVolumeChartToken({ symbol: token.symbol, range })
 		return data
 	}
-	const formatPercent = (value) => {
-		return formateNumberDecimalsAuto({ price: value, minDecimal: 0, minPrice: 1, maxDecimal: 2, unit: "%" })
-	}
 	return (
 		<div className={classes.tokenRoot}>
 			<ContainerLoader className={classes.containerInfo} isLoading={!dataIsLoaded}>
@@ -246,7 +244,7 @@ const Token = ({ showToast }) => {
 									) : (
 										<span />
 									)}
-									{formatPercent(token.liquidity24hChange)}
+									{getPercent(token.liquidity24hChange)}
 								</p>
 							</div>
 						</div>
@@ -270,7 +268,7 @@ const Token = ({ showToast }) => {
 									) : (
 										<span />
 									)}
-									{formatPercent(token.volume24hChange)}
+									{getPercent(token.volume24hChange)}
 								</p>
 							</div>
 						</div>
@@ -295,7 +293,7 @@ const Token = ({ showToast }) => {
 									) : (
 										<span />
 									)}
-									{formatPercent(token.price24hChange)}
+									{getPercent(token.price24hChange)}
 								</p>
 							</div>
 						</div>
