@@ -50,18 +50,27 @@ const useStyles = makeStyles((theme) => {
 		details: {
 			display: "flex",
 			flexDirection: "column",
+			width: "100%",
 			minHeight: "350px",
-			[theme.breakpoints.down("xs")]: {
-				width: "100%",
-			},
 		},
 		detail: {
-			padding: theme.spacing(2),
 			width: "100%",
+			padding: "0px 0px 50px 0"
 		},
 		dataDetail: {
-			fontSize: theme.fontSize.big,
+			fontSize: "1.5rem",
 			color: theme.palette.gray.contrastText,
+		},
+		detailsValues: {
+			display: "flex",
+			flexDirection: "row",
+			alignItems: "center",
+			justifyContent: "space-between",
+			paddingTop: "10px",
+			width: "100%",
+		},
+		dataDetailChange: {
+			fontSize: "1.2rem",
 		},
 		titleDetail: {
 			fontWeight: "600",
@@ -123,6 +132,7 @@ const useStyles = makeStyles((theme) => {
 			flexDirection: "row",
 			alignItems: "center",
 		},
+		
 	}
 })
 
@@ -218,87 +228,76 @@ const Token = ({ showToast }) => {
 					<div className={classes.details}>
 						<div className={classes.detail}>
 							<p className={classes.titleDetail}>Liquidity</p>
-							<p variant="body2" className={classes.dataDetail}>
-								{formateNumberPrice(token.liquidity)}
-							</p>
-						</div>
-						<div className={classes.detail}>
-							<p className={classes.titleDetail}>Liquidity 24hrs change</p>
-							<p
-								variant="body2"
-								className={
-									token.liquidity24hChange < 0
-										? `${classes.dataDetail} ${classes.colorDown} ${classes.containerUpDown}`
-										: token.liquidity24hChange > 0
-										? `${classes.dataDetail} ${classes.colorUp} ${classes.containerUpDown}`
-										: classes.dataDetail
-								}
-							>
-								{token.liquidity24hChange > 0 ? (
-									<ArrowDropUpIcon className={classes.colorUp} />
-								) : token.liquidity24hChange < 0 ? (
-									<ArrowDropDownIcon className={classes.colorDown} />
-								) : (
-									<span />
-								)}
-								{formatPercent(token.liquidity24hChange)}
-							</p>
+							<div className={classes.detailsValues}>
+								<p className={classes.dataDetail}>{formateNumberPrice(token.liquidity)}</p>
+								<p
+									className={
+										token.liquidity24hChange < 0
+											? `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
+											: token.liquidity24hChange > 0
+											? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
+											: classes.dataDetailChange
+									}
+								>
+									{token.liquidity24hChange > 0 ? (
+										<ArrowDropUpIcon className={classes.colorUp} />
+									) : token.liquidity24hChange < 0 ? (
+										<ArrowDropDownIcon className={classes.colorDown} />
+									) : (
+										<span />
+									)}
+									{formatPercent(token.liquidity24hChange)}
+								</p>
+							</div>
 						</div>
 						<div className={classes.detail}>
 							<p className={classes.titleDetail}>Volume (24hrs)</p>
-							<p variant="body2" className={classes.dataDetail}>
-								{formateNumberPrice(token.volume24h)}
-							</p>
+							<div className={classes.detailsValues}>
+								<p className={classes.dataDetail}>{formateNumberPrice(token.volume24h)}</p>
+								<p
+									className={
+										token.volume24hChange > 0
+											? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
+											: token.volume24hChange < 0
+											? `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
+											: classes.dataDetailChange
+									}
+								>
+									{token.volume24hChange > 0 ? (
+										<ArrowDropUpIcon className={classes.colorUp} />
+									) : token.volume24hChange < 0 ? (
+										<ArrowDropDownIcon className={classes.colorDown} />
+									) : (
+										<span />
+									)}
+									{formatPercent(token.volume24hChange)}
+								</p>
+							</div>
 						</div>
-						<div className={classes.detail}>
-							<p className={classes.titleDetail}>Volume 24hrs change</p>
-							<p
-								variant="body2"
-								className={
-									token.volume24hChange > 0
-										? `${classes.dataDetail} ${classes.colorUp} ${classes.containerUpDown}`
-										: token.volume24hChange < 0
-										? `${classes.dataDetail} ${classes.colorDown} ${classes.containerUpDown}`
-										: classes.dataDetail
-								}
-							>
-								{token.volume24hChange > 0 ? (
-									<ArrowDropUpIcon className={classes.colorUp} />
-								) : token.volume24hChange < 0 ? (
-									<ArrowDropDownIcon className={classes.colorDown} />
-								) : (
-									<span />
-								)}
-								{formatPercent(token.volume24hChange)}
-							</p>
-						</div>
+
 						<div className={classes.detail}>
 							<p className={classes.titleDetail}>Price</p>
-							<p variant="body2" className={classes.dataDetail}>
-								{formateNumberPriceDecimals(token.price, priceDecimals.current)}
-							</p>
-						</div>
-						<div className={classes.detail}>
-							<p className={classes.titleDetail}>Price 24hrs change</p>
-							<p
-								variant="body2"
-								className={
-									token.price24hChange === 0
-										? classes.dataDetail
-										: token.price24hChange > 0
-										? `${classes.dataDetail} ${classes.colorUp} ${classes.containerUpDown}`
-										: `${classes.dataDetail} ${classes.colorDown} ${classes.containerUpDown}`
-								}
-							>
-								{token.price24hChange > 0 ? (
-									<ArrowDropUpIcon className={classes.colorUp} />
-								) : token.price24hChange < 0 ? (
-									<ArrowDropDownIcon className={classes.colorDown} />
-								) : (
-									<span />
-								)}
-								{formatPercent(token.price24hChange)}
-							</p>
+							<div className={classes.detailsValues}>
+								<p className={classes.dataDetail}>{formateNumberPriceDecimals(token.price, priceDecimals.current)}</p>
+								<p
+									className={
+										token.price24hChange === 0
+											? classes.dataDetailChange
+											: token.price24hChange > 0
+											? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
+											: `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
+									}
+								>
+									{token.price24hChange > 0 ? (
+										<ArrowDropUpIcon className={classes.colorUp} />
+									) : token.price24hChange < 0 ? (
+										<ArrowDropDownIcon className={classes.colorDown} />
+									) : (
+										<span />
+									)}
+									{formatPercent(token.price24hChange)}
+								</p>
+							</div>
 						</div>
 					</div>
 				</Paper>
