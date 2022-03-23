@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => {
 
 		charts: {
 			display: "grid",
-			gridTemplateColumns: "300px 1fr",
+			gridTemplateColumns: "350px 1fr",
 			gap: theme.spacing(1),
 
 			[theme.breakpoints.down("xs")]: {
