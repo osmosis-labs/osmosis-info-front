@@ -77,12 +77,14 @@ let colors = {
 			third: "#52EB7D16",
 			text: "#52EB7D",
 			subText: "#00CEBA",
+			background: "#52EB7D2A",
 		},
 		red: {
 			first: "#ef535063",
 			second: "#ef53503D",
 			third: "#ef535016",
 			subText: "#EF3456",
+			background: "#EF34562A",
 		},
 	},
 }
@@ -105,6 +107,11 @@ const theme = createTheme({
 			lg: 960,
 			xl: 1280,
 		},
+	},
+	zIndex: {
+		loader: 100,
+		dialog: 200,
+		appBar: 300,
 	},
 	overrides: {
 		MuiTooltip: {

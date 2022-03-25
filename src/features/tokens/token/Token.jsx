@@ -19,14 +19,26 @@ import { useTokensV2 } from "../../../contexts/TokensV2.provider"
 
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
+import ExpertChartDialog from "./expertChart/ExpertChartDialog"
 
 const useStyles = makeStyles((theme) => {
 	return {
 		tokenRoot: {
+			width: "100vw",
+			minHeight: "100%",
+			display: "flex",
+			flexDirection: "column",
+			alignItems: "center",
+			position: "relative", 
+		},
+		tokenContainer: {
 			margin: `${theme.spacing(2)}px 0`,
 			display: "grid",
 			gridAutoRows: "auto",
 			rowGap: theme.spacing(2),
+			position: "relative",
+			maxWidth: "1200px",
+			width: "90%",
 		},
 		charts: {
 			display: "grid",
@@ -56,7 +68,7 @@ const useStyles = makeStyles((theme) => {
 		},
 		detail: {
 			width: "100%",
-			padding: "0px 0px 50px 0"
+			padding: "0px 0px 50px 0",
 		},
 		dataDetail: {
 			fontSize: "1.5rem",
@@ -132,7 +144,6 @@ const useStyles = makeStyles((theme) => {
 			flexDirection: "row",
 			alignItems: "center",
 		},
-		
 	}
 })
 
@@ -151,9 +162,10 @@ const Token = ({ showToast }) => {
 	} = useTokensV2()
 	const [token, setToken] = useState({})
 	const priceDecimals = useRef(2)
-	const [expert, setExpert] = useState("simplified")
 
 	const [dataIsLoaded, setDataIsLoaded] = useState(false) // data is loaded
+
+	const [openExpertChart, setOpenExpertChart] = useState(false)
 
 	useEffect(() => {
 		// get token from history state
@@ -198,6 +210,14 @@ const Token = ({ showToast }) => {
 		}
 	}, [token, getTokenData])
 
+	const onOpenExpertChart = () => {
+		setOpenExpertChart(true)
+	}
+
+	const onCloseExpertChart = () => {
+		setOpenExpertChart(false)
+	}
+
 	const getDataPrice = async (tf) => {
 		let data = await getHistoricalChartToken({ symbol: token.symbol, tf })
 		return data
@@ -214,104 +234,107 @@ const Token = ({ showToast }) => {
 	}
 	return (
 		<div className={classes.tokenRoot}>
-			<ContainerLoader className={classes.containerInfo} isLoading={!dataIsLoaded}>
-				<TokenPath token={token} />
-				<TokenTitle token={token} />
-				<p className={classes.tokenPrice}>{formateNumberPriceDecimals(token.price, priceDecimals.current)}</p>
-			</ContainerLoader>
-			<div className={classes.charts}>
-				<Paper className={classes.loaderDetails}>
-					<BlocLoaderOsmosis open={!dataIsLoaded} classNameLoading={classes.loading} />
-					<div className={classes.details}>
-						<div className={classes.detail}>
-							<p className={classes.titleDetail}>Liquidity</p>
-							<div className={classes.detailsValues}>
-								<p className={classes.dataDetail}>{formateNumberPrice(token.liquidity)}</p>
-								<p
-									className={
-										token.liquidity24hChange < 0
-											? `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
-											: token.liquidity24hChange > 0
-											? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
-											: classes.dataDetailChange
-									}
-								>
-									{token.liquidity24hChange > 0 ? (
-										<ArrowDropUpIcon className={classes.colorUp} />
-									) : token.liquidity24hChange < 0 ? (
-										<ArrowDropDownIcon className={classes.colorDown} />
-									) : (
-										<span />
-									)}
-									{getPercent(token.liquidity24hChange)}
-								</p>
-							</div>
-						</div>
-						<div className={classes.detail}>
-							<p className={classes.titleDetail}>Volume (24hrs)</p>
-							<div className={classes.detailsValues}>
-								<p className={classes.dataDetail}>{formateNumberPrice(token.volume24h)}</p>
-								<p
-									className={
-										token.volume24hChange > 0
-											? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
-											: token.volume24hChange < 0
-											? `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
-											: classes.dataDetailChange
-									}
-								>
-									{token.volume24hChange > 0 ? (
-										<ArrowDropUpIcon className={classes.colorUp} />
-									) : token.volume24hChange < 0 ? (
-										<ArrowDropDownIcon className={classes.colorDown} />
-									) : (
-										<span />
-									)}
-									{getPercent(token.volume24hChange)}
-								</p>
-							</div>
-						</div>
+			<ExpertChartDialog open={openExpertChart} onClose={onCloseExpertChart} token={token} />
 
-						<div className={classes.detail}>
-							<p className={classes.titleDetail}>Price</p>
-							<div className={classes.detailsValues}>
-								<p className={classes.dataDetail}>{formateNumberPriceDecimals(token.price, priceDecimals.current)}</p>
-								<p
-									className={
-										token.price24hChange === 0
-											? classes.dataDetailChange
-											: token.price24hChange > 0
-											? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
-											: `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
-									}
-								>
-									{token.price24hChange > 0 ? (
-										<ArrowDropUpIcon className={classes.colorUp} />
-									) : token.price24hChange < 0 ? (
-										<ArrowDropDownIcon className={classes.colorDown} />
-									) : (
-										<span />
-									)}
-									{getPercent(token.price24hChange)}
-								</p>
+			<div className={classes.tokenContainer}>
+				<ContainerLoader className={classes.containerInfo} isLoading={!dataIsLoaded}>
+					<TokenPath token={token} />
+					<TokenTitle token={token} />
+					<p className={classes.tokenPrice}>{formateNumberPriceDecimals(token.price, priceDecimals.current)}</p>
+				</ContainerLoader>
+				<div className={classes.charts}>
+					<Paper className={classes.loaderDetails}>
+						<BlocLoaderOsmosis open={!dataIsLoaded} classNameLoading={classes.loading} />
+						<div className={classes.details}>
+							<div className={classes.detail}>
+								<p className={classes.titleDetail}>Liquidity</p>
+								<div className={classes.detailsValues}>
+									<p className={classes.dataDetail}>{formateNumberPrice(token.liquidity)}</p>
+									<p
+										className={
+											token.liquidity24hChange < 0
+												? `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
+												: token.liquidity24hChange > 0
+												? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
+												: classes.dataDetailChange
+										}
+									>
+										{token.liquidity24hChange > 0 ? (
+											<ArrowDropUpIcon className={classes.colorUp} />
+										) : token.liquidity24hChange < 0 ? (
+											<ArrowDropDownIcon className={classes.colorDown} />
+										) : (
+											<span />
+										)}
+										{getPercent(token.liquidity24hChange)}
+									</p>
+								</div>
+							</div>
+							<div className={classes.detail}>
+								<p className={classes.titleDetail}>Volume (24hrs)</p>
+								<div className={classes.detailsValues}>
+									<p className={classes.dataDetail}>{formateNumberPrice(token.volume24h)}</p>
+									<p
+										className={
+											token.volume24hChange > 0
+												? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
+												: token.volume24hChange < 0
+												? `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
+												: classes.dataDetailChange
+										}
+									>
+										{token.volume24hChange > 0 ? (
+											<ArrowDropUpIcon className={classes.colorUp} />
+										) : token.volume24hChange < 0 ? (
+											<ArrowDropDownIcon className={classes.colorDown} />
+										) : (
+											<span />
+										)}
+										{getPercent(token.volume24hChange)}
+									</p>
+								</div>
+							</div>
+
+							<div className={classes.detail}>
+								<p className={classes.titleDetail}>Price</p>
+								<div className={classes.detailsValues}>
+									<p className={classes.dataDetail}>{formateNumberPriceDecimals(token.price, priceDecimals.current)}</p>
+									<p
+										className={
+											token.price24hChange === 0
+												? classes.dataDetailChange
+												: token.price24hChange > 0
+												? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
+												: `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
+										}
+									>
+										{token.price24hChange > 0 ? (
+											<ArrowDropUpIcon className={classes.colorUp} />
+										) : token.price24hChange < 0 ? (
+											<ArrowDropDownIcon className={classes.colorDown} />
+										) : (
+											<span />
+										)}
+										{getPercent(token.price24hChange)}
+									</p>
+								</div>
 							</div>
 						</div>
-					</div>
-				</Paper>
-				<Paper className={classes.right}>
-					<BlocLoaderOsmosis open={!dataIsLoaded || loadingCharts} classNameLoading={classes.loading} />
-					<div className={classes.containerHideShow}>
-						<div className={expert === "expert" ? classes.hide : classes.show}>
+					</Paper>
+					<Paper className={classes.right}>
+						<BlocLoaderOsmosis open={!dataIsLoaded || loadingCharts} classNameLoading={classes.loading} />
+						<div className={classes.containerHideShow}>
 							<ContainerCharts
 								token={token}
+								onOpenExpertChart={onOpenExpertChart}
 								getDataPrice={getDataPrice}
 								getDataVolume={getDataVolume}
 								getDataLiquidity={getDataLiquidity}
 								dataIsLoaded={dataIsLoaded || loadingCharts}
 							/>
 						</div>
-					</div>
-				</Paper>
+					</Paper>
+				</div>
 			</div>
 		</div>
 	)
