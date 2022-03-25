@@ -1,12 +1,12 @@
 import { createContext, useContext } from "react"
 import useLocalStorage from "../hooks/LocalStorageHook"
-const version = "1.0"
+const version = "1.3"
 const defaultSettings = {
 	tokenTable: [
 		{ name: "Id", display: true, order: 1, key: "id" },
 		{ name: "Name", display: true, order: 2, key: "name" },
 		{ name: "Liquidity", display: true, order: 3, key: "liquidity" },
-		{ name: "Liquidity (24h) change", display: true, order: 4, key: "liquidity24hChange" },
+		// { name: "Liquidity (24h) change", display: false, order: 4, key: "liquidity24hChange" },
 		{ name: "Price", display: true, order: 5, key: "price" },
 		{ name: "Price (24h) change", display: true, order: 6, key: "price24hChange" },
 		{ name: "Volume (24h)", display: true, order: 7, key: "volume24h" },
@@ -16,7 +16,7 @@ const defaultSettings = {
 		{ name: "Id", display: true, order: 1, key: "id" },
 		{ name: "Name", display: true, order: 2, key: "name" },
 		{ name: "Liquidity", display: true, order: 3, key: "liquidity" },
-		{ name: "Liquidity (24h) change", display: true, order: 4, key: "liquidity24hChange" },
+		// { name: "Liquidity (24h) change", display: false, order: 4, key: "liquidity24hChange" },
 		{ name: "Price", display: true, order: 5, key: "price" },
 		{ name: "Price (24h) change", display: true, order: 6, key: "price24hChange" },
 		{ name: "Volume (24h)", display: true, order: 7, key: "volume24h" },

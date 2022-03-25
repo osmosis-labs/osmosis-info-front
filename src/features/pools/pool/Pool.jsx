@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => {
 
 		charts: {
 			display: "grid",
-			gridTemplateColumns: "300px 1fr",
+			gridTemplateColumns: "350px 1fr",
 			gap: theme.spacing(1),
 
 			[theme.breakpoints.down("xs")]: {
@@ -117,6 +117,7 @@ const Pool = ({ showToast }) => {
 	const [currentDataPrice, setCurrentDataPrice] = useState([])
 	const [currentDataVolume, setCurrentDataVolume] = useState([])
 	const [currentDataLiquidity, setCurrentDataLiquidity] = useState([])
+	const [currency, setCurrency] = useState({ before: true, value: "$" })
 
 	useEffect(() => {
 		// get pool from history state
@@ -176,6 +177,7 @@ const Pool = ({ showToast }) => {
 				tmpPricesDecimals[i] = detectBestDecimalsDisplay(tokens[i].price)
 			}
 			pricesDecimals.current = tmpPricesDecimals
+			setCurrency({ before: false, value: tokens[0].symbol })
 			setSelectedTokens({ one: tokens[0], two: tokens[1] })
 			updatePriceInfo(firstPair)
 
@@ -191,6 +193,7 @@ const Pool = ({ showToast }) => {
 
 	const onChangeSeletedTokens = useCallback(
 		(selectedTokens) => {
+			setCurrency({ before: false, value: selectedTokens.one.symbol })
 			setSelectedTokens(selectedTokens)
 			if (typeChart === "price")
 				onChangeRangePrice(rangePrice, selectedTokens.one.denom, selectedTokens.two.denom, updatePriceInfo)
@@ -338,6 +341,7 @@ const Pool = ({ showToast }) => {
 								rangeLiquidity={rangeLiquidity}
 								rangeVolume={rangeVolume}
 								rangePrice={rangePrice}
+								currency={currency}
 							/>
 							<div className={classes.headerActions}>
 								<ButtonsTypeChart type={typeChart} onChangeType={onChangeTypeChart} />
