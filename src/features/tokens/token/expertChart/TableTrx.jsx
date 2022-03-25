@@ -45,11 +45,16 @@ const useStyles = makeStyles((theme) => {
 			fontSize: theme.fontSize.small,
 			padding: "2px 8px 2px 10px",
 			borderColor: theme.palette.primary.main,
-			
 		},
-		rowIcon:{
-			paddingLeft: "4px",
-			verticalAlign: "middle",
+		iconRow: {
+			paddingRight: "4px",
+			justifySelf: "end",
+		},
+		rowIcon: {
+			display: "grid",
+			gridTemplateColumns: "1fr 100px",
+			alignItems: "center",
+			justifyItems: "start",
 		},
 		cellH: {
 			fontSize: theme.fontSize.small,
@@ -74,6 +79,10 @@ const useStyles = makeStyles((theme) => {
 			overflow: "hidden",
 			maxWidth: "200px",
 			color: theme.palette.primary.contrastText,
+			transition: "all 0.2s ease",
+			"&:hover": {
+				textDecoration: "underline",
+			},
 		},
 	}
 })
@@ -284,6 +293,44 @@ const TableTrx = ({ data, textEmpty, size = "ld", sortable = true, onClickToken,
 			</div>
 		)
 
+	const getCell = (headCell, row, id) => {
+		if (headCell.id === "address" || headCell.id === "hash") {
+			return (
+				<TableCell
+					size={headCell.size}
+					key={headCell.id + row.hash.value}
+					className={`${headCell.cellClasses} ${headCell.onClick ? classes.headerClickable : ""} ${
+						row.type === "Sell" ? classes.cellSell : classes.cellBuy
+					}`}
+					component={headCell.component}
+					align={headCell.align}
+					padding={headCell.padding}
+					onClick={headCell.onClick ? () => headCell.onClick(row) : null}
+				>
+					<div className={classes.rowIcon}>
+						<LaunchIcon className={classes.iconRow} />
+						{headCell.transform ? headCell.transform(row[headCell.id]) : row[headCell.id]}
+					</div>
+				</TableCell>
+			)
+		}
+		return (
+			<TableCell
+				size={headCell.size}
+				key={headCell.id + row.hash.value}
+				className={`${headCell.cellClasses} ${headCell.onClick ? classes.headerClickable : ""} ${
+					row.type === "Sell" ? classes.cellSell : classes.cellBuy
+				}`}
+				component={headCell.component}
+				align={headCell.align}
+				padding={headCell.padding}
+				onClick={headCell.onClick ? () => headCell.onClick(row) : null}
+			>
+				{headCell.transform ? headCell.transform(row[headCell.id]) : row[headCell.id]}
+			</TableCell>
+		)
+	}
+
 	return (
 		<div className={classes.tableTrxRoot}>
 			<Table>
@@ -303,22 +350,7 @@ const TableTrx = ({ data, textEmpty, size = "ld", sortable = true, onClickToken,
 							headCells.forEach((headCell, index) => {
 								let cell = {}
 
-								cell = (
-									<TableCell
-										size={headCell.size}
-										key={headCell.id + row.hash.value}
-										className={`${headCell.cellClasses} ${headCell.onClick ? classes.headerClickable : ""} ${
-											row.type === "Sell" ? classes.cellSell : classes.cellBuy
-										}`}
-										component={headCell.component}
-										align={headCell.align}
-										padding={headCell.padding}
-										onClick={headCell.onClick ? () => headCell.onClick(row) : null}
-									>
-										{headCell.transform ? headCell.transform(row[headCell.id]) : row[headCell.id]}
-										{headCell.id === "address" || headCell.id === "hash" ? <LaunchIcon className={classes.rowIcon}/> : ""}
-									</TableCell>
-								)
+								cell = getCell(headCell, row, index)
 								cells.push(cell)
 							})
 							return (
