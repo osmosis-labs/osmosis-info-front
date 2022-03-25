@@ -7,7 +7,6 @@ import TableHeaderTrx from "./TableHeaderTrx"
 const useStyles = makeStyles((theme) => {
 	return {
 		tableTrxRoot: {
-			overflowX: "auto",
 			width: "100%",
 		},
 		visuallyHidden: {

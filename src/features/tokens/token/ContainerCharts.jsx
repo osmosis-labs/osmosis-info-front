@@ -7,7 +7,6 @@ import ButtonsTypeChart from "../../../components/chart/charts/ButtonsTypeChart"
 import Charts from "../../../components/chart/charts/Charts"
 import InfoCharts from "../../../components/chart/charts/InfoCharts"
 import Button from "../../../components/button/Button"
-import ExpertChartDialog from './expertChart/ExpertChartDialog'
 
 const useStyles = makeStyles((theme) => {
 	return {

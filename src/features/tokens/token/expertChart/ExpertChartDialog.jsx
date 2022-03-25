@@ -10,12 +10,14 @@ const useStyles = makeStyles((theme) => {
 			position: "fixed",
 			width: "100%",
 			height: "calc(100% - 141px)",
+			maxHeight: "calc(100% - 141px)",
 			display: "flex",
 			flexDirection: "column",
 			zIndex: "1000",
 			transition: "all 0.3s ease-in-out",
 			[theme.breakpoints.down("xs")]: {
 				height: "calc(100% - 109px)",
+				maxHeight: "calc(100% - 109px)",
 			},
 		},
 		expertDialogContainerOpened: {
@@ -29,24 +31,24 @@ const useStyles = makeStyles((theme) => {
 			transform: "translateY(100%)",
 		},
 		expertContainer: {
-			overflow: "auto",
+			overflowY: "scroll",
 			width: "100%",
 			display: "flex",
 			flexDirection: "column",
-			flexGrow: "1",
 			backgroundColor: theme.palette.primary.light,
+			height: "100%",
+			
 		},
-		expertChart: { height: "66%" },
+		expertChart: { minHeight: "66%" },
 		table: {
-			height: "34%",
+			minHeight: "34%",
 		},
 	}
 })
 
 const ExpertChartDialog = ({ open, onClose, token }) => {
 	const classes = useStyles()
-	const { getVolumeChartToken, getHistoricalChartToken, getLiquidityChartToken, getTrxToken, loadingTrx } =
-		useTokenChartV2()
+	const { getHistoricalChartToken, getTrxToken, loadingTrx } = useTokenChartV2()
 
 	const handleClose = () => {
 		onClose()
@@ -62,13 +64,7 @@ const ExpertChartDialog = ({ open, onClose, token }) => {
 		>
 			<AppBarExpertChart onClose={handleClose} token={token} />
 			<div className={classes.expertContainer}>
-				<ExpertChart
-					getVolumeChartToken={getVolumeChartToken}
-					getHistoricalChartToken={getHistoricalChartToken}
-					getLiquidityChartToken={getLiquidityChartToken}
-					token={token}
-					className={classes.expertChart}
-				/>
+				<ExpertChart getHistoricalChartToken={getHistoricalChartToken} token={token} className={classes.expertChart} />
 				<TransactionTable getTrxToken={getTrxToken} loadingTrx={loadingTrx} token={token} className={classes.table} />
 			</div>
 		</div>

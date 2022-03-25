@@ -7,12 +7,9 @@ const useStyles = makeStyles((theme) => {
 	return {
 		transactionTableRoot: {
 			padding: theme.spacing(1),
-			display: "flex",
-			flexGrow: "1",
 		},
 		table: {
-			display: "flex",
-			flexGrow: "1",
+			overflowX: "auto",
 		},
 	}
 })
