@@ -21,7 +21,7 @@ const getDataFeed = ({ token, chartReady, getHistoricalChartToken }) => {
 			try {
 				let tf = resolution
 				if (resolution === "1D") {
-					tf = 10_080
+					tf = 1_440
 				}
 				let data = await getHistoricalChartToken({ symbol: token.symbol, tf })
 				// console.log("%cgetDataFeed.js -> 28 TEAL: data", "background: #009688; color:#FFFFFF", data)

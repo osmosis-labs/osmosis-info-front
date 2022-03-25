@@ -3,7 +3,7 @@ import { useState } from "react"
 import TablePagination from "../../../../components/tablePagination/TablePagination"
 import { formateNumberDecimalsAuto, formaterNumber } from "../../../../helpers/helpers"
 import TableHeaderTrx from "./TableHeaderTrx"
-
+import LaunchIcon from "@material-ui/icons/Launch"
 const useStyles = makeStyles((theme) => {
 	return {
 		tableTrxRoot: {
@@ -45,37 +45,41 @@ const useStyles = makeStyles((theme) => {
 			fontSize: theme.fontSize.small,
 			padding: "2px 8px 2px 10px",
 			borderColor: theme.palette.primary.main,
+			
+		},
+		rowIcon:{
+			paddingLeft: "4px",
+			verticalAlign: "middle",
 		},
 		cellH: {
 			fontSize: theme.fontSize.small,
 		},
 		rows: {},
-		// cellBuy: { color: theme.palette.green.text },
-		// cellSell: { color: theme.palette.error.main },
-		rowBuy: {
-			backgroundColor: `${theme.palette.green.background} !important`,
-		},
-		rowSell: {
-			backgroundColor: `${theme.palette.red.background} !important`,
-		},
+		cellBuy: { color: theme.palette.green.text },
+		cellSell: { color: theme.palette.error.main },
+		// rowBuy: {
+		// 	backgroundColor: `${theme.palette.green.background} !important`,
+		// },
+		// rowSell: {
+		// 	backgroundColor: `${theme.palette.red.background} !important`,
+		// },
 		headerClickable: {
 			cursor: "pointer",
 		},
-		cellToken: {
-		
-		},
-		cellHash:{
+		cellToken: {},
+		cellHash: {
 			fontSize: theme.fontSize.small,
 			borderColor: theme.palette.primary.main,
 			textOverflow: "ellipsis",
 			overflow: "hidden",
 			maxWidth: "200px",
-		}
+			color: theme.palette.primary.contrastText,
+		},
 	}
 })
 
 // Component used for display Tokens table
-const TableTrx = ({ data, textEmpty, size = "ld", sortable = true, onClickToken, cbMax=null }) => {
+const TableTrx = ({ data, textEmpty, size = "ld", sortable = true, onClickToken, cbMax = null }) => {
 	const classes = useStyles()
 	const [order, setOrder] = useState("asc")
 	const [orderBy, setOrderBy] = useState("time")
@@ -173,12 +177,10 @@ const TableTrx = ({ data, textEmpty, size = "ld", sortable = true, onClickToken,
 			return `${formaterNumber(token.value)} ${token.symbol}`
 		}
 		const onClickAddress = (row) => {
-			window.open(
-				`https://www.mintscan.io/osmosis/account/${row.address.value}`, "_blank");
+			window.open(`https://www.mintscan.io/osmosis/account/${row.address.value}`, "_blank")
 		}
 		const onClickHash = (row) => {
-			window.open(
-				`https://www.mintscan.io/osmosis/txs/${row.hash.value}`, "_blank");
+			window.open(`https://www.mintscan.io/osmosis/txs/${row.hash.value}`, "_blank")
 		}
 		let head = [
 			{
@@ -314,6 +316,7 @@ const TableTrx = ({ data, textEmpty, size = "ld", sortable = true, onClickToken,
 										onClick={headCell.onClick ? () => headCell.onClick(row) : null}
 									>
 										{headCell.transform ? headCell.transform(row[headCell.id]) : row[headCell.id]}
+										{headCell.id === "address" || headCell.id === "hash" ? <LaunchIcon className={classes.rowIcon}/> : ""}
 									</TableCell>
 								)
 								cells.push(cell)

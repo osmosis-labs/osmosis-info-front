@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const ExpertChart = ({token, getVolumeChartToken, getHistoricalChartToken, getLiquidityChartToken, className}) => {
+const ExpertChart = ({token, getHistoricalChartToken, className}) => {
 	const classes = useStyles()
 	const [chartIsReady, setChartIsReady] = useState(false)
 
@@ -36,9 +36,7 @@ const ExpertChart = ({token, getVolumeChartToken, getHistoricalChartToken, getLi
 				interval: 15, // default interval
 				datafeed: getDataFeed({
 					token,
-					getVolumeChartToken,
-					getHistoricalChartToken,
-					getLiquidityChartToken,
+					getHistoricalChartToken ,
 					chartReady,
 				}),
 				container: "chartExpert",
