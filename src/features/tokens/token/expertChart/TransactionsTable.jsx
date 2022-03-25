@@ -40,7 +40,6 @@ const TransactionTable = ({ getTrxToken, loadingTrx, token, className }) => {
 		const fetch = async () => {
 			let data = await getTrxToken({ symbol: token.symbol, limit: limit, offset: 0 })
 			setTrx(data)
-			console.log("%cTransactionsTable.jsx -> 25 ORANGE: data", "background: #607d8b; color:#FFFFFF", data)
 		}
 		if (token.symbol) {
 			fetch()
@@ -49,11 +48,9 @@ const TransactionTable = ({ getTrxToken, loadingTrx, token, className }) => {
 
 	const cbMax = async () => {
 		let newLimit= limit+100
-		console.log("TransactionsTable.jsx -> 54: bc", newLimit )
 		let data = await getTrxToken({ symbol: token.symbol, limit: newLimit, offset: 0 })
 		setTrx(data)
 		setLimit(newLimit)
-		console.log("TransactionsTable.jsx -> 58: data", data  )
 	}
 	return (
 		<div className={`${classes.transactionTableRoot} ${className}`}>
