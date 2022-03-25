@@ -326,6 +326,7 @@ const Token = ({ showToast }) => {
 						<div className={classes.containerHideShow}>
 							<ContainerCharts
 								token={token}
+								onOpenExpertChart={onOpenExpertChart}
 								getDataPrice={getDataPrice}
 								getDataVolume={getDataVolume}
 								getDataLiquidity={getDataLiquidity}

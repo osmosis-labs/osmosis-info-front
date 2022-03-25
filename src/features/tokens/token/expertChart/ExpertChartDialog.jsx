@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => {
 			transform: "translateY(100%)",
 		},
 		expertContainer: {
-			overflowY: "scroll",
+			overflowY: "auto",
 			width: "100%",
 			display: "flex",
 			flexDirection: "column",

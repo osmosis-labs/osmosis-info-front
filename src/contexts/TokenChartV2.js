@@ -34,12 +34,13 @@ export const TokenChartV2Provider = ({ children }) => {
 				let time = new Date(trx.time_tx)
 				let options = { month: "short", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric" }
 				let timeDisplay = new Intl.DateTimeFormat("en-US", options).format(time)
-
+				let addressDisplay = trx.address.substring(0, 5) + "..." + trx.address.substring(trx.address.length - 5)
+				let hashDisplay = trx.tx_hash.substring(0, 5) + "..." + trx.tx_hash.substring(trx.tx_hash.length - 5)
 				return {
 					type: trx.symbol_out === symbol ? "Buy" : "Sell",
 					time: { value: time, display: timeDisplay },
-					hash: { value: trx.tx_hash, display: trx.tx_hash },
-					address: { value: trx.address, display: trx.address },
+					hash: { value: trx.tx_hash, display: hashDisplay },
+					address: { value: trx.address, display: addressDisplay },
 					tokenIn: { value: trx.amount_in, symbol: trx.symbol_in },
 					tokenOut: { value: trx.amount_out, symbol: trx.symbol_out },
 				}
