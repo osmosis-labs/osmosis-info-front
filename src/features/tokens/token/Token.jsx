@@ -20,6 +20,8 @@ import { useTokensV2 } from "../../../contexts/TokensV2.provider"
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import ExpertChartDialog from "./expertChart/ExpertChartDialog"
+import TransactionTable from "./trxTable/TransactionsTable"
+import { useTokenChartV2 } from "../../../contexts/TokenChartV2"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -29,7 +31,7 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "center",
-			position: "relative", 
+			position: "relative",
 		},
 		tokenContainer: {
 			margin: `${theme.spacing(2)}px 0`,
@@ -144,6 +146,10 @@ const useStyles = makeStyles((theme) => {
 			flexDirection: "row",
 			alignItems: "center",
 		},
+		paperTrx: {
+			marginBottom: "16px",
+			padding: "16px 16px 0 16px",
+		},
 	}
 })
 
@@ -160,6 +166,7 @@ const Token = ({ showToast }) => {
 		getVolumeChartToken,
 		getLiquidityChartToken,
 	} = useTokensV2()
+	const { getTrxToken, loadingTrx } = useTokenChartV2()
 	const [token, setToken] = useState({})
 	const priceDecimals = useRef(2)
 
@@ -335,6 +342,10 @@ const Token = ({ showToast }) => {
 						</div>
 					</Paper>
 				</div>
+				<Paper className={classes.paperTrx}>
+					<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} />
+					<TransactionTable getTrxToken={getTrxToken} loadingTrx={loadingTrx} token={token} />
+				</Paper>
 			</div>
 		</div>
 	)
