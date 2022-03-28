@@ -23,7 +23,7 @@ import IBC from "../ibc/IBC"
 import { IBCProvider } from "../../contexts/IBCProvier"
 import { WatchlistIBCProvider } from "../../contexts/WatchlistIBCProvider"
 import { TokensV2Provider } from "../../contexts/TokensV2.provider"
-import { PoolsV2Provider } from "../../contexts/PoolsV2.provier"
+import { PoolsV2Provider } from "../../contexts/PoolsV2.provider"
 import { TokenChartV2Provider } from "../../contexts/TokenChartV2"
 const useStyles = makeStyles((theme) => {
 	return {

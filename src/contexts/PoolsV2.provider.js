@@ -1,5 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
 import API from "../helpers/API"
+import relativeTime from "dayjs/plugin/relativeTime"
+import dayjs from "dayjs"
 import { getWeekNumber, timeToDateUTC } from "../helpers/helpers"
 const PoolsV2Context = createContext()
 
@@ -11,6 +13,7 @@ export const PoolsV2Provider = ({ children }) => {
 	const [loadingPools, setLoadingPools] = useState(true)
 	const [loadingPool, setLoadingPool] = useState(true)
 	const [loadingPoolChart, setLoadingPoolChart] = useState(true)
+	const [loadingTrx, setLoadingTrx] = useState(true)
 
 	const saveDataChart = useRef({})
 
@@ -45,7 +48,48 @@ export const PoolsV2Provider = ({ children }) => {
 		}
 	}, [])
 
-	
+	const getTrxPool = async ({ poolId, onlySuccess = false, limit = 10, offset = 0 }) => {
+		setLoadingTrx(true)
+		let data = []
+		if (
+			saveDataChart.current[getName("trx", poolId)] &&
+			saveDataChart.current[getName("trx", poolId, limit, offset)].length > 0
+		) {
+			data = saveDataChart.current[getName("trx", poolId, limit, offset)]
+			return data
+		} else {
+			let response = await API.request({
+				url: `https://api-osmosis-chain.imperator.co/swap/v1/pool/${poolId}?only_success=${onlySuccess}&limit=${limit}&offset=${offset}`,
+				type: "get",
+				useCompleteURL: true,
+			})
+			dayjs.extend(relativeTime)
+			data = response.data.map((trx) => {
+				let time = new Date(trx.time_tx)
+				let options = { month: "short", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric" }
+				let timeDisplay = new Intl.DateTimeFormat("en-US", options).format(time)
+				let addressDisplay = trx.address.substring(0, 5) + "..." + trx.address.substring(trx.address.length - 5)
+				let hashDisplay = trx.tx_hash.substring(0, 5) + "..." + trx.tx_hash.substring(trx.tx_hash.length - 5)
+				let timeRelative = {
+					value: Date.now() - time,
+					display: dayjs(trx.time_tx).fromNow(true),
+				}
+				return {
+					time: { value: time, display: timeDisplay },
+					hash: { value: trx.tx_hash, display: hashDisplay },
+					address: { value: trx.address, display: addressDisplay },
+					tokenIn: { value: trx.amount_in, symbol: trx.symbol_in },
+					tokenOut: { value: trx.amount_out, symbol: trx.symbol_out },
+					usd: trx.value_usd,
+					timeRelative,
+				}
+			})
+			saveDataChart.current = { ...saveDataChart.current, [getName("trx", poolId, limit, offset)]: data }
+		}
+		setLoadingTrx(false)
+		return data
+	}
+
 	const getPools = useCallback(async ({ lowLiquidity = false }) => {
 		setLoadingPools(true)
 		if (
@@ -210,7 +254,9 @@ export const PoolsV2Provider = ({ children }) => {
 				loadingPoolChart,
 				getChartPool,
 				getVolumeChartPool,
-				getLiquidityChartPool
+				getLiquidityChartPool,
+				getTrxPool,
+				loadingTrx,
 			}}
 		>
 			{children}
