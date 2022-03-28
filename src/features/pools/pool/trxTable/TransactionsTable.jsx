@@ -1,6 +1,7 @@
-import { makeStyles, useMediaQuery } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core"
 
 import React, { useEffect, useState } from "react"
+import useSize from "../../../../hooks/sizeHook"
 import TableTrx from "./TableTrx"
 
 const useStyles = makeStyles((theme) => {
@@ -17,25 +18,8 @@ const useStyles = makeStyles((theme) => {
 const TransactionTable = ({ getTrxPool, loadingTrx, pool, className }) => {
 	const classes = useStyles()
 	const [trx, setTrx] = useState([])
-	const [size, setSize] = useState("xl")
-	const matchXS = useMediaQuery((theme) => theme.breakpoints.down("xs"))
-	const matchSM = useMediaQuery((theme) => theme.breakpoints.down("sm"))
-	const matchMD = useMediaQuery((theme) => theme.breakpoints.down("md"))
-	const matchLD = useMediaQuery((theme) => theme.breakpoints.down("ld"))
+	const size = useSize()
 	const [limit, setLimit] = useState(100)
-	useEffect(() => {
-		if (matchXS) {
-			setSize("xs")
-		} else if (matchSM) {
-			setSize("sm")
-		} else if (matchMD) {
-			setSize("md")
-		} else if (matchLD) {
-			setSize("ld")
-		} else {
-			setSize("xl")
-		}
-	}, [matchXS, matchSM, matchMD, matchLD])
 	useEffect(() => {
 		const fetch = async () => {
 			let data = await getTrxPool({ poolId: pool.id, limit: limit, offset: 0 })

@@ -15,6 +15,7 @@ import { useCallback } from "react"
 import { usePoolsV2 } from "../../../contexts/PoolsV2.provider"
 import TransactionTable from "./trxTable/TransactionsTable"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
+import TrxTable from "./trxTable"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -394,7 +395,8 @@ const Pool = ({ showToast }) => {
 			</div>
 			<Paper className={classes.paperTrx}>
 				<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} borderRadius={true}/>
-				<TransactionTable getTrxPool={getTrxPool} loadingTrx={loadingTrx} pool={pool} />
+				<TrxTable getTrxPool={getTrxPool} loadingTrx={loadingTrx} pool={pool}/>
+				{/* <TransactionTable getTrxPool={getTrxPool} loadingTrx={loadingTrx} pool={pool} /> */}
 			</Paper>
 		</div>
 	)
