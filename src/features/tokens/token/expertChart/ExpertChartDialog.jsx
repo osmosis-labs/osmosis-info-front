@@ -3,7 +3,6 @@ import React, { memo } from "react"
 import { useTokenChartV2 } from "../../../../contexts/TokenChartV2"
 import AppBarExpertChart from "./AppBarExpertChart"
 import ExpertChart from "./ExpertChart"
-import TransactionTable from "./TransactionsTable"
 const useStyles = makeStyles((theme) => {
 	return {
 		expertDialogContainer: {
@@ -39,16 +38,14 @@ const useStyles = makeStyles((theme) => {
 			height: "100%",
 			
 		},
-		expertChart: { minHeight: "66%" },
-		table: {
-			minHeight: "34%",
-		},
+		expertChart: { minHeight: "100%" },
+		
 	}
 })
 
 const ExpertChartDialog = ({ open, onClose, token }) => {
 	const classes = useStyles()
-	const { getHistoricalChartToken, getTrxToken, loadingTrx } = useTokenChartV2()
+	const { getHistoricalChartToken } = useTokenChartV2()
 
 	const handleClose = () => {
 		onClose()
@@ -65,7 +62,6 @@ const ExpertChartDialog = ({ open, onClose, token }) => {
 			<AppBarExpertChart onClose={handleClose} token={token} />
 			<div className={classes.expertContainer}>
 				<ExpertChart getHistoricalChartToken={getHistoricalChartToken} token={token} className={classes.expertChart} />
-				<TransactionTable getTrxToken={getTrxToken} loadingTrx={loadingTrx} token={token} className={classes.table} />
 			</div>
 		</div>
 	)
