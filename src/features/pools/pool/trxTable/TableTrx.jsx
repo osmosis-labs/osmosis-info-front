@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme) => {
 	return {
 		tableTrxRoot: {
 			width: "100%",
+			overflowX: "auto",
 		},
 		visuallyHidden: {
 			border: 0,
