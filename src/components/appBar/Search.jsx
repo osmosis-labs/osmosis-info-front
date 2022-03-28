@@ -10,7 +10,7 @@ import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
 import { useHistory } from "react-router-dom"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import TokensTable from "../../features/tokens/TokensTable"
-import { usePoolsV2 } from "../../contexts/PoolsV2.provier"
+import { usePoolsV2 } from "../../contexts/PoolsV2.provider"
 import { useTokensV2 } from "../../contexts/TokensV2.provider"
 
 const useStyles = makeStyles((theme) => {
