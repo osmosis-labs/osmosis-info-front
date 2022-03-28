@@ -3,11 +3,11 @@ FROM node:16 AS builder
 
 WORKDIR /app
 
+ENV NODE_ENV production
 COPY package*.json /app/
 RUN yarn install 
 
 COPY . /app/
-
 RUN yarn build
 
 # Serve build folder via NGINX
