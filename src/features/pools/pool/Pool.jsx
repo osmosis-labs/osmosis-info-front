@@ -87,6 +87,7 @@ const useStyles = makeStyles((theme) => {
 			position: "relative",
 			marginBottom: "16px",
 			padding: "16px 16px 0 16px",
+			minHeight: "120px",
 		},
 	}
 })
@@ -391,7 +392,7 @@ const Pool = ({ showToast }) => {
 				</Paper>
 			</div>
 			<Paper className={classes.paperTrx}>
-				<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} />
+				<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} borderRadius={true}/>
 				<TransactionTable getTrxPool={getTrxPool} loadingTrx={loadingTrx} pool={pool} />
 			</Paper>
 		</div>
