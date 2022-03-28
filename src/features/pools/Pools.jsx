@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useHistory } from "react-router-dom"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
-import { usePools } from "../../contexts/PoolsProvider"
+import { usePoolsV2 } from "../../contexts/PoolsV2.provier"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
 import { getInclude } from "../../helpers/helpers"
 import PoolsTable from "./PoolsTable"
@@ -21,13 +21,17 @@ const useStyles = makeStyles((theme) => {
 			overflowX: "hidden",
 			position: "relative",
 			minHeight: "200px"
+		},
+		containerWatchlist:{
+			position: "relative",
+			minWidth: "200px",
 		}
 	}
 })
 
 const Pools = () => {
 	const classes = useStyles()
-	const { pools, loadingPools} = usePools()
+	const { pools, loadingPools} = usePoolsV2()
 	// get pools from watch list
 	const { watchlistPools } = useWatchlistPools()
 	const [poolsOnWatchlist, setPoolsOnWatchlist] = useState([])
@@ -69,7 +73,7 @@ const Pools = () => {
 	return (
 		<div className={classes.poolsRoot}>
 			<p className={classes.subTitle}>Your watchlist</p>
-			<Paper>
+			<Paper className={classes.containerWatchlist}>
 				{watchlistPools.length > 0 ? (
 					<PoolsTable
 						data={poolsOnWatchlist}

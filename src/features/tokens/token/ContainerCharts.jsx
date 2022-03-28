@@ -2,7 +2,6 @@ import { makeStyles } from "@material-ui/core"
 import { useEffect } from "react"
 import { useRef, useState } from "react"
 import { getInclude } from "../../../helpers/helpers"
-import ContainerLoader from "../../../components/loader/ContainerLoader"
 import ButtonsCharts from "../../../components/chart/charts/ButtonsCharts"
 import ButtonsTypeChart from "../../../components/chart/charts/ButtonsTypeChart"
 import Charts from "../../../components/chart/charts/Charts"
@@ -15,6 +14,7 @@ const useStyles = makeStyles((theme) => {
 			height: "100%",
 			width: "100%",
 			display: "flex",
+			flexDirection: "column",
 		},
 		chartRoot: {
 			position: "absolute",
@@ -24,24 +24,24 @@ const useStyles = makeStyles((theme) => {
 			left: "0",
 			height: "100%",
 			width: "100%",
+			[theme.breakpoints.down("xs")]: {},
 		},
 		header: {
 			display: "flex",
 			flexDirection: "row",
 			justifyContent: "space-between",
-			height: "25%",
 			alignItems: "center",
 			[theme.breakpoints.down("xs")]: {
 				flexDirection: "column",
 				alignItems: "flex-start",
 				justifyContent: "flex-start",
-				height: "35%",
 			},
 		},
 		charts: {
-			height: "75%",
+			height: "100%",
+			width: "100%",
+			display: "flex",
 			[theme.breakpoints.down("xs")]: {
-				height: "65%",
 			},
 		},
 		headerInfo: {
@@ -65,10 +65,9 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "flex-end",
 			flexDirection: "column",
 			justifyContent: "flex-end",
-			paddingTop: theme.spacing(1),
 			paddingBottom: theme.spacing(1),
 			[theme.breakpoints.down("xs")]: {
-				flexDirection: "row",
+				flexDirection: "column",
 				justifyContent: "space-between",
 				width: "100%",
 			},
@@ -80,13 +79,13 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIsLoaded }) => {
+const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIsLoaded, token }) => {
 	const classes = useStyles()
 	const [typeChart, setTypeChart] = useState("price") // price, volume, liquidity
 
-	const [rangePrice, setRangePrice] = useState("7d") // 7d, 1m, 1y, all
-	const [rangeVolume, setRangeVolume] = useState("d") // d, w, m
-	const [rangeLiquidity, setRangeLiquidity] = useState("d") // d, w, m
+	const [rangePrice, setRangePrice] = useState(1440)
+	const [rangeVolume, setRangeVolume] = useState("d")
+	const [rangeLiquidity, setRangeLiquidity] = useState("d")
 
 	const [currentDataPrice, setCurrentDataPrice] = useState([])
 	const [currentDataVolume, setCurrentDataVolume] = useState([])
@@ -100,7 +99,7 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 
 	useEffect(() => {
 		if (dataIsLoaded) {
-			onChangeRangePrice("7d")
+			onChangeRangePrice(1440)
 		}
 	}, [dataIsLoaded])
 
@@ -154,7 +153,7 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 			setRangeVolume(value)
 			setIsLoading(false)
 		} catch (e) {
-			console.log("%cContainerCharts.jsx -> 124 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
+			console.log("%cContainerCharts.jsx -> 157 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
 			setIsLoading(false)
 		}
 	}
@@ -168,7 +167,7 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 			setRangeLiquidity(value)
 			setIsLoading(false)
 		} catch (e) {
-			console.log("%cContainerCharts.jsx -> 124 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
+			console.log("%cContainerCharts.jsx -> 171 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
 			setIsLoading(false)
 		}
 	}
@@ -178,12 +177,14 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 			setIsLoading(true)
 			let data = await getDataPrice(value)
 			setCurrentDataPrice(data)
-			let lastItem = data[data.length - 1]
-			setCurrentItem({ time: lastItem.time, value: lastItem })
-			setRangePrice(value)
+			if (data.length > 0) {
+				let lastItem = data[data.length - 1]
+				setCurrentItem({ time: lastItem.time, value: lastItem })
+				setRangePrice(value)
+			}
 			setIsLoading(false)
 		} catch (e) {
-			console.log("%cContainerCharts.jsx -> 124 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
+			console.log("%cContainerCharts.jsx -> 186 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
 			setIsLoading(false)
 		}
 	}
@@ -200,11 +201,7 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 	}
 
 	return (
-		<ContainerLoader
-			className={classes.chartContainer}
-			isLoading={!dataIsLoaded || isLoading}
-			classChildren={classes.loader}
-		>
+		<div className={classes.chartContainer}>
 			<div className={classes.header}>
 				<InfoCharts
 					data={currentItem}
@@ -212,7 +209,6 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 					rangeLiquidity={rangeLiquidity}
 					rangeVolume={rangeVolume}
 					rangePrice={rangePrice}
-					currency={{ before: true, value: "$" }}
 				/>
 				<div className={classes.headerActions}>
 					<ButtonsTypeChart type={typeChart} onChangeType={onChangeTypeChart} />
@@ -242,7 +238,7 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 					isLoading={isLoading}
 				/>
 			</div>
-		</ContainerLoader>
+		</div>
 	)
 }
 

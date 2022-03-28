@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core"
-import ButtonGroup from "../../buttonGroup/ButtonGroup"
+import ButtonGroup from "../../components/buttonGroup/ButtonGroup"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const ButtonsPrice = ({ onChangeRange, range }) => {
+const ButtonsLiquidityType = ({ onChangeRange, range }) => {
 	const classes = useStyles()
 
 	return (
@@ -17,32 +17,24 @@ const ButtonsPrice = ({ onChangeRange, range }) => {
 			className={classes.groupButton}
 			buttons={[
 				{
-					id: 60,
-					name: "1H",
+					id: "usd",
+					name: "USD",
 					onClick: () => {
-						onChangeRange(60)
-					},
-				},
-
-				{
-					id: 1440,
-					name: "1D",
-					onClick: () => {
-						onChangeRange(1440)
+						onChangeRange("usd")
 					},
 				},
 				{
-					id: 10080,
-					name: "1W",
+					id: "atom",
+					name: "ATOM",
 					onClick: () => {
-						onChangeRange(10080)
+						onChangeRange("atom")
 					},
 				},
 				{
-					id: 43800,
-					name: "1M",
+					id: "osmo",
+					name: "OSMO",
 					onClick: () => {
-						onChangeRange(43800)
+						onChangeRange("osmo")
 					},
 				},
 			]}
@@ -51,4 +43,4 @@ const ButtonsPrice = ({ onChangeRange, range }) => {
 	)
 }
 
-export default ButtonsPrice
+export default ButtonsLiquidityType

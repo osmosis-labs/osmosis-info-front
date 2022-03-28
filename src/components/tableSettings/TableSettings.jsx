@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => {
 			},
 		},
 		actions: {
-            marginTop: theme.spacing(2),
+			marginTop: theme.spacing(2),
 			display: "flex",
 			justifyContent: "space-around",
 			alignItems: "center",
@@ -63,22 +63,23 @@ const useStyles = makeStyles((theme) => {
 })
 
 // Component used for display Tokens table
-const TableSettings = ({ settings, setSettings, match }) => {
+const TableSettings = ({ settings, setSettings }) => {
 	const classes = useStyles()
 	const [anchorEl, setAnchorEl] = useState(null)
 	const [values, setValues] = useState({})
 
 	useEffect(() => {
-		if (settings && match) {
+		if (settings && settings.length > 0) {
 			let values = {}
-			Object.keys(match).forEach((key) => {
-				let value = settings[key]
-				let name = match[key]
-				values[key] = { value, name }
+			settings.sort((a, b) => a.order - b.order)
+			settings.forEach((setting) => {
+				let value = setting.display
+				let name = setting.name
+				values[setting.key] = { value, name }
 			})
 			setValues(values)
 		}
-	}, [settings, match])
+	}, [settings])
 
 	const open = Boolean(anchorEl)
 
@@ -86,12 +87,15 @@ const TableSettings = ({ settings, setSettings, match }) => {
 		setAnchorEl(null)
 	}
 	const onChangeSettings = () => {
-        let newSettings = {}
-        Object.keys(values).forEach((key) => {
-            newSettings[key] = values[key].value
-        })
+		let newSettings = []
+		Object.keys(values).forEach((key) => {
+			newSettings[key] = values[key].value
+		})
+		settings.forEach((setting) => {
+			newSettings.push({ ...setting, display: newSettings[setting.key] })
+		})
 		setSettings(newSettings)
-        handleClose()
+		handleClose()
 	}
 
 	const openSettings = (event) => {

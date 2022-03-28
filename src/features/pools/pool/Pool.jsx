@@ -4,7 +4,6 @@ import { useEffect } from "react"
 import { useHistory, useParams } from "react-router-dom"
 import ContainerLoader from "../../../components/loader/ContainerLoader"
 import Paper from "../../../components/paper/Paper"
-import { usePools } from "../../../contexts/PoolsProvider"
 import { formateNumberDecimals, detectBestDecimalsDisplay, getInclude } from "../../../helpers/helpers"
 import Charts from "../../../components/chart/charts/Charts"
 import ButtonsCharts from "../../../components/chart/charts/ButtonsCharts"
@@ -13,6 +12,7 @@ import InfoCharts from "../../../components/chart/charts/InfoCharts"
 import PoolHeader from "./PoolHeader"
 import PoolInfo from "./PoolInfo"
 import { useCallback } from "react"
+import { usePoolsV2 } from "../../../contexts/PoolsV2.provier"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -21,12 +21,11 @@ const useStyles = makeStyles((theme) => {
 			display: "grid",
 			gridAutoRows: "auto",
 			rowGap: theme.spacing(2),
-			margin: `${theme.spacing(2)}px 0`,
 		},
 
 		charts: {
 			display: "grid",
-			gridTemplateColumns: "300px 1fr",
+			gridTemplateColumns: "350px 1fr",
 			gap: theme.spacing(1),
 
 			[theme.breakpoints.down("xs")]: {
@@ -38,6 +37,8 @@ const useStyles = makeStyles((theme) => {
 			zIndex: "0",
 			height: "100%",
 			width: "100%",
+			display: "flex",
+			flexDirection: "column",
 			[theme.breakpoints.down("xs")]: {
 				width: "100%",
 			},
@@ -46,12 +47,13 @@ const useStyles = makeStyles((theme) => {
 			position: "relative",
 			height: "100%",
 			width: "100%",
+			display: "flex",
+			flexDirection: "column",
 		},
 		header: {
 			display: "flex",
 			flexDirection: "row",
 			justifyContent: "space-between",
-			height: "25%",
 			alignItems: "center",
 			[theme.breakpoints.down("xs")]: {
 				flexDirection: "column",
@@ -60,9 +62,10 @@ const useStyles = makeStyles((theme) => {
 			},
 		},
 		chartsContainer: {
-			height: "75%",
+			display: "flex",
+			flexDirection: "column",
+			flexGrow: "1",
 			[theme.breakpoints.down("xs")]: {
-				height: "75%",
 			},
 		},
 		headerActions: {
@@ -86,7 +89,7 @@ const Pool = ({ showToast }) => {
 	const classes = useStyles()
 	const history = useHistory()
 	const { id } = useParams()
-	const { pools, getPoolData, getChartPool, getVolumeChartPool, getLiquidityChartPool } = usePools()
+	const { pools, getPoolData, loadingPoolChart, getChartPool, getVolumeChartPool, getLiquidityChartPool } = usePoolsV2()
 
 	//save data here to avoid to re fetching data if is already fetched
 	const [pool, setPool] = useState({})
@@ -114,7 +117,6 @@ const Pool = ({ showToast }) => {
 	const [currentDataPrice, setCurrentDataPrice] = useState([])
 	const [currentDataVolume, setCurrentDataVolume] = useState([])
 	const [currentDataLiquidity, setCurrentDataLiquidity] = useState([])
-
 	const [currency, setCurrency] = useState({ before: true, value: "$" })
 
 	useEffect(() => {
@@ -175,9 +177,9 @@ const Pool = ({ showToast }) => {
 				tmpPricesDecimals[i] = detectBestDecimalsDisplay(tokens[i].price)
 			}
 			pricesDecimals.current = tmpPricesDecimals
+			setCurrency({ before: false, value: tokens[0].symbol })
 			setSelectedTokens({ one: tokens[0], two: tokens[1] })
 			updatePriceInfo(firstPair)
-			setCurrency({ before: false, value: tokens[0].symbol })
 
 			onChangeRangePrice(rangePrice, tokens[0].denom, tokens[1].denom)
 			setLoadingPoolDetails(false)
@@ -191,13 +193,10 @@ const Pool = ({ showToast }) => {
 
 	const onChangeSeletedTokens = useCallback(
 		(selectedTokens) => {
+			setCurrency({ before: false, value: selectedTokens.one.symbol })
 			setSelectedTokens(selectedTokens)
-			if (typeChart === "price") {
-				setCurrency({ before: false, value: selectedTokens.one.symbol })
+			if (typeChart === "price")
 				onChangeRangePrice(rangePrice, selectedTokens.one.denom, selectedTokens.two.denom, updatePriceInfo)
-			} else {
-				setCurrency({ before: true, value: "$" })
-			}
 		},
 		[selectedTokens, typeChart]
 	)
@@ -354,6 +353,7 @@ const Pool = ({ showToast }) => {
 									rangeLiquidity={rangeLiquidity}
 									rangeVolume={rangeVolume}
 									rangePrice={rangePrice}
+									priceV1={true}
 								/>
 							</div>
 						</div>

@@ -16,6 +16,13 @@ const useStyles = makeStyles((theme) => {
 		errorChart: {
 			margin: "auto",
 		},
+		container:{
+			height: "100%",
+			width: "100%",
+			display: "flex",
+			alignItems: "center",
+			justifyContent: "center",
+		}
 	}
 })
 
@@ -64,7 +71,7 @@ const Charts = ({
 	}
 
 	return (
-		<CSSTransitionGroup transitionName="fade" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+		<CSSTransitionGroup transitionName="fade" className={classes.container} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
 			{chartRender}
 		</CSSTransitionGroup>
 	)

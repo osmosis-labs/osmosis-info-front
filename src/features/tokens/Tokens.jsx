@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useHistory } from "react-router-dom"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
-import { useTokens } from "../../contexts/TokensProvider"
+import { useTokensV2 } from "../../contexts/TokensV2.provider"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import { getInclude } from "../../helpers/helpers"
 import TokensTable from "./TokensTable"
@@ -16,19 +16,22 @@ const useStyles = makeStyles((theme) => {
 			display: "grid",
 			gridAutoRows: "auto",
 			rowGap: theme.spacing(2),
-			margin: `${theme.spacing(2)}px 0`,
 		},
 		containerLoader:{
 			position: "relative",
 			overflowX: "hidden",
 			minHeight: "200px"
+		},
+		containerWatchlist:{
+			position: "relative",
+			minWidth: "200px",
 		}
 	}
 })
 
 const Tokens = () => {
 	const classes = useStyles()
-	const { tokens, loadingTokens } = useTokens()
+	const { tokens, loadingTokens } = useTokensV2()
 	// get tokens from watch list
 	const { watchlistTokens } = useWatchlistTokens()
 	const [tokensOnWatchlist, setTokensOnWatchlist] = useState([])
@@ -70,7 +73,7 @@ const Tokens = () => {
 	return (
 		<div className={classes.tokensRoot}>
 			<p className={classes.subTitle}>Your watchlist</p>
-			<Paper>
+			<Paper className={classes.containerWatchlist}>
 				{watchlistTokens.length > 0 ? (
 					<TokensTable
 						data={tokensOnWatchlist}

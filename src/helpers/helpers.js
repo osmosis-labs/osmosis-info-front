@@ -7,6 +7,14 @@ export const formateNumberPrice = (price) => {
 	}).format(price)
 }
 
+export const formateNumber = (price) => {
+	return new Intl.NumberFormat("en-US", {
+		currency: "USD",
+		minimumFractionDigits: 0,
+		maximumFractionDigits: 0,
+	}).format(price)
+}
+
 export const formatDate = (date) => {
 	let options = { month: "short", day: "numeric", year: "numeric" }
 	return new Intl.DateTimeFormat("en-US", options).format(date)
@@ -49,12 +57,23 @@ export const formateNumberPriceDecimals = (price, decimals = 2) => {
 	}).format(price)
 }
 
-export const formateNumberPriceDecimalsAuto = (price) => {
-	return formateNumberPriceDecimals(price, detectBestDecimalsDisplay(price))
+export const getPercent = (value, unit = true) => {
+	let res = parseFloat(formateNumberDecimalsAuto({ price: value, minDecimal: 2, minPrice: 1, maxDecimal: 2 })).toFixed(
+		2
+	)
+	if (unit) {
+		return res + "%"
+	}
+	return res
 }
 
-export const formateNumberDecimalsAuto = (price) => {
-	return formateNumberDecimals(price, detectBestDecimalsDisplay(price))
+export const formateNumberDecimalsAuto = ({ price, maxDecimal, unit, minDecimal, minPrice }) => {
+	minDecimal = minDecimal ? minDecimal : 2
+	minPrice = minPrice ? minPrice : 1
+	let res =
+		formateNumberDecimals(price, detectBestDecimalsDisplay(price, minDecimal, minPrice, maxDecimal)) +
+		(unit ? unit : "")
+	return res
 }
 
 export const formateNumberDecimalsAutoV2 = ({ price, maxDecimal, unit, minDecimal, minPrice }) => {

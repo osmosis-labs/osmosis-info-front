@@ -3,7 +3,15 @@ import { makeStyles } from "@material-ui/core"
 import Image from "../../../components/image/Image"
 import ContainerLoader from "../../../components/loader/ContainerLoader"
 import Paper from "../../../components/paper/Paper"
-import { formateNumberPrice, formateNumberPriceDecimals, formaterNumber } from "../../../helpers/helpers"
+import {
+	formateNumberDecimalsAuto,
+	formateNumberPrice,
+	formateNumberPriceDecimals,
+	formaterNumber,
+} from "../../../helpers/helpers"
+
+import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -59,14 +67,35 @@ const useStyles = makeStyles((theme) => {
 			fontWeight: "600",
 		},
 		dataDetail: {
-			fontSize: theme.fontSize.big,
 			color: theme.palette.gray.contrastText,
+			fontSize: "1.5rem",
+		},
+		detailsValues: {
+			display: "flex",
+			flexDirection: "column",
+			justifyContent: "space-between",
+			paddingTop: "10px",
+			width: "100%",
+		},
+		dataDetailChange: {
+			fontSize: "1.2rem",
+		},
+
+		colorUp: { color: theme.palette.green.text },
+		colorDown: { color: theme.palette.error.main },
+		containerUpDown: {
+			display: "flex",
+			flexDirection: "row",
+			alignItems: "center",
 		},
 	}
 })
 
-const PoolInfo = ({ loadingPoolInfo, tokens, pool, fees, pricesDecimals }) => {
+const PoolInfo = ({ loadingPoolInfo, tokens, pool, pricesDecimals }) => {
 	const classes = useStyles()
+	const formatPercent = (value) => {
+		return formateNumberDecimalsAuto({ price: value, minDecimal: 0, minPrice: 1, maxDecimal: 2, unit: "%" })
+	}
 	return (
 		<div className={classes.details}>
 			<Paper className={classes.detailPaper}>
@@ -99,27 +128,60 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool, fees, pricesDecimals }) => {
 					</div>
 					<div className={classes.detail}>
 						<p className={classes.titleDetail}>Liquidity</p>
-						<p variant="body2" className={classes.dataDetail}>
-							{formateNumberPrice(pool.liquidity)}
-						</p>
+						<div className={classes.detailsValues}>
+							<p className={classes.dataDetail}>{formateNumberPrice(pool.liquidity)}</p>
+							<p
+								className={
+									pool.liquidity24hChange === 0
+										? classes.dataDetailChange
+										: pool.liquidity24hChange > 0
+										? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
+										: `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
+								}
+							>
+								{pool.liquidity24hChange > 0 ? (
+									<ArrowDropUpIcon className={classes.colorUp} />
+								) : pool.liquidity24hChange < 0 ? (
+									<ArrowDropDownIcon className={classes.colorDown} />
+								) : (
+									<span />
+								)}
+								{formatPercent(pool.liquidity24hChange)}
+							</p>
+						</div>
 					</div>
 					<div className={classes.detail}>
 						<p className={classes.titleDetail}>Volume (24hrs)</p>
-						<p variant="body2" className={classes.dataDetail}>
-							{formateNumberPrice(pool.volume_24h)}
-						</p>
+						<div className={classes.detailsValues}>
+							<p className={classes.dataDetail}>{formateNumberPrice(pool.volume24h)}</p>
+							<p
+								className={
+									pool.volume24hChange === 0
+										? classes.dataDetailChange
+										: pool.volume24hChange > 0
+										? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
+										: `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
+								}
+							>
+								{pool.volume24hChange > 0 ? (
+									<ArrowDropUpIcon className={classes.colorUp} />
+								) : pool.volume24hChange < 0 ? (
+									<ArrowDropDownIcon className={classes.colorDown} />
+								) : (
+									<span />
+								)}
+								{formatPercent(pool.volume24hChange)}
+							</p>
+						</div>
 					</div>
+
 					<div className={classes.detail}>
 						<p className={classes.titleDetail}>Volume (7d)</p>
-						<p variant="body2" className={classes.dataDetail}>
-							{formateNumberPrice(pool.volume_7d)}
-						</p>
+						<p className={classes.dataDetail}>{formateNumberPrice(pool.volume7d)}</p>
 					</div>
 					<div className={classes.detail}>
 						<p className={classes.titleDetail}>Fees</p>
-						<p variant="body2" className={classes.dataDetail}>
-							{fees}
-						</p>
+						<p className={classes.dataDetail}>{formatPercent(parseFloat(pool.fees))}</p>
 					</div>
 				</ContainerLoader>
 			</Paper>

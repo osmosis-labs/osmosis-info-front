@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core"
 import { useCallback, useEffect, useState } from "react"
-import { formatDate, formateNumberPrice, getDates, isValidDate, timeToDate, twoNumber } from "../../../helpers/helpers"
+import { formatDate, formateNumberDecimals, formateNumberPrice, formateNumberPriceDecimals, getDates, isValidDate, timeToDate, twoNumber } from "../../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const InfoLiquidity = ({ title, data, range }) => {
+const InfoLiquidity = ({ title, data, range, currency = { value: "$", before: true } }) => {
 	const classes = useStyles()
 	const [currentInfo, setCurrentInfo] = useState({
 		price: 0,
@@ -48,7 +48,13 @@ const InfoLiquidity = ({ title, data, range }) => {
 	}
 
 	const formatPriceForDisplay = (price) => {
-		return formateNumberPrice(price)
+		let value = formateNumberDecimals(price, 0)
+		if (currency.before) {
+			value = `${currency.value}${value}`
+		} else {
+			value = `${value} ${currency.value}`
+		}
+		return value
 	}
 
 	const formatDateForDisplay = (date, range) => {

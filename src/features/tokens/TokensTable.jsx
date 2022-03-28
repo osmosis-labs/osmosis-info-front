@@ -3,8 +3,10 @@ import { useState } from "react"
 import Image from "../../components/image/Image"
 import TablePagination from "../../components/tablePagination/TablePagination"
 import { useSettings } from "../../contexts/SettingsProvider"
-import { formateNumberPrice, formateNumberPriceDecimalsAuto, formaterNumber } from "../../helpers/helpers"
+import { formateNumberDecimalsAuto, formaterNumber, getPercent } from "../../helpers/helpers"
 import TokensHeaderTable from "./TokensHearderTable"
+import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import TableSettings from "../../components/tableSettings/TableSettings"
 
 const useStyles = makeStyles((theme) => {
@@ -111,6 +113,13 @@ const useStyles = makeStyles((theme) => {
 			color: theme.palette.gray.dark,
 			paddingLeft: theme.spacing(1),
 		},
+		cellUpDown: {
+			display: "flex",
+			justifyContent: "flex-end",
+			alignItems: "center",
+		},
+		cellUp: { color: theme.palette.green.text },
+		cellDown: { color: theme.palette.error.main },
 	}
 })
 
@@ -144,10 +153,10 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 
 	const orderNumber = (a, b, orderBy) => {
 		let res = 0
-		if (parseInt(b[orderBy]) < parseInt(a[orderBy])) {
+		if (b[orderBy] < a[orderBy]) {
 			res = 1
 		}
-		if (parseInt(b[orderBy]) > parseInt(a[orderBy])) {
+		if (b[orderBy] > a[orderBy]) {
 			res = -1
 		}
 		return res
@@ -169,8 +178,20 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 		return res
 	}
 
+	const orderNumberInt = (a, b, orderBy) => {
+		let res = 0
+		if (parseInt(b[orderBy]) < parseInt(a[orderBy])) {
+			res = 1
+		}
+		if (parseInt(b[orderBy]) > parseInt(a[orderBy])) {
+			res = -1
+		}
+		return res
+	}
+
 	const descendingComparator = (a, b, orderBy) => {
 		if (orderBy === "name") return orderString(a, b, orderBy)
+		if (orderBy === "id") return orderNumberInt(a, b, orderBy)
 		return orderNumber(a, b, orderBy)
 	}
 
@@ -181,14 +202,19 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 	}
 
 	const getHeadCells = () => {
+		const isXs = size === "xs"
 		const transformPriceMK = (price) => {
 			return `$${formaterNumber(price)}`
+		}
+
+		const formatTokenPrice = (value) => {
+			return "$" + formateNumberDecimalsAuto({ price: value })
 		}
 		let head = [
 			{
 				id: "id",
-				cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
-				classes: size === "xs" ? classes.hCellsExtraSmall : classes.hCellsSmall,
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsSmall,
 				sortable: sortable,
 				disablePadding: false,
 				label: "#",
@@ -196,8 +222,8 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 			},
 			{
 				id: "name",
-				cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
-				classes: size === "xs" ? classes.hCellsExtraSmallName : classes.hCellsLg,
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmallName : classes.hCellsLg,
 				sortable: sortable,
 				disablePadding: false,
 				label: "Tokens",
@@ -207,8 +233,8 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 			},
 			{
 				id: "liquidity",
-				cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
-				classes: size === "xs" ? classes.hCellsExtraSmall : classes.hCellsLg,
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
 				transform: transformPriceMK,
 				disablePadding: false,
@@ -216,43 +242,71 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 				align: "right",
 			},
 			{
-				id: "price",
-				cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
-				classes: size === "xs" ? classes.hCellsExtraSmall : classes.hCellsLg,
+				id: "liquidity24hChange",
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
-				transform: formateNumberPriceDecimalsAuto,
+				transform: getPercent,
+				disablePadding: false,
+				label: "Liquidity (24h) change",
+				align: "right",
+			},
+			{
+				id: "price",
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
+				sortable: sortable,
+				transform: formatTokenPrice,
 				disablePadding: false,
 				label: "Price",
 				align: "right",
 			},
 			{
-				id: "volume_24h",
-				cellClasses: size === "xs" ? classes.cellsExtraSmall : classes.cells,
-				classes: size === "xs" ? classes.hCellsExtraSmall : classes.hCellsLg,
+				id: "price24hChange",
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
+				sortable: sortable,
+				transform: getPercent,
+				disablePadding: false,
+				label: "Price (24h) change",
+				align: "right",
+			},
+			{
+				id: "volume24h",
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
 				sortable: sortable,
 				transform: transformPriceMK,
 				disablePadding: false,
 				label: "Volume (24h)",
 				align: "right",
 			},
+			{
+				id: "volume24hChange",
+				cellClasses: isXs ? classes.cellsExtraSmall : classes.cells,
+				classes: isXs ? classes.hCellsExtraSmall : classes.hCellsLg,
+				sortable: sortable,
+				transform: getPercent,
+				disablePadding: false,
+				label: "Volume (24h) change",
+				align: "right",
+			},
 		]
 
 		let headToDisplay = []
-
-		if (settings.tokenTable.id) {
-			headToDisplay.push(head[0])
-		}
-		if (settings.tokenTable.name) {
-			headToDisplay.push(head[1])
-		}
-		if (settings.tokenTable.liquidity) {
-			headToDisplay.push(head[2])
-		}
-		if (settings.tokenTable.price) {
-			headToDisplay.push(head[3])
-		}
-		if (settings.tokenTable.volume24h) {
-			headToDisplay.push(head[4])
+		if (settings && settings.poolTable && Array.isArray(settings.poolTable)) {
+			settings.tokenTable
+				.sort((a, b) => a.order - b.order)
+				.forEach((setting) => {
+					if (setting.display) {
+						let header = head.filter((item) => item.id === setting.key)
+						if (header.length > 0) {
+							headToDisplay.push(header[0])
+						}
+					}
+				})
+		} else {
+			headToDisplay = [...head]
 		}
 		return headToDisplay
 	}
@@ -271,6 +325,45 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 
 	const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
 	const headCells = getHeadCells()
+
+	const formatChange = (headCell, row) => {
+		let value = row[headCell.id]
+		let className = `${headCell.cellClasses}`
+		let body = headCell.transform ? headCell.transform(value) : value
+		if (value > 0) {
+			className = `${headCell.cellClasses} ${classes.cellUpDown} ${classes.cellUp}`
+			body = (
+				<div className={className}>
+					<>
+						<ArrowDropUpIcon className={classes.cellUp} />
+						{headCell.transform ? headCell.transform(value) : value}
+					</>
+				</div>
+			)
+		} else if (value < 0) {
+			className = `${headCell.cellClasses} ${classes.cellUpDown} ${classes.cellDown}`
+			body = (
+				<div className={className}>
+					<>
+						<ArrowDropDownIcon className={classes.cellDown} />
+						{headCell.transform ? headCell.transform(value) : value}
+					</>
+				</div>
+			)
+		}
+
+		return (
+			<TableCell
+				key={headCell.id + row.id}
+				className={headCell.cellClasses}
+				component={headCell.component}
+				align={headCell.align}
+				padding={headCell.padding}
+			>
+				{body}
+			</TableCell>
+		)
+	}
 	if (data.length === 0)
 		return (
 			<div className={classes.tokensTableRoot}>
@@ -290,11 +383,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 
 	return (
 		<div>
-			<TableSettings
-				settings={settings.tokenTable}
-				setSettings={setSettings}
-				match={{ id: "Id", name: "Name", liquidity: "Liquidity", price: "Price", volume24h: "Volume (24h)" }}
-			/>
+			<TableSettings settings={settings.tokenTable} setSettings={setSettings} />
 			<div className={classes.tokensTableRoot}>
 				<Table>
 					<TokensHeaderTable
@@ -322,34 +411,40 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 												padding={headCell.padding}
 											>
 												{/* <Tooltip title={row.name}> */}
-													<div className={classes.cellName}>
-														<div className={classes.images}>
-															{row.symbol
-																.split("-")
-																.slice(0, 2)
-																.map((symbol, index) => {
-																	return (
-																		<Image
-																			style={{ left: index * 18 + "px" }}
-																			key={headCell.id + row.id + symbol}
-																			className={classes.image}
-																			assets={true}
-																			pathAssets=""
-																			src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${symbol.toLowerCase()}.png`}
-																			srcFallback="../assets/default.png"
-																			alt={`${symbol}`}
-																		/>
-																	)
-																})}
-														</div>
-														<p className={classes.name}>
-															{row.name}
-															<em className={classes.symbolName}>({row.symbol})</em>
-														</p>
+												<div className={classes.cellName}>
+													<div className={classes.images}>
+														{row.symbol
+															.split("-")
+															.slice(0, 2)
+															.map((symbol, index) => {
+																return (
+																	<Image
+																		style={{ left: index * 18 + "px" }}
+																		key={headCell.id + row.id + symbol}
+																		className={classes.image}
+																		assets={true}
+																		pathAssets=""
+																		src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${symbol.toLowerCase()}.png`}
+																		srcFallback="../assets/default.png"
+																		alt={`${symbol}`}
+																	/>
+																)
+															})}
 													</div>
+													<p className={classes.name}>
+														{row.name}
+														<em className={classes.symbolName}>({row.symbol})</em>
+													</p>
+												</div>
 												{/* </Tooltip> */}
 											</TableCell>
 										)
+									} else if (
+										headCell.id === "price24hChange" ||
+										headCell.id === "liquidity24hChange" ||
+										headCell.id === "volume24hChange"
+									) {
+										cell = formatChange(headCell, row)
 									} else {
 										cell = (
 											<TableCell
@@ -382,7 +477,7 @@ const TokensTable = ({ data, textEmpty, size = "ld", sortable = true, onClickTok
 							})}
 						{data.length > rowsPerPage && emptyRows > 0 && (
 							<TableRow style={{ height: 53 * emptyRows }}>
-								<TableCell colSpan={6} />
+								<TableCell colSpan={headCells.length} />
 							</TableRow>
 						)}
 					</TableBody>

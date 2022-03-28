@@ -5,8 +5,6 @@ import { useHistory } from "react-router-dom"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
 import { useCharts } from "../../contexts/ChartsProvider"
-import { usePools } from "../../contexts/PoolsProvider"
-import { useTokens } from "../../contexts/TokensProvider"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
 import { getInclude} from "../../helpers/helpers"
@@ -14,6 +12,8 @@ import PoolsTable from "../pools/PoolsTable"
 import TokensTable from "../tokens/TokensTable"
 import ContainerChartLiquidity from "./ContainerChartLiquidity"
 import ContainerChartVolume from "./ContainerChartVolume"
+import { usePoolsV2 } from "../../contexts/PoolsV2.provier"
+import { useTokensV2 } from "../../contexts/TokensV2.provider"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -66,12 +66,16 @@ const useStyles = makeStyles((theme) => {
 				minHeight: "410px",
 			},
 		},
-		containerChart: { height: "250px" },
+		containerChart: {  height:'100%' },
 		containerLoading: {
 			position: "relative",
 			minWidth: "200px",
 			minHeight: "200px",
 		},
+		containerWatchlist:{
+			position: "relative",
+			minWidth: "200px",
+		}
 	}
 })
 
@@ -90,8 +94,8 @@ const Overview = () => {
 	const matchMD = useMediaQuery((theme) => theme.breakpoints.down("md"))
 	const matchLD = useMediaQuery((theme) => theme.breakpoints.down("ld"))
 
-	const { pools, loadingPools } = usePools()
-	const { tokens, loadingTokens } = useTokens()
+	const { pools, loadingPools } = usePoolsV2()
+	const { tokens, loadingTokens } = useTokensV2()
 	const [dataPools, setDataPools] = useState([])
 	const [dataTokens, setDataTokens] = useState([])
 	const history = useHistory()
@@ -198,7 +202,7 @@ const Overview = () => {
 					</Paper>
 				</div>
 				<p className={classes.subTitle}>Your token watchlist</p>
-				<Paper>
+				<Paper className={classes.containerWatchlist}>
 					{watchlistTokens.length > 0 ? (
 						<TokensTable
 							data={tokensOnWatchlist}
@@ -212,7 +216,7 @@ const Overview = () => {
 					)}
 				</Paper>
 				<p className={classes.subTitle}>Your pool watchlist</p>
-				<Paper>
+				<Paper className={classes.containerWatchlist}>
 					{watchlistPools.length > 0 ? (
 						<PoolsTable
 							data={poolsOnWatchlist}

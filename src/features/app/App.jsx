@@ -6,13 +6,11 @@ import Overview from "../overview/Overview"
 import Pools from "../pools/Pools"
 import Tokens from "../tokens/Tokens"
 import AppBar from "../../components/appBar/AppBar"
-import { PoolsProvider } from "../../contexts/PoolsProvider"
 import { ChartsProvider } from "../../contexts/ChartsProvider"
 import Pool from "../pools/pool/Pool"
 import { WatchlistPoolsProvider } from "../../contexts/WatchlistPoolsProvider"
 import InfoBar from "../../components/appBar/Infobar"
 import { PricesProvider } from "../../contexts/PricesProvider"
-import { TokensProvider } from "../../contexts/TokensProvider"
 import { WatchlistTokensProvider } from "../../contexts/WatchlistTokensProvider"
 import Token from "../tokens/token/Token"
 import LoaderOsmosis from "../../components/loader/LoaderOsmosis"
@@ -23,6 +21,8 @@ import OverviewMetrics from "../overview/metrics/OverviewMetrics"
 import IBC from "../ibc/IBC"
 import { IBCProvider } from "../../contexts/IBCProvier"
 import { WatchlistIBCProvider } from "../../contexts/WatchlistIBCProvider"
+import { TokensV2Provider } from "../../contexts/TokensV2.provider"
+import { PoolsV2Provider } from "../../contexts/PoolsV2.provier"
 const useStyles = makeStyles((theme) => {
 	return {
 		appRoot: {
@@ -56,6 +56,9 @@ const useStyles = makeStyles((theme) => {
 		content: {
 			maxWidth: "1200px",
 			width: "90%",
+			[theme.breakpoints.down("sm")]: {
+				width: "95%",
+			},
 		},
 	}
 })
@@ -76,12 +79,12 @@ const App = () => {
 	}, [])
 
 	return (
-		<BrowserRouter>
+		<BrowserRouter basename=".">
 			<Switch>
 				<>
 					<SettingsProviders>
-						<PoolsProvider>
-							<TokensProvider>
+						<TokensV2Provider>
+							<PoolsV2Provider>
 								<ChartsProvider>
 									<WatchlistPoolsProvider>
 										<WatchlistTokensProvider>
@@ -142,8 +145,8 @@ const App = () => {
 										</WatchlistTokensProvider>
 									</WatchlistPoolsProvider>
 								</ChartsProvider>
-							</TokensProvider>
-						</PoolsProvider>
+							</PoolsV2Provider>
+						</TokensV2Provider>
 					</SettingsProviders>
 				</>
 			</Switch>

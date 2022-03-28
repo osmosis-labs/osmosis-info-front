@@ -118,8 +118,12 @@ const TopItem = ({ item, index, type }) => {
 				<span className={classes.name}>{item.name}</span>
 			</div>
 			<div className={classes.container}>
-				<span className={`${classes.price} ${type==="gainers"?classes.priceUp:classes.priceDown}`}>${formateNumberDecimalsAuto(item.price)}</span>
-				<span className={`${classes.price} ${type==="gainers"?classes.priceUp:classes.priceDown}`}>{formateNumberDecimalsAuto(item.price_24h_change)}%</span>
+				<span className={`${classes.price} ${type === "gainers" ? classes.priceUp : classes.priceDown}`}>
+					${formateNumberDecimalsAuto({ price: item.price })}
+				</span>
+				<span className={`${classes.price} ${type === "gainers" ? classes.priceUp : classes.priceDown}`}>
+					{formateNumberDecimalsAuto({ price: item.price_24h_change, unit: "%" })}
+				</span>
 			</div>
 		</div>
 	)
