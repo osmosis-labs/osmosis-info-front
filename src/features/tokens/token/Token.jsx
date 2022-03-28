@@ -151,6 +151,8 @@ const useStyles = makeStyles((theme) => {
 			marginBottom: "16px",
 			padding: "16px 16px 0 16px",
 			minHeight: "120px",
+			overflowX: "auto",
+
 		},
 	}
 })
