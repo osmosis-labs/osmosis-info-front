@@ -48,7 +48,7 @@ export const PoolsV2Provider = ({ children }) => {
 		}
 	}, [])
 
-	const getTrxPool = async ({ poolId, onlySuccess = false, limit = 10, offset = 0 }) => {
+	const getTrxPool = async ({ poolId, onlySuccess = true, limit = 10, offset = 0 }) => {
 		setLoadingTrx(true)
 		let data = []
 		if (
