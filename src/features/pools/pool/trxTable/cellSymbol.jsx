@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => {
 			fontSize: "14px",
 		},
 		restNumber: {
-			fontSize: "12px",
+			fontSize: "13px",
 		},
 		symbol: {
 			paddingLeft: "5px",

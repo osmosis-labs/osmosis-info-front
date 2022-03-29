@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme) => {
 			},
 			"& th": {
 				color: theme.palette.table.cellDark,
-				fontFamily: "'Poppins' !important",
 				fontSize: "15px",
 				lineHeight: "23px",
 			}

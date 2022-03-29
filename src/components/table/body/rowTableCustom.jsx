@@ -14,9 +14,11 @@ const useStyles = makeStyles((theme) => {
 			"& td": {
 				color: theme.palette.table.cell,
 				fontFamily: "'Inter' !important",
-				fontSize: "12px",
+				fontSize: "14px",
 				lineHeight: "19px",
-			}
+				padding: "12px !important",
+				borderBottom: `1px solid ${theme.palette.table.border}`,
+			},
 		},
 	}
 })

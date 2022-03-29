@@ -1,6 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
 import API from "../helpers/API"
 import relativeTime from "dayjs/plugin/relativeTime"
+import utc from "dayjs/plugin/utc"
+
 import dayjs from "dayjs"
 import { getWeekNumber, timeToDateUTC } from "../helpers/helpers"
 const PoolsV2Context = createContext()
@@ -64,10 +66,15 @@ export const PoolsV2Provider = ({ children }) => {
 				useCompleteURL: true,
 			})
 			dayjs.extend(relativeTime)
+			dayjs.extend(utc)
+
 			data = response.data.map((trx) => {
 				let time = new Date(trx.time_tx)
-				let options = { month: "short", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric" }
-				let timeDisplay = new Intl.DateTimeFormat("en-US", options).format(time)
+				const tzOffset = new Date(trx.time_tx).getTimezoneOffset()
+				let sourceDate = dayjs(trx.time_tx).add(-tzOffset, "minute")
+
+				let timeAgo = dayjs(sourceDate).utc().fromNow(false)
+
 				let addressDisplay = trx.address.substring(0, 5) + "..." + trx.address.substring(trx.address.length - 5)
 				let hashDisplay = trx.tx_hash.substring(0, 5) + "..." + trx.tx_hash.substring(trx.tx_hash.length - 5)
 				let pools = {
@@ -78,10 +85,9 @@ export const PoolsV2Provider = ({ children }) => {
 					name: `${trx.symbol_in}/${trx.symbol_out}`,
 					routes: trx.swap_route.routes,
 				}
-
 				return {
 					hash: { value: trx.tx_hash, display: hashDisplay },
-					time: { value: time, display: timeDisplay },
+					time: { value: time, display: timeAgo },
 					pools,
 					tokenIn: { value: trx.amount_in, symbol: trx.symbol_in },
 					tokenOut: { value: trx.amount_out, symbol: trx.symbol_out },
