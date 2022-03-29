@@ -4,6 +4,7 @@ import { makeStyles, TableCell } from "@material-ui/core"
 const useStyles = makeStyles((theme) => {
 	return {
 		cellCustom: {},
+		cellClickable: { cursor: "pointer" },
 	}
 })
 
@@ -16,7 +17,11 @@ const CellCustom = (props) => {
 		<TableCell
 			key={cellKey}
 			align={align}
-			className={`${classes.cellCustom} ${customClassCell}`}
+			className={
+				onClickCell
+					? `${classes.cellClickable} ${classes.cellCustom} ${customClassCell}`
+					: `${classes.cellCustom} ${customClassCell}`
+			}
 			onClick={
 				onClickCell
 					? () => {

@@ -4,7 +4,20 @@ import CellCustom from "./cellCustom"
 
 const useStyles = makeStyles((theme) => {
 	return {
-		rowTableCustom: {},
+		rowTableCustom: {
+			"& td:first-child": {
+				paddingLeft: "25px",
+			},
+			"& td:last-child": {
+				paddingRight: "25px",
+			},
+			"& td": {
+				color: theme.palette.table.cell,
+				fontFamily: "'Inter' !important",
+				fontSize: "12px",
+				lineHeight: "19px",
+			}
+		},
 	}
 })
 
@@ -13,7 +26,7 @@ const RowTableCustom = (props) => {
 	const { data, config, indexRow } = props
 
 	return (
-		<TableRow>
+		<TableRow classes={{ root: classes.rowTableCustom }}>
 			{config.cellsConfig.map((cellConfig, index) => {
 				if (cellConfig.cellBody) {
 					return (

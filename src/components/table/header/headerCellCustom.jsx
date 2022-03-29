@@ -9,15 +9,11 @@ const useStyles = makeStyles((theme) => {
 
 const HeaderCellCustom = (props) => {
 	const classes = useStyles()
-	const { sortable, order, orderBy, customClass, label, onSort, align, cellKey } = props
+	const { sortable, order, orderBy, customClass, label, onSort, align, cellKey, first, last } = props
+	let className = `${classes.headerCellCustom} ${customClass}`
 	if (sortable) {
 		return (
-			<TableCell
-				key={cellKey}
-				align={align}
-				sortDirection={orderBy === cellKey ? order : false}
-				className={`${classes.headerCellCustom} ${customClass}`}
-			>
+			<TableCell key={cellKey} align={align} sortDirection={orderBy === cellKey ? order : false} className={className}>
 				<TableSortLabel
 					active={orderBy === cellKey}
 					direction={orderBy === cellKey ? order : "asc"}

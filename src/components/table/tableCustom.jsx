@@ -6,8 +6,16 @@ import FooterTableCustom from "./footer/footerTableCustom"
 
 const useStyles = makeStyles((theme) => {
 	return {
-		tableCustom: {},
-		tableCustomTextEmpty: {},
+		tableCustom: {
+			overflowX: "auto",
+		},
+		tableCustomTextEmpty: {
+			padding: "25px",
+			color: theme.palette.table.cellDark,
+			fontFamily: "'Poppins' !important",
+			fontSize: "15px",
+			lineHeight: "23px",
+		},
 	}
 })
 
@@ -50,10 +58,10 @@ const TableCustom = ({ config, data, customClass }) => {
 	const sortNumber = (a, b, orderBy) => {
 		let res = 0
 		if (b[orderBy] < a[orderBy]) {
-			res = 1
+			res = -1
 		}
 		if (b[orderBy] > a[orderBy]) {
-			res = -1
+			res = 1
 		}
 		return res
 	}
@@ -94,7 +102,7 @@ const TableCustom = ({ config, data, customClass }) => {
 	if (data.length === 0) {
 		return (
 			<div className={`${classes.tableCustom} ${customClass}`}>
-				<Table>
+				<Table classes={{ root: classes.tableRoot }}>
 					<HeaderTableCustom onSort={onSort} cellsHeader={config.cellsConfig} orderBy={orderBy} order={order} />
 				</Table>
 				<p className={classes.tableCustomTextEmpty}>{config.textEmpty}</p>

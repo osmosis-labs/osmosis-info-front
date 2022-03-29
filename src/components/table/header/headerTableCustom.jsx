@@ -4,16 +4,32 @@ import HeaderCellCustom from "./headerCellCustom"
 
 const useStyles = makeStyles((theme) => {
 	return {
-		tableHeader: {},
+		tableHeader: {
+			backgroundColor: theme.palette.primary.light,
+			"& th:first-child": {
+				borderRadius: "20px 0 0 0",
+				paddingLeft: "25px",
+			},
+			"& th:last-child": {
+				borderRadius: "0 20px 0 0",
+				paddingRight: "25px",
+			},
+			"& th": {
+				color: theme.palette.table.cellDark,
+				fontFamily: "'Poppins' !important",
+				fontSize: "15px",
+				lineHeight: "23px",
+			}
+		},
 	}
 })
 
 const HeaderTableCustom = ({ cellsHeader = [], onSort, order, orderBy }) => {
 	const classes = useStyles()
 	return (
-		<TableHead>
+		<TableHead classes={{ root: classes.tableHeader }}>
 			<TableRow>
-				{cellsHeader.map((cellHead) => {
+				{cellsHeader.map((cellHead, index) => {
 					const { sortable, customClassHeader, label, cellKey, align } = cellHead
 					return (
 						<HeaderCellCustom

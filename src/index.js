@@ -1,8 +1,8 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import * as serviceWorker from "./serviceWorker"
-import {ThemeProvider } from "@material-ui/core"
-import { createTheme } from '@material-ui/core/styles'
+import { ThemeProvider } from "@material-ui/core"
+import { createTheme } from "@material-ui/core/styles"
 import "./styles/index.css"
 import "./styles/loader.css"
 import "./styles/transitions.css"
@@ -55,15 +55,22 @@ let colors = {
 			dark: "#000000",
 			main: "#191B1F",
 			light: "#1f2128",
-
 			other: "#2C2F36",
 			contrastText: "#FFFFFF",
+		},
+		table: {
+			cell: "#FFFFFFDE",
+			cellDark: "#FFFFFF66",
+			border: "#FFFFFF33",
+			badgeBackground: "#C4A46A1F",
+			badgeText: "#C4A46A",
 		},
 		gray: {
 			light: "#40444f",
 			main: "#c3c5cb",
 			dark: "#6c7284",
 			textLight: "rgba(255, 255, 255, 0.7)",
+			textDark: "rgba(255, 255, 255, 0.4)",
 			contrastText: "#FFFFFF",
 		},
 		yellow: {
