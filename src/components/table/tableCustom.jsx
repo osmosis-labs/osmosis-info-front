@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => {
 const TableCustom = ({ config, data, customClass }) => {
 	const classes = useStyles()
 	const [order, setOrder] = useState(config.defaultOrder)
-	const [orderBy, setOrderBy] = useState(config.defaultSort)
+	const [orderBy, setOrderBy] = useState(config.defaultOrderBy)
 	const [page, setPage] = useState(0)
 	const [rowsPerPage, setRowsPerPage] = useState(config.rowsPerPage)
 

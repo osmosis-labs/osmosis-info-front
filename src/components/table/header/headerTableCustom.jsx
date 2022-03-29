@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => {
 				color: theme.palette.table.cellDark,
 				fontSize: "15px",
 				lineHeight: "23px",
+				borderBottom: `1px solid ${theme.palette.table.border}`,
 			}
 		},
 	}

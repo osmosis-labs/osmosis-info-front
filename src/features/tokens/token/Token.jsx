@@ -20,8 +20,8 @@ import { useTokensV2 } from "../../../contexts/TokensV2.provider"
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import ExpertChartDialog from "./expertChart/ExpertChartDialog"
-import TransactionTable from "./trxTable/TransactionsTable"
 import { useTokenChartV2 } from "../../../contexts/TokenChartV2"
+import TrxTable from "./trxTable/trxTable"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -146,13 +146,10 @@ const useStyles = makeStyles((theme) => {
 			flexDirection: "row",
 			alignItems: "center",
 		},
-		paperTrx: {
+		trxContainer: {
+			marginBottom: `${theme.spacing(2)}px`,
 			position: "relative",
-			marginBottom: "16px",
-			padding: "16px 16px 0 16px",
-			minHeight: "120px",
-			overflowX: "auto",
-
+			overflow: "hidden",
 		},
 	}
 })
@@ -346,9 +343,9 @@ const Token = ({ showToast }) => {
 						</div>
 					</Paper>
 				</div>
-				<Paper className={classes.paperTrx}>
-					<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} borderRadius={true}/>
-					<TransactionTable getTrxToken={getTrxToken} loadingTrx={loadingTrx} token={token} />
+				<Paper className={classes.trxContainer}>
+					<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} borderRadius={true} />
+					<TrxTable getTrxToken={getTrxToken} loadingTrx={loadingTrx} token={token} />
 				</Paper>
 			</div>
 		</div>

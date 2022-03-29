@@ -2,8 +2,8 @@ import { makeStyles, TableCell } from "@material-ui/core"
 
 import React, { memo, useEffect, useState } from "react"
 import TableCustom from "../../../../components/table/tableCustom"
-import { formateNumberDecimalsAuto, formateNumberPriceDecimals } from "../../../../helpers/helpers"
-import CellPools from "./cellPool"
+import { formateNumberDecimalsAuto } from "../../../../helpers/helpers"
+import Cell from "./cell"
 import CellSymbol from "./cellSymbol"
 
 const useStyles = makeStyles((theme) => {
@@ -13,22 +13,23 @@ const useStyles = makeStyles((theme) => {
 		headerValue: {
 			minWidth: "115px",
 		},
-		onClickCell: { color: `${theme.palette.table.link} !important`  },
+		onClickCell: { color: `${theme.palette.table.link} !important` },
 	}
 })
 
-const TrxTable = ({ getTrxPool, loadingTrx, pool, className }) => {
+const TrxTable = ({ getTrxToken, loadingTrx, token, className }) => {
 	const classes = useStyles()
+    const [limit, setLimit] = useState(100)
 	const [trx, setTrx] = useState([])
 	useEffect(() => {
 		const fetch = async () => {
-			let data = await getTrxPool({ poolId: pool.id, limit: 100, offset: 0 })
+			let data = await getTrxToken({ symbol: token.symbol, limit: limit, offset: 0 })
 			setTrx(data)
 		}
-		if (pool.id) {
+		if (token.id) {
 			fetch()
 		}
-	}, [pool])
+	}, [token])
 	const onClickAddress = (row) => {
 		window.open(`https://www.mintscan.io/osmosis/account/${row.address.value}`, "_blank")
 	}
@@ -50,13 +51,25 @@ const TrxTable = ({ getTrxPool, loadingTrx, pool, className }) => {
 		return res
 	}
 	const trxTableConfig = {
-		defaultSort: "time",
-		defaultOrderBy: "desc",
+		defaultOrderBy: "time",
+		defautlOrder: "asc",
 		textEmpty: "No transactions found",
 		rowsPerPage: 10,
 		rowsPerPageOptions: [5, 10, 20, 50, 100],
 		callBackEndPage: null,
 		cellsConfig: [
+			{
+				label: "Type",
+				cellKey: "type",
+				sortable: false,
+				customClassHeader: null,
+				customClassCell: null,
+				onSort: null,
+				align: "center",
+				onClickCell: null,
+				transform: null,
+				cellBody: Cell,
+			},
 			{
 				label: "Hash",
 				cellKey: "hash",
@@ -80,20 +93,6 @@ const TrxTable = ({ getTrxPool, loadingTrx, pool, className }) => {
 				onClickCell: null,
 				transform: transformDisplay,
 				cellBody: null,
-			},
-			{
-				label: "Pools",
-				cellKey: "pools",
-				sortable: true,
-				customClassHeader: null,
-				customClassCell: null,
-				onSort: (a, b, orderBy) => {
-					return 0
-				},
-				align: "left",
-				onClickCell: null,
-				transform: null,
-				cellBody: CellPools,
 			},
 			{
 				label: "Token in",
@@ -121,7 +120,7 @@ const TrxTable = ({ getTrxPool, loadingTrx, pool, className }) => {
 			},
 			{
 				label: "$ Value",
-				cellKey: "usd",
+				cellKey: "value",
 				sortable: true,
 				customClassHeader: classes.headerValue,
 				customClassCell: null,
@@ -129,7 +128,7 @@ const TrxTable = ({ getTrxPool, loadingTrx, pool, className }) => {
 				align: "right",
 				onClickCell: null,
 				transform: transformUSD,
-				cellBody: null,
+				cellBody: Cell,
 			},
 			{
 				label: "Address",
