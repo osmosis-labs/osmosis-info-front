@@ -61,9 +61,10 @@ let colors = {
 		table: {
 			cell: "#FFFFFFDE",
 			cellDark: "#FFFFFF66",
-			border: "#FFFFFF33",
+			border: "rgb(28, 23, 60)",
 			badgeBackground: "#C4A46A1F",
 			badgeText: "#C4A46A",
+			link: "#4885ff"
 		},
 		gray: {
 			light: "#40444f",

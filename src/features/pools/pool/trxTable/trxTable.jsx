@@ -10,9 +10,10 @@ const useStyles = makeStyles((theme) => {
 	return {
 		trxTableRoot: {},
 		trxTable: {},
-		headerValue:{
+		headerValue: {
 			minWidth: "115px",
-		}
+		},
+		onClickCell: { color: `${theme.palette.table.link} !important`  },
 	}
 })
 
@@ -36,7 +37,7 @@ const TrxTable = ({ getTrxPool, loadingTrx, pool, className }) => {
 	}
 	const transformDisplay = (data) => data.display
 	const transformUSD = (data) => {
-		return `$${formateNumberDecimalsAuto({price:data})}`
+		return `$${formateNumberDecimalsAuto({ price: data })}`
 	}
 	const onSortTime = (a, b, orderBy) => {
 		let res = 0
@@ -61,7 +62,7 @@ const TrxTable = ({ getTrxPool, loadingTrx, pool, className }) => {
 				cellKey: "hash",
 				sortable: false,
 				customClassHeader: null,
-				customClassCell: null,
+				customClassCell: classes.onClickCell,
 				onSort: null,
 				align: "left",
 				onClickCell: onClickHash,
@@ -135,7 +136,7 @@ const TrxTable = ({ getTrxPool, loadingTrx, pool, className }) => {
 				cellKey: "address",
 				sortable: false,
 				customClassHeader: null,
-				customClassCell: null,
+				customClassCell: classes.onClickCell,
 				onSort: null,
 				align: "left",
 				onClickCell: onClickAddress,
