@@ -7,7 +7,7 @@ class API {
 			API.instance = this
 		}
 		this.token = null
-		this.url = "https://api-osmosis.imperator.co/"
+		this.url = window["API_URL"]
 		this.baseURL = this.url + ""
 		this.captchaKey = "6LcibsgaAAAAAEjfNfpoSd3TRhgRDFAjAgOOgAFe"
 		return API.instance

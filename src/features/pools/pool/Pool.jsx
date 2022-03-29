@@ -13,8 +13,8 @@ import PoolHeader from "./PoolHeader"
 import PoolInfo from "./PoolInfo"
 import { useCallback } from "react"
 import { usePoolsV2 } from "../../../contexts/PoolsV2.provider"
-import TransactionTable from "./trxTable/TransactionsTable"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
+import TrxTable from "./trxTable/trxTable"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => {
 			display: "grid",
 			gridAutoRows: "auto",
 			rowGap: theme.spacing(2),
+			
 		},
 
 		charts: {
@@ -83,12 +84,11 @@ const useStyles = makeStyles((theme) => {
 				width: "100%",
 			},
 		},
-		paperTrx: {
+		trxContainer: {
+			marginTop: theme.spacing(2),
 			position: "relative",
-			marginBottom: "16px",
-			padding: "16px 16px 0 16px",
-			minHeight: "120px",
-			overflowX: "auto",
+			overflow: "hidden",
+
 		},
 	}
 })
@@ -392,10 +392,10 @@ const Pool = ({ showToast }) => {
 					</ContainerLoader>
 				</Paper>
 			</div>
-			<Paper className={classes.paperTrx}>
-				<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} borderRadius={true}/>
-				<TransactionTable getTrxPool={getTrxPool} loadingTrx={loadingTrx} pool={pool} />
-			</Paper>
+			<div className={classes.trxContainer}>
+				<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} borderRadius={true} />
+				<TrxTable getTrxPool={getTrxPool} loadingTrx={loadingTrx} pool={pool} />
+			</div>
 		</div>
 	)
 }
