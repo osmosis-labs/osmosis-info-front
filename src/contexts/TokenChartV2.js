@@ -1,5 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
 import API from "../helpers/API"
+import relativeTime from "dayjs/plugin/relativeTime"
+import utc from "dayjs/plugin/utc"
+import dayjs from "dayjs"
 const TokenChartV2Context = createContext()
 
 export const useTokenChartV2 = () => useContext(TokenChartV2Context)
@@ -30,19 +33,24 @@ export const TokenChartV2Provider = ({ children }) => {
 				type: "get",
 				useCompleteURL: true,
 			})
+			dayjs.extend(relativeTime)
+			dayjs.extend(utc)
 			data = response.data.map((trx) => {
 				let time = new Date(trx.time_tx)
-				let options = { month: "short", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric" }
-				let timeDisplay = new Intl.DateTimeFormat("en-US", options).format(time)
+				const tzOffset = new Date(trx.time_tx).getTimezoneOffset()
+				let sourceDate = dayjs(trx.time_tx).add(-tzOffset, "minute")
+
+				let timeAgo = dayjs(sourceDate).utc().fromNow(false)
 				let addressDisplay = trx.address.substring(0, 5) + "..." + trx.address.substring(trx.address.length - 5)
 				let hashDisplay = trx.tx_hash.substring(0, 5) + "..." + trx.tx_hash.substring(trx.tx_hash.length - 5)
 				return {
 					type: trx.symbol_out === symbol ? "Buy" : "Sell",
-					time: { value: time, display: timeDisplay },
+					time: { value: time, display: timeAgo },
 					hash: { value: trx.tx_hash, display: hashDisplay },
 					address: { value: trx.address, display: addressDisplay },
 					tokenIn: { value: trx.amount_in, symbol: trx.symbol_in },
 					tokenOut: { value: trx.amount_out, symbol: trx.symbol_out },
+					value: trx.value_usd,
 				}
 			})
 			saveDataChart.current = { ...saveDataChart.current, [getName("trx", symbol, limit, offset)]: data }

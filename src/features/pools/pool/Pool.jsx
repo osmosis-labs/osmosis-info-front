@@ -85,10 +85,9 @@ const useStyles = makeStyles((theme) => {
 			},
 		},
 		trxContainer: {
-			marginTop: theme.spacing(2),
+			marginBottom: `${theme.spacing(2)}px`,
 			position: "relative",
 			overflow: "hidden",
-
 		},
 	}
 })
@@ -392,10 +391,10 @@ const Pool = ({ showToast }) => {
 					</ContainerLoader>
 				</Paper>
 			</div>
-			<div className={classes.trxContainer}>
+			<Paper className={classes.trxContainer}>
 				<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} borderRadius={true} />
 				<TrxTable getTrxPool={getTrxPool} loadingTrx={loadingTrx} pool={pool} />
-			</div>
+			</Paper>
 		</div>
 	)
 }
