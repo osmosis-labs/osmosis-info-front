@@ -43,6 +43,10 @@ export const TokenChartV2Provider = ({ children }) => {
 				let timeAgo = dayjs(sourceDate).utc().fromNow(false)
 				let addressDisplay = trx.address.substring(0, 5) + "..." + trx.address.substring(trx.address.length - 5)
 				let hashDisplay = trx.tx_hash.substring(0, 5) + "..." + trx.tx_hash.substring(trx.tx_hash.length - 5)
+				let pool = {
+					image: `https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.swap_route.routes[0].tokenOutSymbol.toLowerCase()}.png`,
+					name: trx.swap_route.routes[0].poolName,
+				}
 				return {
 					type: trx.symbol_out === symbol ? "Buy" : "Sell",
 					time: { value: time, display: timeAgo },
@@ -51,6 +55,7 @@ export const TokenChartV2Provider = ({ children }) => {
 					tokenIn: { value: trx.amount_in, symbol: trx.symbol_in },
 					tokenOut: { value: trx.amount_out, symbol: trx.symbol_out },
 					value: trx.value_usd,
+					pool,
 				}
 			})
 			saveDataChart.current = { ...saveDataChart.current, [getName("trx", symbol, limit, offset)]: data }

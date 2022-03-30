@@ -4,6 +4,7 @@ import React, { memo, useEffect, useState } from "react"
 import TableCustom from "../../../../components/table/tableCustom"
 import { formateNumberDecimalsAuto } from "../../../../helpers/helpers"
 import Cell from "./cell"
+import CellPool from "./cellPool"
 import CellSymbol from "./cellSymbol"
 
 const useStyles = makeStyles((theme) => {
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme) => {
 
 const TrxTable = ({ getTrxToken, loadingTrx, token, className }) => {
 	const classes = useStyles()
-    const [limit, setLimit] = useState(100)
+	const [limit, setLimit] = useState(100)
 	const [trx, setTrx] = useState([])
 	useEffect(() => {
 		const fetch = async () => {
@@ -59,18 +60,6 @@ const TrxTable = ({ getTrxToken, loadingTrx, token, className }) => {
 		callBackEndPage: null,
 		cellsConfig: [
 			{
-				label: "Type",
-				cellKey: "type",
-				sortable: false,
-				customClassHeader: null,
-				customClassCell: null,
-				onSort: null,
-				align: "center",
-				onClickCell: null,
-				transform: null,
-				cellBody: Cell,
-			},
-			{
 				label: "Hash",
 				cellKey: "hash",
 				sortable: false,
@@ -94,6 +83,31 @@ const TrxTable = ({ getTrxToken, loadingTrx, token, className }) => {
 				transform: transformDisplay,
 				cellBody: null,
 			},
+			{
+				label: "Type",
+				cellKey: "type",
+				sortable: false,
+				customClassHeader: null,
+				customClassCell: null,
+				onSort: null,
+				align: "center",
+				onClickCell: null,
+				transform: null,
+				cellBody: Cell,
+			},
+			{
+				label: "Pool",
+				cellKey: "pool",
+				sortable: true,
+				customClassHeader: null,
+				customClassCell: null,
+				onSort: null,
+				align: "left",
+				onClickCell: null,
+				transform: null,
+				cellBody: CellPool,
+			},
+
 			{
 				label: "Token in",
 				cellKey: "tokenIn",
