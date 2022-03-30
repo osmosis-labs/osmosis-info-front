@@ -8,11 +8,13 @@ const useStyles = makeStyles((theme) => {
 		expertDialogContainer: {
 			position: "fixed",
 			width: "100%",
-			height: "calc(100% - 141px)",
-			maxHeight: "calc(100% - 141px)",
+			left: "0",
+			bottom: "0",
+			right: "0",
+			height: "calc(100% - 140px)",
 			display: "flex",
 			flexDirection: "column",
-			zIndex: "1000",
+			zIndex: "200",
 			transition: "all 0.3s ease-in-out",
 			[theme.breakpoints.down("xs")]: {
 				height: "calc(100% - 109px)",

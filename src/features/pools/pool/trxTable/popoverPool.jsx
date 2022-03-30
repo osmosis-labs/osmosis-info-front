@@ -58,6 +58,11 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "center",
 		},
 
+		imagesContainer: {
+			display: "flex",
+			alignItems: "center",
+			pointerEvents: "none",
+		},
 		image: {
 			height: "20px",
 		},
@@ -73,7 +78,6 @@ const useStyles = makeStyles((theme) => {
 })
 const PopoverPool = ({ routes, open, event, onClose, id }) => {
 	const classes = useStyles()
-	
 	return (
 		<Popover
 			id={id + "p"}
@@ -92,24 +96,34 @@ const PopoverPool = ({ routes, open, event, onClose, id }) => {
 			PaperProps={{ className: classes.paperPopover }}
 		>
 			{/* <Popover open={open} event={event}> */}
-			<Paper className={classes.rootPopoverPool} >
+			<Paper className={classes.rootPopoverPool}>
 				<div className={classes.header}>
 					<span>#</span>
 					<span>Pool</span>
 				</div>
 				<div className={classes.body}>
 					{routes.map((route, index) => {
+						let images = route.poolName.split("-").map((tokenName) => {
+							return `https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${tokenName.toLowerCase()}.png`
+						})
 						return (
 							<div key={index} className={classes.row}>
 								<span className={classes.id}>{route.poolId}</span>
 								<div className={classes.contentRow}>
-									<Image
-										className={`${classes.image}`}
-										assets={true}
-										src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${route.tokenOutSymbol.toLowerCase()}.png`}
-										srcFallback="../assets/default.png"
-										pathAssets=""
-									/>
+									<div className={classes.imagesContainer}>
+										{images.map((image, index) => {
+											return (
+												<Image
+													key={index}
+													className={`${classes.image}`}
+													assets={true}
+													src={image}
+													srcFallback="../assets/default.png"
+													pathAssets=""
+												/>
+											)
+										})}
+									</div>
 									<span className={classes.name} key={id + "route" + index}>
 										{route.poolName}
 									</span>
