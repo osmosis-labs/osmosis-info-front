@@ -1,15 +1,15 @@
-import { makeStyles } from "@material-ui/core"
+import { makeStyles, Popover } from "@material-ui/core"
 import { useEffect } from "react"
 import Image from "../../../../components/image/Image"
 import Paper from "../../../../components/paper/Paper"
-import Popover from "../../../../components/popover/popover"
+// import Popover from "../../../../components/popover/popover"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootPopoverPool: {
 			display: "flex",
 			alignItems: "center",
 			flexDirection: "column",
-			boxShadow: "0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)",
+			// boxShadow: "0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)",
 		},
 		header: {
 			width: "100%",
@@ -63,16 +63,36 @@ const useStyles = makeStyles((theme) => {
 		},
 		name: {
 			paddingLeft: "5px",
-            minWidth: "100px",
+			minWidth: "100px",
+		},
+		paperPopover: {
+			backgroundColor: "transparent",
+			borderRadius: "20px",
 		},
 	}
 })
 const PopoverPool = ({ routes, open, event, onClose, id }) => {
 	const classes = useStyles()
-
+	
 	return (
-		<Popover open={open} event={event}>
-			<Paper className={classes.rootPopoverPool}>
+		<Popover
+			id={id + "p"}
+			open={open}
+			anchorEl={event?.target}
+			onClose={onClose}
+			anchorOrigin={{
+				vertical: "bottom",
+				horizontal: "center",
+			}}
+			transformOrigin={{
+				vertical: "top",
+				horizontal: "center",
+			}}
+			style={{ pointerEvents: "none" }}
+			PaperProps={{ className: classes.paperPopover }}
+		>
+			{/* <Popover open={open} event={event}> */}
+			<Paper className={classes.rootPopoverPool} >
 				<div className={classes.header}>
 					<span>#</span>
 					<span>Pool</span>

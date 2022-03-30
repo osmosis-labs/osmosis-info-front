@@ -1,28 +1,29 @@
-import { makeStyles, TableCell } from "@material-ui/core"
+import { makeStyles, Popover, TableCell } from "@material-ui/core"
 import { useState } from "react"
 import Image from "../../../../components/image/Image"
+import Paper from "../../../../components/paper/Paper"
 import PopoverPool from "./popoverPool"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootCellPool: {
 			display: "flex",
 			alignItems: "center",
-            pointerEvents: "none",
+			pointerEvents: "none",
 		},
 		imagesContainer: {
 			display: "flex",
 			alignItems: "center",
-            pointerEvents: "none",
+			pointerEvents: "none",
 		},
 		image: {
 			height: "20px",
 		},
 		poolName: {
 			paddingLeft: "5px",
-            pointerEvents: "none",
+			pointerEvents: "none",
 		},
 		poolBadge: {
-            pointerEvents: "none",
+			pointerEvents: "none",
 			backgroundColor: theme.palette.table.badgeBackground,
 			color: theme.palette.table.badgeText,
 			borderRadius: "16px",
@@ -35,20 +36,22 @@ const useStyles = makeStyles((theme) => {
 const CellPool = ({ cellKey, cellConfig, data }) => {
 	const classes = useStyles()
 	const [event, setEvent] = useState(null)
+	let currentData = data[cellConfig.cellKey]
 
 	const onOpen = (event) => {
 		setEvent(event)
 	}
 
-    const onClose = (event) => {
+	const onClose = (event) => {
 		setEvent(null)
 	}
 
 	const open = Boolean(event)
-	let currentData = data[cellConfig.cellKey]
+
 	return (
 		<TableCell key={cellKey} onMouseEnter={onOpen} onMouseLeave={onClose}>
-			<div className={classes.rootCellPool} >
+			
+			<div className={classes.rootCellPool}>
 				<div className={classes.imagesContainer}>
 					{currentData.images.map((image, index) => {
 						return (
@@ -63,10 +66,19 @@ const CellPool = ({ cellKey, cellConfig, data }) => {
 						)
 					})}
 				</div>
-				<span className={classes.poolName}>{currentData.name}</span>
+				P<span className={classes.poolName}>{currentData.name}</span>
 				{currentData.routes.length > 1 ? <span className={classes.poolBadge}>+{currentData.routes.length}</span> : null}
 			</div>
-			<PopoverPool routes={currentData.routes} open={open} onClose={onClose} event={event} key={cellKey+"ppover"} id={cellKey + "pop"} />
+			{currentData.routes.length > 1 ? (
+				<PopoverPool
+					routes={currentData.routes}
+					open={open}
+					onClose={onClose}
+					event={event}
+					key={cellKey + "ppover"}
+					id={cellKey + "pop"}
+				/>
+			) : null}
 		</TableCell>
 	)
 }

@@ -42,8 +42,6 @@ const ExpertChart = ({token, getHistoricalChartToken, className}) => {
 				container: "chartExpert",
 				library_path: "/charting_library/",
 				autosize: true,
-				intervals: [],
-				time_frames: [],
 				theme: "dark",
 			})
 		}
