@@ -5,13 +5,11 @@ const getDataFeed = ({ token, chartReady, getHistoricalChartToken }) => {
 		onReady: (callback) => {
 			callback({
 				exchanges: [],
-				symbols_types: [],
 				currency_codes: [],
 				units: [],
 				supported_resolutions: ["5", "15", "30", "60", "120", "240", "720", "1d", "1W", "1M"],
-				leftPriceScale: {
-					visible: true,
-				},
+				symbols_types: [
+				],
 			})
 			chartReady()
 		},
@@ -19,14 +17,16 @@ const getDataFeed = ({ token, chartReady, getHistoricalChartToken }) => {
 			onResultReadyCallback([])
 		},
 		resolveSymbol: (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) => {
-			onSymbolResolvedCallback({
-				...token,
+			let symbol = {
 				has_intraday: true,
-				timezone: "Etc/UTC",
 				session: "24x7",
-				type: "crypto",
+				ticker: token.symbol,
+				name: symbolName,
+				type: "crypto", 
+				minmov: 1,
 				pricescale: Math.pow(10, detectBestDecimalsDisplay(token.price)),
-			})
+			}
+			onSymbolResolvedCallback(symbol)
 		},
 		getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
 			const { from, to } = periodParams
