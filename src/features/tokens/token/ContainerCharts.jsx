@@ -6,6 +6,7 @@ import ButtonsCharts from "../../../components/chart/charts/ButtonsCharts"
 import ButtonsTypeChart from "../../../components/chart/charts/ButtonsTypeChart"
 import Charts from "../../../components/chart/charts/Charts"
 import InfoCharts from "../../../components/chart/charts/InfoCharts"
+import Button from "../../../components/button/Button"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -76,10 +77,14 @@ const useStyles = makeStyles((theme) => {
 			height: "100%",
 			width: "100%",
 		},
+		expertButton:{
+			marginBottom: theme.spacing(1),
+
+		}
 	}
 })
 
-const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIsLoaded, token }) => {
+const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIsLoaded, token, onOpenExpertChart }) => {
 	const classes = useStyles()
 	const [typeChart, setTypeChart] = useState("price") // price, volume, liquidity
 
@@ -201,7 +206,9 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 	}
 
 	return (
-		<div className={classes.chartContainer}>
+		<div
+			className={classes.chartContainer}
+		>
 			<div className={classes.header}>
 				<InfoCharts
 					data={currentItem}
@@ -211,6 +218,7 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 					rangePrice={rangePrice}
 				/>
 				<div className={classes.headerActions}>
+					<Button className={classes.expertButton} onclick={onOpenExpertChart}>Open expert chart</Button>
 					<ButtonsTypeChart type={typeChart} onChangeType={onChangeTypeChart} />
 					<ButtonsCharts
 						typeChart={typeChart}

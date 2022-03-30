@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			alignItems: "center",
 			justifyContent: "center",
-			zIndex: "-1",
+			zIndex: -1,
 			opacity: "0",
 			transition: "all 0.3s",
 			position: "absolute",
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => {
 			borderRadius: "16px",
 		},
 		loaderRootDisplayed: {
-			zIndex: 20,
+			zIndex: theme.zIndex.loader,
 			opacity: 1,
 		},
 		osmosisContainer: {

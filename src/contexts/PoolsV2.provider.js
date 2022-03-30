@@ -1,5 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
 import API from "../helpers/API"
+import relativeTime from "dayjs/plugin/relativeTime"
+import utc from "dayjs/plugin/utc"
+import dayjs from "dayjs"
 import { getWeekNumber, timeToDateUTC } from "../helpers/helpers"
 const PoolsV2Context = createContext()
 
@@ -11,6 +14,7 @@ export const PoolsV2Provider = ({ children }) => {
 	const [loadingPools, setLoadingPools] = useState(true)
 	const [loadingPool, setLoadingPool] = useState(true)
 	const [loadingPoolChart, setLoadingPoolChart] = useState(true)
+	const [loadingTrx, setLoadingTrx] = useState(true)
 
 	const saveDataChart = useRef({})
 
@@ -45,7 +49,57 @@ export const PoolsV2Provider = ({ children }) => {
 		}
 	}, [])
 
-	
+	const getTrxPool = async ({ poolId, limit = 10, offset = 0 }) => {
+		setLoadingTrx(true)
+		let data = []
+		if (
+			saveDataChart.current[getName("trx", poolId)] &&
+			saveDataChart.current[getName("trx", poolId, limit, offset)].length > 0
+		) {
+			data = saveDataChart.current[getName("trx", poolId, limit, offset)]
+			return data
+		} else {
+			let response = await API.request({
+				url: `https://api-osmosis-chain.imperator.co/swap/v1/pool/${poolId}?only_success=true&limit=${limit}&offset=${offset}`,
+				type: "get",
+				useCompleteURL: true,
+			})
+			dayjs.extend(relativeTime)
+			dayjs.extend(utc)
+
+			data = response.data.map((trx) => {
+				let time = new Date(trx.time_tx)
+				const tzOffset = new Date(trx.time_tx).getTimezoneOffset()
+				let sourceDate = dayjs(trx.time_tx).add(-tzOffset, "minute")
+
+				let timeAgo = dayjs(sourceDate).utc().fromNow(false)
+
+				let addressDisplay = trx.address.substring(0, 5) + "..." + trx.address.substring(trx.address.length - 5)
+				let hashDisplay = trx.tx_hash.substring(0, 5) + "..." + trx.tx_hash.substring(trx.tx_hash.length - 5)
+				let pools = {
+					images: [
+						`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_in.toLowerCase()}.png`,
+						`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_out.toLowerCase()}.png`,
+					],
+					name: `${trx.symbol_in}/${trx.symbol_out}`,
+					routes: trx.swap_route.routes,
+				}
+				return {
+					hash: { value: trx.tx_hash, display: hashDisplay },
+					time: { value: time, display: timeAgo },
+					pools,
+					tokenIn: { value: trx.amount_in, symbol: trx.symbol_in },
+					tokenOut: { value: trx.amount_out, symbol: trx.symbol_out },
+					usd: trx.value_usd,
+					address: { value: trx.address, display: addressDisplay },
+				}
+			})
+			saveDataChart.current = { ...saveDataChart.current, [getName("trx", poolId, limit, offset)]: data }
+		}
+		setLoadingTrx(false)
+		return data
+	}
+
 	const getPools = useCallback(async ({ lowLiquidity = false }) => {
 		setLoadingPools(true)
 		if (
@@ -210,7 +264,9 @@ export const PoolsV2Provider = ({ children }) => {
 				loadingPoolChart,
 				getChartPool,
 				getVolumeChartPool,
-				getLiquidityChartPool
+				getLiquidityChartPool,
+				getTrxPool,
+				loadingTrx,
 			}}
 		>
 			{children}

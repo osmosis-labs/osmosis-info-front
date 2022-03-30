@@ -12,7 +12,9 @@ import InfoCharts from "../../../components/chart/charts/InfoCharts"
 import PoolHeader from "./PoolHeader"
 import PoolInfo from "./PoolInfo"
 import { useCallback } from "react"
-import { usePoolsV2 } from "../../../contexts/PoolsV2.provier"
+import { usePoolsV2 } from "../../../contexts/PoolsV2.provider"
+import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
+import TrxTable from "./trxTable/trxTable"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -21,6 +23,7 @@ const useStyles = makeStyles((theme) => {
 			display: "grid",
 			gridAutoRows: "auto",
 			rowGap: theme.spacing(2),
+			
 		},
 
 		charts: {
@@ -65,8 +68,7 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			flexDirection: "column",
 			flexGrow: "1",
-			[theme.breakpoints.down("xs")]: {
-			},
+			[theme.breakpoints.down("xs")]: {},
 		},
 		headerActions: {
 			alignSelf: "flex-end",
@@ -82,6 +84,11 @@ const useStyles = makeStyles((theme) => {
 				width: "100%",
 			},
 		},
+		trxContainer: {
+			marginBottom: `${theme.spacing(2)}px`,
+			position: "relative",
+			overflow: "hidden",
+		},
 	}
 })
 
@@ -89,7 +96,16 @@ const Pool = ({ showToast }) => {
 	const classes = useStyles()
 	const history = useHistory()
 	const { id } = useParams()
-	const { pools, getPoolData, loadingPoolChart, getChartPool, getVolumeChartPool, getLiquidityChartPool } = usePoolsV2()
+	const {
+		pools,
+		getPoolData,
+		loadingPoolChart,
+		getChartPool,
+		getVolumeChartPool,
+		getLiquidityChartPool,
+		getTrxPool,
+		loadingTrx,
+	} = usePoolsV2()
 
 	//save data here to avoid to re fetching data if is already fetched
 	const [pool, setPool] = useState({})
@@ -375,6 +391,10 @@ const Pool = ({ showToast }) => {
 					</ContainerLoader>
 				</Paper>
 			</div>
+			<Paper className={classes.trxContainer}>
+				<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} borderRadius={true} />
+				<TrxTable getTrxPool={getTrxPool} loadingTrx={loadingTrx} pool={pool} />
+			</Paper>
 		</div>
 	)
 }

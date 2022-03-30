@@ -1,8 +1,8 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import * as serviceWorker from "./serviceWorker"
-import {ThemeProvider } from "@material-ui/core"
-import { createTheme } from '@material-ui/core/styles'
+import { ThemeProvider } from "@material-ui/core"
+import { createTheme } from "@material-ui/core/styles"
 import "./styles/index.css"
 import "./styles/loader.css"
 import "./styles/transitions.css"
@@ -55,15 +55,23 @@ let colors = {
 			dark: "#000000",
 			main: "#191B1F",
 			light: "#1f2128",
-
 			other: "#2C2F36",
 			contrastText: "#FFFFFF",
+		},
+		table: {
+			cell: "#FFFFFFDE",
+			cellDark: "#FFFFFF66",
+			border: "rgb(45, 36, 70)",
+			badgeBackground: "#C4A46A1F",
+			badgeText: "#C4A46A",
+			link: "#4885ff"
 		},
 		gray: {
 			light: "#40444f",
 			main: "#c3c5cb",
 			dark: "#6c7284",
 			textLight: "rgba(255, 255, 255, 0.7)",
+			textDark: "rgba(255, 255, 255, 0.4)",
 			contrastText: "#FFFFFF",
 		},
 		yellow: {
@@ -77,12 +85,14 @@ let colors = {
 			third: "#52EB7D16",
 			text: "#52EB7D",
 			subText: "#00CEBA",
+			background: "#52EB7D2A",
 		},
 		red: {
 			first: "#ef535063",
 			second: "#ef53503D",
 			third: "#ef535016",
 			subText: "#EF3456",
+			background: "#EF34562A",
 		},
 	},
 }
@@ -105,6 +115,11 @@ const theme = createTheme({
 			lg: 960,
 			xl: 1280,
 		},
+	},
+	zIndex: {
+		loader: 100,
+		dialog: 200,
+		appBar: 300,
 	},
 	overrides: {
 		MuiTooltip: {

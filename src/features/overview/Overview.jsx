@@ -12,7 +12,7 @@ import PoolsTable from "../pools/PoolsTable"
 import TokensTable from "../tokens/TokensTable"
 import ContainerChartLiquidity from "./ContainerChartLiquidity"
 import ContainerChartVolume from "./ContainerChartVolume"
-import { usePoolsV2 } from "../../contexts/PoolsV2.provier"
+import { usePoolsV2 } from "../../contexts/PoolsV2.provider"
 import { useTokensV2 } from "../../contexts/TokensV2.provider"
 
 const useStyles = makeStyles((theme) => {

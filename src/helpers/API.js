@@ -15,10 +15,10 @@ class API {
 
 	getURL = () => this.url
 
-	request = ({ url, type, data, params }) => {
+	request = ({ url, type, data, params, useCompleteURL = false }) => {
 		let options = {
 			method: type,
-			url: this.baseURL + url,
+			url: !useCompleteURL ? this.baseURL + url : url,
 		}
 		if (data) options.data = data
 		if (params) options.params = params
