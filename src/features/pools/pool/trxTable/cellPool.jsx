@@ -66,7 +66,7 @@ const CellPool = ({ cellKey, cellConfig, data }) => {
 						)
 					})}
 				</div>
-				P<span className={classes.poolName}>{currentData.name}</span>
+				<span className={classes.poolName}>{currentData.name}</span>
 				{currentData.routes.length > 1 ? <span className={classes.poolBadge}>+{currentData.routes.length}</span> : null}
 			</div>
 			{currentData.routes.length > 1 ? (

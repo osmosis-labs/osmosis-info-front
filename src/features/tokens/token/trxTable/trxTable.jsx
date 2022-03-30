@@ -3,8 +3,8 @@ import { makeStyles, TableCell } from "@material-ui/core"
 import React, { memo, useEffect, useState } from "react"
 import TableCustom from "../../../../components/table/tableCustom"
 import { formateNumberDecimalsAuto } from "../../../../helpers/helpers"
+import CellPool from "../../../pools/pool/trxTable/cellPool"
 import Cell from "./cell"
-import CellPool from "./cellPool"
 import CellSymbol from "./cellSymbol"
 
 const useStyles = makeStyles((theme) => {
@@ -96,8 +96,8 @@ const TrxTable = ({ getTrxToken, loadingTrx, token, className }) => {
 				cellBody: Cell,
 			},
 			{
-				label: "Pool",
-				cellKey: "pool",
+				label: "Pools",
+				cellKey: "pools",
 				sortable: true,
 				customClassHeader: null,
 				customClassCell: null,
