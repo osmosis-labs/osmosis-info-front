@@ -1,3 +1,5 @@
+import { detectBestDecimalsDisplay } from "../../../../helpers/helpers"
+
 const getDataFeed = ({ token, chartReady, getHistoricalChartToken }) => {
 	return {
 		onReady: (callback) => {
@@ -7,6 +9,9 @@ const getDataFeed = ({ token, chartReady, getHistoricalChartToken }) => {
 				currency_codes: [],
 				units: [],
 				supported_resolutions: ["5", "15", "30", "60", "120", "240", "720", "1d", "1W", "1M"],
+				leftPriceScale: {
+					visible: true,
+				},
 			})
 			chartReady()
 		},
@@ -14,7 +19,14 @@ const getDataFeed = ({ token, chartReady, getHistoricalChartToken }) => {
 			onResultReadyCallback([])
 		},
 		resolveSymbol: (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) => {
-			onSymbolResolvedCallback({ ...token, has_intraday: true, timezone: "Etc/UTC", session: "24x7" })
+			onSymbolResolvedCallback({
+				...token,
+				has_intraday: true,
+				timezone: "Etc/UTC",
+				session: "24x7",
+				type: "crypto",
+				pricescale: Math.pow(10, detectBestDecimalsDisplay(token.price)),
+			})
 		},
 		getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
 			const { from, to } = periodParams
@@ -30,7 +42,6 @@ const getDataFeed = ({ token, chartReady, getHistoricalChartToken }) => {
 				}
 				let bars = []
 				data.forEach((bar) => {
-					
 					if (bar.time >= from && bar.time < to) {
 						bars.push({
 							time: bar.time * 1000,
