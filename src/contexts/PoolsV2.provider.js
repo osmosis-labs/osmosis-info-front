@@ -140,7 +140,7 @@ export const PoolsV2Provider = ({ children }) => {
 					volume7d: row[0].volume_7d,
 					volume24h: row[0].volume_24h,
 					volume24hChange: row[0].volume_24h_change,
-					fees: row[0].fees,
+					fees: parseFloat(row[0].fees),
 					apr,
 				}
 			})

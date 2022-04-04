@@ -7,7 +7,7 @@ import Paper from "../../components/paper/Paper"
 import { usePoolsV2 } from "../../contexts/PoolsV2.provider"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
 import { getInclude } from "../../helpers/helpers"
-import PoolsTable from "./PoolsTable"
+import PoolsTable from "./poolsTable/poolsTable"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -17,21 +17,21 @@ const useStyles = makeStyles((theme) => {
 			rowGap: theme.spacing(2),
 			margin: `${theme.spacing(2)}px 0`,
 		},
-		containerLoader:{
+		containerLoader: {
 			overflowX: "hidden",
 			position: "relative",
-			minHeight: "200px"
+			minHeight: "200px",
 		},
-		containerWatchlist:{
+		containerWatchlist: {
 			position: "relative",
 			minWidth: "200px",
-		}
+		},
 	}
 })
 
 const Pools = () => {
 	const classes = useStyles()
-	const { pools, loadingPools} = usePoolsV2()
+	const { pools, loadingPools } = usePoolsV2()
 	// get pools from watch list
 	const { watchlistPools } = useWatchlistPools()
 	const [poolsOnWatchlist, setPoolsOnWatchlist] = useState([])
@@ -89,7 +89,7 @@ const Pools = () => {
 			<p className={classes.subTitle}>All pools</p>
 			<Paper className={classes.containerLoader}>
 				<BlocLoaderOsmosis open={loadingPools} borderRadius={true} />
-				<PoolsTable data={pools} textEmpty={"Any rows"} size={size} onClickPool={onClickPool} sortable={true} />
+				<PoolsTable data={pools} onClickPool={onClickPool} />
 			</Paper>
 		</div>
 	)

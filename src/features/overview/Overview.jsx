@@ -7,13 +7,13 @@ import Paper from "../../components/paper/Paper"
 import { useCharts } from "../../contexts/ChartsProvider"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
-import { getInclude} from "../../helpers/helpers"
-import PoolsTable from "../pools/PoolsTable"
+import { getInclude } from "../../helpers/helpers"
 import TokensTable from "../tokens/TokensTable"
 import ContainerChartLiquidity from "./ContainerChartLiquidity"
 import ContainerChartVolume from "./ContainerChartVolume"
 import { usePoolsV2 } from "../../contexts/PoolsV2.provider"
 import { useTokensV2 } from "../../contexts/TokensV2.provider"
+import PoolsTable from "../pools/poolsTable/poolsTable"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -66,16 +66,16 @@ const useStyles = makeStyles((theme) => {
 				minHeight: "410px",
 			},
 		},
-		containerChart: {  height:'100%' },
+		containerChart: { height: "100%" },
 		containerLoading: {
 			position: "relative",
 			minWidth: "200px",
 			minHeight: "200px",
 		},
-		containerWatchlist:{
+		containerWatchlist: {
 			position: "relative",
 			minWidth: "200px",
-		}
+		},
 	}
 })
 
@@ -99,7 +99,6 @@ const Overview = () => {
 	const [dataPools, setDataPools] = useState([])
 	const [dataTokens, setDataTokens] = useState([])
 	const history = useHistory()
-
 
 	useEffect(() => {
 		// sort pools on the first time is fetched
@@ -243,7 +242,8 @@ const Overview = () => {
 				<p className={classes.subTitle}>Top pools</p>
 				<Paper className={classes.containerLoading}>
 					<BlocLoaderOsmosis open={loadingPools} borderRadius={true} />
-					<PoolsTable data={dataPools} textEmpty={"Any rows"} size={size} sortable={true} onClickPool={onClickPool} />
+					<PoolsTable data={dataPools} onClickPool={onClickPool} />
+					{/* <PoolsTable data={dataPools} textEmpty={"Any rows"} size={size} sortable={true}  onClickPool={onClickPool}/> */}
 				</Paper>
 			</div>
 		</div>

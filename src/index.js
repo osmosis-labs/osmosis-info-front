@@ -64,7 +64,8 @@ let colors = {
 			border: "rgb(45, 36, 70)",
 			badgeBackground: "#C4A46A1F",
 			badgeText: "#C4A46A",
-			link: "#4885ff"
+			link: "#4885ff",
+			hover: "rgba(255, 255, 255, 0.08)"
 		},
 		gray: {
 			light: "#40444f",
