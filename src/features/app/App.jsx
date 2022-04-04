@@ -25,6 +25,8 @@ import { WatchlistIBCProvider } from "../../contexts/WatchlistIBCProvider"
 import { TokensV2Provider } from "../../contexts/TokensV2.provider"
 import { PoolsV2Provider } from "../../contexts/PoolsV2.provider"
 import { TokenChartV2Provider } from "../../contexts/TokenChartV2"
+import NotFound from "../404/notFound"
+import { Redirect } from "react-router-dom"
 const useStyles = makeStyles((theme) => {
 	return {
 		appRoot: {
@@ -139,6 +141,11 @@ const App = () => {
 																			<IBCProvider>
 																				<IBC showToast={showToast} />
 																			</IBCProvider>
+																		</Route>
+																		<Route path="/*">
+																			<div className={classes.content}>
+																				<NotFound showToast={showToast} />
+																			</div>
 																		</Route>
 																	</div>
 																</div>
