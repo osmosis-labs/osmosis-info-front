@@ -3,13 +3,14 @@ import API from "../helpers/API"
 import relativeTime from "dayjs/plugin/relativeTime"
 import utc from "dayjs/plugin/utc"
 import dayjs from "dayjs"
-import { getWeekNumber, timeToDateUTC } from "../helpers/helpers"
+import { getInclude, getWeekNumber, timeToDateUTC } from "../helpers/helpers"
 const PoolsV2Context = createContext()
 
 export const usePoolsV2 = () => useContext(PoolsV2Context)
 
 export const PoolsV2Provider = ({ children }) => {
 	const [pools, setPools] = useState([])
+	const [poolsAPR, setPoolsAPR] = useState([])
 	const saveData = useRef({})
 	const [loadingPools, setLoadingPools] = useState(true)
 	const [loadingPool, setLoadingPool] = useState(true)
@@ -102,6 +103,7 @@ export const PoolsV2Provider = ({ children }) => {
 
 	const getPools = useCallback(async ({ lowLiquidity = false }) => {
 		setLoadingPools(true)
+
 		if (
 			saveData.current[getName("pools", lowLiquidity)] &&
 			saveData.current[getName("pools", lowLiquidity)].length > 0
@@ -111,9 +113,22 @@ export const PoolsV2Provider = ({ children }) => {
 			setLoadingPools(false)
 			return data
 		} else {
-			let response = await API.request({ url: `pools/v2/all?low_liquidity=${lowLiquidity}`, type: "get" })
-			let data = Object.keys(response.data).map((key) => {
-				let row = response.data[key]
+			let promises = [API.request({ url: `pools/v2/all?low_liquidity=${lowLiquidity}`, type: "get" })]
+			if (poolsAPR.length === 0) {
+				promises.push(API.request({ url: `apr/v2/all`, type: "get" }))
+			}
+			let responses = await Promise.all(promises)
+			let responsesPools = responses[0].data
+			let responsesAPR = responses[1].data
+			let data = Object.keys(responsesPools).map((key) => {
+				let row = responsesPools[key]
+				let apr = null
+				let indexAPR = getInclude(responsesAPR, (apr) => {
+					return apr.pool_id + "" === key
+				})
+				if (indexAPR !== -1) {
+					apr = responsesAPR[indexAPR].apr_list
+				}
 				return {
 					id: key,
 					name: row.reduce((acc, currentValue) => {
@@ -126,6 +141,7 @@ export const PoolsV2Provider = ({ children }) => {
 					volume24h: row[0].volume_24h,
 					volume24hChange: row[0].volume_24h_change,
 					fees: row[0].fees,
+					apr,
 				}
 			})
 			setPools(data)
