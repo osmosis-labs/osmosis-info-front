@@ -7,7 +7,7 @@ import Paper from "../../components/paper/Paper"
 import { useTokensV2 } from "../../contexts/TokensV2.provider"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import { getInclude } from "../../helpers/helpers"
-import TokensTable from "./TokensTable"
+import TokensTable from "./tokensTable/tokensTable"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -89,7 +89,7 @@ const Tokens = () => {
 			<p className={classes.subTitle}>All tokens</p>
 			<Paper className={classes.containerLoader}>
 				<BlocLoaderOsmosis open={loadingTokens} borderRadius={true} />
-				<TokensTable data={tokens} textEmpty={"Any rows"} size={size} onClickToken={onClickToken} sortable={true} />
+				<TokensTable data={tokens} onClickToken={onClickToken}/>
 			</Paper>
 		</div>
 	)

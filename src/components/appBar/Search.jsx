@@ -1,4 +1,4 @@
-import { makeStyles, useMediaQuery } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core"
 import { useState } from "react"
 import useFocus from "../../hooks/FocusHook"
 import DialogSearch from "./DialogSearch"
@@ -8,10 +8,10 @@ import { useCallback } from "react"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
 import { useHistory } from "react-router-dom"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
-import TokensTable from "../../features/tokens/TokensTable"
 import { usePoolsV2 } from "../../contexts/PoolsV2.provider"
 import { useTokensV2 } from "../../contexts/TokensV2.provider"
 import PoolsTable from "../../features/pools/poolsTable/poolsTable"
+import TokensTable from "../../features/tokens/tokensTable/tokensTable"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -85,8 +85,6 @@ const Search = () => {
 	const [sizeToken, setSizeToken] = useState(3)
 	const [active, setActive] = useState("all")
 	const [inputSearch, setInputSearch] = useState("")
-	const matchXS = useMediaQuery((theme) => theme.breakpoints.down("xs"))
-	const matchSM = useMediaQuery((theme) => theme.breakpoints.down("sm"))
 	const { pools } = usePoolsV2()
 	const { tokens } = useTokensV2()
 	const { watchlistPools } = useWatchlistPools()
@@ -150,16 +148,11 @@ const Search = () => {
 				return index >= 0
 			})
 		}
-		let data = getSearchedData(dataSort, inputSearch, sizeToken)
+		let data = getSearchedData(dataSort, inputSearch)
 		setDataShowTokens(data)
-	}, [tokens, inputSearch, watchlistTokens, getSearchedData, active, sizeToken])
+	}, [tokens, inputSearch, watchlistTokens, getSearchedData, active])
 
-	const getSize = () => {
-		if (matchXS) return "xs"
-		if (matchSM) return "sm"
-		return "md"
-	}
-
+	
 	const onClickPool = (pool) => {
 		handleClose()
 		history.push(`/pool/${pool.id}`)
@@ -225,14 +218,17 @@ const Search = () => {
 					)}
 					<TokensTable
 						data={dataShowTokens}
-						textEmpty={active === "all" ? "Any rows" : "Saved Tokens will appear here"}
-						size={getSize()}
 						onClickToken={onClickToken}
-						sortable={false}
+						headerClass={classes.headerClass}
+						maxRowDisplay={sizeToken}
+						showFooter={sizeToken > 10}
+						columnsToDisplay={["id", "name", "liquidity"]}
 					/>
-					<p className={classes.showMore} onClick={onClickShowMoreToken}>
-						Show more...
-					</p>
+					{sizeToken < 10 && (
+						<p className={classes.showMore} onClick={onClickShowMoreToken}>
+							Show more...
+						</p>
+					)}
 				</div>
 			</DialogSearch>
 		</div>
