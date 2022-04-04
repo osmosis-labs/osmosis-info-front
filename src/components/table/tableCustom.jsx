@@ -90,7 +90,7 @@ const TableCustom = ({ config, data, customClass }) => {
 		} else {
 			let res = [...data]
 			let currentConfig = getCellConfigByKey(orderBy)
-			let sortMethod = currentConfig.onSort
+			let sortMethod = currentConfig ? currentConfig.onSort : () => {}
 			if (!sortMethod) {
 				if (typeof data[0][currentConfig.cellKey] === "string") {
 					sortMethod = sortString

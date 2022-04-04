@@ -12,6 +12,7 @@ import { usePoolsV2 } from "../../contexts/PoolsV2.provider"
 import { useTokensV2 } from "../../contexts/TokensV2.provider"
 import PoolsTable from "../../features/pools/poolsTable/poolsTable"
 import TokensTable from "../../features/tokens/tokensTable/tokensTable"
+import { useSettings } from "../../contexts/SettingsProvider"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -80,6 +81,16 @@ const useStyles = makeStyles((theme) => {
 const Search = () => {
 	const classes = useStyles()
 	const [inputRef, setInputFocus] = useFocus()
+	const { settings, updateSettings } = useSettings()
+
+	const setSettingsPools = (poolTableSearch) => {
+		updateSettings({ poolTableSearch })
+	}
+
+	const setSettingsTokens = (tokenTableSearch) => {
+		console.log("Search.jsx -> 91: settings", tokenTableSearch)
+		updateSettings({ tokenTableSearch })
+	}
 	const [open, setOpen] = useState(false)
 	const [sizePool, setSizePool] = useState(3)
 	const [sizeToken, setSizeToken] = useState(3)
@@ -152,7 +163,6 @@ const Search = () => {
 		setDataShowTokens(data)
 	}, [tokens, inputSearch, watchlistTokens, getSearchedData, active])
 
-	
 	const onClickPool = (pool) => {
 		handleClose()
 		history.push(`/pool/${pool.id}`)
@@ -203,26 +213,29 @@ const Search = () => {
 					</p>
 				</div>
 				<div className={classes.resultContainer}>
-					<PoolsTable
-						data={dataShowPools}
-						onClickPool={onClickPool}
-						headerClass={classes.headerClass}
-						maxRowDisplay={sizePool}
-						showFooter={sizePool > 10}
-						columnsToDisplay={["id", "name", "liquidity"]}
-					/>
-					{sizePool < 10 && (
-						<p className={classes.showMore} onClick={onClickShowMorePool}>
-							Show more...
-						</p>
-					)}
 					<TokensTable
 						data={dataShowTokens}
 						onClickToken={onClickToken}
 						headerClass={classes.headerClass}
 						maxRowDisplay={sizeToken}
 						showFooter={sizeToken > 10}
-						columnsToDisplay={["id", "name", "liquidity"]}
+						settings={settings.tokenTableSearch}
+						setSettings={setSettingsTokens}
+					/>
+					{sizePool < 10 && (
+						<p className={classes.showMore} onClick={onClickShowMorePool}>
+							Show more...
+						</p>
+					)}
+
+					<PoolsTable
+						data={dataShowPools}
+						onClickPool={onClickPool}
+						headerClass={classes.headerClass}
+						maxRowDisplay={sizePool}
+						showFooter={sizePool > 10}
+						settings={settings.poolTableSearch}
+						setSettings={setSettingsPools}
 					/>
 					{sizeToken < 10 && (
 						<p className={classes.showMore} onClick={onClickShowMoreToken}>

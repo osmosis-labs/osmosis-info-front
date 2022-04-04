@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => {
 			overflow: "hidden",
 			whiteSpace: "nowrap",
             cursor: "pointer",
-
+			fontSize: "16px !important",
 			alignItems: "center",
 			height: "30px",
 			[theme.breakpoints.down("xs")]: {
