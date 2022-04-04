@@ -42,14 +42,14 @@ const TableCustom = ({ config, data, customClass }) => {
 	const sortString = (a, b, orderBy) => {
 		let res = 0
 		if (b[orderBy].length === 0 || a[orderBy].length === 0) {
-			if (a[orderBy].length <= 0) res = -1
-			if (b[orderBy].length <= 0) res = 1
+			if (a[orderBy].length <= 0) res = 1
+			if (b[orderBy].length <= 0) res = -1
 		} else {
 			if (b[orderBy] < a[orderBy]) {
-				res = -1
+				res = 1
 			}
 			if (b[orderBy] > a[orderBy]) {
-				res = 1
+				res = -1
 			}
 		}
 		return res
@@ -110,13 +110,19 @@ const TableCustom = ({ config, data, customClass }) => {
 		)
 	}
 
+	let cutRowStart = page * rowsPerPage
+	let cutRowEnd = page * rowsPerPage + rowsPerPage
+	if (config.maxRowDisplay && rowsPerPage > config.maxRowDisplay) {
+		cutRowEnd = page * rowsPerPage + config.maxRowDisplay
+	}
+
 	return (
 		<div className={`${classes.tableCustom} ${customClass}`}>
 			<Table>
 				<HeaderTableCustom onSort={onSort} cellsHeader={config.cellsConfig} orderBy={orderBy} order={order} />
 				<TableBody>
 					{displayData(data)
-						.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+						.slice(cutRowStart, cutRowEnd)
 						.map((row, index) => {
 							return <RowTableCustom key={index} config={config} data={row} indexRow={index} />
 						})}
@@ -127,15 +133,17 @@ const TableCustom = ({ config, data, customClass }) => {
 					)}
 				</TableBody>
 			</Table>
-			<FooterTableCustom
-				rowsPerPageOptions={config.rowsPerPageOptions}
-				count={data.length}
-				rowsPerPage={rowsPerPage}
-				page={page}
-				onChangePage={onChangePage}
-				onChangeRowsPerPage={onChangeRowsPerPage}
-				callBackEndPage={config.callBackEndPage}
-			/>
+			{config.showFooter && (
+				<FooterTableCustom
+					rowsPerPageOptions={config.rowsPerPageOptions}
+					count={data.length}
+					rowsPerPage={rowsPerPage}
+					page={page}
+					onChangePage={onChangePage}
+					onChangeRowsPerPage={onChangeRowsPerPage}
+					callBackEndPage={config.callBackEndPage}
+				/>
+			)}
 		</div>
 	)
 }

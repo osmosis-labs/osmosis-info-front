@@ -1,6 +1,5 @@
 import { makeStyles, useMediaQuery } from "@material-ui/core"
 import { useState } from "react"
-import PoolsTable from "../../features/pools/PoolsTable"
 import useFocus from "../../hooks/FocusHook"
 import DialogSearch from "./DialogSearch"
 import { getInclude, normalize } from "../../helpers/helpers"
@@ -12,12 +11,13 @@ import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import TokensTable from "../../features/tokens/TokensTable"
 import { usePoolsV2 } from "../../contexts/PoolsV2.provider"
 import { useTokensV2 } from "../../contexts/TokensV2.provider"
+import PoolsTable from "../../features/pools/poolsTable/poolsTable"
 
 const useStyles = makeStyles((theme) => {
 	return {
 		searchRoot: {
 			margin: `${theme.spacing(3)}px ${theme.spacing(4)}px ${theme.spacing(3)}px ${theme.spacing(2)}px`,
-			zIndex: theme.zIndex.appBar-2,
+			zIndex: theme.zIndex.appBar - 2,
 			[theme.breakpoints.down("sm")]: {
 				display: "flex",
 				alignItem: "center",
@@ -70,6 +70,10 @@ const useStyles = makeStyles((theme) => {
 				color: theme.palette.gray.main,
 			},
 		},
+		headerClass: {
+			backgroundColor: theme.palette.primary.dark,
+			borderRadius: 0,
+		},
 	}
 })
 
@@ -111,13 +115,11 @@ const Search = () => {
 			}
 			return 0
 		})
-		return dataSorted
-			.filter(
-				(value) =>
-					normalize(value.name).includes(normalize(searchInput)) ||
-					normalize(value.symbol).includes(normalize(searchInput))
-			)
-			.slice(0, size)
+		return dataSorted.filter(
+			(value) =>
+				normalize(value.name).includes(normalize(searchInput)) ||
+				normalize(value.symbol).includes(normalize(searchInput))
+		)
 	}, [])
 
 	useEffect(() => {
@@ -132,9 +134,9 @@ const Search = () => {
 				return index >= 0
 			})
 		}
-		let data = getSearchedData(dataSort, inputSearch, sizePool)
+		let data = getSearchedData(dataSort, inputSearch)
 		setDataShowPools(data)
-	}, [pools, inputSearch, watchlistPools, getSearchedData, active, sizePool])
+	}, [pools, inputSearch, watchlistPools, getSearchedData, active])
 
 	useEffect(() => {
 		let dataSort = []
@@ -210,14 +212,17 @@ const Search = () => {
 				<div className={classes.resultContainer}>
 					<PoolsTable
 						data={dataShowPools}
-						textEmpty={active === "all" ? "Any rows" : "Saved pools will appear here"}
-						size={getSize()}
 						onClickPool={onClickPool}
-						sortable={false}
+						headerClass={classes.headerClass}
+						maxRowDisplay={sizePool}
+						showFooter={sizePool > 10}
+						columnsToDisplay={["id", "name", "liquidity"]}
 					/>
-					<p className={classes.showMore} onClick={onClickShowMorePool}>
-						Show more...
-					</p>
+					{sizePool < 10 && (
+						<p className={classes.showMore} onClick={onClickShowMorePool}>
+							Show more...
+						</p>
+					)}
 					<TokensTable
 						data={dataShowTokens}
 						textEmpty={active === "all" ? "Any rows" : "Saved Tokens will appear here"}
