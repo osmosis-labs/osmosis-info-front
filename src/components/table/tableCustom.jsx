@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { makeStyles, Table, TableBody, TableCell, TableRow } from "@material-ui/core"
 import HeaderTableCustom from "./header/headerTableCustom"
 import RowTableCustom from "./body/rowTableCustom"
@@ -54,6 +54,18 @@ const TableCustom = ({ config, data, customClass }) => {
 		}
 		return res
 	}
+
+	useEffect(() => {
+		if (config.defaultOrderBy) {
+			setOrderBy(config.defaultOrderBy)
+		}
+	}, [config.defaultOrderBy])
+
+	useEffect(() => {
+		if (config.defaultOrder) {
+			setOrder(config.defaultOrder)
+		}
+	}, [config.defaultOrder])
 
 	const sortNumber = (a, b, orderBy) => {
 		let res = 0

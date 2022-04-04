@@ -8,12 +8,12 @@ import { useCharts } from "../../contexts/ChartsProvider"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
 import { getInclude } from "../../helpers/helpers"
-import TokensTable from "../tokens/TokensTable"
 import ContainerChartLiquidity from "./ContainerChartLiquidity"
 import ContainerChartVolume from "./ContainerChartVolume"
 import { usePoolsV2 } from "../../contexts/PoolsV2.provider"
 import { useTokensV2 } from "../../contexts/TokensV2.provider"
 import PoolsTable from "../pools/poolsTable/poolsTable"
+import TokensTable from "../tokens/tokensTable/tokensTable"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -231,19 +231,19 @@ const Overview = () => {
 				<p className={classes.subTitle}>Top tokens</p>
 				<Paper className={classes.containerLoading}>
 					<BlocLoaderOsmosis open={loadingTokens} borderRadius={true} />
-					<TokensTable
+					{/* <TokensTable
 						data={dataTokens}
 						textEmpty={"Any rows"}
 						size={size}
 						sortable={true}
 						onClickToken={onClickToken}
-					/>
+					/> */}
+					<TokensTable data={dataTokens} onClickToken={onClickToken} />
 				</Paper>
 				<p className={classes.subTitle}>Top pools</p>
 				<Paper className={classes.containerLoading}>
 					<BlocLoaderOsmosis open={loadingPools} borderRadius={true} />
 					<PoolsTable data={dataPools} onClickPool={onClickPool} />
-					{/* <PoolsTable data={dataPools} textEmpty={"Any rows"} size={size} sortable={true}  onClickPool={onClickPool}/> */}
 				</Paper>
 			</div>
 		</div>

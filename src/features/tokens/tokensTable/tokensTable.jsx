@@ -4,14 +4,14 @@ import React, { memo } from "react"
 import TableCustom from "../../../components/table/tableCustom"
 import TableSettings from "../../../components/tableSettings/TableSettings"
 import { useSettings } from "../../../contexts/SettingsProvider"
-import { formaterNumber, getInclude, getPercent } from "../../../helpers/helpers"
-import CellPoolChange from "./cellPoolChange"
-import CellPoolName from "./cellPoolName"
+import { formateNumberDecimalsAuto, formaterNumber, getInclude, getPercent } from "../../../helpers/helpers"
+import CellTokenName from "./cellTokenName"
+import CellTokenChange from "./cellTokenChange"
 
 const useStyles = makeStyles((theme) => {
 	return {
-		poolsTableRoot: {},
-		poolsTable: {},
+		tokensTableRoot: {},
+		tokensTable: {},
 		headerValue: {
 			minWidth: "115px",
 		},
@@ -19,11 +19,11 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const PoolsTable = ({
+const TokensTable = ({
 	data,
-	loadingPools,
+	loadingtokens,
 	className,
-	onClickPool,
+	onClickToken,
 	headerClass,
 	showFooter = true,
 	maxRowDisplay = null,
@@ -33,7 +33,7 @@ const PoolsTable = ({
 	const { settings, updateSettings } = useSettings()
 
 	const setSettings = (settings) => {
-		updateSettings({ poolTable: settings })
+		updateSettings({ tokenTable: settings })
 	}
 
 	const sortId = (a, b, orderBy) => {
@@ -50,8 +50,9 @@ const PoolsTable = ({
 	const transformPriceMK = (price) => {
 		return `$${formaterNumber(price)}`
 	}
-	const transformFees = (data) => {
-		return getPercent(data)
+
+	const formatTokenPrice = (value) => {
+		return "$" + formateNumberDecimalsAuto({ price: value })
 	}
 
 	const cellsConfig = [
@@ -63,21 +64,21 @@ const PoolsTable = ({
 			customClassCell: null,
 			onSort: sortId,
 			align: "right",
-			onClickCell: onClickPool,
+			onClickCell: onClickToken,
 			transform: null,
 			cellBody: null,
 		},
 		{
-			label: "Name",
+			label: "Token",
 			cellKey: "name",
 			sortable: true,
 			customClassHeader: headerClass,
 			customClassCell: null,
 			onSort: null,
 			align: "left",
-			onClickCell: onClickPool,
+			onClickCell: onClickToken,
 			transform: null,
-			cellBody: CellPoolName,
+			cellBody: CellTokenName,
 		},
 		{
 			label: "Liquidity",
@@ -85,11 +86,36 @@ const PoolsTable = ({
 			sortable: true,
 			customClassHeader: headerClass,
 			customClassCell: null,
-			onSort: sortId,
+			onSort: null,
 			align: "right",
-			onClickCell: onClickPool,
+			onClickCell: onClickToken,
 			transform: transformPriceMK,
 			cellBody: null,
+		},
+		{
+			label: "Price",
+			cellKey: "price",
+			sortable: true,
+			customClassHeader: headerClass,
+			customClassCell: null,
+			onSort: null,
+			align: "right",
+			onClickCell: onClickToken,
+			transform: formatTokenPrice,
+			cellBody: null,
+		},
+
+		{
+			label: "Price (24h) change",
+			cellKey: "price24hChange",
+			sortable: true,
+			customClassHeader: headerClass,
+			customClassCell: null,
+			onSort: null,
+			align: "right",
+			onClickCell: onClickToken,
+			transform: getPercent,
+			cellBody: CellTokenChange,
 		},
 		{
 			label: "Volume (24h)",
@@ -97,9 +123,9 @@ const PoolsTable = ({
 			sortable: true,
 			customClassHeader: headerClass,
 			customClassCell: null,
-			onSort: sortId,
+			onSort: null,
 			align: "right",
-			onClickCell: onClickPool,
+			onClickCell: onClickToken,
 			transform: transformPriceMK,
 			cellBody: null,
 		},
@@ -109,42 +135,18 @@ const PoolsTable = ({
 			sortable: true,
 			customClassHeader: headerClass,
 			customClassCell: null,
-			onSort: sortId,
-			align: "right",
-			onClickCell: onClickPool,
-			transform: getPercent,
-			cellBody: CellPoolChange,
-		},
-		{
-			label: "Volume (7d)",
-			cellKey: "volume7d",
-			sortable: true,
-			customClassHeader: headerClass,
-			customClassCell: null,
-			onSort: sortId,
-			align: "right",
-			onClickCell: onClickPool,
-			transform: transformPriceMK,
-			cellBody: null,
-		},
-		{
-			label: "Fees",
-			cellKey: "fees",
-			sortable: true,
-			customClassHeader: headerClass,
-			customClassCell: null,
 			onSort: null,
 			align: "right",
-			onClickCell: onClickPool,
-			transform: transformFees,
-			cellBody: null,
+			onClickCell: onClickToken,
+			transform: getPercent,
+			cellBody: CellTokenChange,
 		},
 	]
 
-	let poolsTableConfig = {
-		defaultSort: "liquidity",
-		defaultOrderBy: "desc",
-		textEmpty: "No pool found",
+	let tokensTableConfig = {
+		defaultOrderBy: "liquidity",
+		defaultOrder: "asc",
+		textEmpty: "No token found",
 		rowsPerPage: 10,
 		rowsPerPageOptions: [5, 10, 20, 50, 100],
 		callBackEndPage: null,
@@ -152,8 +154,8 @@ const PoolsTable = ({
 		maxRowDisplay: maxRowDisplay,
 		cellsConfig: [],
 	}
-	if (settings && settings.poolTable && Array.isArray(settings.poolTable)) {
-		settings.poolTable
+	if (settings && settings.tokenTable && Array.isArray(settings.tokenTable)) {
+		settings.tokenTable
 			.sort((a, b) => a.order - b.order)
 			.forEach((setting) => {
 				if (setting.display) {
@@ -170,21 +172,21 @@ const PoolsTable = ({
 							display = true
 						}
 						if (display) {
-							poolsTableConfig.cellsConfig.push(header[0])
+							tokensTableConfig.cellsConfig.push(header[0])
 						}
 					}
 				}
 			})
 	} else {
-		poolsTableConfig.cellsConfig = [...cellsConfig]
+		tokensTableConfig.cellsConfig = [...cellsConfig]
 	}
-
 	return (
-		<div className={`${classes.poolsTableRoot} ${className}`}>
-			<TableSettings settings={settings.poolTable} setSettings={setSettings} />
-			<TableCustom config={poolsTableConfig} data={data} customClass={classes.poolsTable} />
+		<div className={`${classes.tokensTableRoot} ${className}`}>
+			<TableSettings settings={settings.tokenTable} setSettings={setSettings} />
+
+			<TableCustom config={tokensTableConfig} data={data} customClass={classes.tokensTable} />
 		</div>
 	)
 }
 
-export default memo(PoolsTable)
+export default memo(TokensTable)

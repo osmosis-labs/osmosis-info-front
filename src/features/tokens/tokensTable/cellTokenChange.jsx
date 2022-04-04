@@ -4,7 +4,7 @@ import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 
 const useStyles = makeStyles((theme) => {
 	return {
-		rootCellPoolChange: {},
+		rootCellTokenChange: {},
 		cellUpDown: {
 			display: "flex",
 			justifyContent: "flex-end",
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => {
 		cellDown: { color: theme.palette.error.main },
 	}
 })
-const CellPoolChange = ({ cellKey, cellConfig, data }) => {
+const CellTokenChange = ({ cellKey, cellConfig, data }) => {
 	const classes = useStyles()
 	let currentData = data[cellConfig.cellKey]
 	let valueDisplay = cellConfig.transform ? cellConfig.transform(currentData) : currentData
@@ -47,9 +47,9 @@ const CellPoolChange = ({ cellKey, cellConfig, data }) => {
 				cellConfig.onClickCell(data)
 			}}
 		>
-			<div className={classes.rootCellPoolChange}>{body}</div>
+			<div className={classes.rootCellTokenChange}>{body}</div>
 		</TableCell>
 	)
 }
 
-export default CellPoolChange
+export default CellTokenChange
