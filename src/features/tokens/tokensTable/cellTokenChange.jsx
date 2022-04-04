@@ -4,7 +4,12 @@ import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 
 const useStyles = makeStyles((theme) => {
 	return {
-		rootCellTokenChange: {},
+		rootCellTokenChange: {
+			display: "flex",
+			justifyContent: "flex-end",
+			alignItems: "center",
+			fontSize: "16px !important",
+		},
 		cellUpDown: {
 			display: "flex",
 			justifyContent: "flex-end",

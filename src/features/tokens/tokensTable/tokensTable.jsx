@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core"
 import React, { memo } from "react"
 import TableCustom from "../../../components/table/tableCustom"
 import TableSettings from "../../../components/tableSettings/TableSettings"
-import { useSettings } from "../../../contexts/SettingsProvider"
 import { formateNumberDecimalsAuto, formaterNumber, getInclude, getPercent } from "../../../helpers/helpers"
 import CellTokenName from "./cellTokenName"
 import CellTokenChange from "./cellTokenChange"
@@ -16,6 +15,9 @@ const useStyles = makeStyles((theme) => {
 			minWidth: "115px",
 		},
 		onClickCell: { color: `${theme.palette.table.link} !important` },
+		cell:{
+			fontSize: "16px !important",
+		}
 	}
 })
 
@@ -27,14 +29,10 @@ const TokensTable = ({
 	headerClass,
 	showFooter = true,
 	maxRowDisplay = null,
-	columnsToDisplay = null,
+	settings,
+	setSettings,
 }) => {
 	const classes = useStyles()
-	const { settings, updateSettings } = useSettings()
-
-	const setSettings = (settings) => {
-		updateSettings({ tokenTable: settings })
-	}
 
 	const sortId = (a, b, orderBy) => {
 		let res = 0
@@ -61,7 +59,7 @@ const TokensTable = ({
 			cellKey: "id",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell: null,
+			customClassCell: classes.cell,
 			onSort: sortId,
 			align: "right",
 			onClickCell: onClickToken,
@@ -73,7 +71,7 @@ const TokensTable = ({
 			cellKey: "name",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell: null,
+			customClassCell: classes.cell,
 			onSort: null,
 			align: "left",
 			onClickCell: onClickToken,
@@ -85,7 +83,7 @@ const TokensTable = ({
 			cellKey: "liquidity",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell: null,
+			customClassCell: classes.cell,
 			onSort: null,
 			align: "right",
 			onClickCell: onClickToken,
@@ -97,7 +95,7 @@ const TokensTable = ({
 			cellKey: "price",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell: null,
+			customClassCell: classes.cell,
 			onSort: null,
 			align: "right",
 			onClickCell: onClickToken,
@@ -110,7 +108,7 @@ const TokensTable = ({
 			cellKey: "price24hChange",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell: null,
+			customClassCell: classes.cell,
 			onSort: null,
 			align: "right",
 			onClickCell: onClickToken,
@@ -122,7 +120,7 @@ const TokensTable = ({
 			cellKey: "volume24h",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell: null,
+			customClassCell: classes.cell,
 			onSort: null,
 			align: "right",
 			onClickCell: onClickToken,
@@ -134,7 +132,7 @@ const TokensTable = ({
 			cellKey: "volume24hChange",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell: null,
+			customClassCell: classes.cell,
 			onSort: null,
 			align: "right",
 			onClickCell: onClickToken,
@@ -154,26 +152,14 @@ const TokensTable = ({
 		maxRowDisplay: maxRowDisplay,
 		cellsConfig: [],
 	}
-	if (settings && settings.tokenTable && Array.isArray(settings.tokenTable)) {
-		settings.tokenTable
+	if (settings && Array.isArray(settings)) {
+		settings
 			.sort((a, b) => a.order - b.order)
 			.forEach((setting) => {
 				if (setting.display) {
 					let header = cellsConfig.filter((item) => item.cellKey === setting.key)
-
 					if (header.length > 0) {
-						let display = false
-						if (columnsToDisplay && columnsToDisplay.length > 0) {
-							let index = getInclude(columnsToDisplay, (column) => {
-								return column === setting.key
-							})
-							display = index !== -1
-						} else {
-							display = true
-						}
-						if (display) {
-							tokensTableConfig.cellsConfig.push(header[0])
-						}
+						tokensTableConfig.cellsConfig.push(header[0])
 					}
 				}
 			})
@@ -182,7 +168,7 @@ const TokensTable = ({
 	}
 	return (
 		<div className={`${classes.tokensTableRoot} ${className}`}>
-			<TableSettings settings={settings.tokenTable} setSettings={setSettings} />
+			<TableSettings settings={settings} setSettings={setSettings} />
 
 			<TableCustom config={tokensTableConfig} data={data} customClass={classes.tokensTable} />
 		</div>

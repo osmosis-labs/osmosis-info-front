@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme) => {
 			minWidth: "115px",
 		},
 		onClickCell: { color: `${theme.palette.table.link} !important` },
+        cell:{
+			fontSize: "16px !important",
+		}
 	}
 })
 
@@ -27,14 +30,10 @@ const PoolsTable = ({
 	headerClass,
 	showFooter = true,
 	maxRowDisplay = null,
-	columnsToDisplay = null,
+	settings,
+	setSettings,
 }) => {
 	const classes = useStyles()
-	const { settings, updateSettings } = useSettings()
-
-	const setSettings = (settings) => {
-		updateSettings({ poolTable: settings })
-	}
 
 	const sortId = (a, b, orderBy) => {
 		let res = 0
@@ -60,7 +59,7 @@ const PoolsTable = ({
 			cellKey: "id",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell: null,
+			customClassCell:classes.cell,
 			onSort: sortId,
 			align: "right",
 			onClickCell: onClickPool,
@@ -68,11 +67,11 @@ const PoolsTable = ({
 			cellBody: null,
 		},
 		{
-			label: "Name",
+			label: "Pool",
 			cellKey: "name",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell: null,
+			customClassCell:classes.cell,
 			onSort: null,
 			align: "left",
 			onClickCell: onClickPool,
@@ -84,7 +83,7 @@ const PoolsTable = ({
 			cellKey: "liquidity",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell: null,
+			customClassCell:classes.cell,
 			onSort: sortId,
 			align: "right",
 			onClickCell: onClickPool,
@@ -96,7 +95,7 @@ const PoolsTable = ({
 			cellKey: "volume24h",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell: null,
+			customClassCell:classes.cell,
 			onSort: sortId,
 			align: "right",
 			onClickCell: onClickPool,
@@ -108,7 +107,7 @@ const PoolsTable = ({
 			cellKey: "volume24hChange",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell: null,
+			customClassCell:classes.cell,
 			onSort: sortId,
 			align: "right",
 			onClickCell: onClickPool,
@@ -120,7 +119,7 @@ const PoolsTable = ({
 			cellKey: "volume7d",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell: null,
+			customClassCell:classes.cell,
 			onSort: sortId,
 			align: "right",
 			onClickCell: onClickPool,
@@ -132,7 +131,7 @@ const PoolsTable = ({
 			cellKey: "fees",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell: null,
+			customClassCell:classes.cell,
 			onSort: null,
 			align: "right",
 			onClickCell: onClickPool,
@@ -142,8 +141,8 @@ const PoolsTable = ({
 	]
 
 	let poolsTableConfig = {
-		defaultSort: "liquidity",
-		defaultOrderBy: "desc",
+		defaultOrderBy: "liquidity",
+		defaultOrder: "desc",
 		textEmpty: "No pool found",
 		rowsPerPage: 10,
 		rowsPerPageOptions: [5, 10, 20, 50, 100],
@@ -152,36 +151,24 @@ const PoolsTable = ({
 		maxRowDisplay: maxRowDisplay,
 		cellsConfig: [],
 	}
-	if (settings && settings.poolTable && Array.isArray(settings.poolTable)) {
-		settings.poolTable
+	if (settings && Array.isArray(settings)) {
+		settings
 			.sort((a, b) => a.order - b.order)
 			.forEach((setting) => {
 				if (setting.display) {
 					let header = cellsConfig.filter((item) => item.cellKey === setting.key)
 
 					if (header.length > 0) {
-						let display = false
-						if (columnsToDisplay && columnsToDisplay.length > 0) {
-							let index = getInclude(columnsToDisplay, (column) => {
-								return column === setting.key
-							})
-							display = index !== -1
-						} else {
-							display = true
-						}
-						if (display) {
-							poolsTableConfig.cellsConfig.push(header[0])
-						}
+						poolsTableConfig.cellsConfig.push(header[0])
 					}
 				}
 			})
 	} else {
 		poolsTableConfig.cellsConfig = [...cellsConfig]
 	}
-
 	return (
 		<div className={`${classes.poolsTableRoot} ${className}`}>
-			<TableSettings settings={settings.poolTable} setSettings={setSettings} />
+			<TableSettings settings={settings} setSettings={setSettings} />
 			<TableCustom config={poolsTableConfig} data={data} customClass={classes.poolsTable} />
 		</div>
 	)
