@@ -1,6 +1,8 @@
 import { makeStyles, TableCell } from "@material-ui/core"
 import { getPercent } from "../../../helpers/helpers"
+import CalculateIcon from "@mui/icons-material/Calculate"
 import { useState } from "react"
+import DialogAPR from "./dialogAPR/dialogAPR"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootCellPoolNoAPR: {
@@ -9,13 +11,18 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "center",
 		},
 		rootCellPoolAPR: {
-			display: "flex",
+			display: "grid",
 			justifyContent: "center",
 			alignItems: "center",
+			cursor: "pointer",
+			gridTemplateColumns: "1fr 1fr",
+		},
+		icon: {
+			fontSize: "1.5rem !important",
 		},
 	}
 })
-const CellPoolAPR = ({ cellKey, cellConfig, data }) => {
+const CellPoolAPRTotal = ({ cellKey, cellConfig, data }) => {
 	const classes = useStyles()
 	const [open, setOpen] = useState(false)
 
@@ -39,21 +46,15 @@ const CellPoolAPR = ({ cellKey, cellConfig, data }) => {
 	)
 
 	if (!data.apr) return emptyBody
-	let currentData = null
-	if (cellConfig.cellKey === "internalReturn") {
-		currentData = getPercent(data.apr.display.internal)
-	} else if (data.apr.external) {
-		currentData = getPercent(data.apr.display.external)
-	}
-	if (!currentData) return emptyBody
-
 	return (
 		<TableCell key={cellKey}>
+			<DialogAPR open={open} onClose={onClose} data={data} />
 			<div className={classes.rootCellPoolAPR}>
-				{currentData}
+				<CalculateIcon className={classes.icon} onClick={onOpen} />
+				{getPercent(data.apr.display.total)}
 			</div>
 		</TableCell>
 	)
 }
 
-export default CellPoolAPR
+export default CellPoolAPRTotal

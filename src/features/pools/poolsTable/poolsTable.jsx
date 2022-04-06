@@ -6,6 +6,7 @@ import TableSettings from "../../../components/tableSettings/TableSettings"
 import { useSettings } from "../../../contexts/SettingsProvider"
 import { formaterNumber, getInclude, getPercent } from "../../../helpers/helpers"
 import CellPoolAPR from "./cellPoolAPR"
+import CellPoolAPRTotal from "./cellPoolAPRTotal"
 import CellPoolChange from "./cellPoolChange"
 import CellPoolName from "./cellPoolName"
 
@@ -17,9 +18,9 @@ const useStyles = makeStyles((theme) => {
 			minWidth: "115px",
 		},
 		onClickCell: { color: `${theme.palette.table.link} !important` },
-        cell:{
+		cell: {
 			fontSize: "16px !important",
-		}
+		},
 	}
 })
 
@@ -49,7 +50,32 @@ const PoolsTable = ({
 
 	const onSortApr = (a, b, orderBy) => {
 		let res = 0
-		
+
+		let valA = 0
+		let valB = 0
+		if (a.apr && b.apr) {
+			if (orderBy === "internalReturn") {
+				valA = a.apr.display.internal
+				valB = b.apr.display.internal
+			} else if (orderBy === "externalReturn") {
+				valA = a.apr.display.external
+				valB = b.apr.display.external
+			} else {
+				valA = a.apr.display.total
+				valB = b.apr.display.total
+			}
+
+			if (parseFloat(valB) < parseFloat(valA)) {
+				res = -1
+			}
+			if (parseFloat(valB) > parseFloat(valA)) {
+				res = 1
+			}
+		}else if(a.apr && !b.apr){
+			res = -1
+		}else{
+			res = 1
+		}
 		return res
 	}
 
@@ -66,7 +92,7 @@ const PoolsTable = ({
 			cellKey: "id",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell:classes.cell,
+			customClassCell: classes.cell,
 			onSort: sortId,
 			align: "right",
 			onClickCell: onClickPool,
@@ -78,7 +104,7 @@ const PoolsTable = ({
 			cellKey: "name",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell:classes.cell,
+			customClassCell: classes.cell,
 			onSort: null,
 			align: "left",
 			onClickCell: onClickPool,
@@ -90,7 +116,7 @@ const PoolsTable = ({
 			cellKey: "liquidity",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell:classes.cell,
+			customClassCell: classes.cell,
 			onSort: sortId,
 			align: "right",
 			onClickCell: onClickPool,
@@ -102,7 +128,7 @@ const PoolsTable = ({
 			cellKey: "volume24h",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell:classes.cell,
+			customClassCell: classes.cell,
 			onSort: sortId,
 			align: "right",
 			onClickCell: onClickPool,
@@ -114,7 +140,7 @@ const PoolsTable = ({
 			cellKey: "volume24hChange",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell:classes.cell,
+			customClassCell: classes.cell,
 			onSort: sortId,
 			align: "right",
 			onClickCell: onClickPool,
@@ -126,7 +152,7 @@ const PoolsTable = ({
 			cellKey: "volume7d",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell:classes.cell,
+			customClassCell: classes.cell,
 			onSort: sortId,
 			align: "right",
 			onClickCell: onClickPool,
@@ -138,7 +164,7 @@ const PoolsTable = ({
 			cellKey: "fees",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell:classes.cell,
+			customClassCell: classes.cell,
 			onSort: null,
 			align: "right",
 			onClickCell: onClickPool,
@@ -146,13 +172,25 @@ const PoolsTable = ({
 			cellBody: null,
 		},
 		{
+			label: "Total return",
+			cellKey: "totalReturn",
+			sortable: true,
+			customClassHeader: headerClass,
+			customClassCell: classes.cell,
+			onSort: onSortApr,
+			align: "center",
+			onClickCell: null,
+			transform: null,
+			cellBody: CellPoolAPRTotal,
+		},
+		{
 			label: "Internal return",
 			cellKey: "internalReturn",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell:classes.cell,
+			customClassCell: classes.cell,
 			onSort: onSortApr,
-			align: "center",
+			align: "left",
 			onClickCell: null,
 			transform: null,
 			cellBody: CellPoolAPR,
@@ -162,9 +200,9 @@ const PoolsTable = ({
 			cellKey: "externalReturn",
 			sortable: true,
 			customClassHeader: headerClass,
-			customClassCell:classes.cell,
+			customClassCell: classes.cell,
 			onSort: onSortApr,
-			align: "center",
+			align: "left",
 			onClickCell: null,
 			transform: null,
 			cellBody: CellPoolAPR,

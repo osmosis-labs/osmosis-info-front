@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => {
 		},
 		rowTotal: {
 			display: "grid",
-			gridTemplateColumns: "20px 65px 120px 120px 60px",
+			gridTemplateColumns: "20px 100px 120px 120px 60px",
 			alignItems: "center",
 			gridGap: "0",
 			justifyItems: "end",
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => {
 		},
 		row: {
 			display: "grid",
-			gridTemplateColumns: "20px 65px 120px 120px 60px",
+			gridTemplateColumns: "20px 100px 120px 120px 60px",
 			gridGap: "0",
 			alignItems: "center",
 			justifyItems: "end",
@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme) => {
 })
 const TotalAPR = ({ apr, periode, stacked }) => {
 	const classes = useStyles()
-	const [open, setOpen] = useState(false)
+	const [open, setOpen] = useState(true)
 
 	const [total, setTotal] = useState({ osmo: 0, usd: 0, percent: 0 })
 	const [internal, setInternal] = useState({ osmo: 0, usd: 0, percent: 0 })
@@ -123,7 +123,7 @@ const TotalAPR = ({ apr, periode, stacked }) => {
 		let res = { osmo: 0, usd: 0, percent: 0 }
 		let currentApr = getPeriode(apr.internal) + (hasExternal ? getPeriode(apr.external) : 0)
 		res.percent = currentApr
-		res.usd = ((currentApr * parseFloat(stacked)) / 365) * periode
+		res.usd = (currentApr * parseFloat(stacked)) / 365
 		res.osmo = res.usd / apr.internal.token.price
 
 		setTotal(res)
@@ -134,7 +134,7 @@ const TotalAPR = ({ apr, periode, stacked }) => {
 		let res = { osmo: 0, usd: 0, percent: 0 }
 		let currentApr = getPeriode(apr.internal)
 		res.percent = currentApr
-		res.usd = ((currentApr * parseFloat(stacked)) / 365) * periode
+		res.usd = (currentApr * parseFloat(stacked)) / 365
 		res.osmo = res.usd / apr.internal.token.price
 		setInternal(res)
 		return res
@@ -147,7 +147,7 @@ const TotalAPR = ({ apr, periode, stacked }) => {
 		}
 		let currentApr = getPeriode(apr.external)
 		res.percent = currentApr
-		res.usd = ((currentApr * parseFloat(stacked)) / 365) * periode
+		res.usd = (currentApr * parseFloat(stacked)) / 365
 		res.external = res.usd / apr.internal.token.price
 		setExternal(res)
 		return res
@@ -159,7 +159,7 @@ const TotalAPR = ({ apr, periode, stacked }) => {
 			<p className={classes.resultTitle}>Roi at current rates</p>
 			<div className={`${classes.rowTotal}`} onClick={switchDropdown}>
 				<ArrowDropDownIcon className={`${classes.arrowIcon} ${open ? classes.arrowIconOpened : null}`} />
-				<p className={` ${classes.itemTotal} ${classes.itemInfoTotal}`}>Total</p>
+				<p className={` ${classes.itemTotal} ${classes.itemInfoTotal}`}>Total daily</p>
 				<p className={` ${classes.itemTotal} ${classes.itemUSDTotal}`}>${formaterNumber(total.usd)}</p>
 				<p className={` ${classes.itemTotal}`}>{formaterNumber(total.osmo)} OSMO</p>
 				<p className={`${classes.itemPercent}`}>({getPercent(total.percent)})</p>
@@ -167,7 +167,7 @@ const TotalAPR = ({ apr, periode, stacked }) => {
 			<div className={`${classes.dropdown} ${open ? classes.dropdownOpened : null}`}>
 				<div className={classes.row}>
 					<span></span>
-					<p className={`${classes.item} ${classes.itemInfo}`}>Internal</p>
+					<p className={`${classes.item} ${classes.itemInfo}`}>Internal daily</p>
 					<p className={`${classes.item} ${classes.itemUSD}`}>${formaterNumber(internal.usd)}</p>
 					<p className={`${classes.item}`}>{formaterNumber(internal.osmo)} OSMO</p>
 					<p className={`${classes.itemPercent}`}>({getPercent(internal.percent)})</p>
@@ -175,7 +175,7 @@ const TotalAPR = ({ apr, periode, stacked }) => {
 				{hasExternal && (
 					<div className={classes.row}>
 						<span></span>
-						<p className={`${classes.item} ${classes.itemInfo}`}>External</p>
+						<p className={`${classes.item} ${classes.itemInfo}`}>External daily</p>
 						<p className={`${classes.item} ${classes.itemUSD}`}>${formaterNumber(external.usd)}</p>
 						<p className={`${classes.item}`}>
 							{formaterNumber(external.external)} {external.symbol}

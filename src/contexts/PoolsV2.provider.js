@@ -129,7 +129,7 @@ export const PoolsV2Provider = ({ children }) => {
 						return apr.pool_id + "" === key
 					})
 					if (indexAPR !== -1) {
-						apr = { internal: { apr1d: 0, apr7d: 0, apr14d: 0 } }
+						apr = { display: { total: 0, internal: 0, external: 0 } }
 
 						responsesAPR[indexAPR].apr_list.forEach((aprItem) => {
 							if (aprItem.symbol === "OSMO") {
@@ -159,6 +159,14 @@ export const PoolsV2Provider = ({ children }) => {
 								}
 							}
 						})
+						if (apr.internal) {
+							apr.display.internal = apr.internal.apr14d
+							apr.display.total += apr.internal.apr14d
+						}
+						if (apr.external) {
+							apr.display.external = apr.external.apr14d
+							apr.display.total += apr.external.apr14d
+						}
 					}
 					return {
 						id: key,
