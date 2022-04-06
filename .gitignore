@@ -4,3 +4,4 @@ package-lock.json
 .DS_Store
 deploy_preprod.bat
 www.tar
+.env

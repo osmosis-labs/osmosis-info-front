@@ -25,10 +25,7 @@
 	"scripts": {
 		"startssl": "react-scripts --openssl-legacy-provider start",
 		"start": "react-scripts start",
-		"build": "react-scripts build",
-		"buildpreprod": "env-cmd -f .env.preprod react-scripts build",
-		"buildpreprod2": "env-cmd -f .env.preprod2 react-scripts build",
-		"buildprod": "env-cmd -f .env.prod react-scripts build",
+		"build": "env-cmd -f .env react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"
 	},
