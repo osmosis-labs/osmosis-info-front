@@ -5,6 +5,7 @@ import TableCustom from "../../../components/table/tableCustom"
 import TableSettings from "../../../components/tableSettings/TableSettings"
 import { useSettings } from "../../../contexts/SettingsProvider"
 import { formaterNumber, getInclude, getPercent } from "../../../helpers/helpers"
+import CellPoolAPR from "./cellPoolAPR"
 import CellPoolChange from "./cellPoolChange"
 import CellPoolName from "./cellPoolName"
 
@@ -43,6 +44,12 @@ const PoolsTable = ({
 		if (parseInt(b[orderBy]) > parseInt(a[orderBy])) {
 			res = 1
 		}
+		return res
+	}
+
+	const onSortApr = (a, b, orderBy) => {
+		let res = 0
+		
 		return res
 	}
 
@@ -138,11 +145,35 @@ const PoolsTable = ({
 			transform: transformFees,
 			cellBody: null,
 		},
+		{
+			label: "Internal return",
+			cellKey: "internalReturn",
+			sortable: true,
+			customClassHeader: headerClass,
+			customClassCell:classes.cell,
+			onSort: onSortApr,
+			align: "center",
+			onClickCell: null,
+			transform: null,
+			cellBody: CellPoolAPR,
+		},
+		{
+			label: "External return",
+			cellKey: "externalReturn",
+			sortable: true,
+			customClassHeader: headerClass,
+			customClassCell:classes.cell,
+			onSort: onSortApr,
+			align: "center",
+			onClickCell: null,
+			transform: null,
+			cellBody: CellPoolAPR,
+		},
 	]
 
 	let poolsTableConfig = {
 		defaultOrderBy: "liquidity",
-		defaultOrder: "desc",
+		defaultOrder: "asc",
 		textEmpty: "No pool found",
 		rowsPerPage: 10,
 		rowsPerPageOptions: [5, 10, 20, 50, 100],
