@@ -98,7 +98,7 @@ export const formateNumberDecimals = (price, decimals = 2) => {
 
 export const formaterNumber = (num) => {
 	if (Math.abs(num) < 1_000) {
-		return formateNumberDecimals(num) // if value < 1000, nothing to do
+		return formateNumberDecimalsAuto({ price: num }) // if value < 1000, nothing to do
 	} else if (Math.abs(num) < 1_000_000) {
 		return parseFloat((num / 1000).toFixed(1)) + "K" // convert to K for number from > 1000 < 1 million
 	} else if (Math.abs(num) < 1_000_000_000) {
@@ -115,6 +115,15 @@ export const getInclude = (list, condition) => {
 		i++
 	}
 	return -1
+}
+
+export const getItemInclude = (list, condition) => {
+	let i = 0
+	while (i < list.length) {
+		if (condition(list[i])) return list[i]
+		i++
+	}
+	return null
 }
 
 export const float2Numbers = (num) => Math.round(num * 100) / 100

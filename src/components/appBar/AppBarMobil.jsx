@@ -1,11 +1,10 @@
-import { Dialog, IconButton, List, ListItem, ListItemText, makeStyles, Menu, MenuItem, Slide } from "@material-ui/core"
+import { Dialog, IconButton, makeStyles, Slide } from "@material-ui/core"
 import { forwardRef, useEffect, useState } from "react"
-import { p, useHistory, useLocation } from "react-router-dom"
+import { useHistory, useLocation } from "react-router-dom"
 import logo from "./logo.png"
 import Search from "./Search"
 import MenuIcon from "@material-ui/icons/Menu"
 import CloseIcon from "@material-ui/icons/Close"
-import Paper from "../paper/Paper"
 import PaperDialog from "./PaperDialog"
 
 const useStyles = makeStyles((theme) => {

@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react"
 import useLocalStorage from "../hooks/LocalStorageHook"
-const version = "1.1"
+const version = "1.2"
 const defaultSettings = {
 	tokenTable: [
 		{ name: "Id", display: true, order: 1, key: "id" },
@@ -28,6 +28,8 @@ const defaultSettings = {
 		{ name: "Volume (24h) change", display: true, order: 8, key: "volume24hChange" },
 		{ name: "Volume (7d)", display: true, order: 8, key: "volume7d" },
 		{ name: "Fees", display: true, order: 9, key: "fees" },
+		{ name: "Internal return", display: true, order: 10, key: "internalReturn" },
+		{ name: "External return", display: true, order: 11, key: "externalReturn" },
 	],
 	poolTableSearch: [
 		{ name: "Id", display: true, order: 1, key: "id" },
@@ -37,6 +39,8 @@ const defaultSettings = {
 		{ name: "Volume (24h) change", display: false, order: 8, key: "volume24hChange" },
 		{ name: "Volume (7d)", display: false, order: 8, key: "volume7d" },
 		{ name: "Fees", display: false, order: 9, key: "fees" },
+		{ name: "Internal return", display: false, order: 10, key: "internalReturn" },
+		{ name: "External return", display: false, order: 11, key: "externalReturn" },
 	],
 }
 const SettingsContext = createContext()
