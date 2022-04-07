@@ -36,12 +36,16 @@ const useStyles = makeStyles((theme) => {
 			backgroundColor: theme.palette.primary.dark,
 			border: "none",
 			maxWidth: "250px",
+			
 			textAlign: "right",
 			marginRight: "6px",
 			color: theme.palette.gray.textDark,
 			fontSize: "1.2rem",
 			padding: "8px 0",
 			outline: "none",
+			[theme.breakpoints.down("xs")]: {
+				maxWidth: "150px",
+			},
 		},
 		inputCurrency: {
 			fontSize: "1.2rem",
@@ -54,9 +58,9 @@ const useStyles = makeStyles((theme) => {
 			cursor: "pointer",
 			transition: "all 0.3s !important",
 		},
-        iconSwapRotated:{
-            transform: "rotate(180deg)"
-        }
+		iconSwapRotated: {
+			transform: "rotate(180deg)",
+		},
 	}
 })
 const InputAPR = ({ onChange, value, swapIsOsmos }) => {
@@ -84,9 +88,9 @@ const InputAPR = ({ onChange, value, swapIsOsmos }) => {
 
 	const onClickSwap = () => {
 		if (swapIsOsmos) {
-			onChange(parseFloat(formateNumberDecimalsAuto({ price: valueUSD }).replace(',', '')), !swapIsOsmos)
+			onChange(parseFloat(formateNumberDecimalsAuto({ price: valueUSD }).replace(",", "")), !swapIsOsmos)
 		} else {
-			onChange(parseFloat(formateNumberDecimalsAuto({ price: valueOSMO }).replace(',', '')), !swapIsOsmos)
+			onChange(parseFloat(formateNumberDecimalsAuto({ price: valueOSMO }).replace(",", "")), !swapIsOsmos)
 		}
 	}
 
@@ -117,7 +121,10 @@ const InputAPR = ({ onChange, value, swapIsOsmos }) => {
 						</p>
 					</div>
 				</div>
-				<SwapVertIcon className={`${classes.iconSwap} ${swapIsOsmos?classes.iconSwapRotated:null}`} onClick={onClickSwap} />
+				<SwapVertIcon
+					className={`${classes.iconSwap} ${swapIsOsmos ? classes.iconSwapRotated : null}`}
+					onClick={onClickSwap}
+				/>
 			</div>
 		</div>
 	)

@@ -2,6 +2,7 @@ import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import { formaterNumber, getPercent } from "../../../../helpers/helpers"
+import useSize from "../../../../hooks/sizeHook"
 const useStyles = makeStyles((theme) => {
 	return {
 		resultContainer: {
@@ -14,6 +15,9 @@ const useStyles = makeStyles((theme) => {
 			textTransform: "uppercase",
 			margin: "10px 0",
 			fontSize: "0.9rem",
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "0.8rem",
+			},
 		},
 		rowTotal: {
 			display: "grid",
@@ -22,6 +26,9 @@ const useStyles = makeStyles((theme) => {
 			gridGap: "0",
 			justifyItems: "end",
 			margin: "4px 0",
+			[theme.breakpoints.down("xs")]: {
+				gridTemplateColumns: "20px 50px 100px 100px ",
+			},
 		},
 		row: {
 			display: "grid",
@@ -30,10 +37,16 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "center",
 			justifyItems: "end",
 			margin: "4px 0",
+			[theme.breakpoints.down("xs")]: {
+				gridTemplateColumns: "20px 50px 100px 100px",
+			},
 		},
 		item: {
 			fontSize: "0.9rem",
 			color: theme.palette.gray.textDark,
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "0.8rem",
+			},
 		},
 
 		itemInfo: {
@@ -41,11 +54,17 @@ const useStyles = makeStyles((theme) => {
 			fontSize: "0.9rem",
 			color: theme.palette.gray.textDark,
 			justifySelf: "start",
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "0.8em",
+			},
 		},
 		itemInfoTotal: {
 			fontSize: "0.9rem",
 			color: theme.palette.gray.textDark,
 			justifySelf: "start",
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "0.8rem",
+			},
 		},
 
 		itemPercent: {
@@ -56,18 +75,30 @@ const useStyles = makeStyles((theme) => {
 		itemTotal: {
 			fontSize: "1rem",
 			color: theme.palette.gray.textDark,
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "0.9rem",
+			},
 		},
 		itemUSDTotal: {
 			color: theme.palette.green.subText,
 			fontSize: "1rem",
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "0.9rem",
+			},
 		},
 		itemUSD: {
 			color: theme.palette.green.subText,
 			fontSize: "0.9rem",
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "0.8rem",
+			},
 		},
 		itemResult: {
 			fontSize: "1rem",
 			marginTop: "4px",
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "0.9rem",
+			},
 		},
 
 		dropdown: {
@@ -94,7 +125,7 @@ const useStyles = makeStyles((theme) => {
 const TotalAPR = ({ apr, periode, staked }) => {
 	const classes = useStyles()
 	const [open, setOpen] = useState(true)
-
+	const size = useSize()
 	const [total, setTotal] = useState({ osmo: 0, usd: 0, percent: 0 })
 	const [internal, setInternal] = useState({ osmo: 0, usd: 0, percent: 0 })
 	const [external, setExternal] = useState({ external: 0, usd: 0, percent: 0, symbol: "" })
@@ -162,7 +193,7 @@ const TotalAPR = ({ apr, periode, staked }) => {
 				<p className={` ${classes.itemTotal} ${classes.itemInfoTotal}`}>Total daily</p>
 				<p className={` ${classes.itemTotal} ${classes.itemUSDTotal}`}>${formaterNumber(total.usd)}</p>
 				<p className={` ${classes.itemTotal}`}>{formaterNumber(total.osmo)} OSMO</p>
-				<p className={`${classes.itemPercent}`}>({getPercent(total.percent)})</p>
+				{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(total.percent)})</p>}
 			</div>
 			<div className={`${classes.dropdown} ${open ? classes.dropdownOpened : null}`}>
 				<div className={classes.row}>
@@ -170,7 +201,7 @@ const TotalAPR = ({ apr, periode, staked }) => {
 					<p className={`${classes.item} ${classes.itemInfo}`}>Internal daily</p>
 					<p className={`${classes.item} ${classes.itemUSD}`}>${formaterNumber(internal.usd)}</p>
 					<p className={`${classes.item}`}>{formaterNumber(internal.osmo)} OSMO</p>
-					<p className={`${classes.itemPercent}`}>({getPercent(internal.percent)})</p>
+					{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(internal.percent)})</p>}
 				</div>
 				{hasExternal && (
 					<div className={classes.row}>
@@ -180,7 +211,7 @@ const TotalAPR = ({ apr, periode, staked }) => {
 						<p className={`${classes.item}`}>
 							{formaterNumber(external.external)} {external.symbol}
 						</p>
-						<p className={`${classes.itemPercent}`}>({getPercent(external.percent)})</p>
+						{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(external.percent)})</p>}
 					</div>
 				)}
 			</div>

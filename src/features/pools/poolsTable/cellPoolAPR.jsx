@@ -36,9 +36,6 @@ const CellPoolAPR = ({ cellKey, cellConfig, data }) => {
 	const emptyBody = (
 		<TableCell
 			key={cellKey}
-			onClick={() => {
-				cellConfig.onClickCell(data)
-			}}
 		>
 			<div className={classes.rootCellPoolNoAPR}>-</div>
 		</TableCell>

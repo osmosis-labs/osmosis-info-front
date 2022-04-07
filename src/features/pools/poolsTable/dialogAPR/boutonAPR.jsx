@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => {
 			padding: "8px 30px",
             transition: "background-color .3s",
 			borderRadius: "20px",
+			textAlign: "center",
 			
 		},
 		buttonActive: {
