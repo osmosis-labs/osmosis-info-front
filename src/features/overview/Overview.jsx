@@ -15,6 +15,7 @@ import { useTokensV2 } from "../../contexts/TokensV2.provider"
 import PoolsTable from "../pools/poolsTable/poolsTable"
 import TokensTable from "../tokens/tokensTable/tokensTable"
 import { useSettings } from "../../contexts/SettingsProvider"
+import OverviewBar from "./overviewBar/overviewBar"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -36,8 +37,14 @@ const useStyles = makeStyles((theme) => {
 			pointerEvents: "none",
 			background: `radial-gradient(50% 50% at 50% 60%, ${theme.palette.primary.main} 30%,  ${theme.palette.black.light} 100%)`,
 		},
+		title: {
+			fontSize: "1.6rem",
+			color: theme.palette.gray.contrastText,
+			marginBottom: "20px",
+		},
 		subTitle: {
 			color: theme.palette.gray.main,
+			
 		},
 		container: {
 			display: "grid",
@@ -166,7 +173,7 @@ const Overview = () => {
 	return (
 		<div className={classes.overviewRoot}>
 			<div className={classes.container}>
-				<p className={classes.subTitle}>Osmosis - Overview</p>
+				<p className={classes.title}>Osmosis - Overview</p>
 				<div className={classes.charts}>
 					<Paper className={classes.chart}>
 						<BlocLoaderOsmosis open={loadingData} borderRadius={true} />
@@ -191,6 +198,7 @@ const Overview = () => {
 						</div>
 					</Paper>
 				</div>
+				<OverviewBar />
 				<p className={classes.subTitle}>Your token watchlist</p>
 				<Paper className={classes.containerWatchlist}>
 					{watchlistTokens.length > 0 ? (
