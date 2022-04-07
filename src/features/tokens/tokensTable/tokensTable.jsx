@@ -11,12 +11,20 @@ const useStyles = makeStyles((theme) => {
 	return {
 		tokensTableRoot: {},
 		tokensTable: {},
+		headerCell:{
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "12px  !important",
+			},
+		},
 		headerValue: {
 			minWidth: "115px",
 		},
 		onClickCell: { color: `${theme.palette.table.link} !important` },
 		cell:{
 			fontSize: "16px !important",
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "12px  !important",
+			},
 		}
 	}
 })
@@ -26,7 +34,6 @@ const TokensTable = ({
 	loadingtokens,
 	className,
 	onClickToken,
-	headerClass,
 	showFooter = true,
 	maxRowDisplay = null,
 	settings,
@@ -58,7 +65,7 @@ const TokensTable = ({
 			label: "#",
 			cellKey: "id",
 			sortable: true,
-			customClassHeader: headerClass,
+			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
 			onSort: sortId,
 			align: "right",
@@ -70,7 +77,7 @@ const TokensTable = ({
 			label: "Token",
 			cellKey: "name",
 			sortable: true,
-			customClassHeader: headerClass,
+			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
 			onSort: null,
 			align: "left",
@@ -82,7 +89,7 @@ const TokensTable = ({
 			label: "Liquidity",
 			cellKey: "liquidity",
 			sortable: true,
-			customClassHeader: headerClass,
+			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
 			onSort: null,
 			align: "right",
@@ -94,7 +101,7 @@ const TokensTable = ({
 			label: "Price",
 			cellKey: "price",
 			sortable: true,
-			customClassHeader: headerClass,
+			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
 			onSort: null,
 			align: "right",
@@ -107,7 +114,7 @@ const TokensTable = ({
 			label: "Price (24h) change",
 			cellKey: "price24hChange",
 			sortable: true,
-			customClassHeader: headerClass,
+			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
 			onSort: null,
 			align: "right",
@@ -119,7 +126,7 @@ const TokensTable = ({
 			label: "Volume (24h)",
 			cellKey: "volume24h",
 			sortable: true,
-			customClassHeader: headerClass,
+			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
 			onSort: null,
 			align: "right",
@@ -131,7 +138,7 @@ const TokensTable = ({
 			label: "Volume (24h) change",
 			cellKey: "volume24hChange",
 			sortable: true,
-			customClassHeader: headerClass,
+			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
 			onSort: null,
 			align: "right",

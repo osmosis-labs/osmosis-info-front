@@ -7,11 +7,17 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			justifyContent: "center",
 			alignItems: "center",
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "12px  !important",
+			},
 		},
 		rootCellPoolAPR: {
 			display: "flex",
 			justifyContent: "center",
 			alignItems: "center",
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "12px  !important",
+			},
 		},
 	}
 })
@@ -30,9 +36,6 @@ const CellPoolAPR = ({ cellKey, cellConfig, data }) => {
 	const emptyBody = (
 		<TableCell
 			key={cellKey}
-			onClick={() => {
-				cellConfig.onClickCell(data)
-			}}
 		>
 			<div className={classes.rootCellPoolNoAPR}>-</div>
 		</TableCell>

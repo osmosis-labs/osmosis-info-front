@@ -9,6 +9,9 @@ const useStyles = makeStyles((theme) => {
 			justifyContent: "flex-end",
 			alignItems: "center",
 			fontSize: "16px !important",
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "12px  !important",
+			},
 		},
 		cellUpDown: {
 			display: "flex",

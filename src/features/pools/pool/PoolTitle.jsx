@@ -6,6 +6,9 @@ import StarBorderIcon from "@material-ui/icons/StarBorder"
 import Tooltip from "@material-ui/core/Tooltip"
 import { useWatchlistPools } from "../../../contexts/WatchlistPoolsProvider"
 import { getInclude } from "../../../helpers/helpers"
+import DialogAPR from "../poolsTable/dialogAPR/dialogAPR"
+import CalculateIcon from "@mui/icons-material/Calculate"
+import { useState } from "react"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -48,8 +51,13 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "center",
 			[theme.breakpoints.down("xs")]: {
 				display: "grid",
-				gridTemplateColumns: "1fr 30px",
+				gridTemplateColumns: "1fr 30px 30px",
 			},
+		},
+		icons:{
+			display: "flex",
+			flexDirection: "row",
+			alignItems: "center",
 		},
 		images: {
 			display: "flex",
@@ -59,6 +67,10 @@ const useStyles = makeStyles((theme) => {
 		iconStar: {
 			color: "rgba(196, 164, 106,1)",
 		},
+		icon: {
+			cursor: "pointer",
+			fontSize: "1.5rem !important",
+		},
 	}
 })
 
@@ -66,6 +78,7 @@ const PoolTitle = ({ pool, tokens }) => {
 	const classes = useStyles()
 	const { watchlistPools, setWatchlistPools } = useWatchlistPools()
 	const matchMD = useMediaQuery((theme) => theme.breakpoints.down("md"))
+	const [open, setOpen] = useState(false)
 
 	const toggleWatchlist = () => {
 		let tmpWatchListPools = [...watchlistPools]
@@ -82,8 +95,16 @@ const PoolTitle = ({ pool, tokens }) => {
 		return index >= 0
 	}
 
+	const onOpen = () => {
+		setOpen(true)
+	}
+	const onClose = () => {
+		setOpen(false)
+	}
+
 	return (
 		<div className={classes.poolName}>
+			{pool.apr && <DialogAPR open={open} onClose={onClose} data={pool} />}
 			<div className={classes.images}>
 				{tokens.map((token, index) => {
 					return (
@@ -107,19 +128,21 @@ const PoolTitle = ({ pool, tokens }) => {
 					style={matchMD ? { transform: `translateX(0)` } : { transform: `translateX(-${tokens.length * 20}px)` }}
 					className={classes.subTitle}
 				>{`#${pool.id} ${pool.name}`}</p>
-
-				<Tooltip
-					style={matchMD ? { transform: `translateX(0)` } : { transform: `translateX(-${tokens.length * 20}px)` }}
-					title={isInWatchList() ? "Remove from your watchlist" : "Add to your watchlist"}
-				>
-					<IconButton onClick={toggleWatchlist} aria-label="Switch in your watchList" component="span">
-						{isInWatchList() ? (
-							<StarIcon className={classes.iconStar} />
-						) : (
-							<StarBorderIcon className={classes.iconStar} />
-						)}
-					</IconButton>
-				</Tooltip>
+				<span className={classes.icons}>
+					<Tooltip
+						style={matchMD ? { transform: `translateX(0)` } : { transform: `translateX(-${tokens.length * 20}px)` }}
+						title={isInWatchList() ? "Remove from your watchlist" : "Add to your watchlist"}
+					>
+						<IconButton onClick={toggleWatchlist} aria-label="Switch in your watchList" component="span">
+							{isInWatchList() ? (
+								<StarIcon className={classes.iconStar} />
+							) : (
+								<StarBorderIcon className={classes.iconStar} />
+							)}
+						</IconButton>
+					</Tooltip>
+					{pool.apr && <CalculateIcon  style={matchMD ? { transform: `translateX(0)` } : { transform: `translateX(-${tokens.length * 20}px)` }} className={classes.icon} onClick={onOpen} />}
+				</span>
 			</div>
 		</div>
 	)
