@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme) => {
 		},
 	}
 })
-const TotalAPR = ({ apr, periode, stacked }) => {
+const TotalAPR = ({ apr, periode, staked }) => {
 	const classes = useStyles()
 	const [open, setOpen] = useState(true)
 
@@ -108,7 +108,7 @@ const TotalAPR = ({ apr, periode, stacked }) => {
 			getExternal()
 			setHasExternal(true)
 		}
-	}, [apr, periode, stacked])
+	}, [apr, periode, staked])
 
 	const getPeriode = (apr) => {
 		if (periode === 1) {
@@ -123,7 +123,7 @@ const TotalAPR = ({ apr, periode, stacked }) => {
 		let res = { osmo: 0, usd: 0, percent: 0 }
 		let currentApr = getPeriode(apr.internal) + (hasExternal ? getPeriode(apr.external) : 0)
 		res.percent = currentApr
-		res.usd = (currentApr * parseFloat(stacked)) / 365
+		res.usd = (currentApr * parseFloat(staked)) / 365
 		res.osmo = res.usd / apr.internal.token.price
 
 		setTotal(res)
@@ -134,7 +134,7 @@ const TotalAPR = ({ apr, periode, stacked }) => {
 		let res = { osmo: 0, usd: 0, percent: 0 }
 		let currentApr = getPeriode(apr.internal)
 		res.percent = currentApr
-		res.usd = (currentApr * parseFloat(stacked)) / 365
+		res.usd = (currentApr * parseFloat(staked)) / 365
 		res.osmo = res.usd / apr.internal.token.price
 		setInternal(res)
 		return res
@@ -147,8 +147,8 @@ const TotalAPR = ({ apr, periode, stacked }) => {
 		}
 		let currentApr = getPeriode(apr.external)
 		res.percent = currentApr
-		res.usd = (currentApr * parseFloat(stacked)) / 365
-		res.external = res.usd / apr.internal.token.price
+		res.usd = (currentApr * parseFloat(staked)) / 365
+		res.external = res.usd / apr.external.token.price
 		setExternal(res)
 		return res
 	}

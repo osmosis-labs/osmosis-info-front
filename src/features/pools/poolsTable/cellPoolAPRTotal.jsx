@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => {
 			justifyContent: "center",
 			alignItems: "center",
 			cursor: "pointer",
-			gridTemplateColumns: "1fr 1fr",
+			gridTemplateColumns: "30px 1fr",
 		},
 		icon: {
 			fontSize: "1.5rem !important",
@@ -50,8 +50,8 @@ const CellPoolAPRTotal = ({ cellKey, cellConfig, data }) => {
 		<TableCell key={cellKey}>
 			<DialogAPR open={open} onClose={onClose} data={data} />
 			<div className={classes.rootCellPoolAPR}>
-				{getPercent(data.apr.display.total)}
 				<CalculateIcon className={classes.icon} onClick={onOpen} />
+				{getPercent(data.apr.display.total)}
 			</div>
 		</TableCell>
 	)

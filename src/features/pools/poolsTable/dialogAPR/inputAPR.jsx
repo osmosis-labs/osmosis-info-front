@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => {
         }
 	}
 })
-const InputAPR = ({ onChange, value, setSwapIsOsmos, swapIsOsmos }) => {
+const InputAPR = ({ onChange, value, swapIsOsmos }) => {
 	const classes = useStyles()
 	const { priceOsmoBrut } = usePrices()
 	const [valueUSD, setValueUSD] = useState(0)
@@ -104,7 +104,7 @@ const InputAPR = ({ onChange, value, setSwapIsOsmos, swapIsOsmos }) => {
 
 	return (
 		<div className={classes.rootInputAPR}>
-			<p className={classes.label}>Stacked OSMO</p>
+			<p className={classes.label}>Staked OSMO</p>
 			<div className={classes.containerInput}>
 				<div className={classes.containerValue}>
 					<div className={classes.row}>

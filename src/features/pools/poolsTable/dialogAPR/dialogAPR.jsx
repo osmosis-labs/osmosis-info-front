@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => {
 		},
 		bubles: {
 			display: "grid",
-			gridTemplateColumns: "1fr 1fr 1fr 1fr",
+			gridTemplateColumns: "1fr 1fr 1fr",
 			alignItems: "center",
 			justifyContent: "space-between",
 			marginTop: "10px",
@@ -105,24 +105,23 @@ const DialogAPR = ({ data, open, onClose }) => {
 	const { priceOsmoBrut } = usePrices()
 	const classes = useStyles()
 	const [aprPeriode, setAprPeriode] = useState(14)
-	const [stacked, setStacked] = useState(0)
-	const [stackedUSD, setStackedUSD] = useState(0)
+	const [staked, setStaked] = useState(0)
+	const [stakedUSD, setStakedUSD] = useState(0)
 	const [swapIsOsmos, setSwapIsOsmos] = useState(false)
 
-	const onChangeStacked = (value, swap) => {
+	const onChangeStaked = (value, swap) => {
 		if (swap) {
-			setStackedUSD(value * priceOsmoBrut)
+			setStakedUSD(value * priceOsmoBrut)
 		} else {
-			setStackedUSD(value)
+			setStakedUSD(value)
 		}
-		setStacked(value)
+		setStaked(value)
 		setSwapIsOsmos(swap)
 	}
 
 	const onChangeBuble = (value) => {
-		onChangeStacked(value, false)
+		onChangeStaked(value, swapIsOsmos)
 	}
-
 	return (
 		<Dialog
 			open={open}
@@ -135,30 +134,27 @@ const DialogAPR = ({ data, open, onClose }) => {
 				<CloseIcon className={classes.closeIcon} onClick={onClose} />
 				<div className={classes.title}>
 					<CalculateIcon className={classes.iconTitle} />
-					<p>ROI Calculator</p>
+					<p>ROI Calculator for pool {data.name} </p>
 				</div>
 				<InputAPR
-					onChange={onChangeStacked}
-					value={stacked}
+					onChange={onChangeStaked}
+					value={staked}
 					swapIsOsmos={swapIsOsmos}
 					setSwapIsOsmos={setSwapIsOsmos}
 				/>
 				<div className={classes.bubles}>
 					<span className={classes.buble} onClick={() => onChangeBuble(100)}>
-						$100
+						{swapIsOsmos ? "100 OSMO" : "$100"}
 					</span>
 					<span className={classes.buble} onClick={() => onChangeBuble(500)}>
-						$500
+						{swapIsOsmos ? "500 OSMO" : "$500"}
 					</span>
 					<span className={classes.buble} onClick={() => onChangeBuble(1000)}>
-						$1000
-					</span>
-					<span className={classes.buble} onClick={() => onChangeBuble(2000)}>
-						$2000
+						{swapIsOsmos ? "1000 OSMO" : "$1000"}
 					</span>
 				</div>
 				<div className={classes.stakedDuring}>
-					<p className={classes.stakedDuringTitle}>Stacked during</p>
+					<p className={classes.stakedDuringTitle}>Staked for</p>
 					<ButtonAPR
 						className={classes.stakedDuringButton}
 						buttons={[
@@ -192,7 +188,7 @@ const DialogAPR = ({ data, open, onClose }) => {
 					<ArrowDownwardIcon className={classes.arrowIcon} />
 				</div>
 
-				<TotalAPR apr={data.apr} periode={aprPeriode} stacked={stackedUSD} />
+				<TotalAPR apr={data.apr} periode={aprPeriode} staked={stakedUSD} />
 			</Paper>
 		</Dialog>
 	)
