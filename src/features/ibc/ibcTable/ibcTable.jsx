@@ -1,6 +1,7 @@
 import { makeStyles } from "@material-ui/core"
 
 import React, { memo } from "react"
+import Paper from "../../../components/paper/Paper"
 import TableCustom from "../../../components/table/tableCustom"
 import CellChain from "./cellChain"
 import CellChannel from "./cellChannel"
@@ -99,9 +100,9 @@ const IBCTable = ({ data, loadingIBC, className, updateWatchlistIBC, isInWatchli
 		],//CellSource
 	}
 	return (
-		<div className={`${classes.rootIBCTable} ${className}`}>
+		<Paper className={`${classes.rootIBCTable} ${className}`}>
 			<TableCustom config={configIBCTable} data={data} customClassTable={classes.table} />
-		</div>
+		</Paper>
 	)
 }
 
