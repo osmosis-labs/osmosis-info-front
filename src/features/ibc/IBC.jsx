@@ -8,6 +8,7 @@ import { getInclude } from "../../helpers/helpers"
 import IBCInfo from "./IBCInfo"
 import IBCList from "./IBCList"
 import IBCSearch from "./IBCSearch"
+import IbcTable from "./ibcTable/ibcTable"
 import IBCwatchlist from "./IBCwatchlist"
 const useStyles = makeStyles((theme) => {
 	return {
@@ -56,9 +57,11 @@ const IBC = () => {
 			res = list
 		} else {
 			res = list.filter((ibc) => {
-				return getInclude(ibc, (item) => {
-					return item.token_name.toLowerCase().includes(value.toLowerCase())
-				}) !== -1
+				return (
+					getInclude(ibc, (item) => {
+						return item.token_name.toLowerCase().includes(value.toLowerCase())
+					}) !== -1
+				)
 			})
 		}
 		return res
@@ -109,27 +112,21 @@ const IBC = () => {
 	return (
 		<div className={classes.IBCRoot}>
 			<BlocLoaderOsmosis open={loaderIBC} classNameLoading={classes.loading} />
-			<IBCInfo
-				timeLastUpdate={timeLastUpdate}
-				statusNormal={statusNormal}
-				statusCongested={statusCongested}
-				statusBlocked={statusBlocked}
-				nbNetwork={ibcCouple.length}
-				setIbcFilter={updateFilter}
-				ibcFilter={ibcFilter}
-			/>
-			<IBCwatchlist ibcCouple={ibcCouple} />
+				<IBCInfo
+					timeLastUpdate={timeLastUpdate}
+					statusNormal={statusNormal}
+					statusCongested={statusCongested}
+					statusBlocked={statusBlocked}
+					nbNetwork={ibcCouple.length}
+					setIbcFilter={updateFilter}
+					ibcFilter={ibcFilter}
+				/>
+				<IBCwatchlist ibcCouple={ibcCouple} />
 			<div className={classes.content}>
 				<p className={classes.subTitle}>IBC list</p>
+				<IBCSearch ibcSearch={ibcSearch} setIbcSearch={setIbcSearch} />
+				<IbcTable data={ibcSearchList} updateWatchlistIBC={updateWatchlistIBC} isInWatchlist={isInWatchlist} />
 			</div>
-			<IBCSearch ibcSearch={ibcSearch} setIbcSearch={setIbcSearch} />
-			{ibcSearchList.length === 0 ? (
-				<div className={classes.content}>
-					<p className={classes.info}>No result</p>
-				</div>
-			) : (
-				<IBCList ibcCouple={ibcSearchList} updateWatchlistIBC={updateWatchlistIBC} isInWatchlist={isInWatchlist} />
-			)}
 		</div>
 	)
 }
