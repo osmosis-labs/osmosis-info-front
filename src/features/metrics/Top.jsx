@@ -1,11 +1,11 @@
 import { makeStyles } from "@material-ui/core"
-import Paper from "../../../components/paper/Paper"
-import { useMetrics } from "../../../contexts/MetricsProvider"
-import TopItem from "./TopItem"
 import ShowChartIcon from "@material-ui/icons/ShowChart"
 import { useEffect, useState } from "react"
-import ButtonGroup from "../../../components/buttonGroup/ButtonGroup"
-import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
+import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
+import ButtonGroup from "../../components/buttonGroup/ButtonGroup"
+import TopItem from "./TopItem"
+import Paper from "../../components/paper/Paper"
+import { useMetrics } from "../../contexts/MetricsProvider"
 const useStyles = makeStyles((theme) => {
 	return {
 		topRoot: {
