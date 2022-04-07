@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const TableCustom = ({ config, data, customClass }) => {
+const TableCustom = ({ config, data, customClass, customClassTable }) => {
 	const classes = useStyles()
 	const [order, setOrder] = useState(config.defaultOrder)
 	const [orderBy, setOrderBy] = useState(config.defaultOrderBy)
@@ -130,7 +130,7 @@ const TableCustom = ({ config, data, customClass }) => {
 
 	return (
 		<div className={`${classes.tableCustom} ${customClass}`}>
-			<Table>
+			<Table className={customClassTable}>
 				<HeaderTableCustom onSort={onSort} cellsHeader={config.cellsConfig} orderBy={orderBy} order={order} />
 				<TableBody>
 					{displayData(data)

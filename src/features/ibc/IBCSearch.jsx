@@ -7,11 +7,9 @@ const useStyles = makeStyles((theme) => {
 			width: "100vw",
 			display: "flex",
 			flexDirection: "column",
-			alignItems: "center",
 		},
 		content: {
 			maxWidth: "1200px",
-			width: "90%",
 		},
 		input: {
 			backgroundColor: theme.palette.primary.light,
