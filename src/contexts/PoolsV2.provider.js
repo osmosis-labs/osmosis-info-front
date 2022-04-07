@@ -3,19 +3,21 @@ import API from "../helpers/API"
 import relativeTime from "dayjs/plugin/relativeTime"
 import utc from "dayjs/plugin/utc"
 import dayjs from "dayjs"
-import { getWeekNumber, timeToDateUTC } from "../helpers/helpers"
+import { getInclude, getItemInclude, getWeekNumber, timeToDateUTC } from "../helpers/helpers"
+import { useTokensV2 } from "./TokensV2.provider"
 const PoolsV2Context = createContext()
 
 export const usePoolsV2 = () => useContext(PoolsV2Context)
 
 export const PoolsV2Provider = ({ children }) => {
 	const [pools, setPools] = useState([])
+	const { tokens } = useTokensV2()
+	const [poolsAPR, setPoolsAPR] = useState([])
 	const saveData = useRef({})
 	const [loadingPools, setLoadingPools] = useState(true)
 	const [loadingPool, setLoadingPool] = useState(true)
 	const [loadingPoolChart, setLoadingPoolChart] = useState(true)
 	const [loadingTrx, setLoadingTrx] = useState(true)
-
 	const saveDataChart = useRef({})
 
 	const getName = (chartType, range = "-", poolId = "-") => {
@@ -100,39 +102,94 @@ export const PoolsV2Provider = ({ children }) => {
 		return data
 	}
 
-	const getPools = useCallback(async ({ lowLiquidity = false }) => {
-		setLoadingPools(true)
-		if (
-			saveData.current[getName("pools", lowLiquidity)] &&
-			saveData.current[getName("pools", lowLiquidity)].length > 0
-		) {
-			let data = saveData.current[getName("pools", lowLiquidity)]
-			setPools(data)
-			setLoadingPools(false)
-			return data
-		} else {
-			let response = await API.request({ url: `pools/v2/all?low_liquidity=${lowLiquidity}`, type: "get" })
-			let data = Object.keys(response.data).map((key) => {
-				let row = response.data[key]
-				return {
-					id: key,
-					name: row.reduce((acc, currentValue) => {
-						let symbolName = currentValue.symbol.length === 0 ? currentValue.denom : currentValue.symbol
-						return `${acc}${acc.length > 0 ? "-" : ""}${symbolName}`
-					}, ""),
-					liquidity: row[0].liquidity,
-					liquidity24hChange: row[0].liquidity_24h_change,
-					volume7d: row[0].volume_7d,
-					volume24h: row[0].volume_24h,
-					volume24hChange: row[0].volume_24h_change,
-					fees: row[0].fees,
+	const getPools = useCallback(
+		async ({ lowLiquidity = false }) => {
+			setLoadingPools(true)
+
+			if (
+				saveData.current[getName("pools", lowLiquidity)] &&
+				saveData.current[getName("pools", lowLiquidity)].length > 0
+			) {
+				let data = saveData.current[getName("pools", lowLiquidity)]
+				setPools(data)
+				setLoadingPools(false)
+				return data
+			} else {
+				let promises = [API.request({ url: `pools/v2/all?low_liquidity=${lowLiquidity}`, type: "get" })]
+				if (poolsAPR.length === 0) {
+					promises.push(API.request({ url: `apr/v2/all`, type: "get" }))
 				}
-			})
-			setPools(data)
-			setLoadingPools(false)
-			return data
-		}
-	}, [])
+				let responses = await Promise.all(promises)
+				let responsesPools = responses[0].data
+				let responsesAPR = responses[1].data
+				let data = Object.keys(responsesPools).map((key) => {
+					let row = responsesPools[key]
+					let apr = null
+					let indexAPR = getInclude(responsesAPR, (apr) => {
+						return apr.pool_id + "" === key
+					})
+					if (indexAPR !== -1) {
+						apr = { display: { total: 0, internal: 0, external: 0 } }
+
+						responsesAPR[indexAPR].apr_list.forEach((aprItem) => {
+							if (aprItem.symbol === "OSMO") {
+								let date = new Date(aprItem.start_date)
+								if (date <= new Date()) {
+									let token = getItemInclude(tokens, (token) => aprItem.symbol === token.symbol)
+									if (!apr.internal) {
+										apr.internal = { apr1d: 0, apr7d: 0, apr14d: 0, token }
+									}
+									apr.internal.apr1d = aprItem.apr_1d
+									apr.internal.apr7d = aprItem.apr_7d
+									apr.internal.apr14d = aprItem.apr_14d
+									apr.internal.token = token
+								}
+							} else {
+								let date = new Date(aprItem.start_date)
+								if (date <= new Date()) {
+									let token = getItemInclude(tokens, (token) => aprItem.symbol === token.symbol)
+
+									if (!apr.external) {
+										apr.external = { apr1d: 0, apr7d: 0, apr14d: 0, token }
+									}
+									apr.external.apr1d += aprItem.apr_1d
+									apr.external.apr7d += aprItem.apr_7d
+									apr.external.apr14d += aprItem.apr_14d
+									apr.external.token = token
+								}
+							}
+						})
+						if (apr.internal) {
+							apr.display.internal = apr.internal.apr14d
+							apr.display.total += apr.internal.apr14d
+						}
+						if (apr.external) {
+							apr.display.external = apr.external.apr14d
+							apr.display.total += apr.external.apr14d
+						}
+					}
+					return {
+						id: key,
+						name: row.reduce((acc, currentValue) => {
+							let symbolName = currentValue.symbol.length === 0 ? currentValue.denom : currentValue.symbol
+							return `${acc}${acc.length > 0 ? "-" : ""}${symbolName}`
+						}, ""),
+						liquidity: row[0].liquidity,
+						liquidity24hChange: row[0].liquidity_24h_change,
+						volume7d: row[0].volume_7d,
+						volume24h: row[0].volume_24h,
+						volume24hChange: row[0].volume_24h_change,
+						fees: parseFloat(row[0].fees),
+						apr,
+					}
+				})
+				setPools(data)
+				setLoadingPools(false)
+				return data
+			}
+		},
+		[tokens]
+	)
 
 	const getLiquidityChartPool = useCallback(async ({ poolId, range = "d" }) => {
 		setLoadingPoolChart(true)
@@ -247,11 +304,13 @@ export const PoolsV2Provider = ({ children }) => {
 
 	useEffect(() => {
 		let fetch = async () => {
-			setLoadingPools(false)
-			getPools({})
+			if (tokens && tokens.length > 0) {
+				setLoadingPools(false)
+				getPools({})
+			}
 		}
 		fetch()
-	}, [])
+	}, [tokens])
 
 	return (
 		<PoolsV2Context.Provider

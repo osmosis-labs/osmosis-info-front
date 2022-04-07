@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme) => {
 				padding: "12px !important",
 				borderBottom: `1px solid ${theme.palette.table.border}`,
 			},
+			"&:hover": {
+				backgroundColor: theme.palette.table.hover,
+			}
 		},
 	}
 })

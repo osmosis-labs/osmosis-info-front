@@ -1,13 +1,14 @@
-import { makeStyles, useMediaQuery } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core"
 import { useEffect } from "react"
 import { useState } from "react"
 import { useHistory } from "react-router-dom"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
+import { useSettings } from "../../contexts/SettingsProvider"
 import { useTokensV2 } from "../../contexts/TokensV2.provider"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import { getInclude } from "../../helpers/helpers"
-import TokensTable from "./TokensTable"
+import TokensTable from "./tokensTable/tokensTable"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -17,44 +18,30 @@ const useStyles = makeStyles((theme) => {
 			gridAutoRows: "auto",
 			rowGap: theme.spacing(2),
 		},
-		containerLoader:{
+		containerLoader: {
 			position: "relative",
 			overflowX: "hidden",
-			minHeight: "200px"
+			minHeight: "200px",
 		},
-		containerWatchlist:{
+		containerWatchlist: {
 			position: "relative",
 			minWidth: "200px",
-		}
+		},
 	}
 })
 
 const Tokens = () => {
 	const classes = useStyles()
 	const { tokens, loadingTokens } = useTokensV2()
+	const { settings, updateSettings } = useSettings()
+
+	const setSettingsTokens = (settings) => {
+		updateSettings({ tokenTable: settings })
+	}
 	// get tokens from watch list
 	const { watchlistTokens } = useWatchlistTokens()
 	const [tokensOnWatchlist, setTokensOnWatchlist] = useState([])
 	const history = useHistory()
-	const [size, setSize] = useState("xl")
-	const matchXS = useMediaQuery((theme) => theme.breakpoints.down("xs"))
-	const matchSM = useMediaQuery((theme) => theme.breakpoints.down("sm"))
-	const matchMD = useMediaQuery((theme) => theme.breakpoints.down("md"))
-	const matchLD = useMediaQuery((theme) => theme.breakpoints.down("ld"))
-
-	useEffect(() => {
-		if (matchXS) {
-			setSize("xs")
-		} else if (matchSM) {
-			setSize("sm")
-		} else if (matchMD) {
-			setSize("md")
-		} else if (matchLD) {
-			setSize("ld")
-		} else {
-			setSize("xl")
-		}
-	}, [matchXS, matchSM, matchMD, matchLD])
 
 	const onClickToken = (token) => {
 		history.push(`/token/${token.symbol}`)
@@ -77,10 +64,9 @@ const Tokens = () => {
 				{watchlistTokens.length > 0 ? (
 					<TokensTable
 						data={tokensOnWatchlist}
-						textEmpty={"Any rows"}
-						size={size}
 						onClickToken={onClickToken}
-						sortable={true}
+						setSettings={setSettingsTokens}
+						settings={settings.tokenTable}
 					/>
 				) : (
 					<p>Saved tokens will appear here</p>
@@ -89,7 +75,12 @@ const Tokens = () => {
 			<p className={classes.subTitle}>All tokens</p>
 			<Paper className={classes.containerLoader}>
 				<BlocLoaderOsmosis open={loadingTokens} borderRadius={true} />
-				<TokensTable data={tokens} textEmpty={"Any rows"} size={size} onClickToken={onClickToken} sortable={true} />
+				<TokensTable
+					data={tokens}
+					onClickToken={onClickToken}
+					setSettings={setSettingsTokens}
+					settings={settings.tokenTable}
+				/>
 			</Paper>
 		</div>
 	)

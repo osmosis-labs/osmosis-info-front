@@ -13,12 +13,6 @@ import App from "./features/app/App"
 let colors = {
 	palette: {
 		type: "dark",
-		// primary: {
-		//   light: "#b65bee",
-		//   main: "#8229bb",
-		//   dark: "#4f008a",
-		//   contrastText: "#ffffff",
-		// },
 		primary: {
 			light: "rgb(45, 39, 85)",
 			lightLowOpacity: "rgba(45, 39, 85, 0.9)",
@@ -64,7 +58,8 @@ let colors = {
 			border: "rgb(45, 36, 70)",
 			badgeBackground: "#C4A46A1F",
 			badgeText: "#C4A46A",
-			link: "#4885ff"
+			link: "#4885ff",
+			hover: "rgba(255, 255, 255, 0.08)"
 		},
 		gray: {
 			light: "#40444f",
@@ -72,12 +67,17 @@ let colors = {
 			dark: "#6c7284",
 			textLight: "rgba(255, 255, 255, 0.7)",
 			textDark: "rgba(255, 255, 255, 0.4)",
+			textDark2: "rgba(255, 255, 255, 0.2)",
+			textDark3: "rgba(255, 255, 255, 0.1)",
 			contrastText: "#FFFFFF",
 		},
 		yellow: {
 			main: "#dddf39",
 			rgb: "221, 223, 57",
 			gold: "#C4A46A",
+		},
+		blue:{
+			main: "#322DC2"
 		},
 		green: {
 			first: "#52EB7D63",

@@ -1,6 +1,5 @@
-import { makeStyles, useMediaQuery } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core"
 import { useState } from "react"
-import PoolsTable from "../../features/pools/PoolsTable"
 import useFocus from "../../hooks/FocusHook"
 import DialogSearch from "./DialogSearch"
 import { getInclude, normalize } from "../../helpers/helpers"
@@ -9,15 +8,17 @@ import { useCallback } from "react"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
 import { useHistory } from "react-router-dom"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
-import TokensTable from "../../features/tokens/TokensTable"
 import { usePoolsV2 } from "../../contexts/PoolsV2.provider"
 import { useTokensV2 } from "../../contexts/TokensV2.provider"
+import PoolsTable from "../../features/pools/poolsTable/poolsTable"
+import TokensTable from "../../features/tokens/tokensTable/tokensTable"
+import { useSettings } from "../../contexts/SettingsProvider"
 
 const useStyles = makeStyles((theme) => {
 	return {
 		searchRoot: {
 			margin: `${theme.spacing(3)}px ${theme.spacing(4)}px ${theme.spacing(3)}px ${theme.spacing(2)}px`,
-			zIndex: theme.zIndex.appBar-2,
+			zIndex: theme.zIndex.appBar - 2,
 			[theme.breakpoints.down("sm")]: {
 				display: "flex",
 				alignItem: "center",
@@ -70,19 +71,31 @@ const useStyles = makeStyles((theme) => {
 				color: theme.palette.gray.main,
 			},
 		},
+		headerClass: {
+			backgroundColor: theme.palette.primary.dark,
+			borderRadius: 0,
+		},
 	}
 })
 
 const Search = () => {
 	const classes = useStyles()
 	const [inputRef, setInputFocus] = useFocus()
+	const { settings, updateSettings } = useSettings()
+
+	const setSettingsPools = (poolTableSearch) => {
+		updateSettings({ poolTableSearch })
+	}
+
+	const setSettingsTokens = (tokenTableSearch) => {
+		console.log("Search.jsx -> 91: settings", tokenTableSearch)
+		updateSettings({ tokenTableSearch })
+	}
 	const [open, setOpen] = useState(false)
 	const [sizePool, setSizePool] = useState(3)
 	const [sizeToken, setSizeToken] = useState(3)
 	const [active, setActive] = useState("all")
 	const [inputSearch, setInputSearch] = useState("")
-	const matchXS = useMediaQuery((theme) => theme.breakpoints.down("xs"))
-	const matchSM = useMediaQuery((theme) => theme.breakpoints.down("sm"))
 	const { pools } = usePoolsV2()
 	const { tokens } = useTokensV2()
 	const { watchlistPools } = useWatchlistPools()
@@ -111,13 +124,11 @@ const Search = () => {
 			}
 			return 0
 		})
-		return dataSorted
-			.filter(
-				(value) =>
-					normalize(value.name).includes(normalize(searchInput)) ||
-					normalize(value.symbol).includes(normalize(searchInput))
-			)
-			.slice(0, size)
+		return dataSorted.filter(
+			(value) =>
+				normalize(value.name).includes(normalize(searchInput)) ||
+				normalize(value.symbol).includes(normalize(searchInput))
+		)
 	}, [])
 
 	useEffect(() => {
@@ -132,9 +143,9 @@ const Search = () => {
 				return index >= 0
 			})
 		}
-		let data = getSearchedData(dataSort, inputSearch, sizePool)
+		let data = getSearchedData(dataSort, inputSearch)
 		setDataShowPools(data)
-	}, [pools, inputSearch, watchlistPools, getSearchedData, active, sizePool])
+	}, [pools, inputSearch, watchlistPools, getSearchedData, active])
 
 	useEffect(() => {
 		let dataSort = []
@@ -148,15 +159,9 @@ const Search = () => {
 				return index >= 0
 			})
 		}
-		let data = getSearchedData(dataSort, inputSearch, sizeToken)
+		let data = getSearchedData(dataSort, inputSearch)
 		setDataShowTokens(data)
-	}, [tokens, inputSearch, watchlistTokens, getSearchedData, active, sizeToken])
-
-	const getSize = () => {
-		if (matchXS) return "xs"
-		if (matchSM) return "sm"
-		return "md"
-	}
+	}, [tokens, inputSearch, watchlistTokens, getSearchedData, active])
 
 	const onClickPool = (pool) => {
 		handleClose()
@@ -208,26 +213,35 @@ const Search = () => {
 					</p>
 				</div>
 				<div className={classes.resultContainer}>
-					<PoolsTable
-						data={dataShowPools}
-						textEmpty={active === "all" ? "Any rows" : "Saved pools will appear here"}
-						size={getSize()}
-						onClickPool={onClickPool}
-						sortable={false}
-					/>
-					<p className={classes.showMore} onClick={onClickShowMorePool}>
-						Show more...
-					</p>
 					<TokensTable
 						data={dataShowTokens}
-						textEmpty={active === "all" ? "Any rows" : "Saved Tokens will appear here"}
-						size={getSize()}
 						onClickToken={onClickToken}
-						sortable={false}
+						headerClass={classes.headerClass}
+						maxRowDisplay={sizeToken}
+						showFooter={sizeToken > 10}
+						settings={settings.tokenTableSearch}
+						setSettings={setSettingsTokens}
 					/>
-					<p className={classes.showMore} onClick={onClickShowMoreToken}>
-						Show more...
-					</p>
+					{sizePool < 10 && (
+						<p className={classes.showMore} onClick={onClickShowMorePool}>
+							Show more...
+						</p>
+					)}
+
+					<PoolsTable
+						data={dataShowPools}
+						onClickPool={onClickPool}
+						headerClass={classes.headerClass}
+						maxRowDisplay={sizePool}
+						showFooter={sizePool > 10}
+						settings={settings.poolTableSearch}
+						setSettings={setSettingsPools}
+					/>
+					{sizeToken < 10 && (
+						<p className={classes.showMore} onClick={onClickShowMoreToken}>
+							Show more...
+						</p>
+					)}
 				</div>
 			</DialogSearch>
 		</div>
