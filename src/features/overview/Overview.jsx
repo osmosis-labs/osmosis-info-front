@@ -14,6 +14,7 @@ import ContainerChartLiquidity from "./ContainerChartLiquidity"
 import ContainerChartVolume from "./ContainerChartVolume"
 import { usePoolsV2 } from "../../contexts/PoolsV2.provider"
 import { useTokensV2 } from "../../contexts/TokensV2.provider"
+import OverviewBar from "./overviewBar/overviewBar"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -207,6 +208,7 @@ const Overview = () => {
 						</div>
 					</Paper>
 				</div>
+				<OverviewBar />
 				<p className={classes.subTitle}>Your token watchlist</p>
 				<Paper className={classes.containerWatchlist}>
 					{watchlistTokens.length > 0 ? (
