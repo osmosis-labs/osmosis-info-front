@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => {
 		},
 		rowTotal: {
 			display: "grid",
-			gridTemplateColumns: "20px 100px 120px 120px 60px",
+			gridTemplateColumns: "20px 100px 130px 130px 60px",
 			alignItems: "center",
 			gridGap: "0",
 			justifyItems: "end",
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => {
 		},
 		row: {
 			display: "grid",
-			gridTemplateColumns: "20px 100px 120px 120px 60px",
+			gridTemplateColumns: "20px 100px 130px 130px 60px",
 			gridGap: "0",
 			alignItems: "center",
 			justifyItems: "end",
@@ -121,7 +121,7 @@ const TotalAPR = ({ apr, periode, staked }) => {
 
 	const getTotal = (hasExternal) => {
 		let res = { osmo: 0, usd: 0, percent: 0 }
-		let currentApr = getPeriode(apr.internal) + (hasExternal ? getPeriode(apr.external) : 0)
+		let currentApr = getPeriode(apr.internal) / 100 + (hasExternal ? getPeriode(apr.external) / 100 : 0)
 		res.percent = currentApr
 		res.usd = (currentApr * parseFloat(staked)) / 365
 		res.osmo = res.usd / apr.internal.token.price
@@ -134,7 +134,7 @@ const TotalAPR = ({ apr, periode, staked }) => {
 		let res = { osmo: 0, usd: 0, percent: 0 }
 		let currentApr = getPeriode(apr.internal)
 		res.percent = currentApr
-		res.usd = (currentApr * parseFloat(staked)) / 365
+		res.usd = ((currentApr / 100) * parseFloat(staked)) / 365
 		res.osmo = res.usd / apr.internal.token.price
 		setInternal(res)
 		return res
@@ -147,7 +147,7 @@ const TotalAPR = ({ apr, periode, staked }) => {
 		}
 		let currentApr = getPeriode(apr.external)
 		res.percent = currentApr
-		res.usd = (currentApr * parseFloat(staked)) / 365
+		res.usd = ((currentApr / 100) * parseFloat(staked)) / 365
 		res.external = res.usd / apr.external.token.price
 		setExternal(res)
 		return res
