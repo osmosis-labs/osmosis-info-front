@@ -15,7 +15,6 @@ const useStyles = makeStyles((theme) => {
             width: "100%",
             maxWidth: "1200px",
         },
-		table: {  },
 		headerValue: {
 			minWidth: "115px",
 		},
@@ -33,6 +32,7 @@ const IBCTable = ({ data, loadingIBC, className, updateWatchlistIBC, isInWatchli
 		rowsPerPage: 10,
 		rowsPerPageOptions: [5, 10, 20, 50, 100],
 		callBackEndPage: null,
+		showFooter: true,
 		cellsConfig: [
 			{
 				label: "Chains",
