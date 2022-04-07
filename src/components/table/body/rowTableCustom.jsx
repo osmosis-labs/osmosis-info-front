@@ -16,6 +16,8 @@ const useStyles = makeStyles((theme) => {
 				fontFamily: "'Inter' !important",
 				fontSize: "14px",
 				lineHeight: "19px",
+				color: "#fff",
+
 				padding: "12px !important",
 				borderBottom: `1px solid ${theme.palette.table.border}`,
 			},

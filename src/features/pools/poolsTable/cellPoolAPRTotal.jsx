@@ -9,6 +9,9 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			justifyContent: "center",
 			alignItems: "center",
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "12px  !important",
+			},
 		},
 		rootCellPoolAPR: {
 			display: "grid",
@@ -16,6 +19,9 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "center",
 			cursor: "pointer",
 			gridTemplateColumns: "30px 1fr",
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "12px  !important",
+			},
 		},
 		icon: {
 			fontSize: "1.5rem !important",

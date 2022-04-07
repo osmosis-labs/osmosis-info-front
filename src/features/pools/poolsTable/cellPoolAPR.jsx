@@ -7,11 +7,17 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			justifyContent: "center",
 			alignItems: "center",
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "12px  !important",
+			},
 		},
 		rootCellPoolAPR: {
 			display: "flex",
 			justifyContent: "center",
 			alignItems: "center",
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "12px  !important",
+			},
 		},
 	}
 })

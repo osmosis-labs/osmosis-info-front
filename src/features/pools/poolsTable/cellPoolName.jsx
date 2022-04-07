@@ -8,12 +8,13 @@ const useStyles = makeStyles((theme) => {
 			textOverflow: "ellipsis",
 			overflow: "hidden",
 			whiteSpace: "nowrap",
-            cursor: "pointer",
+			cursor: "pointer",
 			fontSize: "16px !important",
 			alignItems: "center",
 			height: "30px",
 			[theme.breakpoints.down("xs")]: {
 				gridTemplateColumns: "60px 100px",
+				fontSize: "12px  !important",
 			},
 		},
 		image: {

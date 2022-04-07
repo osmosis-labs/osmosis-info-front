@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core"
 import React, { memo } from "react"
 import TableCustom from "../../../components/table/tableCustom"
 import TableSettings from "../../../components/tableSettings/TableSettings"
-import { useSettings } from "../../../contexts/SettingsProvider"
 import { formaterNumber, getInclude, getPercent } from "../../../helpers/helpers"
 import CellPoolAPR from "./cellPoolAPR"
 import CellPoolAPRTotal from "./cellPoolAPRTotal"
@@ -14,12 +13,23 @@ const useStyles = makeStyles((theme) => {
 	return {
 		poolsTableRoot: {},
 		poolsTable: {},
+			headerCell:{
+				[theme.breakpoints.down("xs")]: {
+					fontSize: "12px  !important",
+				},
+			},
 		headerValue: {
 			minWidth: "115px",
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "12px  !important",
+			},
 		},
 		onClickCell: { color: `${theme.palette.table.link} !important` },
 		cell: {
 			fontSize: "16px !important",
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "12px  !important",
+			},
 		},
 	}
 })
@@ -29,7 +39,6 @@ const PoolsTable = ({
 	loadingPools,
 	className,
 	onClickPool,
-	headerClass,
 	showFooter = true,
 	maxRowDisplay = null,
 	settings,
@@ -71,9 +80,9 @@ const PoolsTable = ({
 			if (parseFloat(valB) > parseFloat(valA)) {
 				res = 1
 			}
-		}else if(a.apr && !b.apr){
+		} else if (a.apr && !b.apr) {
 			res = -1
-		}else{
+		} else {
 			res = 1
 		}
 		return res
@@ -91,7 +100,7 @@ const PoolsTable = ({
 			label: "#",
 			cellKey: "id",
 			sortable: true,
-			customClassHeader: headerClass,
+			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
 			onSort: sortId,
 			align: "right",
@@ -103,7 +112,7 @@ const PoolsTable = ({
 			label: "Pool",
 			cellKey: "name",
 			sortable: true,
-			customClassHeader: headerClass,
+			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
 			onSort: null,
 			align: "left",
@@ -115,7 +124,7 @@ const PoolsTable = ({
 			label: "Liquidity",
 			cellKey: "liquidity",
 			sortable: true,
-			customClassHeader: headerClass,
+			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
 			onSort: sortId,
 			align: "right",
@@ -127,7 +136,7 @@ const PoolsTable = ({
 			label: "Volume (24h)",
 			cellKey: "volume24h",
 			sortable: true,
-			customClassHeader: headerClass,
+			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
 			onSort: sortId,
 			align: "right",
@@ -139,7 +148,7 @@ const PoolsTable = ({
 			label: "Volume (24h) change",
 			cellKey: "volume24hChange",
 			sortable: true,
-			customClassHeader: headerClass,
+			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
 			onSort: sortId,
 			align: "right",
@@ -151,7 +160,7 @@ const PoolsTable = ({
 			label: "Volume (7d)",
 			cellKey: "volume7d",
 			sortable: true,
-			customClassHeader: headerClass,
+			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
 			onSort: sortId,
 			align: "right",
@@ -163,7 +172,7 @@ const PoolsTable = ({
 			label: "Fees",
 			cellKey: "fees",
 			sortable: true,
-			customClassHeader: headerClass,
+			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
 			onSort: null,
 			align: "right",
@@ -175,7 +184,7 @@ const PoolsTable = ({
 			label: "Total return",
 			cellKey: "totalReturn",
 			sortable: true,
-			customClassHeader: headerClass,
+			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
 			onSort: onSortApr,
 			align: "center",
@@ -187,7 +196,7 @@ const PoolsTable = ({
 			label: "Internal return",
 			cellKey: "internalReturn",
 			sortable: true,
-			customClassHeader: headerClass,
+			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
 			onSort: onSortApr,
 			align: "left",
@@ -199,7 +208,7 @@ const PoolsTable = ({
 			label: "External return",
 			cellKey: "externalReturn",
 			sortable: true,
-			customClassHeader: headerClass,
+			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
 			onSort: onSortApr,
 			align: "left",
