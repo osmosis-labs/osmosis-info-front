@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme) => {
 			flexDirection: "column",
 			flexGrow: 1,
 			minHeight: "200px",
-			width: "100vw",
 			alignItems: "center",
 		},
 		loading: {
@@ -27,7 +26,7 @@ const useStyles = makeStyles((theme) => {
 
 		subTitle: {
 			alignSelf: "flex-start",
-			margin: `${theme.spacing(2)}px 0`,
+			margin: `60px 0 20px 0`,
 			fontSize: "1.5rem",
 		},
 		content: {
@@ -37,6 +36,9 @@ const useStyles = makeStyles((theme) => {
 		info: {
 			margin: `${theme.spacing(2)}px 0`,
 		},
+		table:{
+			marginBottom: "60px"
+		}
 	}
 })
 
@@ -112,20 +114,20 @@ const IBC = () => {
 	return (
 		<div className={classes.IBCRoot}>
 			<BlocLoaderOsmosis open={loaderIBC} classNameLoading={classes.loading} />
-				<IBCInfo
-					timeLastUpdate={timeLastUpdate}
-					statusNormal={statusNormal}
-					statusCongested={statusCongested}
-					statusBlocked={statusBlocked}
-					nbNetwork={ibcCouple.length}
-					setIbcFilter={updateFilter}
-					ibcFilter={ibcFilter}
-				/>
-				<IBCwatchlist ibcCouple={ibcCouple} />
+			<IBCInfo
+				timeLastUpdate={timeLastUpdate}
+				statusNormal={statusNormal}
+				statusCongested={statusCongested}
+				statusBlocked={statusBlocked}
+				nbNetwork={ibcCouple.length}
+				setIbcFilter={updateFilter}
+				ibcFilter={ibcFilter}
+			/>
 			<div className={classes.content}>
+				<IBCwatchlist ibcCouple={ibcCouple} />
 				<p className={classes.subTitle}>IBC list</p>
 				<IBCSearch ibcSearch={ibcSearch} setIbcSearch={setIbcSearch} />
-				<IbcTable data={ibcSearchList} updateWatchlistIBC={updateWatchlistIBC} isInWatchlist={isInWatchlist} />
+				<IbcTable data={ibcSearchList} updateWatchlistIBC={updateWatchlistIBC} isInWatchlist={isInWatchlist} className={classes.table}/>
 			</div>
 		</div>
 	)

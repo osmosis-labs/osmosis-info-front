@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => {
 	return {
 		rootIBCTable: {
             width: "100%",
-            maxWidth: "1200px"
+            maxWidth: "1200px",
         },
 		table: {  },
 		headerValue: {
