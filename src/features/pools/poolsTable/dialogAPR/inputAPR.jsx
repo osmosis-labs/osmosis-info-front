@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => {
 			backgroundColor: theme.palette.primary.dark,
 			border: "none",
 			maxWidth: "250px",
-			
+
 			textAlign: "right",
 			marginRight: "6px",
 			color: theme.palette.gray.textDark,
@@ -68,6 +68,12 @@ const InputAPR = ({ onChange, value, swapIsOsmos }) => {
 	const { priceOsmoBrut } = usePrices()
 	const [valueUSD, setValueUSD] = useState(0)
 	const [valueOSMO, setValueOSMO] = useState(0)
+	let currentValue = swapIsOsmos ? valueOSMO : valueUSD
+	let currentCurrency = swapIsOsmos ? "OSMO" : "USD"
+	let otherValue = !swapIsOsmos
+		? formateNumberDecimalsAuto({ price: valueOSMO })
+		: formateNumberDecimalsAuto({ price: valueUSD })
+	let otherCurrency = !swapIsOsmos ? "OSMO" : "USD"
 
 	const convertToUSD = (value) => {
 		return value * priceOsmoBrut
@@ -95,16 +101,12 @@ const InputAPR = ({ onChange, value, swapIsOsmos }) => {
 	}
 
 	const onInputChange = (e) => {
-		let currentValue = e.target.value
-		onChange(currentValue)
+		let value = e.target.value
+		if (isNaN(value)) {
+		} else {
+			onChange(value)
+		}
 	}
-
-	let currentValue = swapIsOsmos ? valueOSMO : valueUSD
-	let currentCurrency = swapIsOsmos ? "OSMO" : "USD"
-	let otherValue = !swapIsOsmos
-		? formateNumberDecimalsAuto({ price: valueOSMO })
-		: formateNumberDecimalsAuto({ price: valueUSD })
-	let otherCurrency = !swapIsOsmos ? "OSMO" : "USD"
 
 	return (
 		<div className={classes.rootInputAPR}>
