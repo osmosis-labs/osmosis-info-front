@@ -4,6 +4,9 @@ const useStyles = makeStyles((theme) => {
 	return {
 		rootCellSymbol: {
 			textAlign: "right",
+			width: "140px",
+			overflow: "hidden",
+			textOverflow: "ellipsis",
 		},
 		firstNumber: {
 			fontSize: "14px",
@@ -24,7 +27,7 @@ const CellSymbol = ({ cellKey, cellConfig, data }) => {
 	if (!currentData && !currentData.value) return <TableCell key={cellKey}>-</TableCell>
 	let splitNumber = formateNumberDecimalsAuto({ price: currentData.value }).toString().split(".")
 	return (
-		<TableCell key={cellKey}>
+		<TableCell key={cellKey} className={classes.rootCellSymbol}>
 			<div className={classes.rootCellSymbol}>
 				<span className={classes.firstNumber}>{splitNumber[0]}</span>
 				{splitNumber.length > 1 ? <span className={classes.restNumber}>.{splitNumber[1]}</span> : null}

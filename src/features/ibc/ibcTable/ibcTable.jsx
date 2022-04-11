@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) => {
 			minWidth: "115px",
 		},
 		onClickCell: { color: `${theme.palette.table.link} !important` },
+		headChains:{ width:"100px !important"},
+		headChannels:{ width:"100px !important"},
+		headTrx:{ width:"100px !important"},
+		headStatus:{ width:"100px !important"},
 	}
 })
 
@@ -84,13 +88,12 @@ const IBCTable = ({ data, loadingIBC, className, updateWatchlistIBC, isInWatchli
 		rowsPerPage: 10,
 		rowsPerPageOptions: [5, 10, 20, 50, 100],
 		callBackEndPage: null,
-		showFooter: true,
 		cellsConfig: [
 			{
 				label: "Chains",
 				cellKey: "chains",
 				sortable: true,
-				customClassHeader: null,
+				customClassHeader: classes.headChains,
 				customClassCell: null,
 				onSort: sortChains,
 				align: "left",
@@ -99,18 +102,20 @@ const IBCTable = ({ data, loadingIBC, className, updateWatchlistIBC, isInWatchli
 				cellBody: CellChain,
 				updateWatchlistIBC,
 				isInWatchlist,
+				
 			},
 			{
 				label: "Channels",
 				cellKey: "channels",
 				sortable: false,
-				customClassHeader: null,
+				customClassHeader: classes.headChannels,
 				customClassCell: null,
 				onSort: null,
 				align: "left",
 				onClickCell: null,
 				transform: null,
 				cellBody: CellChannel,
+				width: "140px"
 			},
 			// {
 			// 	label: "Source",
@@ -128,25 +133,27 @@ const IBCTable = ({ data, loadingIBC, className, updateWatchlistIBC, isInWatchli
 				label: "Pending Trx",
 				cellKey: "pendingTransactions",
 				sortable: true,
-				customClassHeader: null,
+				customClassHeader: classes.headTrx,
 				customClassCell: null,
 				onSort: sortPendingTrx,
 				align: "left",
 				onClickCell: null,
 				transform: null,
 				cellBody: PendingTrx,
+				width: "140px"
 			},
 			{
 				label: "Status",
 				cellKey: "status",
 				sortable: true,
-				customClassHeader: null,
+				customClassHeader: classes.headStatus,
 				customClassCell: null,
 				onSort: sortStatus,
 				align: "center",
 				onClickCell: null,
 				transform: null,
 				cellBody: CellStatus,
+				width: "140px"
 			},
 		], //CellSource
 	}

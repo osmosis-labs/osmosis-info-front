@@ -17,6 +17,7 @@ const CellCustom = (props) => {
 		<TableCell
 			key={cellKey}
 			align={align}
+			style={{maxWidth: "140px"}}
 			className={
 				onClickCell
 					? `${classes.cellClickable} ${classes.cellCustom} ${customClassCell}`

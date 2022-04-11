@@ -3,7 +3,12 @@ import { makeStyles, TableCell } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => {
 	return {
-		cellCustom: {},
+		cellCustom: {
+			textAlign: "right",
+			width: "140px",
+			overflow: "hidden",
+			textOverflow: "ellipsis",
+		},
 		cellClickable: { cursor: "pointer" },
 		cellSell: {
 			color: `${theme.palette.error.main} !important`,

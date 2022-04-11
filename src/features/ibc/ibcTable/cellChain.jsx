@@ -11,6 +11,9 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			alignItems: "center",
 			justifyContent: "flex-start",
+			minWidth: "400px",
+			overflow: "hidden",
+			textOverflow: "ellipsis",
 			"& span": {
 				margin: "0px 2px",
 			},
