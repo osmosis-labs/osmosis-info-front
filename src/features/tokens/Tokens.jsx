@@ -8,6 +8,7 @@ import { useSettings } from "../../contexts/SettingsProvider"
 import { useTokensV2 } from "../../contexts/TokensV2.provider"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import { getInclude } from "../../helpers/helpers"
+import TokenOverview from "./tokenOverview/tokenOverview"
 import TokensTable from "./tokensTable/tokensTable"
 
 const useStyles = makeStyles((theme) => {
@@ -72,6 +73,8 @@ const Tokens = () => {
 					<p>Saved tokens will appear here</p>
 				)}
 			</Paper>
+			<p className={classes.subTitle}>Top movers</p>
+			<TokenOverview />
 			<p className={classes.subTitle}>All tokens</p>
 			<Paper className={classes.containerLoader}>
 				<BlocLoaderOsmosis open={loadingTokens} borderRadius={true} />
