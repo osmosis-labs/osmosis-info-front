@@ -104,7 +104,7 @@ const InputAPR = ({ onChange, value, swapIsOsmos }) => {
 		let value = e.target.value
 		if (isNaN(value)) {
 		} else {
-			onChange(value)
+			onChange(value, swapIsOsmos)
 		}
 	}
 
