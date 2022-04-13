@@ -267,9 +267,9 @@ const Token = ({ showToast }) => {
 										}
 									>
 										{token.liquidity24hChange > 0 ? (
-											<ArrowDropUpIcon className={classes.colorUp} />
+											"↑"
 										) : token.liquidity24hChange < 0 ? (
-											<ArrowDropDownIcon className={classes.colorDown} />
+											"↓"
 										) : (
 											<span />
 										)}
@@ -291,9 +291,9 @@ const Token = ({ showToast }) => {
 										}
 									>
 										{token.volume24hChange > 0 ? (
-											<ArrowDropUpIcon className={classes.colorUp} />
+											"↑"
 										) : token.volume24hChange < 0 ? (
-											<ArrowDropDownIcon className={classes.colorDown} />
+											"↓"
 										) : (
 											<span />
 										)}
@@ -316,9 +316,9 @@ const Token = ({ showToast }) => {
 										}
 									>
 										{token.price24hChange > 0 ? (
-											<ArrowDropUpIcon className={classes.colorUp} />
+											"↑"
 										) : token.price24hChange < 0 ? (
-											<ArrowDropDownIcon className={classes.colorDown} />
+											"↓"
 										) : (
 											<span />
 										)}

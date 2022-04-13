@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme) => {
 			position: "relative",
 			display: "flex",
 			flexDirection: "column",
-			flexGrow: 1,
 			minHeight: "200px",
 			alignItems: "center",
 		},
@@ -29,16 +28,28 @@ const useStyles = makeStyles((theme) => {
 			margin: `60px 0 20px 0`,
 			fontSize: "1.5rem",
 		},
+		container: {
+			width: "100vw",
+			display: "flex",
+			flexDirection: "column",
+			alignItems: "center",
+		},
 		content: {
+			overflowX: "hidden",
 			maxWidth: "1200px",
 			width: "90%",
 		},
 		info: {
 			margin: `${theme.spacing(2)}px 0`,
 		},
-		table:{
-			marginBottom: "60px"
-		}
+		table: {
+			marginBottom: "60px",
+		},
+		containerTable: {
+			position: "relative",
+			overflowX: "hidden",
+			minHeight: "200px",
+		},
 	}
 })
 
@@ -123,11 +134,20 @@ const IBC = () => {
 				setIbcFilter={updateFilter}
 				ibcFilter={ibcFilter}
 			/>
-			<div className={classes.content}>
-				<IBCwatchlist ibcCouple={ibcCouple} />
-				<p className={classes.subTitle}>IBC list</p>
-				<IBCSearch ibcSearch={ibcSearch} setIbcSearch={setIbcSearch} />
-				<IbcTable data={ibcSearchList} updateWatchlistIBC={updateWatchlistIBC} isInWatchlist={isInWatchlist} className={classes.table}/>
+			<div className={classes.container}>
+				<div className={classes.content}>
+					<IBCwatchlist ibcCouple={ibcCouple} />
+					<p className={classes.subTitle}>IBC list</p>
+					<IBCSearch ibcSearch={ibcSearch} setIbcSearch={setIbcSearch} />
+					<div className={classes.containerTable}>
+						<IbcTable
+							data={ibcSearchList}
+							updateWatchlistIBC={updateWatchlistIBC}
+							isInWatchlist={isInWatchlist}
+							className={classes.table}
+						/>
+					</div>
+				</div>
 			</div>
 		</div>
 	)

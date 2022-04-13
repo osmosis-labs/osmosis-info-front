@@ -31,20 +31,14 @@ const CellPoolChange = ({ cellKey, cellConfig, data }) => {
 		let className = `${classes.cellUpDown} ${classes.cellUp}`
 		body = (
 			<div className={className}>
-				<>
-					<ArrowDropUpIcon className={classes.cellUp} />
-					{valueDisplay}
-				</>
+				↑{valueDisplay}
 			</div>
 		)
 	} else if (currentData < 0) {
 		let className = `${classes.cellUpDown} ${classes.cellDown}`
 		body = (
 			<div className={className}>
-				<>
-					<ArrowDropDownIcon className={classes.cellDown} />
-					{valueDisplay}
-				</>
+				↓{valueDisplay}
 			</div>
 		)
 	}
