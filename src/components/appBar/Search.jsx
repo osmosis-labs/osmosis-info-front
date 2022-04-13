@@ -218,7 +218,7 @@ const Search = () => {
 						onClickToken={onClickToken}
 						headerClass={classes.headerClass}
 						maxRowDisplay={sizeToken}
-						showFooter={sizeToken > 10}
+						hideFooter={!sizeToken > 10}
 						settings={settings.tokenTableSearch}
 						setSettings={setSettingsTokens}
 					/>
@@ -233,7 +233,7 @@ const Search = () => {
 						onClickPool={onClickPool}
 						headerClass={classes.headerClass}
 						maxRowDisplay={sizePool}
-						showFooter={sizePool > 10}
+						hideFooter={!sizePool > 10}
 						settings={settings.poolTableSearch}
 						setSettings={setSettingsPools}
 					/>

@@ -39,7 +39,7 @@ const PoolsTable = ({
 	loadingPools,
 	className,
 	onClickPool,
-	showFooter = true,
+	hideFooter = false,
 	maxRowDisplay = null,
 	settings,
 	setSettings,
@@ -225,7 +225,7 @@ const PoolsTable = ({
 		rowsPerPage: 10,
 		rowsPerPageOptions: [5, 10, 20, 50, 100],
 		callBackEndPage: null,
-		showFooter: showFooter,
+		hideFooter: hideFooter,
 		maxRowDisplay: maxRowDisplay,
 		cellsConfig: [],
 	}

@@ -34,7 +34,7 @@ const TokensTable = ({
 	loadingtokens,
 	className,
 	onClickToken,
-	showFooter = true,
+	hideFooter = false,
 	maxRowDisplay = null,
 	settings,
 	setSettings,
@@ -155,7 +155,7 @@ const TokensTable = ({
 		rowsPerPage: 10,
 		rowsPerPageOptions: [5, 10, 20, 50, 100],
 		callBackEndPage: null,
-		showFooter: showFooter,
+		hideFooter: hideFooter,
 		maxRowDisplay: maxRowDisplay,
 		cellsConfig: [],
 	}

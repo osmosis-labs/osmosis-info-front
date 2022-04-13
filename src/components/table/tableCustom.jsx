@@ -130,7 +130,7 @@ const TableCustom = ({ config, data, customClass, customClassTable }) => {
 
 	return (
 		<div className={`${classes.tableCustom} ${customClass}`}>
-			<Table className={customClassTable}>
+			<Table className={customClassTable} >
 				<HeaderTableCustom onSort={onSort} cellsHeader={config.cellsConfig} orderBy={orderBy} order={order} />
 				<TableBody>
 					{displayData(data)
@@ -145,7 +145,7 @@ const TableCustom = ({ config, data, customClass, customClassTable }) => {
 					)}
 				</TableBody>
 			</Table>
-			{config.showFooter && (
+			{!config.hideFooter && (
 				<FooterTableCustom
 					rowsPerPageOptions={config.rowsPerPageOptions}
 					count={data.length}

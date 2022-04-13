@@ -25,7 +25,6 @@ import { TokensV2Provider } from "../../contexts/TokensV2.provider"
 import { PoolsV2Provider } from "../../contexts/PoolsV2.provider"
 import { TokenChartV2Provider } from "../../contexts/TokenChartV2"
 import NotFound from "../404/notFound"
-import TokenOverview from "../tokens/tokenOverview"
 const useStyles = makeStyles((theme) => {
 	return {
 		appRoot: {
@@ -126,7 +125,6 @@ const App = () => {
 																			</div>
 																		</Route>
 																		<Route path="/tokens">
-																			<TokenOverview />
 																			<div className={classes.content}>
 																				<Tokens showToast={showToast} />
 																			</div>

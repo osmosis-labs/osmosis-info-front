@@ -4,6 +4,9 @@ const useStyles = makeStyles((theme) => {
 	return {
 		rootCellSymbol: {
 			textAlign: "right",
+			width: "140px",
+			overflow: "hidden",
+			textOverflow: "ellipsis",
 		},
 		firstNumber: {
 			fontSize: "14px",
