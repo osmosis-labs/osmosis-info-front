@@ -166,11 +166,28 @@ const AppBarMobile = ({ type, onChangeType }) => {
 								IBC Status
 							</p>
 						</div>
+
+						<div
+							className={
+								currentPath === "/dashboard" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem
+							}
+							onClick={() => {
+								clickItem("/dashboard")
+							}}
+						>
+							<p
+								className={
+									currentPath === "/dashboard" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem
+								}
+							>
+								Dashboard
+							</p>
+						</div>
 						<div className={classes.toggle}>
-						<Toggle color="primary" value={type} exclusive onChange={onChangeType}>
-							<ToggleItem value="app">App</ToggleItem>
-							<ToggleItem value="frontier">Frontier</ToggleItem>
-						</Toggle>
+							<Toggle color="primary" value={type} exclusive onChange={onChangeType}>
+								<ToggleItem value="app">App</ToggleItem>
+								<ToggleItem value="frontier">Frontier</ToggleItem>
+							</Toggle>
 						</div>
 						<div className={`${classes.menuItem} ${classes.menuItemClose}`}>
 							<IconButton aria-label="Close menu" onClick={handleClose}>
