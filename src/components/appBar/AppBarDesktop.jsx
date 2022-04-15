@@ -136,6 +136,14 @@ const AppBarDesktop = ({ type, onChangeType }) => {
 						>
 							IBC Status
 						</Link>
+						<Link
+							to="/dashboard"
+							className={
+								currentPath === "/dashboard" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem
+							}
+						>
+							Dashboard
+						</Link>
 					</div>
 				</div>
 				<div className={classes.right}>

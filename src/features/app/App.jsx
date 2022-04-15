@@ -25,6 +25,8 @@ import { PoolsV2Provider } from "../../contexts/PoolsV2.provider"
 import { TokenChartV2Provider } from "../../contexts/TokenChartV2"
 import NotFound from "../404/notFound"
 import { useThemeCustom } from "../../contexts/ThemeProvider"
+import { KeplrProvider } from "../../contexts/KeplrProvider"
+import Dashboard from "../dashboard/dashboard"
 const useStyles = makeStyles((theme) => {
 	return {
 		appRoot: {
@@ -91,61 +93,66 @@ const App = () => {
 									<PricesProvider>
 										<TokenChartV2Provider>
 											<MetricsProvider>
-												<LoaderProvider>
-													<LoaderOsmosis />
-													<Helmet>
-														<script src="/charting_library/charting_library.js" type="text/javascript" />
-													</Helmet>
-													<div className={classes.appRoot}>
-														<Toast
-															open={stateToast.open}
-															severity={stateToast.severity}
-															message={stateToast.text}
-															handleClose={closeToast}
-														/>
-														<InfoBar />
-														<AppBar />
-														<div className={classes.container}>
-															<div className={classes.contentContainer}>
-																<Switch>
-																	<Route path="/" exact={true}>
-																		<div className={classes.content}>
-																			<Overview showToast={showToast} />
-																		</div>
-																	</Route>
-																	<Route path="/pools">
-																		<div className={classes.content}>
-																			<Pools showToast={showToast} />
-																		</div>
-																	</Route>
-																	<Route path="/pool/:id">
-																		<div className={classes.content}>
-																			<Pool showToast={showToast} />
-																		</div>
-																	</Route>
-																	<Route path="/tokens">
-																		<div className={classes.content}>
-																			<Tokens showToast={showToast} />
-																		</div>
-																	</Route>
-																	<Route path="/token/:symbol">
-																		<Token showToast={showToast} />
-																	</Route>
-																	<Route path="/ibc">
-																		<IBCProvider>
-																			<IBC showToast={showToast} />
-																		</IBCProvider>
-																	</Route>
-																	<Route>
-																		<div className={classes.content}>
-																			<NotFound showToast={showToast} />
-																		</div>
-																	</Route>
-																</Switch>
+												<KeplrProvider>
+													<LoaderProvider>
+														<LoaderOsmosis />
+														<Helmet>
+															<script src="/charting_library/charting_library.js" type="text/javascript" />
+														</Helmet>
+														<div className={classes.appRoot}>
+															<Toast
+																open={stateToast.open}
+																severity={stateToast.severity}
+																message={stateToast.text}
+																handleClose={closeToast}
+															/>
+															<InfoBar />
+															<AppBar />
+															<div className={classes.container}>
+																<div className={classes.contentContainer}>
+																	<Switch>
+																		<Route path="/" exact={true}>
+																			<div className={classes.content}>
+																				<Overview showToast={showToast} />
+																			</div>
+																		</Route>
+																		<Route path="/pools">
+																			<div className={classes.content}>
+																				<Pools showToast={showToast} />
+																			</div>
+																		</Route>
+																		<Route path="/pool/:id">
+																			<div className={classes.content}>
+																				<Pool showToast={showToast} />
+																			</div>
+																		</Route>
+																		<Route path="/tokens">
+																			<div className={classes.content}>
+																				<Tokens showToast={showToast} />
+																			</div>
+																		</Route>
+																		<Route path="/token/:symbol">
+																			<Token showToast={showToast} />
+																		</Route>
+																		<Route path="/ibc">
+																			<IBCProvider>
+																				<IBC showToast={showToast} />
+																			</IBCProvider>
+																		</Route>
+																		<Route path="/dashboard">
+																			<Dashboard showToast={showToast} />
+																		</Route>
+																		<Route>
+																			<div className={classes.content}>
+																				<NotFound showToast={showToast} />
+																			</div>
+																		</Route>
+																	</Switch>
+																</div>
 															</div>
 														</div>
-													</div>
-												</LoaderProvider>
+													</LoaderProvider>
+												</KeplrProvider>
 											</MetricsProvider>
 										</TokenChartV2Provider>
 									</PricesProvider>
