@@ -98,8 +98,7 @@ const OverviewBar = () => {
 
 				<span className={`${getClasses(volume24hChange, "percent")}`}>
 					({getArrow(volume24hChange)}
-					{volume24hChange > 0 ? "+" : ""}
-					{getPercent(volume24hChange)})
+					{getPercent(Math.abs(volume24hChange))})
 				</span>
 			</div>
 
@@ -109,8 +108,7 @@ const OverviewBar = () => {
 
 				<span className={`${getClasses(liquidityUSD24h, "percent")}`}>
 					({getArrow(liquidityUSD24h)}
-					{liquidityUSD24h > 0 ? "+" : ""}
-					{getPercent(liquidityUSD24h)})
+					{getPercent(Math.abs(liquidityUSD24h))})
 				</span>
 			</div>
 			{/* <div className={classes.item}>

@@ -12,9 +12,9 @@ const useStyles = makeStyles((theme) => {
 		item: {
 			display: "flex",
 			alignItems: "center",
-            justifyContent: "center",
-            whiteSpace: "nowrap",
-            margin: "0 20px"
+			justifyContent: "center",
+			whiteSpace: "nowrap",
+			margin: "0 20px",
 		},
 		itemLabel: {
 			fontSize: "0.9rem",
@@ -39,11 +39,10 @@ const useStyles = makeStyles((theme) => {
 		buttonGroup: {
 			alignSelf: "center",
 		},
-	
 	}
 })
 
-const Bar = ({className}) => {
+const Bar = ({ className }) => {
 	const classes = useStyles()
 	const {
 		osmosPrice,
@@ -90,8 +89,7 @@ const Bar = ({className}) => {
 
 				<span className={`${getClasses(osmosChange24h, "percent")}`}>
 					({getArrow(osmosChange24h)}
-					{osmosChange24h > 0 ? "+" : ""}
-					{getPercent(osmosChange24h)})
+					{getPercent(Math.abs(osmosChange24h))})
 				</span>
 			</div>
 			<div className={classes.item}>
@@ -100,8 +98,7 @@ const Bar = ({className}) => {
 
 				<span className={`${getClasses(volume24hChange, "percent")}`}>
 					({getArrow(volume24hChange)}
-					{volume24hChange > 0 ? "+" : ""}
-					{getPercent(volume24hChange)})
+					{getPercent(Math.abs(volume24hChange))})
 				</span>
 			</div>
 
@@ -111,8 +108,7 @@ const Bar = ({className}) => {
 
 				<span className={`${getClasses(liquidityUSD24h, "percent")}`}>
 					({getArrow(liquidityUSD24h)}
-					{liquidityUSD24h > 0 ? "+" : ""}
-					{getPercent(liquidityUSD24h)})
+					{getPercent(Math.abs(liquidityUSD24h))})
 				</span>
 			</div>
 			<div className={classes.item}>
@@ -121,8 +117,7 @@ const Bar = ({className}) => {
 
 				<span className={`${getClasses(liquidityAtom24h, "percent")}`}>
 					({getArrow(liquidityAtom24h)}
-					{liquidityAtom24h > 0 ? "+" : ""}
-					{getPercent(liquidityAtom24h)})
+					{getPercent(Math.abs(liquidityAtom24h))})
 				</span>
 			</div>
 			<div className={classes.item}>
@@ -131,8 +126,7 @@ const Bar = ({className}) => {
 
 				<span className={`${getClasses(liquidityOsmo24h, "percent")}`}>
 					({getArrow(liquidityOsmo24h)}
-					{liquidityOsmo24h > 0 ? "+" : ""}
-					{getPercent(liquidityOsmo24h)})
+					{getPercent(Math.abs(liquidityOsmo24h))})
 				</span>
 			</div>
 		</div>

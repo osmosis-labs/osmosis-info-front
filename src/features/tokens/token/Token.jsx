@@ -273,7 +273,7 @@ const Token = ({ showToast }) => {
 										) : (
 											<span />
 										)}
-										{getPercent(token.liquidity24hChange)}
+										{getPercent(Math.abs(token.liquidity24hChange))}
 									</p>
 								</div>
 							</div>
@@ -297,7 +297,7 @@ const Token = ({ showToast }) => {
 										) : (
 											<span />
 										)}
-										{getPercent(token.volume24hChange)}
+										{getPercent(Math.abs(token.volume24hChange))}
 									</p>
 								</div>
 							</div>
@@ -322,7 +322,7 @@ const Token = ({ showToast }) => {
 										) : (
 											<span />
 										)}
-										{getPercent(token.price24hChange)}
+										{getPercent(Math.abs(token.price24hChange))}
 									</p>
 								</div>
 							</div>

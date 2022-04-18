@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => {
 const CellTokenChange = ({ cellKey, cellConfig, data }) => {
 	const classes = useStyles()
 	let currentData = data[cellConfig.cellKey]
-	let valueDisplay = cellConfig.transform ? cellConfig.transform(currentData) : currentData
+	let valueDisplay = cellConfig.transform ? cellConfig.transform(Math.abs(currentData)) : Math.abs(currentData)
 	let body = currentData
 
 	if (currentData > 0) {

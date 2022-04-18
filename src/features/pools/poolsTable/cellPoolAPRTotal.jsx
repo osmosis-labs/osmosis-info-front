@@ -23,9 +23,9 @@ const useStyles = makeStyles((theme) => {
 			[theme.breakpoints.down("xs")]: {
 				fontSize: "12px  !important",
 			},
-		},
+		}, 
 		imageIcon: {
-			height: "30px",
+			height: "28px",
 		},
 	}
 })

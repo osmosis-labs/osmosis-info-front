@@ -146,7 +146,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool, pricesDecimals }) => {
 								) : (
 									<span />
 								)}
-								{formatPercent(pool.liquidity24hChange)}
+								{formatPercent(Math.abs(pool.liquidity24hChange))}
 							</p>
 						</div>
 					</div>
@@ -170,7 +170,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool, pricesDecimals }) => {
 								) : (
 									<span />
 								)}
-								{formatPercent(pool.volume24hChange)}
+								{formatPercent(Math.abs(pool.volume24hChange))}
 							</p>
 						</div>
 					</div>

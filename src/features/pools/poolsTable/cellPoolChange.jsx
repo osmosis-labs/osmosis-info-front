@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => {
 const CellPoolChange = ({ cellKey, cellConfig, data }) => {
 	const classes = useStyles()
 	let currentData = data[cellConfig.cellKey]
-	let valueDisplay = cellConfig.transform ? cellConfig.transform(currentData) : currentData
+	let valueDisplay = cellConfig.transform ? cellConfig.transform(Math.abs(currentData)) : Math.abs(currentData)
 	let body = currentData
 	if (currentData > 0) {
 		let className = `${classes.cellUpDown} ${classes.cellUp}`
