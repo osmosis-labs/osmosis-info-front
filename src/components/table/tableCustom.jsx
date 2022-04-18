@@ -100,9 +100,9 @@ const TableCustom = ({ config, data, customClass, customClassTable }) => {
 			}
 			res.sort((a, b) => {
 				if (order === "asc") {
-					return sortMethod(a, b, orderBy)
+					return sortMethod(a, b, orderBy, order)
 				} else {
-					return -sortMethod(a, b, orderBy)
+					return -sortMethod(a, b, orderBy, order)
 				}
 			})
 			return res

@@ -13,11 +13,11 @@ const useStyles = makeStyles((theme) => {
 	return {
 		poolsTableRoot: {},
 		poolsTable: {},
-			headerCell:{
-				[theme.breakpoints.down("xs")]: {
-					fontSize: "12px  !important",
-				},
+		headerCell: {
+			[theme.breakpoints.down("xs")]: {
+				fontSize: "12px  !important",
 			},
+		},
 		headerValue: {
 			minWidth: "115px",
 			[theme.breakpoints.down("xs")]: {
@@ -57,7 +57,7 @@ const PoolsTable = ({
 		return res
 	}
 
-	const onSortApr = (a, b, orderBy) => {
+	const onSortApr = (a, b, orderBy, order) => {
 		let res = 0
 
 		let valA = 0
@@ -81,6 +81,32 @@ const PoolsTable = ({
 				res = 1
 			}
 		} else if (!a.apr || !b.apr) {
+			res = 0
+		} else {
+			res = 0
+		}
+		return res
+	}
+
+	const onSortAprExternal = (a, b, orderBy, order) => {
+		let res = 0
+		let valA = 0
+		let valB = 0
+		if (a.apr && a.apr.external && b.apr && b.apr.external) {
+			valA = a.apr.display.external
+			valB = b.apr.display.external
+
+			if (parseFloat(valB) < parseFloat(valA)) {
+				res = -1
+			}
+			if (parseFloat(valB) > parseFloat(valA)) {
+				res = 1
+			}
+		} else if (a.apr && a.apr.external && (!b.apr || !b.apr.external)) {
+			res = order === "asc" ? -1 : 1
+		} else if (b.apr && b.apr.external && (!a.apr || !a.apr.external)) {
+			res = order === "asc" ? 1 : -1
+		} else {
 			res = 0
 		}
 		return res
@@ -208,7 +234,7 @@ const PoolsTable = ({
 			sortable: true,
 			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
-			onSort: onSortApr,
+			onSort: onSortAprExternal,
 			align: "left",
 			onClickCell: null,
 			transform: null,
