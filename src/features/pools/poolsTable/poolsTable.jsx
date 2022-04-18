@@ -80,10 +80,8 @@ const PoolsTable = ({
 			if (parseFloat(valB) > parseFloat(valA)) {
 				res = 1
 			}
-		} else if (a.apr && !b.apr) {
-			res = -1
-		} else {
-			res = 1
+		} else if (!a.apr || !b.apr) {
+			res = 0
 		}
 		return res
 	}
