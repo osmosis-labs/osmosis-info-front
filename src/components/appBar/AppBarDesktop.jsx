@@ -1,6 +1,7 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
 import { Link, useHistory, useLocation } from "react-router-dom"
+import ButtonConnection from "./button_connection"
 import logo from "./logo.png"
 import Search from "./Search"
 import Toggle from "../toggle/Toggle"
@@ -151,6 +152,7 @@ const AppBarDesktop = ({ type, onChangeType }) => {
 						<ToggleItem value="app">App</ToggleItem>
 						<ToggleItem value="frontier">Frontier</ToggleItem>
 					</Toggle>
+					<ButtonConnection />
 					<Search />
 				</div>
 			</div>
