@@ -50,6 +50,9 @@ const useStyles = makeStyles((theme) => {
 		},
 		right: {
 			zIndex: theme.zIndex.appBar,
+			display: "flex",
+			flexDirection: "row",
+			alignItems: "center",
 			[theme.breakpoints.down("sm")]: {
 				width: "100%",
 			},
@@ -58,6 +61,9 @@ const useStyles = makeStyles((theme) => {
 		menu: {
 			margin: `${theme.spacing(3)}px ${theme.spacing(3)}px ${theme.spacing(3)}px ${theme.spacing(2)}px`,
 			display: "flex",
+			flexDirection: "row",
+			alignItems: "center",
+
 			flexWrap: "wrap",
 			[theme.breakpoints.down("sm")]: {
 				margin: `${theme.spacing(3)}px ${theme.spacing(3)}px ${theme.spacing(1)}px ${theme.spacing(4)}px`,
@@ -65,8 +71,9 @@ const useStyles = makeStyles((theme) => {
 		},
 		menuItem: {
 			color: theme.palette.gray.dark,
-			margin: theme.spacing(1),
-			padding: theme.spacing(1),
+			padding: "4px 8px",
+			margin: "0px 4px",
+			verticalAlign: "middle",
 			textDecoration: "none",
 			transition: "all 0.2s",
 			zIndex: theme.zIndex.appBar,
@@ -77,8 +84,6 @@ const useStyles = makeStyles((theme) => {
 		menuItemActive: {
 			color: theme.palette.gray.contrastText,
 			backgroundColor: theme.palette.primary.light,
-			margin: theme.spacing(1),
-			padding: theme.spacing(1),
 			borderRadius: theme.spacing(1),
 		},
 	}
@@ -131,13 +136,13 @@ const AppBarDesktop = ({ type, onChangeType }) => {
 						>
 							IBC Status
 						</Link>
-						<Toggle color="primary" value={type} exclusive onChange={onChangeType}>
-							<ToggleItem value="app">App</ToggleItem>
-							<ToggleItem value="frontier">Frontier</ToggleItem>
-						</Toggle>
 					</div>
 				</div>
 				<div className={classes.right}>
+					<Toggle color="primary" value={type} exclusive onChange={onChangeType}>
+						<ToggleItem value="app">App</ToggleItem>
+						<ToggleItem value="frontier">Frontier</ToggleItem>
+					</Toggle>
 					<Search />
 				</div>
 			</div>

@@ -6,6 +6,9 @@ const ToggleItem = styled(ToggleButton)(({ theme }) => ({
 	"&.MuiToggleButton-root": {
 		color: theme.palette.gray.dark,
 		borderColor: theme.palette.primary.light,
+		padding: "0px 6px",
+		fontSize: "14px",
+		textTransform: "none",
 		"&:hover": {
 			backgroundColor: theme.palette.primary.main,
 		},
