@@ -3,12 +3,15 @@ import { useEffect, useState } from "react"
 import { Link, useHistory, useLocation } from "react-router-dom"
 import logo from "./logo.png"
 import Search from "./Search"
+import Toggle from "../toggle/Toggle"
+import ToggleItem from "../toggle/ToggleItem"
+
 const useStyles = makeStyles((theme) => {
 	return {
 		appBarDesktopRoot: {
 			position: "fixed",
 			marginTop: "40px",
-			zIndex: theme.zIndex.appBar-2,
+			zIndex: theme.zIndex.appBar - 2,
 		},
 		appBarDesktopContent: {
 			position: "relative",
@@ -81,7 +84,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const AppBarDesktop = () => {
+const AppBarDesktop = ({ type, onChangeType }) => {
 	const classes = useStyles()
 	const history = useHistory()
 	let location = useLocation()
@@ -90,6 +93,7 @@ const AppBarDesktop = () => {
 	useEffect(() => {
 		setCurrentPath(location.pathname)
 	}, [location.pathname, setCurrentPath])
+
 	return (
 		<div className={classes.appBarDesktopRoot}>
 			<div className={classes.appBarDesktopContent}>
@@ -127,6 +131,10 @@ const AppBarDesktop = () => {
 						>
 							IBC Status
 						</Link>
+						<Toggle color="primary" value={type} exclusive onChange={onChangeType}>
+							<ToggleItem value="app">App</ToggleItem>
+							<ToggleItem value="frontier">Frontier</ToggleItem>
+						</Toggle>
 					</div>
 				</div>
 				<div className={classes.right}>

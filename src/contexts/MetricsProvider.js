@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import API from "../helpers/API"
+import { useSettings } from "./SettingsProvider"
 const MetricsContext = createContext()
 
 export const useMetrics = () => useContext(MetricsContext)
@@ -16,6 +17,7 @@ export const MetricsProvider = ({ children }) => {
 	const [liquidityAtom24h, setLiquidityAtom24h] = useState(10)
 	const [liquidityOsmo, setLiquidityOsmo] = useState(100)
 	const [liquidityOsmo24h, setLiquidityOsmo24h] = useState(100)
+	const { settings } = useSettings()
 
 	const [dominance, setDominance] = useState([])
 
@@ -47,7 +49,11 @@ export const MetricsProvider = ({ children }) => {
 			setLoadingTop(true)
 			API.request({ url: "tokens/v2/top/gainers", type: "get" })
 				.then((res) => {
-					setGainers(res.data)
+					let data = res.data
+					if (settings.type === "app") {
+						data = data.filter((item) => item.main)
+					}
+					setGainers(data)
 					setLoadingTop(false)
 				})
 				.catch((err) => {
@@ -55,34 +61,38 @@ export const MetricsProvider = ({ children }) => {
 					setLoadingTop(false)
 				})
 			API.request({ url: "tokens/v2/top/losers", type: "get" }).then((res) => {
-				setLosers(res.data)
+				let data = res.data
+				if (settings.type === "app") {
+					data = data.filter((item) => item.main)
+				}
+				setLosers(data)
 			})
 			setLoadingDominance(true)
-			API.request({ url: "tokens/v2/dominance/all", type: "get" })
-				.then((res) => {
-					let dominances = []
-					let others = {
-						symbol: "Others",
-						dominance: 0,
-					}
-					res.data.forEach((dominance, index) => {
-						if (index < 4) {
-							dominances.push(dominance)
-						} else {
-							others.dominance += dominance.dominance
-						}
-					})
-					dominances.push(others)
-					setDominance(dominances)
-					setLoadingDominance(false)
-				})
-				.catch((err) => {
-					console.log("%cMetricsProvider.js -> 70 ERROR: err", "background: #FF0000; color:#FFFFFF", err)
-					setLoadingDominance(false)
-				})
+			// API.request({ url: "tokens/v2/dominance/all", type: "get" })
+			// 	.then((res) => {
+			// 		let dominances = []
+			// 		let others = {
+			// 			symbol: "Others",
+			// 			dominance: 0,
+			// 		}
+			// 		res.data.forEach((dominance, index) => {
+			// 			if (index < 4) {
+			// 				dominances.push(dominance)
+			// 			} else {
+			// 				others.dominance += dominance.dominance
+			// 			}
+			// 		})
+			// 		dominances.push(others)
+			// 		setDominance(dominances)
+			// 		setLoadingDominance(false)
+			// 	})
+			// 	.catch((err) => {
+			// 		console.log("%cMetricsProvider.js -> 70 ERROR: err", "background: #FF0000; color:#FFFFFF", err)
+			// 		setLoadingDominance(false)
+			// 	})
 		}
 		fetch()
-	}, [])
+	}, [settings.type])
 
 	return (
 		<MetricsContext.Provider
@@ -103,7 +113,7 @@ export const MetricsProvider = ({ children }) => {
 				losers,
 				loadingDominance,
 				loadingTop,
-				loadingMetrics
+				loadingMetrics,
 			}}
 		>
 			{children}

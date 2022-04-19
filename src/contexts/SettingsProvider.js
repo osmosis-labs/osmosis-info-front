@@ -1,7 +1,8 @@
 import { createContext, useContext } from "react"
 import useLocalStorage from "../hooks/LocalStorageHook"
-const version = "1.3.1"
+const version = "1.4.1"
 const defaultSettings = {
+	type: "app",
 	tokenTable: [
 		{ name: "Id", display: true, order: 1, key: "id" },
 		{ name: "Name", display: true, order: 2, key: "name" },
