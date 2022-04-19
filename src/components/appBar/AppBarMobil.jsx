@@ -6,6 +6,7 @@ import Search from "./Search"
 import MenuIcon from "@material-ui/icons/Menu"
 import CloseIcon from "@material-ui/icons/Close"
 import PaperDialog from "./PaperDialog"
+import ButtonConnection from "./button_connection"
 
 import Toggle from "../toggle/Toggle"
 import ToggleItem from "../toggle/ToggleItem"
@@ -66,7 +67,11 @@ const useStyles = makeStyles((theme) => {
 		iconMenu: {
 			zIndex: theme.zIndex.appBar,
 		},
-		toggle: { display: "flex", alignItems: "center", justifyContent: "center" },
+		center: {
+			display: "flex",
+			justifyContent: "center",
+			alignItems: "center",
+		},
 	}
 })
 
@@ -183,12 +188,16 @@ const AppBarMobile = ({ type, onChangeType }) => {
 								Dashboard
 							</p>
 						</div>
-						<div className={classes.toggle}>
+						<div className={classes.center}>
 							<Toggle color="primary" value={type} exclusive onChange={onChangeType}>
 								<ToggleItem value="app">App</ToggleItem>
 								<ToggleItem value="frontier">Frontier</ToggleItem>
 							</Toggle>
 						</div>
+						<div className={classes.center}>
+							<ButtonConnection />
+						</div>
+
 						<div className={`${classes.menuItem} ${classes.menuItemClose}`}>
 							<IconButton aria-label="Close menu" onClick={handleClose}>
 								<CloseIcon />
