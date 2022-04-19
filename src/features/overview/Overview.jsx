@@ -1,4 +1,4 @@
-import { Container, makeStyles, useMediaQuery } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core"
 import { useEffect } from "react"
 import { useState } from "react"
 import { useHistory } from "react-router-dom"
@@ -7,13 +7,15 @@ import Paper from "../../components/paper/Paper"
 import { useCharts } from "../../contexts/ChartsProvider"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
-import { getInclude} from "../../helpers/helpers"
-import PoolsTable from "../pools/PoolsTable"
-import TokensTable from "../tokens/TokensTable"
+import { getInclude } from "../../helpers/helpers"
 import ContainerChartLiquidity from "./ContainerChartLiquidity"
 import ContainerChartVolume from "./ContainerChartVolume"
 import { usePoolsV2 } from "../../contexts/PoolsV2.provider"
 import { useTokensV2 } from "../../contexts/TokensV2.provider"
+import PoolsTable from "../pools/poolsTable/poolsTable"
+import TokensTable from "../tokens/tokensTable/tokensTable"
+import { useSettings } from "../../contexts/SettingsProvider"
+import OverviewBar from "./overviewBar/overviewBar"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -35,8 +37,14 @@ const useStyles = makeStyles((theme) => {
 			pointerEvents: "none",
 			background: `radial-gradient(50% 50% at 50% 60%, ${theme.palette.primary.main} 30%,  ${theme.palette.black.light} 100%)`,
 		},
+		title: {
+			fontSize: "1.6rem",
+			color: theme.palette.gray.contrastText,
+			marginBottom: "20px",
+		},
 		subTitle: {
 			color: theme.palette.gray.main,
+			
 		},
 		container: {
 			display: "grid",
@@ -66,16 +74,16 @@ const useStyles = makeStyles((theme) => {
 				minHeight: "410px",
 			},
 		},
-		containerChart: {  height:'100%' },
+		containerChart: { height: "100%" },
 		containerLoading: {
 			position: "relative",
 			minWidth: "200px",
 			minHeight: "200px",
 		},
-		containerWatchlist:{
+		containerWatchlist: {
 			position: "relative",
 			minWidth: "200px",
-		}
+		},
 	}
 })
 
@@ -88,18 +96,21 @@ const Overview = () => {
 	const [tokensOnWatchlist, setTokensOnWatchlist] = useState([])
 	const [poolsOnWatchlist, setPoolsOnWatchlist] = useState([])
 
-	const [size, setSize] = useState("xl")
-	const matchXS = useMediaQuery((theme) => theme.breakpoints.down("xs"))
-	const matchSM = useMediaQuery((theme) => theme.breakpoints.down("sm"))
-	const matchMD = useMediaQuery((theme) => theme.breakpoints.down("md"))
-	const matchLD = useMediaQuery((theme) => theme.breakpoints.down("ld"))
-
 	const { pools, loadingPools } = usePoolsV2()
 	const { tokens, loadingTokens } = useTokensV2()
 	const [dataPools, setDataPools] = useState([])
 	const [dataTokens, setDataTokens] = useState([])
 	const history = useHistory()
 
+	const { settings, updateSettings } = useSettings()
+
+	const setSettingsPools = (settings) => {
+		updateSettings({ poolTable: settings })
+	}
+
+	const setSettingsTokens = (settings) => {
+		updateSettings({ tokenTable: settings })
+	}
 
 	useEffect(() => {
 		// sort pools on the first time is fetched
@@ -130,20 +141,6 @@ const Overview = () => {
 		})
 		setDataTokens(data)
 	}, [tokens])
-
-	useEffect(() => {
-		if (matchXS) {
-			setSize("xs")
-		} else if (matchSM) {
-			setSize("sm")
-		} else if (matchMD) {
-			setSize("md")
-		} else if (matchLD) {
-			setSize("ld")
-		} else {
-			setSize("xl")
-		}
-	}, [matchXS, matchSM, matchMD, matchLD])
 
 	const onClickPool = (pool) => {
 		history.push(`/pool/${pool.id}`)
@@ -176,7 +173,7 @@ const Overview = () => {
 	return (
 		<div className={classes.overviewRoot}>
 			<div className={classes.container}>
-				<p className={classes.subTitle}>Osmosis - Overview</p>
+				<p className={classes.title}>Osmosis - Overview</p>
 				<div className={classes.charts}>
 					<Paper className={classes.chart}>
 						<BlocLoaderOsmosis open={loadingData} borderRadius={true} />
@@ -201,15 +198,15 @@ const Overview = () => {
 						</div>
 					</Paper>
 				</div>
+				<OverviewBar />
 				<p className={classes.subTitle}>Your token watchlist</p>
 				<Paper className={classes.containerWatchlist}>
 					{watchlistTokens.length > 0 ? (
 						<TokensTable
 							data={tokensOnWatchlist}
-							textEmpty={"Any rows"}
-							size={size}
 							onClickToken={onClickToken}
-							sortable={true}
+							setSettings={setSettingsTokens}
+							settings={settings.tokenTable}
 						/>
 					) : (
 						<p>Saved tokens will appear here</p>
@@ -220,10 +217,9 @@ const Overview = () => {
 					{watchlistPools.length > 0 ? (
 						<PoolsTable
 							data={poolsOnWatchlist}
-							textEmpty={"Any rows"}
-							size={size}
 							onClickPool={onClickPool}
-							sortable={true}
+							setSettings={setSettingsPools}
+							settings={settings.poolTable}
 						/>
 					) : (
 						<p>Saved pools will appear here</p>
@@ -234,16 +230,20 @@ const Overview = () => {
 					<BlocLoaderOsmosis open={loadingTokens} borderRadius={true} />
 					<TokensTable
 						data={dataTokens}
-						textEmpty={"Any rows"}
-						size={size}
-						sortable={true}
 						onClickToken={onClickToken}
+						setSettings={setSettingsTokens}
+						settings={settings.tokenTable}
 					/>
 				</Paper>
 				<p className={classes.subTitle}>Top pools</p>
 				<Paper className={classes.containerLoading}>
 					<BlocLoaderOsmosis open={loadingPools} borderRadius={true} />
-					<PoolsTable data={dataPools} textEmpty={"Any rows"} size={size} sortable={true} onClickPool={onClickPool} />
+					<PoolsTable
+						data={dataPools}
+						onClickPool={onClickPool}
+						setSettings={setSettingsPools}
+						settings={settings.poolTable}
+					/>
 				</Paper>
 			</div>
 		</div>

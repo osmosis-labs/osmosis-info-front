@@ -14,7 +14,24 @@ const useStyles = makeStyles((theme) => {
 		headerValue: {
 			minWidth: "115px",
 		},
-		onClickCell: { color: `${theme.palette.table.link} !important` },
+		onClickCell: {
+			width: "140px",
+			overflow: "hidden",
+			textOverflow: "ellipsis",
+			color: `${theme.palette.table.link} !important`,
+		},
+		cellTime: {
+			width: "140px",
+			overflow: "hidden",
+			textOverflow: "ellipsis",
+			whiteSpace: "nowrap",
+		},
+		cellType: {
+			width: "75px",
+			overflow: "hidden",
+			textOverflow: "ellipsis",
+			textAlign: "center",
+		},
 	}
 })
 
@@ -76,7 +93,7 @@ const TrxTable = ({ getTrxToken, loadingTrx, token, className }) => {
 				cellKey: "time",
 				sortable: true,
 				customClassHeader: null,
-				customClassCell: null,
+				customClassCell: classes.cellTime,
 				onSort: onSortTime,
 				align: "left",
 				onClickCell: null,
@@ -88,7 +105,7 @@ const TrxTable = ({ getTrxToken, loadingTrx, token, className }) => {
 				cellKey: "type",
 				sortable: false,
 				customClassHeader: null,
-				customClassCell: null,
+				customClassCell: classes.cellType,
 				onSort: null,
 				align: "center",
 				onClickCell: null,

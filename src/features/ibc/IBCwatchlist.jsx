@@ -3,11 +3,11 @@ import { makeStyles } from "@material-ui/core"
 import IBCItem from "./IBCItem"
 import { useWatchlistIBC } from "../../contexts/WatchlistIBCProvider"
 import IBCList from "./IBCList"
+import IbcTable from "./ibcTable/ibcTable"
 const useStyles = makeStyles((theme) => {
 	return {
 		IBCwatchlistRoot: {
 			margin: `${theme.spacing(2)}px 0`,
-			width: "100vw",
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "center",
@@ -50,15 +50,11 @@ const IBCwatchlist = ({ ibcCouple }) => {
 	}, [watchlistIBC, ibcCouple])
 	return (
 		<div className={classes.IBCwatchlistRoot}>
-			<div className={classes.content}>
-				<p className={classes.subTitle}>Your watchlist</p>
-			</div>
+			<p className={classes.subTitle}>Your watchlist</p>
 			{watchlist.length > 0 ? (
-				<IBCList ibcCouple={watchlist} updateWatchlistIBC={updateWatchlistIBC} isInWatchlist={isInWatchlist} />
+				<IbcTable data={watchlist} updateWatchlistIBC={updateWatchlistIBC} isInWatchlist={isInWatchlist} />
 			) : (
-				<div className={classes.content}>
-					<p className={classes.text}>Saved IBC will appear here</p>
-				</div>
+				<p className={classes.text}>Saved IBC will appear here</p>
 			)}
 		</div>
 	)

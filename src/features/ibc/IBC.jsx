@@ -8,6 +8,7 @@ import { getInclude } from "../../helpers/helpers"
 import IBCInfo from "./IBCInfo"
 import IBCList from "./IBCList"
 import IBCSearch from "./IBCSearch"
+import IbcTable from "./ibcTable/ibcTable"
 import IBCwatchlist from "./IBCwatchlist"
 const useStyles = makeStyles((theme) => {
 	return {
@@ -15,9 +16,7 @@ const useStyles = makeStyles((theme) => {
 			position: "relative",
 			display: "flex",
 			flexDirection: "column",
-			flexGrow: 1,
 			minHeight: "200px",
-			width: "100vw",
 			alignItems: "center",
 		},
 		loading: {
@@ -26,15 +25,30 @@ const useStyles = makeStyles((theme) => {
 
 		subTitle: {
 			alignSelf: "flex-start",
-			margin: `${theme.spacing(2)}px 0`,
+			margin: `60px 0 20px 0`,
 			fontSize: "1.5rem",
 		},
+		container: {
+			width: "100vw",
+			display: "flex",
+			flexDirection: "column",
+			alignItems: "center",
+		},
 		content: {
+			overflowX: "hidden",
 			maxWidth: "1200px",
 			width: "90%",
 		},
 		info: {
 			margin: `${theme.spacing(2)}px 0`,
+		},
+		table: {
+			marginBottom: "60px",
+		},
+		containerTable: {
+			position: "relative",
+			overflowX: "hidden",
+			minHeight: "200px",
 		},
 	}
 })
@@ -56,9 +70,11 @@ const IBC = () => {
 			res = list
 		} else {
 			res = list.filter((ibc) => {
-				return getInclude(ibc, (item) => {
-					return item.token_name.toLowerCase().includes(value.toLowerCase())
-				}) !== -1
+				return (
+					getInclude(ibc, (item) => {
+						return item.token_name.toLowerCase().includes(value.toLowerCase())
+					}) !== -1
+				)
 			})
 		}
 		return res
@@ -118,18 +134,21 @@ const IBC = () => {
 				setIbcFilter={updateFilter}
 				ibcFilter={ibcFilter}
 			/>
-			<IBCwatchlist ibcCouple={ibcCouple} />
-			<div className={classes.content}>
-				<p className={classes.subTitle}>IBC list</p>
-			</div>
-			<IBCSearch ibcSearch={ibcSearch} setIbcSearch={setIbcSearch} />
-			{ibcSearchList.length === 0 ? (
+			<div className={classes.container}>
 				<div className={classes.content}>
-					<p className={classes.info}>No result</p>
+					<IBCwatchlist ibcCouple={ibcCouple} />
+					<p className={classes.subTitle}>IBC list</p>
+					<IBCSearch ibcSearch={ibcSearch} setIbcSearch={setIbcSearch} />
+					<div className={classes.containerTable}>
+						<IbcTable
+							data={ibcSearchList}
+							updateWatchlistIBC={updateWatchlistIBC}
+							isInWatchlist={isInWatchlist}
+							className={classes.table}
+						/>
+					</div>
 				</div>
-			) : (
-				<IBCList ibcCouple={ibcSearchList} updateWatchlistIBC={updateWatchlistIBC} isInWatchlist={isInWatchlist} />
-			)}
+			</div>
 		</div>
 	)
 }

@@ -1,9 +1,9 @@
 import { makeStyles } from "@material-ui/core"
-import Paper from "../../../components/paper/Paper"
-import { useMetrics } from "../../../contexts/MetricsProvider"
 import PieChartIcon from "@material-ui/icons/PieChart"
+import { useMetrics } from "../../contexts/MetricsProvider"
+import Paper from "../../components/paper/Paper"
+import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import DominanceItem from "./DominanceItem"
-import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 const useStyles = makeStyles((theme) => {
 	return {
 		dominanceRoot: {

@@ -3,7 +3,13 @@ import { makeStyles, TableCell, TableSortLabel } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => {
 	return {
-		headerCellCustom: {},
+		headerCellCustom: {
+			[theme.breakpoints.down("xs")]: {
+				paddingTop: "0px",
+				paddingBottom: "0px",
+				color: "#fff",
+			},
+		},
 	}
 })
 

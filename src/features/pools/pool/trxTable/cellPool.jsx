@@ -9,6 +9,9 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			alignItems: "center",
 			pointerEvents: "none",
+			width: "200px",
+			overflow: "hidden",
+			textOverflow: "ellipsis",
 		},
 		imagesContainer: {
 			display: "flex",
@@ -49,8 +52,7 @@ const CellPool = ({ cellKey, cellConfig, data }) => {
 	const open = Boolean(event)
 
 	return (
-		<TableCell key={cellKey} onMouseEnter={onOpen} onMouseLeave={onClose}>
-			
+		<TableCell key={cellKey} onMouseEnter={onOpen} onMouseLeave={onClose} style={{ width: "200px", boxSizing: "border-box" }}>
 			<div className={classes.rootCellPool}>
 				<div className={classes.imagesContainer}>
 					{currentData.images.map((image, index) => {
@@ -68,17 +70,17 @@ const CellPool = ({ cellKey, cellConfig, data }) => {
 				</div>
 				<span className={classes.poolName}>{currentData.name}</span>
 				{currentData.routes.length > 1 ? <span className={classes.poolBadge}>+{currentData.routes.length}</span> : null}
+				{currentData.routes.length > 1 ? (
+					<PopoverPool
+						routes={currentData.routes}
+						open={open}
+						onClose={onClose}
+						event={event}
+						key={cellKey + "ppover"}
+						id={cellKey + "pop"}
+					/>
+				) : null}
 			</div>
-			{currentData.routes.length > 1 ? (
-				<PopoverPool
-					routes={currentData.routes}
-					open={open}
-					onClose={onClose}
-					event={event}
-					key={cellKey + "ppover"}
-					id={cellKey + "pop"}
-				/>
-			) : null}
 		</TableCell>
 	)
 }

@@ -1,8 +1,8 @@
 import { makeStyles } from "@material-ui/core"
-import Image from "../../../components/image/Image"
 import PieChartIcon from "@material-ui/icons/PieChart"
-import { formateNumberDecimals, getPercent } from "../../../helpers/helpers"
 import { useHistory } from "react-router-dom"
+import Image from "../../components/image/Image"
+import { formateNumberDecimals, getPercent } from "../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {
