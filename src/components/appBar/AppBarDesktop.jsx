@@ -87,6 +87,7 @@ const useStyles = makeStyles((theme) => {
 			backgroundColor: theme.palette.primary.light,
 			borderRadius: theme.spacing(1),
 		},
+		toggle: { marginLeft: "12px" },
 	}
 })
 
