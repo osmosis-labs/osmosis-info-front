@@ -3,6 +3,7 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootButtonConnection: {
+			marginLeft:"16px",
 			backgroundColor: "#322DC2",
             color: theme.palette.primary.contrastText,
             "&:hover": {
