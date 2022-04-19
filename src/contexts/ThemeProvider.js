@@ -40,15 +40,7 @@ export const ThemeCustomProvider = ({ children }) => {
 			other: "#2C2F36",
 			contrastText: "#FFFFFF",
 		},
-		table: {
-			cell: "#FFFFFFDE",
-			cellDark: "#FFFFFF66",
-			border: "rgb(45, 36, 70)",
-			badgeBackground: "#C4A46A1F",
-			badgeText: "#C4A46A",
-			link: "#4885ff",
-			hover: "rgba(255, 255, 255, 0.08)",
-		},
+		
 		gray: {
 			light: "#40444f",
 			main: "#c3c5cb",
@@ -101,6 +93,15 @@ export const ThemeCustomProvider = ({ children }) => {
 			dark2: "rgb(23, 15, 52)",
 			contrastText: "#ffffff",
 		},
+		table: {
+			cell: "#FFFFFFDE",
+			cellDark: "#FFFFFF66",
+			border: "rgb(45, 36, 70)",
+			badgeBackground: "#C4A46A1F",
+			badgeText: "#C4A46A",
+			link: "#4885ff",
+			hover: "rgba(255, 255, 255, 0.08)",
+		},
 	}
 
 	let colorsFronier = {
@@ -111,6 +112,15 @@ export const ThemeCustomProvider = ({ children }) => {
 			dark: "rgb(41, 36, 33)",
 			dark2: " rgb(34, 27, 24)",
 			contrastText: "#ffffff",
+		},
+		table: {
+			cell: "#FFFFFFDE",
+			cellDark: "#FFFFFF66",
+			border: "rgb(58,56,59)",
+			badgeBackground: "#C4A46A1F",
+			badgeText: "#C4A46A",
+			link: "#4885ff",
+			hover: "rgba(255, 255, 255, 0.08)",
 		},
 	}
 	const themeCustomApp = createTheme({
