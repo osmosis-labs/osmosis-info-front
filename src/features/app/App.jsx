@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => {
 			fontSize: theme.fontSize.medium,
 		},
 		container: {
-			paddingTop: "140px",
+			paddingTop: "124px",
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "center",
