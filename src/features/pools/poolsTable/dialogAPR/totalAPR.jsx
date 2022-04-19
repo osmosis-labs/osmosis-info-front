@@ -152,9 +152,9 @@ const TotalAPR = ({ apr, periode, staked }) => {
 
 	const getTotal = (hasExternal) => {
 		let res = { osmo: 0, usd: 0, percent: 0 }
-		let currentApr = getPeriode(apr.internal) / 100 + (hasExternal ? getPeriode(apr.external) / 100 : 0)
+		let currentApr = getPeriode(apr.internal) + (hasExternal ? getPeriode(apr.external) : 0)
 		res.percent = currentApr
-		res.usd = (currentApr * parseFloat(staked)) / 365
+		res.usd = ((currentApr / 100) * parseFloat(staked)) / 365
 		res.osmo = res.usd / apr.internal.token.price
 
 		setTotal(res)
@@ -193,7 +193,7 @@ const TotalAPR = ({ apr, periode, staked }) => {
 				<p className={` ${classes.itemTotal} ${classes.itemInfoTotal}`}>Total daily</p>
 				<p className={` ${classes.itemTotal} ${classes.itemUSDTotal}`}>${formaterNumber(total.usd)}</p>
 				<p className={` ${classes.itemTotal}`}>{formaterNumber(total.osmo)} OSMO</p>
-				{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(total.percent)})</p>}
+				{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(total.percent/365)})</p>}
 			</div>
 			<div className={`${classes.dropdown} ${open ? classes.dropdownOpened : null}`}>
 				<div className={classes.row}>
@@ -201,7 +201,7 @@ const TotalAPR = ({ apr, periode, staked }) => {
 					<p className={`${classes.item} ${classes.itemInfo}`}>Internal daily</p>
 					<p className={`${classes.item} ${classes.itemUSD}`}>${formaterNumber(internal.usd)}</p>
 					<p className={`${classes.item}`}>{formaterNumber(internal.osmo)} OSMO</p>
-					{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(internal.percent)})</p>}
+					{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(internal.percent / 365)})</p>}
 				</div>
 				{hasExternal && (
 					<div className={classes.row}>
@@ -211,7 +211,7 @@ const TotalAPR = ({ apr, periode, staked }) => {
 						<p className={`${classes.item}`}>
 							{formaterNumber(external.external)} {external.symbol}
 						</p>
-						{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(external.percent)})</p>}
+						{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(external.percent / 365)})</p>}
 					</div>
 				)}
 			</div>

@@ -140,13 +140,13 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool, pricesDecimals }) => {
 								}
 							>
 								{pool.liquidity24hChange > 0 ? (
-									<ArrowDropUpIcon className={classes.colorUp} />
+									"↑"
 								) : pool.liquidity24hChange < 0 ? (
-									<ArrowDropDownIcon className={classes.colorDown} />
+									"↓"
 								) : (
 									<span />
 								)}
-								{formatPercent(pool.liquidity24hChange)}
+								{formatPercent(Math.abs(pool.liquidity24hChange))}
 							</p>
 						</div>
 					</div>
@@ -164,13 +164,13 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool, pricesDecimals }) => {
 								}
 							>
 								{pool.volume24hChange > 0 ? (
-									<ArrowDropUpIcon className={classes.colorUp} />
+									"↑"
 								) : pool.volume24hChange < 0 ? (
-									<ArrowDropDownIcon className={classes.colorDown} />
+									"↓"
 								) : (
 									<span />
 								)}
-								{formatPercent(pool.volume24hChange)}
+								{formatPercent(Math.abs(pool.volume24hChange))}
 							</p>
 						</div>
 					</div>

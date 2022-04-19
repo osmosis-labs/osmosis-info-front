@@ -267,13 +267,13 @@ const Token = ({ showToast }) => {
 										}
 									>
 										{token.liquidity24hChange > 0 ? (
-											<ArrowDropUpIcon className={classes.colorUp} />
+											"↑"
 										) : token.liquidity24hChange < 0 ? (
-											<ArrowDropDownIcon className={classes.colorDown} />
+											"↓"
 										) : (
 											<span />
 										)}
-										{getPercent(token.liquidity24hChange)}
+										{getPercent(Math.abs(token.liquidity24hChange))}
 									</p>
 								</div>
 							</div>
@@ -291,13 +291,13 @@ const Token = ({ showToast }) => {
 										}
 									>
 										{token.volume24hChange > 0 ? (
-											<ArrowDropUpIcon className={classes.colorUp} />
+											"↑"
 										) : token.volume24hChange < 0 ? (
-											<ArrowDropDownIcon className={classes.colorDown} />
+											"↓"
 										) : (
 											<span />
 										)}
-										{getPercent(token.volume24hChange)}
+										{getPercent(Math.abs(token.volume24hChange))}
 									</p>
 								</div>
 							</div>
@@ -316,13 +316,13 @@ const Token = ({ showToast }) => {
 										}
 									>
 										{token.price24hChange > 0 ? (
-											<ArrowDropUpIcon className={classes.colorUp} />
+											"↑"
 										) : token.price24hChange < 0 ? (
-											<ArrowDropDownIcon className={classes.colorDown} />
+											"↓"
 										) : (
 											<span />
 										)}
-										{getPercent(token.price24hChange)}
+										{getPercent(Math.abs(token.price24hChange))}
 									</p>
 								</div>
 							</div>

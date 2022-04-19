@@ -11,21 +11,22 @@ const useStyles = makeStyles((theme) => {
 			cursor: "pointer",
 			fontSize: "16px !important",
 			alignItems: "center",
-			height: "30px",
+			height: "36px",
 			[theme.breakpoints.down("xs")]: {
 				gridTemplateColumns: "60px 100px",
 				fontSize: "12px  !important",
 			},
 		},
 		image: {
-			width: "30px",
+			width: "34px",
 			marginRight: theme.spacing(1),
 			marginLeft: theme.spacing(1),
 			position: "absolute",
+			padding:"2px",
 			top: "-50%",
 			[theme.breakpoints.down("xs")]: {
-				width: "20px",
-				top: "0%",
+				width: "34px",
+			top: "-50%",
 			},
 		},
 		images: {

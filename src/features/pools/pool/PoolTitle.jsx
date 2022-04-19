@@ -7,8 +7,8 @@ import Tooltip from "@material-ui/core/Tooltip"
 import { useWatchlistPools } from "../../../contexts/WatchlistPoolsProvider"
 import { getInclude } from "../../../helpers/helpers"
 import DialogAPR from "../poolsTable/dialogAPR/dialogAPR"
-import CalculateIcon from "@mui/icons-material/Calculate"
 import { useState } from "react"
+import aprIMG from "../poolsTable/apr_logo.png"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -67,9 +67,9 @@ const useStyles = makeStyles((theme) => {
 		iconStar: {
 			color: "rgba(196, 164, 106,1)",
 		},
-		icon: {
+		imageIcon: {
 			cursor: "pointer",
-			fontSize: "1.5rem !important",
+			height: "28px",
 		},
 	}
 })
@@ -141,7 +141,8 @@ const PoolTitle = ({ pool, tokens }) => {
 							)}
 						</IconButton>
 					</Tooltip>
-					{pool.apr && <CalculateIcon  style={matchMD ? { transform: `translateX(0)` } : { transform: `translateX(-${tokens.length * 20}px)` }} className={classes.icon} onClick={onOpen} />}
+
+					{pool.apr && <img src={aprIMG} alt="calculator icon" className={classes.imageIcon}  style={matchMD ? { transform: `translateX(0)` } : { transform: `translateX(-${tokens.length * 20}px)` }} onClick={onOpen} />}
 				</span>
 			</div>
 		</div>

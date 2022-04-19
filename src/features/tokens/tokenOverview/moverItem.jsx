@@ -93,7 +93,7 @@ const MoverItem = ({ item, index }) => {
 					<span className={classes.price}>${formateNumberDecimalsAutoV2({price: item.price})}</span>
 					<span className={getClasses(item.price_24h_change)}>
 						{getArrow(item.price_24h_change)}
-						{getPercent(item.price_24h_change)}
+						{getPercent(Math.abs(item.price_24h_change))}
 					</span>
 				</div>
 			</div>

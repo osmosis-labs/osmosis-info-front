@@ -22,31 +22,19 @@ const useStyles = makeStyles((theme) => {
 		cellDown: { color: theme.palette.error.main },
 	}
 })
+
 const CellTokenChange = ({ cellKey, cellConfig, data }) => {
 	const classes = useStyles()
 	let currentData = data[cellConfig.cellKey]
-	let valueDisplay = cellConfig.transform ? cellConfig.transform(currentData) : currentData
+	let valueDisplay = cellConfig.transform ? cellConfig.transform(Math.abs(currentData)) : Math.abs(currentData)
 	let body = currentData
+
 	if (currentData > 0) {
 		let className = `${classes.cellUpDown} ${classes.cellUp}`
-		body = (
-			<div className={className}>
-				<>
-					<ArrowDropUpIcon className={classes.cellUp} />
-					{valueDisplay}
-				</>
-			</div>
-		)
+		body = <div className={className}>↑{valueDisplay}</div>
 	} else if (currentData < 0) {
 		let className = `${classes.cellUpDown} ${classes.cellDown}`
-		body = (
-			<div className={className}>
-				<>
-					<ArrowDropDownIcon className={classes.cellDown} />
-					{valueDisplay}
-				</>
-			</div>
-		)
+		body = <div className={className}>↓{valueDisplay}</div>
 	}
 	return (
 		<TableCell

@@ -3,6 +3,7 @@ import { getPercent } from "../../../helpers/helpers"
 import CalculateIcon from "@mui/icons-material/Calculate"
 import { useState } from "react"
 import DialogAPR from "./dialogAPR/dialogAPR"
+import aprIMG from "./apr_logo.png"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootCellPoolNoAPR: {
@@ -22,9 +23,9 @@ const useStyles = makeStyles((theme) => {
 			[theme.breakpoints.down("xs")]: {
 				fontSize: "12px  !important",
 			},
-		},
-		icon: {
-			fontSize: "1.5rem !important",
+		}, 
+		imageIcon: {
+			height: "28px",
 		},
 	}
 })
@@ -52,7 +53,7 @@ const CellPoolAPRTotal = ({ cellKey, cellConfig, data }) => {
 			<DialogAPR open={open} onClose={onClose} data={data} />
 			<div className={classes.rootCellPoolAPR}>
 				{getPercent(data.apr.display.total)}
-				<CalculateIcon className={classes.icon} onClick={onOpen} />
+				<img src={aprIMG} alt="calculator icon" className={classes.imageIcon} onClick={onOpen} />
 			</div>
 		</TableCell>
 	)
