@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => {
 			border: "none",
 			padding: theme.spacing(1),
 			borderRadius: theme.spacing(2),
-			width: "500px",
+			width: "300px",
 			fontSize: "16px",
 			"&::placeholder": {
 				color: theme.palette.gray.dark,
