@@ -5,6 +5,7 @@ import utc from "dayjs/plugin/utc"
 import dayjs from "dayjs"
 import { getInclude, getItemInclude, getWeekNumber, timeToDateUTC } from "../helpers/helpers"
 import { useTokensV2 } from "./TokensV2.provider"
+import { useSettings } from "./SettingsProvider"
 const PoolsV2Context = createContext()
 
 export const usePoolsV2 = () => useContext(PoolsV2Context)
@@ -12,6 +13,8 @@ export const usePoolsV2 = () => useContext(PoolsV2Context)
 export const PoolsV2Provider = ({ children }) => {
 	const [pools, setPools] = useState([])
 	const { tokens } = useTokensV2()
+	const { settings } = useSettings()
+
 	const [poolsAPR, setPoolsAPR] = useState([])
 	const saveData = useRef({})
 	const [loadingPools, setLoadingPools] = useState(true)
@@ -111,6 +114,9 @@ export const PoolsV2Provider = ({ children }) => {
 				saveData.current[getName("pools", lowLiquidity)].length > 0
 			) {
 				let data = saveData.current[getName("pools", lowLiquidity)]
+				if (settings.type === "app") {
+					data = data.filter((item) => item.main)
+				}
 				setPools(data)
 				setLoadingPools(false)
 				return data
@@ -168,6 +174,14 @@ export const PoolsV2Provider = ({ children }) => {
 							apr.display.total += apr.external.apr14d
 						}
 					}
+					let main = true
+					let index = 0
+					while (main && index < row.length) {
+						if (!row[index].main) {
+							main = false
+						}
+						index++
+					}
 					return {
 						id: key,
 						name: row.reduce((acc, currentValue) => {
@@ -181,14 +195,18 @@ export const PoolsV2Provider = ({ children }) => {
 						volume24hChange: row[0].volume_24h_change,
 						fees: parseFloat(row[0].fees),
 						apr,
+						main,
 					}
 				})
+				if (settings.type === "app") {
+					data = data.filter((item) => item.main)
+				}
 				setPools(data)
 				setLoadingPools(false)
 				return data
 			}
 		},
-		[tokens]
+		[tokens, settings.type]
 	)
 
 	const getLiquidityChartPool = useCallback(async ({ poolId, range = "d" }) => {
@@ -310,7 +328,7 @@ export const PoolsV2Provider = ({ children }) => {
 			}
 		}
 		fetch()
-	}, [tokens])
+	}, [tokens, settings.type])
 
 	return (
 		<PoolsV2Context.Provider
