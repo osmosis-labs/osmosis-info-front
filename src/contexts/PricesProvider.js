@@ -14,8 +14,8 @@ export const PricesProvider = ({ children }) => {
 		let fetch = async () => {
 			// get all Prices from server API
 			let promises = [
-				API.request({ url: "search/v1/price/osmo", type: "get" }),
-				API.request({ url: "search/v1/price/ion", type: "get" }),
+				API.request({ url: "tokens/v2/price/osmo", type: "get" }),
+				API.request({ url: "tokens/v2/price/ion", type: "get" }),
 			]
 			let results = await Promise.all(promises)
 			setPriceOsmoBrut(parseFloat(results[0].data.price))
