@@ -9,5 +9,14 @@ export const useDashboard = () => useContext(DashboardContext)
 export const DashboardProvider = ({ children }) => {
 	const { address } = useKeplr()
 
-	return <DashboardContext.Provider value={{ address }}>{children}</DashboardContext.Provider>
+	const getNbTransaction = async () => {
+		let response = await API.request({
+			url: `https://api-osmosis-chain.imperator.co/txs/v1/tx/count/${address}`,
+            useCompleteURL: true,
+			type: "get",
+		})
+        return response.data
+	}
+
+	return <DashboardContext.Provider value={{ address, getNbTransaction }}>{children}</DashboardContext.Provider>
 }

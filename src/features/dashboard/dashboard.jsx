@@ -1,5 +1,6 @@
 import { makeStyles } from "@material-ui/core"
-import { useKeplr } from "../../contexts/KeplrProvider"
+import { useEffect } from "react"
+import { useDashboard } from "../../contexts/dashboard.provider"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootDashboard: {
@@ -9,9 +10,18 @@ const useStyles = makeStyles((theme) => {
 })
 const Dashboard = () => {
 	const classes = useStyles()
-	const { keplrStatus } = useKeplr()
+	const { address, getNbTransaction } = useDashboard()
 
-	console.log("dashboard.jsx -> 15: keplrStatus", keplrStatus)
+	useEffect(() => {
+		const fetch = async () => {
+			let trx = await getNbTransaction(address)
+			console.log("dashboard.jsx -> 21: trx", trx)
+		}
+
+		if (address && address.length > 0) {
+			fetch()
+		}
+	}, [address])
 
 	return (
 		<div className={classes.rootDashboard}>
