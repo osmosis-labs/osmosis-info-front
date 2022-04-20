@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme) => ({
 		cursor: "pointer",
 	},
 	currentPath: {
+		textOverflow: "ellipsis",
+		overflow: "hidden",
+		maxWidth: "300px",
 		color: theme.palette.gray.contrastText,
 	},
 }))

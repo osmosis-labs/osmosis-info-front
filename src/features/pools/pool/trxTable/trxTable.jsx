@@ -47,7 +47,9 @@ const TrxTable = ({ getTrxPool, loadingTrx, pool, className }) => {
 	}
 	const transformDisplay = (data) => data.display
 	const transformUSD = (data) => {
-		return `$${formateNumberDecimalsAuto({ price: data })}`
+		if (data) {
+			return `$${formateNumberDecimalsAuto({ price: data })}`
+		} else return "-"
 	}
 	const onSortTime = (a, b, orderBy) => {
 		let res = 0
