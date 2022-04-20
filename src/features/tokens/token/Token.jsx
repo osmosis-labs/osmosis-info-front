@@ -154,9 +154,11 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const Token = ({ showToast }) => {
+const Token = () => {
 	const classes = useStyles()
 	const history = useHistory()
+	const { showToast } = useToast()
+
 	const { symbol } = useParams()
 	const { settings, updateSettings } = useSettings()
 	const {

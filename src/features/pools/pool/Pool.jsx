@@ -16,6 +16,7 @@ import { usePoolsV2 } from "../../../contexts/PoolsV2.provider"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 import TrxTable from "./trxTable/trxTable"
 import { useSettings } from "../../../contexts/SettingsProvider"
+import { useToast } from "../../../contexts/Toast.provider"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -92,9 +93,10 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const Pool = ({ showToast }) => {
+const Pool = () => {
 	const classes = useStyles()
 	const history = useHistory()
+	const { showToast } = useToast()
 	const { id } = useParams()
 	const {
 		pools,

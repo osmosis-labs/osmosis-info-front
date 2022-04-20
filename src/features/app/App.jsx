@@ -27,6 +27,12 @@ import NotFound from "../404/notFound"
 import { useThemeCustom } from "../../contexts/ThemeProvider"
 import { KeplrProvider } from "../../contexts/KeplrProvider"
 import Dashboard from "../dashboard/dashboard"
+import { ToastProvider } from "../../contexts/Toast.provider"
+import { getKeplrFromWindow } from "@keplr-wallet/stores"
+import { KeplrWalletConnectV1, WalletInfo, WalletManagerProvider } from "cosmodal"
+import keplrLogo from "./keplr.png"
+import walletConnectLogo from "./wallet-connect.png"
+import { DashboardProvider } from "../../contexts/dashboard.provider"
 const useStyles = makeStyles((theme) => {
 	return {
 		appRoot: {
@@ -67,101 +73,109 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-// The first component, contains all app. It's the wrapper, with the menu and toast component
+const walletInfoList = [
+	{
+		id: "keplr-wallet-extension",
+		name: "Keplr Wallet",
+		description: "Keplr Browser Extension",
+		logoImgUrl: keplrLogo,
+		getWallet: () => getKeplrFromWindow(),
+	},
+	{
+		id: "walletconnect-keplr",
+		name: "WalletConnect",
+		description: "Keplr Mobile",
+		logoImgUrl: walletConnectLogo,
+		getWallet: (connector) =>
+			Promise.resolve(connector ? new KeplrWalletConnectV1(connector, EmbedChainInfos) : undefined),
+	},
+]
+
 const App = () => {
 	const classes = useStyles()
-	const [stateToast, setOpenToast] = useState({
-		open: false,
-		text: "",
-		severity: "",
-	})
-	const closeToast = () => {
-		setOpenToast(false)
-	}
-	const showToast = useCallback(({ text, severity }) => {
-		setOpenToast((prev) => ({ ...prev, open: true, text, severity }))
-	}, [])
 
 	return (
 		<BrowserRouter basename=".">
-			<TokensV2Provider>
-				<PoolsV2Provider>
-					<ChartsProvider>
-						<WatchlistPoolsProvider>
-							<WatchlistTokensProvider>
-								<WatchlistIBCProvider>
-									<PricesProvider>
-										<TokenChartV2Provider>
-											<MetricsProvider>
-												<KeplrProvider>
-													<LoaderProvider>
-														<LoaderOsmosis />
-														<Helmet>
-															<script src="/charting_library/charting_library.js" type="text/javascript" />
-														</Helmet>
-														<div className={classes.appRoot}>
-															<Toast
-																open={stateToast.open}
-																severity={stateToast.severity}
-																message={stateToast.text}
-																handleClose={closeToast}
-															/>
-															<InfoBar />
-															<AppBar />
-															<div className={classes.container}>
-																<div className={classes.contentContainer}>
-																	<Switch>
-																		<Route path="/" exact={true}>
-																			<div className={classes.content}>
-																				<Overview showToast={showToast} />
-																			</div>
-																		</Route>
-																		<Route path="/pools">
-																			<div className={classes.content}>
-																				<Pools showToast={showToast} />
-																			</div>
-																		</Route>
-																		<Route path="/pool/:id">
-																			<div className={classes.content}>
-																				<Pool showToast={showToast} />
-																			</div>
-																		</Route>
-																		<Route path="/tokens">
-																			<div className={classes.content}>
-																				<Tokens showToast={showToast} />
-																			</div>
-																		</Route>
-																		<Route path="/token/:symbol">
-																			<Token showToast={showToast} />
-																		</Route>
-																		<Route path="/ibc">
-																			<IBCProvider>
-																				<IBC showToast={showToast} />
-																			</IBCProvider>
-																		</Route>
-																		<Route path="/dashboard">
-																			<Dashboard showToast={showToast} />
-																		</Route>
-																		<Route>
-																			<div className={classes.content}>
-																				<NotFound showToast={showToast} />
-																			</div>
-																		</Route>
-																	</Switch>
+			<WalletManagerProvider walletInfoList={walletInfoList}>
+				<TokensV2Provider>
+					<PoolsV2Provider>
+						<ChartsProvider>
+							<WatchlistPoolsProvider>
+								<WatchlistTokensProvider>
+									<WatchlistIBCProvider>
+										<PricesProvider>
+											<TokenChartV2Provider>
+												<MetricsProvider>
+													<KeplrProvider>
+														<LoaderProvider>
+															<ToastProvider>
+																<LoaderOsmosis />
+																<Helmet>
+																	<script src="/charting_library/charting_library.js" type="text/javascript" />
+																</Helmet>
+																<div className={classes.appRoot}>
+																	<Toast />
+
+																	<InfoBar />
+																	<AppBar />
+																	<div className={classes.container}>
+																		<div className={classes.contentContainer}>
+																			<Switch>
+																				<Route path="/" exact={true}>
+																					<div className={classes.content}>
+																						<Overview />
+																					</div>
+																				</Route>
+																				<Route path="/pools">
+																					<div className={classes.content}>
+																						<Pools />
+																					</div>
+																				</Route>
+																				<Route path="/pool/:id">
+																					<div className={classes.content}>
+																						<Pool />
+																					</div>
+																				</Route>
+																				<Route path="/tokens">
+																					<div className={classes.content}>
+																						<Tokens />
+																					</div>
+																				</Route>
+																				<Route path="/token/:symbol">
+																					<Token />
+																				</Route>
+																				<Route path="/ibc">
+																					<IBCProvider>
+																						<IBC />
+																					</IBCProvider>
+																				</Route>
+																				<Route path="/dashboard">
+																					<DashboardProvider>
+																						<Dashboard />
+																					</DashboardProvider>
+																				</Route>
+																				<Route>
+																					<div className={classes.content}>
+																						<NotFound />
+																					</div>
+																				</Route>
+																			</Switch>
+																		</div>
+																	</div>
 																</div>
-															</div>
-														</div>
-													</LoaderProvider>
-												</KeplrProvider>
-											</MetricsProvider>
-										</TokenChartV2Provider>
-									</PricesProvider>
-								</WatchlistIBCProvider>
-							</WatchlistTokensProvider>
-						</WatchlistPoolsProvider>
-					</ChartsProvider>
-				</PoolsV2Provider>
-			</TokensV2Provider>
+															</ToastProvider>
+														</LoaderProvider>
+													</KeplrProvider>
+												</MetricsProvider>
+											</TokenChartV2Provider>
+										</PricesProvider>
+									</WatchlistIBCProvider>
+								</WatchlistTokensProvider>
+							</WatchlistPoolsProvider>
+						</ChartsProvider>
+					</PoolsV2Provider>
+				</TokensV2Provider>
+			</WalletManagerProvider>
 		</BrowserRouter>
 	)
 }

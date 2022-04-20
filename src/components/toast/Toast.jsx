@@ -4,6 +4,7 @@ import ErrorIcon from "@material-ui/icons/Error"
 import WarningIcon from "@material-ui/icons/Warning"
 import CheckIcon from "@material-ui/icons/Check"
 import InfoIcon from "@material-ui/icons/Info"
+import { useToast } from "../../contexts/Toast.provider"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -41,7 +42,8 @@ const useStyles = makeStyles((theme) => {
 })
 
 // Component used for displaying a short info to the user, like success of his action
-const Toast = ({ open, severity, message, handleClose }) => {
+const Toast = () => {
+	const { closeToast, toastText, toastSeverity, toastOpen } = useToast()
 	const classes = useStyles()
 	const icons = {
 		error: <ErrorIcon className={classes.icon} />,
@@ -55,13 +57,13 @@ const Toast = ({ open, severity, message, handleClose }) => {
 				vertical: "top",
 				horizontal: "right",
 			}}
-			open={open}
+			open={toastOpen}
 			autoHideDuration={2000}
-			onClose={handleClose}
+			onClose={closeToast}
 		>
-			<div className={`${classes.toastRoot} ${classes[severity]}`}>
-				{icons[severity]}
-				<p className={classes.text}>{message}</p>
+			<div className={`${classes.toastRoot} ${classes[toastSeverity]}`}>
+				{icons[toastSeverity]}
+				<p className={classes.text}>{toastText}</p>
 			</div>
 		</Snackbar>
 	)
