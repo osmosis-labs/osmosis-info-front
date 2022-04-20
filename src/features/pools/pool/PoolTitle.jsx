@@ -44,6 +44,10 @@ const useStyles = makeStyles((theme) => {
 			overflow: "hidden",
 			whiteSpace: "nowrap",
 		},
+		name:{
+			textOverflow: "ellipsis",
+			maxWidth: "400px",
+		},
 		titleIcon: {
 			marginTop: theme.spacing(1),
 			display: "flex",
@@ -126,7 +130,7 @@ const PoolTitle = ({ pool, tokens }) => {
 			<div className={classes.titleIcon}>
 				<p
 					style={matchMD ? { transform: `translateX(0)` } : { transform: `translateX(-${tokens.length * 20}px)` }}
-					className={classes.subTitle}
+					className={`${classes.subTitle} ${classes.name}`}
 				>{`#${pool.id} ${pool.name}`}</p>
 				<span className={classes.icons}>
 					<Tooltip
