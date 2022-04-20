@@ -24,6 +24,8 @@ const useStyles = makeStyles((theme) => {
 		},
 		select: {
 			margin: theme.spacing(2),
+			textOverflow: "ellipsis",
+			maxWidth: "300px",
 			[theme.breakpoints.down("sm")]: {
 				margin: theme.spacing(0.5),
 			},
@@ -39,6 +41,7 @@ const useStyles = makeStyles((theme) => {
 			flexDirection: "row",
 			alignItems: "center",
 		},
+		
 	}
 })
 
@@ -107,7 +110,7 @@ const PoolSelect = ({ tokens, setSelectedTokens, selectedTokens }) => {
 				>
 					{tokens.map((token) => {
 						return (
-							<MenuItem disabled={selectPairs.one === token.denom} key={`two-${token.denom}`} value={token.denom}>
+							<MenuItem className={classes.itemSelect} disabled={selectPairs.one === token.denom} key={`two-${token.denom}`} value={token.denom}>
 								{token.symbol.length > 0 ? token.symbol : token.denom}
 							</MenuItem>
 						)
@@ -135,7 +138,7 @@ const PoolSelect = ({ tokens, setSelectedTokens, selectedTokens }) => {
 				>
 					{tokens.map((token) => {
 						return (
-							<MenuItem disabled={selectPairs.two === token.denom} key={`one-${token.denom}`} value={token.denom}>
+							<MenuItem className={classes.itemSelect} disabled={selectPairs.two === token.denom} key={`one-${token.denom}`} value={token.denom}>
 								{token.symbol.length > 0 ? token.symbol : token.denom}
 							</MenuItem>
 						)
