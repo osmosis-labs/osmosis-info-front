@@ -8,7 +8,7 @@ export const KeplrProvider = ({ children }) => {
 	const [keplrStatus, setKeplrStatus] = useState("uninstalled")
 	const { getWallet, clearLastUsedWallet, setDefaultConnectionType, connectionType } = useWalletManager()
 	const [name, setName] = useState("")
-	const [address, setAddress] = useState("")
+	const [address, setAddress] = useState("osmo1ukzgv8ctsvsmwn6z7lhfqfs0cncy6d6f2kvl2vn")
 
 	useEffect(() => {
 		document.addEventListener("readystatechange", documentStateChange)

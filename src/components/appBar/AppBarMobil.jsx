@@ -10,6 +10,7 @@ import ButtonConnection from "./button_connection"
 
 import Toggle from "../toggle/Toggle"
 import ToggleItem from "../toggle/ToggleItem"
+import SelectDashboard from "./selectDashboard/select_dashboard"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -68,6 +69,8 @@ const useStyles = makeStyles((theme) => {
 			zIndex: theme.zIndex.appBar,
 		},
 		center: {
+			margin: theme.spacing(1),
+			padding: theme.spacing(1),
 			display: "flex",
 			justifyContent: "center",
 			alignItems: "center",
@@ -101,6 +104,11 @@ const AppBarMobile = ({ type, onChangeType }) => {
 		history.push(path)
 		handleClose()
 	}
+
+	const callback = () => {
+		handleClose()
+
+	}
 	return (
 		<div className={classes.appBarMobileRoot}>
 			<div className={classes.appBarMobileContent}>
@@ -114,6 +122,7 @@ const AppBarMobile = ({ type, onChangeType }) => {
 				/>
 				<Dialog
 					fullScreen
+					disableEnforceFocus
 					open={open}
 					onClose={handleClose}
 					className={classes.dialog}
@@ -172,22 +181,10 @@ const AppBarMobile = ({ type, onChangeType }) => {
 							</p>
 						</div>
 
-						<div
-							className={
-								currentPath === "/dashboard" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem
-							}
-							onClick={() => {
-								clickItem("/dashboard")
-							}}
-						>
-							<p
-								className={
-									currentPath === "/dashboard" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem
-								}
-							>
-								Dashboard
-							</p>
+						<div className={classes.center}>
+							<SelectDashboard callback={callback}/>
 						</div>
+
 						<div className={classes.center}>
 							<Toggle color="primary" value={type} exclusive onChange={onChangeType}>
 								<ToggleItem value="app">App</ToggleItem>
