@@ -1,5 +1,6 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
+import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 import { useDashboard } from "../../../contexts/dashboard.provider"
 import useSize from "../../../hooks/sizeHook"
 import Details from "./details"
@@ -11,44 +12,61 @@ const useStyles = makeStyles((theme) => {
 			width: "100%",
 			height: "100%",
 			display: "grid",
-			
+
 			gridTemplateColumns: "2fr 1fr",
 			[theme.breakpoints.down("xs")]: {
 				gridTemplateColumns: "1fr",
 			},
 		},
+		loading:{
+			backgroundColor: theme.palette.primary.dark2,
+		},
 		mainContainer: {
-            overflow:"hidden",
-			overflowY:"auto",
+			position: "relative",
+			overflow: "hidden",
+			overflowY: "auto",
 			backgroundColor: theme.palette.primary.dark2,
 		},
 
-		table:{
+		table: {
 			margin: "8px",
-			padding: "12px 0 24px 0"
-		}
+			padding: "12px 0 24px 0",
+		},
 	}
 })
 const Transactions = () => {
 	const classes = useStyles()
 	const size = useSize()
 	const [open, setOpen] = useState(false)
-	const { address, getTypeTrx, getTrx } = useDashboard()
+	const {  getTypeTrx, getTrx } = useDashboard()
+	const address = "osmo1nzutmw5hqat76csr6qggnplemvqf5hczserhuv"
+	/*
+	osmo1nzutmw5hqat76csr6qggnplemvqf5hczserhuv
+	osmo1ukzgv8ctsvsmwn6z7lhfqfs0cncy6d6f2kvl2vn
+	*/
+	const [loadingTrx, setLoadingTrx] = useState(true)
 
 	const [trx, setTrx] = useState([])
 
 	useEffect(() => {
 		const fetch = async () => {
-			let promises = [getTypeTrx({ address }), getTrx({ address })]
-			let results = await Promise.all(promises)
-			let types = results[0]
-			let trx = results[1]
-			setTrx(trx)
-			console.log("%ctransactions.jsx -> 35 BLUE: trx, type", "background: #2196f3; color:#FFFFFF", trx, types)
-			console.log("transactions.jsx -> 36: address", address)
+			try {
+				let promises = [getTypeTrx({ address }), getTrx({ address })]
+				let results = await Promise.all(promises)
+				let types = results[0]
+				let trx = results[1]
+				setTrx(trx)
+				setLoadingTrx(false)
+				console.log("%ctransactions.jsx -> 35 BLUE: trx, type", "background: #2196f3; color:#FFFFFF", trx, types)
+				console.log("transactions.jsx -> 36: address", address)
+			} catch (e) {
+				console.log("%ctransactions.jsx -> 53 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
+				setLoadingTrx(false)
+			}
 		}
 
 		if (address && address.length > 0) {
+			console.log("transactions.jsx -> 61: address", address  )
 			fetch()
 		}
 	}, [address])
@@ -61,12 +79,13 @@ const Transactions = () => {
 	}
 
 	const onClickRow = (data) => {
-		console.log("transactions.jsx -> 64: data", data  )
+		console.log("transactions.jsx -> 64: data", data)
 	}
 	return (
 		<div className={classes.rootTransactions}>
 			<div className={classes.mainContainer} onClick={onOpen}>
-				<TableTrx data={trx} className={classes.table} onClickRow={onClickRow}/>
+				<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} />
+				<TableTrx data={trx} className={classes.table} onClickRow={onClickRow} />
 			</div>
 			{size !== "xs" ? (
 				<div className={classes.detailsConatainer}>
