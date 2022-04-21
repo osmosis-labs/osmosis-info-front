@@ -186,7 +186,7 @@ export const PoolsV2Provider = ({ children }) => {
 						id: key,
 						name: row.reduce((acc, currentValue) => {
 							let symbolName = currentValue.symbol.length === 0 ? currentValue.denom : currentValue.symbol
-							return `${acc}${acc.length > 0 ? "-" : ""}${symbolName}`
+							return `${acc}${acc.length > 0 ? "/" : ""}${symbolName}`
 						}, ""),
 						liquidity: row[0].liquidity,
 						liquidity24hChange: row[0].liquidity_24h_change,
