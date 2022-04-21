@@ -53,7 +53,7 @@ const CellPoolName = ({ cellKey, cellConfig, data }) => {
 			<div className={classes.rootCellPoolName}>
 				<div className={classes.images}>
 					{currentData
-						.split("-")
+						.split("/")
 						.slice(0, 2)
 						.map((name, index) => {
 							return (

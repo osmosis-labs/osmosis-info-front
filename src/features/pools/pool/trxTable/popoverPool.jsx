@@ -103,7 +103,7 @@ const PopoverPool = ({ routes, open, event, onClose, id }) => {
 				</div>
 				<div className={classes.body}>
 					{routes.map((route, index) => {
-						let images = route.poolName.split("-").map((tokenName) => {
+						let images = route.poolName.split("/").map((tokenName) => {
 							return `https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${tokenName.toLowerCase()}.png`
 						})
 						return (
