@@ -26,13 +26,15 @@ import { TokenChartV2Provider } from "../../contexts/TokenChartV2"
 import NotFound from "../404/notFound"
 import { useThemeCustom } from "../../contexts/ThemeProvider"
 import { KeplrProvider } from "../../contexts/KeplrProvider"
-import Dashboard from "../dashboard/dashboard"
 import { ToastProvider } from "../../contexts/Toast.provider"
 import { getKeplrFromWindow } from "@keplr-wallet/stores"
 import { KeplrWalletConnectV1, WalletInfo, WalletManagerProvider } from "cosmodal"
 import keplrLogo from "./keplr.png"
 import walletConnectLogo from "./wallet-connect.png"
 import { DashboardProvider } from "../../contexts/dashboard.provider"
+import Analytics from "../dashboard/analytics/analytics"
+import Transactions from "../dashboard/transactions/transactions"
+import Trades from "../dashboard/trades/trades"
 const useStyles = makeStyles((theme) => {
 	return {
 		appRoot: {
@@ -109,60 +111,66 @@ const App = () => {
 													<KeplrProvider>
 														<LoaderProvider>
 															<ToastProvider>
-																<LoaderOsmosis />
-																<Helmet>
-																	<script src="/charting_library/charting_library.js" type="text/javascript" />
-																</Helmet>
-																<div className={classes.appRoot}>
-																	<Toast />
+																<DashboardProvider>
+																	<LoaderOsmosis />
+																	<Helmet>
+																		<script src="/charting_library/charting_library.js" type="text/javascript" />
+																	</Helmet>
+																	<div className={classes.appRoot}>
+																		<Toast />
 
-																	<InfoBar />
-																	<AppBar />
-																	<div className={classes.container}>
-																		<div className={classes.contentContainer}>
-																			<Switch>
-																				<Route path="/" exact={true}>
-																					<div className={classes.content}>
-																						<Overview />
-																					</div>
-																				</Route>
-																				<Route path="/pools">
-																					<div className={classes.content}>
-																						<Pools />
-																					</div>
-																				</Route>
-																				<Route path="/pool/:id">
-																					<div className={classes.content}>
-																						<Pool />
-																					</div>
-																				</Route>
-																				<Route path="/tokens">
-																					<div className={classes.content}>
-																						<Tokens />
-																					</div>
-																				</Route>
-																				<Route path="/token/:symbol">
-																					<Token />
-																				</Route>
-																				<Route path="/ibc">
-																					<IBCProvider>
-																						<IBC />
-																					</IBCProvider>
-																				</Route>
-																				<Route path="/dashboard">
-																					<DashboardProvider>
-																						<Dashboard />
-																					</DashboardProvider>
-																				</Route>
-																				<Route>
-																					<div className={classes.content}>
-																						<NotFound />
-																					</div>
-																				</Route>
-																			</Switch>
+																		<InfoBar />
+																		<AppBar />
+																		<div className={classes.container}>
+																			<div className={classes.contentContainer}>
+																				<Switch>
+																					<Route path="/" exact={true}>
+																						<div className={classes.content}>
+																							<Overview />
+																						</div>
+																					</Route>
+																					<Route path="/pools">
+																						<div className={classes.content}>
+																							<Pools />
+																						</div>
+																					</Route>
+																					<Route path="/pool/:id">
+																						<div className={classes.content}>
+																							<Pool />
+																						</div>
+																					</Route>
+																					<Route path="/tokens">
+																						<div className={classes.content}>
+																							<Tokens />
+																						</div>
+																					</Route>
+																					<Route path="/token/:symbol">
+																						<Token />
+																					</Route>
+																					<Route path="/ibc">
+																						<IBCProvider>
+																							<IBC />
+																						</IBCProvider>
+																					</Route>
+																					<Route exact={true} path="/dashboard/">
+																						<Analytics />
+																					</Route>
+																					<Route path="/dashboard/transactions">
+																						<Transactions />
+																					</Route>
+																					<Route path="/dashboard/trades">
+																						<Trades />
+																					</Route>
+																					<Route>
+																						<div className={classes.content}>
+																							<NotFound />
+																						</div>
+																					</Route>
+																				</Switch>
+																			</div>
 																		</div>
 																	</div>
-																</div>
+																</DashboardProvider>
 															</ToastProvider>
 														</LoaderProvider>
 													</KeplrProvider>

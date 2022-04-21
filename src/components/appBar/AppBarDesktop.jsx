@@ -6,6 +6,7 @@ import logo from "./logo.png"
 import Search from "./Search"
 import Toggle from "../toggle/Toggle"
 import ToggleItem from "../toggle/ToggleItem"
+import SelectDashboard from "./selectDashboard/select_dashboard"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -138,14 +139,7 @@ const AppBarDesktop = ({ type, onChangeType }) => {
 						>
 							IBC Status
 						</Link>
-						<Link
-							to="/dashboard"
-							className={
-								currentPath === "/dashboard" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem
-							}
-						>
-							Dashboard
-						</Link>
+						<SelectDashboard/>
 					</div>
 				</div>
 				<div className={classes.right}>
