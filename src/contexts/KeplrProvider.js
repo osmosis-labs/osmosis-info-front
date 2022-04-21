@@ -9,6 +9,10 @@ export const KeplrProvider = ({ children }) => {
 	const { getWallet, clearLastUsedWallet, setDefaultConnectionType, connectionType } = useWalletManager()
 	const [name, setName] = useState("")
 	const [address, setAddress] = useState("osmo1ukzgv8ctsvsmwn6z7lhfqfs0cncy6d6f2kvl2vn")
+	/*
+	osmo1nzutmw5hqat76csr6qggnplemvqf5hczserhuv
+	osmo1ukzgv8ctsvsmwn6z7lhfqfs0cncy6d6f2kvl2vn
+	*/
 
 	useEffect(() => {
 		document.addEventListener("readystatechange", documentStateChange)

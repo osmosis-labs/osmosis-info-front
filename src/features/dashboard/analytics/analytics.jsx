@@ -14,8 +14,6 @@ const Analytics = () => {
 
 	useEffect(() => {
 		const fetch = async () => {
-			let trx = await getNbTransaction(address)
-			console.log("analytics.jsx -> 21: trx", trx)
 		}
 
 		if (address && address.length > 0) {
