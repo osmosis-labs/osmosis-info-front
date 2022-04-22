@@ -22,6 +22,7 @@ import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import ExpertChartDialog from "./expertChart/ExpertChartDialog"
 import { useTokenChartV2 } from "../../../contexts/TokenChartV2"
 import TrxTable from "./trxTable/trxTable"
+import { useSettings } from "../../../contexts/SettingsProvider"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -157,9 +158,11 @@ const Token = ({ showToast }) => {
 	const classes = useStyles()
 	const history = useHistory()
 	const { symbol } = useParams()
+	const { settings, updateSettings } = useSettings()
 	const {
 		getTokenData,
 		tokens,
+		allTokens,
 		loadingToken,
 		loadingCharts,
 		getHistoricalChartToken,
@@ -184,9 +187,23 @@ const Token = ({ showToast }) => {
 			history.push("/tokens")
 		} else {
 			if (tokens.length > 0) {
-				let indexToken = getInclude(tokens, (token) => token.symbol === symbol)
+				let indexToken = getInclude(allTokens, (token) => token.symbol === symbol)
 				if (indexToken >= 0) {
-					setToken({ ...tokens[indexToken] })
+					let currentToken = allTokens[indexToken]
+					if (currentToken.main && settings.type === "frontier") {
+						updateSettings({ type: "main" })
+						showToast({
+							severity: "info",
+							text: "You are redirected to main because the token does not exist on frontier.",
+						})
+					} else if (!currentToken.main && settings.type === "app") {
+						updateSettings({ type: "frontier" })
+						showToast({
+							severity: "info",
+							text: "You are redirected to frontier because the token does not exist on main.",
+						})
+					}
+					setToken(currentToken)
 				} else {
 					showToast({
 						severity: "warning",
@@ -266,13 +283,7 @@ const Token = ({ showToast }) => {
 												: classes.dataDetailChange
 										}
 									>
-										{token.liquidity24hChange > 0 ? (
-											"↑"
-										) : token.liquidity24hChange < 0 ? (
-											"↓"
-										) : (
-											<span />
-										)}
+										{token.liquidity24hChange > 0 ? "↑" : token.liquidity24hChange < 0 ? "↓" : <span />}
 										{getPercent(Math.abs(token.liquidity24hChange))}
 									</p>
 								</div>
@@ -290,13 +301,7 @@ const Token = ({ showToast }) => {
 												: classes.dataDetailChange
 										}
 									>
-										{token.volume24hChange > 0 ? (
-											"↑"
-										) : token.volume24hChange < 0 ? (
-											"↓"
-										) : (
-											<span />
-										)}
+										{token.volume24hChange > 0 ? "↑" : token.volume24hChange < 0 ? "↓" : <span />}
 										{getPercent(Math.abs(token.volume24hChange))}
 									</p>
 								</div>
@@ -315,13 +320,7 @@ const Token = ({ showToast }) => {
 												: `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
 										}
 									>
-										{token.price24hChange > 0 ? (
-											"↑"
-										) : token.price24hChange < 0 ? (
-											"↓"
-										) : (
-											<span />
-										)}
+										{token.price24hChange > 0 ? "↑" : token.price24hChange < 0 ? "↓" : <span />}
 										{getPercent(Math.abs(token.price24hChange))}
 									</p>
 								</div>

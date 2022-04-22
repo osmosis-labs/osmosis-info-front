@@ -84,7 +84,7 @@ const IBCTable = ({ data, loadingIBC, className, updateWatchlistIBC, isInWatchli
 	const configIBCTable = {
 		defaultOrderBy: "status",
 		defaultOrder: "desc",
-		textEmpty: "No status find",
+		textEmpty: "No status found",
 		rowsPerPage: 10,
 		rowsPerPageOptions: [5, 10, 20, 50, 100],
 		callBackEndPage: null,
