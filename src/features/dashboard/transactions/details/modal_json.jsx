@@ -1,9 +1,8 @@
 import { AppBar, IconButton, makeStyles, Toolbar } from "@material-ui/core"
+import { useTheme } from "@material-ui/core"
+import ReactJson from "react-json-view"
 
-import { Slide, Dialog } from "@mui/material"
-import { forwardRef } from "react"
 import CloseIcon from "@mui/icons-material/Close"
-import Details from "./details/details"
 const useStyles = makeStyles((theme) => {
 	return {
 		detailsDialog: {
@@ -33,13 +32,16 @@ const useStyles = makeStyles((theme) => {
 			transform: "translateY(100%)",
 		},
 		detailsContainer: {
+			backgroundColor: theme.palette.primary.main,
 			overflowY: "auto",
 			width: "100%",
 			display: "flex",
 			flexDirection: "column",
 			height: "100%",
+			padding: "8px",
 		},
 		appBarDetails: {
+			zIndex: theme.zIndex.drawer + 1,
 			position: "relative",
 		},
 		title: {
@@ -49,8 +51,9 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const DialogDetails = ({ data, open, onClose, openJSON }) => {
+const ModalJSON = ({ data, open, onClose }) => {
 	const classes = useStyles()
+	const theme = useTheme()
 
 	return (
 		<div
@@ -65,16 +68,14 @@ const DialogDetails = ({ data, open, onClose, openJSON }) => {
 					<IconButton edge="start" color="inherit" onClick={onClose} aria-label="close">
 						<CloseIcon />
 					</IconButton>
-					<p className={classes.title}>
-						Transaction details
-					</p>
+					<p className={classes.title}>Transaction json</p>
 				</Toolbar>
 			</AppBar>
 			<div className={classes.detailsContainer}>
-				<Details data={data} openJSON={openJSON}/>
+				<ReactJson src={data} theme="paraiso" style={{ backgroundColor: theme.palette.primary.main }} />
 			</div>
 		</div>
 	)
 }
 
-export default DialogDetails
+export default ModalJSON
