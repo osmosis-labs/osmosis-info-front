@@ -43,6 +43,16 @@ const useStyles = makeStyles((theme) => {
 			marginRight: "30px",
 			width: "100%",
 		},
+		textTitle: {
+			textOverflow: "ellipsis",
+			overflow: "hidden",
+			whiteSpace: "nowrap",
+			maxWidth: "350px",
+			[theme.breakpoints.down("xs")]: {
+				maxWidth: "250px",
+				fontSize: "1.1rem",
+			},
+		},
 		iconTitle: {
 			padding: "6px",
 			marginRight: "10px",
@@ -134,14 +144,9 @@ const DialogAPR = ({ data, open, onClose }) => {
 				<CloseIcon className={classes.closeIcon} onClick={onClose} />
 				<div className={classes.title}>
 					<CalculateIcon className={classes.iconTitle} />
-					<p>ROI Calculator for pool {data.name} </p>
+					<p className={classes.textTitle}>ROI Calculator for pool {data.name} </p>
 				</div>
-				<InputAPR
-					onChange={onChangeStaked}
-					value={staked}
-					swapIsOsmos={swapIsOsmos}
-					setSwapIsOsmos={setSwapIsOsmos}
-				/>
+				<InputAPR onChange={onChangeStaked} value={staked} swapIsOsmos={swapIsOsmos} setSwapIsOsmos={setSwapIsOsmos} />
 				<div className={classes.bubles}>
 					<span className={classes.buble} onClick={() => onChangeBuble(100)}>
 						{swapIsOsmos ? "100 OSMO" : "$100"}
