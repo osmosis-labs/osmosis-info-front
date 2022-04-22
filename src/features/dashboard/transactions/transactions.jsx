@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 import { useDashboard } from "../../../contexts/dashboard.provider"
 import useSize from "../../../hooks/sizeHook"
-import Details from "./details"
+import Details from "./details/details"
 import DialogDetails from "./dialog_details"
 import TableTrx from "./tableTrx/table_trx"
 const useStyles = makeStyles((theme) => {
@@ -32,6 +32,9 @@ const useStyles = makeStyles((theme) => {
 			margin: "8px",
 			padding: "12px 0 24px 0",
 		},
+		detailsConatainer:{
+			borderLeft: `1px solid ${theme.palette.primary.light}`,
+		}
 	}
 })
 const Transactions = () => {
@@ -39,6 +42,7 @@ const Transactions = () => {
 	const size = useSize()
 	const [open, setOpen] = useState(false)
 	const {  getTypeTrx, getTrx } = useDashboard()
+	const [currentTrx, setCurrentTrx] = useState({})
 	const address = "osmo1nzutmw5hqat76csr6qggnplemvqf5hczserhuv"
 	/*
 	osmo1nzutmw5hqat76csr6qggnplemvqf5hczserhuv
@@ -55,6 +59,7 @@ const Transactions = () => {
 				let results = await Promise.all(promises)
 				let types = results[0]
 				let trx = results[1]
+				setCurrentTrx(trx[0])
 				setTrx(trx)
 				setLoadingTrx(false)
 				console.log("%ctransactions.jsx -> 35 BLUE: trx, type", "background: #2196f3; color:#FFFFFF", trx, types)
@@ -79,6 +84,7 @@ const Transactions = () => {
 	}
 
 	const onClickRow = (data) => {
+		setCurrentTrx(data)
 		console.log("transactions.jsx -> 64: data", data)
 	}
 	return (
@@ -89,10 +95,10 @@ const Transactions = () => {
 			</div>
 			{size !== "xs" ? (
 				<div className={classes.detailsConatainer}>
-					<Details />
+					<Details data={currentTrx}/>
 				</div>
 			) : (
-				<DialogDetails open={open} onClose={onClose} />
+				<DialogDetails open={open} onClose={onClose} data={currentTrx} />
 			)}
 		</div>
 	)
