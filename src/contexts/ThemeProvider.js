@@ -47,6 +47,7 @@ export const ThemeCustomProvider = ({ children }) => {
 			dark: "#6c7284",
 			textLight: "rgba(255, 255, 255, 0.7)",
 			textDark: "rgba(255, 255, 255, 0.4)",
+			textLight2: "rgba(255, 255, 255, 0.55)",
 			textDark2: "rgba(255, 255, 255, 0.2)",
 			textDark3: "rgba(255, 255, 255, 0.1)",
 			contrastText: "#FFFFFF",

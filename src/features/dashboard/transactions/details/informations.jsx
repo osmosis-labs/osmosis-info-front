@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => {
 			backgroundColor: theme.palette.primary.light,
 		},
 		rowMiddle: {
-			borderBottom: `1px solid ${theme.palette.gray.dark}`,
+			borderBottom: `1px solid ${theme.palette.gray.textLight2}`,
 		},
 		rowEnd: {
 			padding: "0 20px 12px 20px",
@@ -38,14 +38,14 @@ const useStyles = makeStyles((theme) => {
 		},
 		subTitle: {
 			fontSize: "14px",
+			color: theme.palette.primary.contrastText,
 		},
 		info: {
 			width: "100%",
 			fontSize: "12px",
-			fontWeight: "bold",
 			padding: "0 0 8px 0",
 			marginTop: "4px",
-			color: theme.palette.gray.dark,
+			color: theme.palette.gray.textLight2,
 		},
 		hashContainer: {
 			marginTop: "0",
@@ -77,8 +77,7 @@ const useStyles = makeStyles((theme) => {
 			flexDirection: "row",
 			alignItems: "center",
 			padding: "0 0 8px 0",
-			color: theme.palette.gray.dark,
-			fontWeight: "bold",
+			color: theme.palette.gray.textLight2,
 			width: "100%",
 			fontSize: "12px",
 		},

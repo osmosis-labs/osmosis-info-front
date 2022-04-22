@@ -42,7 +42,7 @@ export const DashboardProvider = ({ children }) => {
 				status: "",
 				time: { display: "", value: null },
 				hash: { display: "", value: null },
-				type: [],
+				types: [],
 				fees: 0,
 				height: 0,
 				messages: [],
@@ -63,27 +63,51 @@ export const DashboardProvider = ({ children }) => {
 			trx.hash.display = hashDisplay
 			trx.hash.value = hash
 
-			let type = item.tx_response.tx["@type"]
-			type = type.replace("/", "")
-			trx.type = typesDashboard[type]
-			if (!trx.type) trx.type = type
 			let fees = item.tx_response.tx.auth_info.fee
 			trx.fees = fees.amount.reduce((pr, cr) => pr + cr.amount, 0) / 1_000_000
 
 			trx.height = item.height
-
-			trx.messages = item.tx_response.tx.body.messages
+			let types = []
+			trx.messages = item.tx_response.tx.body.messages.map((message) => {
+				let msg = { ...message }
+				let type = msg["@type"]
+				type = type.replace("/", "")
+				msg.type = typesDashboard[type]
+				if (!msg.type) msg.type = type
+				msg.type
+				types.push(msg.type)
+				return msg
+			})
+			trx.types = types
 
 			trx.chainId = CHAIN_ID
 
 			res.push(trx)
 		})
-		console.log("%cDashboard.provider.js -> 78 GREEN: response.data[0]",'background: #cddc39; color:#212121', response.data[0]  )
+
 		return res
 	}
 
+	const getAdresses = async () => {
+		let url = "https://api-osmosis-chain.imperator.co/swap/v1/pool/1?only_success=false&limit=50&offset=0"
+		let response = await API.request({
+			url,
+			useCompleteURL: true,
+			type: "get",
+		})
+
+		let addresses = []
+		response.data.push({ address: "osmo1nzutmw5hqat76csr6qggnplemvqf5hczserhuv" })
+		response.data.push({ address: "osmo1ukzgv8ctsvsmwn6z7lhfqfs0cncy6d6f2kvl2v" })
+		response.data.forEach((item) => {
+			let address = item.address
+			if (!addresses.includes(address)) addresses.push(address)
+		})
+		return addresses
+	}
+
 	return (
-		<DashboardContext.Provider value={{ address, getTypeTrx, getTrx, typesDashboard }}>
+		<DashboardContext.Provider value={{ address, getTypeTrx, getTrx, typesDashboard, getAdresses }}>
 			{children}
 		</DashboardContext.Provider>
 	)

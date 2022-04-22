@@ -1,11 +1,17 @@
 import { makeStyles } from "@material-ui/core"
 import dayjs from "dayjs"
 import Informations from "./informations"
-
+import Messages from "./messages/messages"
+import IntegrationInstructionsIcon from "@mui/icons-material/IntegrationInstructions"
+import { IconButton } from "@mui/material"
 import trxImg from "./transactions.svg"
+import { useState } from "react"
+import ModalJSON from "./modal_json"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootDetails: {
+			overflow: "hidden",
+			overflowY: "auto",
 			padding: "8px 8px",
 			backgroundColor: theme.palette.primary.main,
 			display: "flex",
@@ -42,8 +48,13 @@ const useStyles = makeStyles((theme) => {
 			maxWidth: "300px",
 			textAlign: "center",
 		},
+		header: {
+			position: "relative",
+			marginTop: "16px",
+			marginBottom: "32px",
+		},
 		title: {
-			margin: "16px 0 8px 0",
+			margin: "0px 0 8px 0",
 			textAlign: "center",
 			fontSize: "18px",
 			color: theme.palette.primary.contrastText,
@@ -51,11 +62,24 @@ const useStyles = makeStyles((theme) => {
 		subTitle: {
 			textAlign: "center",
 			fontSize: "14px",
-			marginBottom: "32px"
+		},
+		iconContainer: {
+			top: "50%",
+			right: "10%",
+			transform:"translate(-50%, -50%)",
+			position: "absolute !important",
+			backgroundColor: `${theme.palette.primary.dark} !important`,
+			borderRadius: "50% !important",
+			padding: "4px !important",
+		},
+		icon: {
+			color: theme.palette.primary.light2,
+			backgroundColor: theme.palette.primary.dark,
+			fontSize: "24px !important",
 		},
 	}
 })
-const Details = ({ data }) => {
+const Details = ({ data, openJSON }) => {
 	const classes = useStyles()
 	if (!data.time) {
 		return (
@@ -69,11 +93,19 @@ const Details = ({ data }) => {
 	}
 
 	let dateToShow = dayjs(data.time.value.toString()).format("h:m a, D MMM YYYY")
+
+
 	return (
 		<div className={classes.rootDetails}>
-			<p className={classes.title}>Transaction Details</p>
-			<p className={classes.subTitle}>{dateToShow}</p>
-			<Informations data={data}/>
+			<div className={classes.header}>
+				<p className={classes.title}>Transaction Details</p>
+				<p className={classes.subTitle}>{dateToShow}</p>
+				<IconButton aria-label="open" className={classes.iconContainer} onClick={openJSON}>
+					<IntegrationInstructionsIcon className={classes.icon} />
+				</IconButton>
+			</div>
+			<Informations data={data} />
+			<Messages data={data} />
 		</div>
 	)
 }
