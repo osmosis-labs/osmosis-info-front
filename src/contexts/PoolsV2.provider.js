@@ -13,7 +13,7 @@ export const usePoolsV2 = () => useContext(PoolsV2Context)
 export const PoolsV2Provider = ({ children }) => {
 	const [pools, setPools] = useState([])
 	const [allPools, setAllPools] = useState([])
-	const { tokens } = useTokensV2()
+	const { allTokens } = useTokensV2()
 	const { settings } = useSettings()
 
 	const [poolsAPR, setPoolsAPR] = useState([])
@@ -144,7 +144,7 @@ export const PoolsV2Provider = ({ children }) => {
 							if (aprItem.symbol === "OSMO") {
 								let date = new Date(aprItem.start_date)
 								if (date <= new Date()) {
-									let token = getItemInclude(tokens, (token) => aprItem.symbol === token.symbol)
+									let token = getItemInclude(allTokens, (token) => aprItem.symbol === token.symbol)
 									if (!apr.internal) {
 										apr.internal = { apr1d: 0, apr7d: 0, apr14d: 0, token }
 									}
@@ -156,8 +156,7 @@ export const PoolsV2Provider = ({ children }) => {
 							} else {
 								let date = new Date(aprItem.start_date)
 								if (date <= new Date()) {
-									let token = getItemInclude(tokens, (token) => aprItem.symbol === token.symbol)
-
+									let token = getItemInclude(allTokens, (token) => aprItem.symbol === token.symbol)
 									if (!apr.external) {
 										apr.external = { apr1d: 0, apr7d: 0, apr14d: 0, token }
 									}
@@ -212,7 +211,7 @@ export const PoolsV2Provider = ({ children }) => {
 				return data
 			}
 		},
-		[tokens, settings.type]
+		[allTokens, settings.type]
 	)
 
 	const getLiquidityChartPool = useCallback(async ({ poolId, range = "d" }) => {
@@ -328,13 +327,13 @@ export const PoolsV2Provider = ({ children }) => {
 
 	useEffect(() => {
 		let fetch = async () => {
-			if (tokens && tokens.length > 0) {
+			if (allTokens && allTokens.length > 0) {
 				setLoadingPools(false)
 				getPools({})
 			}
 		}
 		fetch()
-	}, [tokens, settings.type])
+	}, [allTokens, settings.type])
 
 	return (
 		<PoolsV2Context.Provider
