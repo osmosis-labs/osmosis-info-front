@@ -90,7 +90,7 @@ export const ThemeCustomProvider = ({ children }) => {
 			lightLowOpacity: "rgba(45, 39, 85, 0.9)",
 			light2: "#8E83AA",
 			main: "rgb(35, 29, 75)",
-			main2: "#2D2755",
+			main2: "#39316B",
 			dark: "rgb(28, 23, 60)",
 			dark2: "rgb(23, 15, 52)",
 			contrastText: "#ffffff",

@@ -4,13 +4,15 @@ import { useKeplr } from "./KeplrProvider"
 import relativeTime from "dayjs/plugin/relativeTime"
 import utc from "dayjs/plugin/utc"
 import dayjs from "dayjs"
+import typesDashboard from "../helpers/typesDashboard.json"
 const DashboardContext = createContext()
 dayjs.extend(relativeTime)
 dayjs.extend(utc)
+
 export const useDashboard = () => useContext(DashboardContext)
 
 export const DashboardProvider = ({ children }) => {
-	const { address } = useKeplr()
+	const { address, CHAIN_ID } = useKeplr()
 
 	const getTypeTrx = async ({ address }) => {
 		let response = await API.request({
@@ -44,6 +46,7 @@ export const DashboardProvider = ({ children }) => {
 				fees: 0,
 				height: 0,
 				messages: [],
+				chainId: "",
 			}
 
 			trx.status = item.tx_response.code === 0 ? "success" : "failed"
@@ -60,19 +63,28 @@ export const DashboardProvider = ({ children }) => {
 			trx.hash.display = hashDisplay
 			trx.hash.value = hash
 
-			trx.type = item.tx_response.tx["@type"]
-
+			let type = item.tx_response.tx["@type"]
+			type = type.replace("/", "")
+			trx.type = typesDashboard[type]
+			if (!trx.type) trx.type = type
 			let fees = item.tx_response.tx.auth_info.fee
-			trx.fees = fees.amount[0].amount / 1_000_000
+			trx.fees = fees.amount.reduce((pr, cr) => pr + cr.amount, 0) / 1_000_000
 
 			trx.height = item.height
 
 			trx.messages = item.tx_response.tx.body.messages
 
+			trx.chainId = CHAIN_ID
+
 			res.push(trx)
 		})
+		console.log("%cDashboard.provider.js -> 78 GREEN: response.data[0]",'background: #cddc39; color:#212121', response.data[0]  )
 		return res
 	}
 
-	return <DashboardContext.Provider value={{ address, getTypeTrx, getTrx }}>{children}</DashboardContext.Provider>
+	return (
+		<DashboardContext.Provider value={{ address, getTypeTrx, getTrx, typesDashboard }}>
+			{children}
+		</DashboardContext.Provider>
+	)
 }

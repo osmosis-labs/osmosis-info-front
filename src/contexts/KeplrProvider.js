@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { useWalletManager } from "cosmodal"
 const KeplrContext = createContext()
 const AUTO_CONNECT_WALLET_KEY = "auto_connect_wallet"
-
+const CHAIN_ID = "osmosis-1"
 export const useKeplr = () => useContext(KeplrContext)
 export const KeplrProvider = ({ children }) => {
 	const [keplrStatus, setKeplrStatus] = useState("uninstalled")
@@ -23,8 +23,8 @@ export const KeplrProvider = ({ children }) => {
 
 	const connect = async () => {
 		const wallet = await getWallet()
-		await wallet.enable(["osmosis-1"])
-		const key = await wallet.getKey("osmosis-1")
+		await wallet.enable([CHAIN_ID])
+		const key = await wallet.getKey(CHAIN_ID)
 		setAddress(key.bech32Address)
 		setName(key.name)
 	}
@@ -59,6 +59,7 @@ export const KeplrProvider = ({ children }) => {
 				disconnect,
 				address,
 				name,
+				CHAIN_ID
 			}}
 		>
 			{children}
