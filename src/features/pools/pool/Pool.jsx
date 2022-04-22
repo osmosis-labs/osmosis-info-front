@@ -142,7 +142,7 @@ const Pool = ({ showToast }) => {
 		if (!id) {
 			showToast({
 				severity: "warning",
-				text: "Pool not find, you are redirected to pools page.",
+				text: "Pool not found, you are redirected to pools page.",
 			})
 			history.push("/pools")
 		} else {
@@ -167,7 +167,7 @@ const Pool = ({ showToast }) => {
 				} else {
 					showToast({
 						severity: "warning",
-						text: "Pool not find, you are redirected to pools page.",
+						text: "Pool not found, you are redirected to pools page.",
 					})
 					history.push("/pools")
 				}
