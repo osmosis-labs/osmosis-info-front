@@ -3,7 +3,7 @@ import { AppBar, IconButton, makeStyles, Toolbar } from "@material-ui/core"
 import { Slide, Dialog } from "@mui/material"
 import { forwardRef } from "react"
 import CloseIcon from "@mui/icons-material/Close"
-import Details from "./details"
+import Details from "./details/details"
 const useStyles = makeStyles((theme) => {
 	return {
 		detailsDialog: {
@@ -71,7 +71,7 @@ const DialogDetails = ({ data, open, onClose }) => {
 				</Toolbar>
 			</AppBar>
 			<div className={classes.detailsContainer}>
-				<Details />
+				<Details data={data}/>
 			</div>
 		</div>
 	)
