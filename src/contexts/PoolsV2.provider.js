@@ -12,6 +12,7 @@ export const usePoolsV2 = () => useContext(PoolsV2Context)
 
 export const PoolsV2Provider = ({ children }) => {
 	const [pools, setPools] = useState([])
+	const [allPools, setAllPools] = useState([])
 	const { tokens } = useTokensV2()
 	const { settings } = useSettings()
 
@@ -116,6 +117,8 @@ export const PoolsV2Provider = ({ children }) => {
 				let data = saveData.current[getName("pools", lowLiquidity)]
 				if (settings.type === "app") {
 					data = data.filter((item) => item.main)
+				} else {
+					data = data.filter((item) => !item.main)
 				}
 				setPools(data)
 				setLoadingPools(false)
@@ -198,8 +201,11 @@ export const PoolsV2Provider = ({ children }) => {
 						main,
 					}
 				})
+				setAllPools(data)
 				if (settings.type === "app") {
 					data = data.filter((item) => item.main)
+				} else {
+					data = data.filter((item) => !item.main)
 				}
 				setPools(data)
 				setLoadingPools(false)
@@ -344,6 +350,7 @@ export const PoolsV2Provider = ({ children }) => {
 				getLiquidityChartPool,
 				getTrxPool,
 				loadingTrx,
+				allPools,
 			}}
 		>
 			{children}
