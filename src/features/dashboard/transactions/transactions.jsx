@@ -1,5 +1,5 @@
 import { makeStyles, MenuItem, Select, TextField } from "@material-ui/core"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 import { useDashboard } from "../../../contexts/dashboard.provider"
 import useSize from "../../../hooks/sizeHook"
@@ -66,6 +66,7 @@ const Transactions = () => {
 	const [address, setAddress] = useState("")
 	const [addressTxt, setAddressTxt] = useState("")
 	const [openModalJSON, setOpenModalJSON] = useState(false)
+	const offset = useRef(0)
 	/*
 	osmo1nzutmw5hqat76csr6qggnplemvqf5hczserhuv
 	*/
@@ -157,6 +158,20 @@ const Transactions = () => {
 	const onChange = (event) => {
 		setAddressTxt(event.target.value)
 	}
+
+	const cbEndPage = async () => {
+		try {
+			setLoadingTrx(true)
+			offset.current += 10
+			let results = await getTrx({ address, offset: offset.current })
+			setTrx([...trx, ...results])
+			setLoadingTrx(false)
+		} catch (e) {
+			setLoadingTrx(false)
+			console.log("%ctransactions.jsx -> 53 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
+		}
+	}
+
 	return (
 		<div className={classes.rootTransactions}>
 			<div className={classes.mainContainer}>
@@ -184,7 +199,7 @@ const Transactions = () => {
 					</Select>
 				</div>
 				<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} />
-				<TableTrx data={trx} className={classes.table} onClickRow={onClickRow} />
+				<TableTrx data={trx} className={classes.table} onClickRow={onClickRow} cbEndPage={cbEndPage} />
 			</div>
 			{size !== "xs" ? (
 				<div className={classes.detailsConatainer}>

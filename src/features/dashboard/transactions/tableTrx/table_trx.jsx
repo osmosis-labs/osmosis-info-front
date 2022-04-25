@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const TableTrx = ({ data, className, onClickRow }) => {
+const TableTrx = ({ data, className, onClickRow, cbEndPage }) => {
 	const classes = useStyles()
 
 	const transformDisplay = (data) => data.display
@@ -74,7 +74,7 @@ const TableTrx = ({ data, className, onClickRow }) => {
 		textEmpty: "No transactions found",
 		rowsPerPage: 10,
 		rowsPerPageOptions: [5, 10, 20, 50, 100],
-		callBackEndPage: null,
+		callBackEndPage: cbEndPage,
 		cellsConfig: [
             {
 				label: "Status",

@@ -23,7 +23,7 @@ export const DashboardProvider = ({ children }) => {
 		return response.data
 	}
 
-	const getTrx = async ({ address, limit = 50, offset = 0, type }) => {
+	const getTrx = async ({ address, limit = 10, offset = 0, type }) => {
 		let url = `https://api-osmosis-chain.imperator.co/txs/v1/tx/address/${address}?limit=${limit}&offset=${offset}`
 		if (type) url += `&type=${type}`
 		let response = await API.request({

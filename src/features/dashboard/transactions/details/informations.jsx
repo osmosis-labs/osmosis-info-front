@@ -7,7 +7,7 @@ import FileCopyIcon from "@mui/icons-material/FileCopy"
 import CheckIcon from "@mui/icons-material/Check"
 import CloseIcon from "@mui/icons-material/Close"
 import { usePrices } from "../../../../contexts/PricesProvider"
-import { detectBestDecimalsDisplay, formateNumberDecimalsAuto } from "../../../../helpers/helpers"
+import {  formateNumberDecimalsAuto } from "../../../../helpers/helpers"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootInformations: {
