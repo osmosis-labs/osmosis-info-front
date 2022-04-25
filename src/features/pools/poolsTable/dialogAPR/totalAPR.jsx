@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import { formaterNumber, getPercent } from "../../../../helpers/helpers"
 import useSize from "../../../../hooks/sizeHook"
+import { usePrices } from "../../../../contexts/PricesProvider"
 const useStyles = makeStyles((theme) => {
 	return {
 		resultContainer: {
@@ -124,17 +125,23 @@ const useStyles = makeStyles((theme) => {
 })
 const TotalAPR = ({ apr, periode, staked }) => {
 	const classes = useStyles()
+	const { priceOsmoBrut } = usePrices()
 	const [open, setOpen] = useState(true)
 	const size = useSize()
 	const [total, setTotal] = useState({ osmo: 0, usd: 0, percent: 0 })
 	const [internal, setInternal] = useState({ osmo: 0, usd: 0, percent: 0 })
 	const [external, setExternal] = useState({ external: 0, usd: 0, percent: 0, symbol: "" })
 	const [hasExternal, setHasExternal] = useState(false)
+	const [hasInternal, setHasInternal] = useState(false)
 
 	useEffect(() => {
 		const hasExternalTMP = !!apr.external
-		getTotal(hasExternalTMP)
-		getInternal(hasExternalTMP)
+		const hasInternalTMP = !!apr.internal
+		getTotal(hasInternalTMP, hasExternalTMP)
+		if (hasInternalTMP) {
+			getInternal()
+			setHasInternal(true)
+		}
 		if (hasExternalTMP) {
 			getExternal()
 			setHasExternal(true)
@@ -150,23 +157,23 @@ const TotalAPR = ({ apr, periode, staked }) => {
 		return apr.apr14d
 	}
 
-	const getTotal = (hasExternal) => {
+	const getTotal = (hasInternalTMP, hasExternal) => {
 		let res = { osmo: 0, usd: 0, percent: 0 }
-		let currentApr = getPeriode(apr.internal) + (hasExternal ? getPeriode(apr.external) : 0)
+		let currentApr = (hasInternalTMP ? getPeriode(apr.internal) : 0) + (hasExternal ? getPeriode(apr.external) : 0)
 		res.percent = currentApr
 		res.usd = ((currentApr / 100) * parseFloat(staked)) / 365
-		res.osmo = res.usd / apr.internal.token.price
+		res.osmo = res.usd / priceOsmoBrut
 
 		setTotal(res)
 		return res
 	}
 
-	const getInternal = (hasExternal) => {
+	const getInternal = () => {
 		let res = { osmo: 0, usd: 0, percent: 0 }
 		let currentApr = getPeriode(apr.internal)
 		res.percent = currentApr
 		res.usd = ((currentApr / 100) * parseFloat(staked)) / 365
-		res.osmo = res.usd / apr.internal.token.price
+		res.osmo = res.usd / priceOsmoBrut
 		setInternal(res)
 		return res
 	}
@@ -193,16 +200,18 @@ const TotalAPR = ({ apr, periode, staked }) => {
 				<p className={` ${classes.itemTotal} ${classes.itemInfoTotal}`}>Total daily</p>
 				<p className={` ${classes.itemTotal} ${classes.itemUSDTotal}`}>${formaterNumber(total.usd)}</p>
 				<p className={` ${classes.itemTotal}`}>{formaterNumber(total.osmo)} OSMO</p>
-				{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(total.percent/365)})</p>}
+				{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(total.percent / 365)})</p>}
 			</div>
 			<div className={`${classes.dropdown} ${open ? classes.dropdownOpened : null}`}>
-				<div className={classes.row}>
-					<span></span>
-					<p className={`${classes.item} ${classes.itemInfo}`}>Internal daily</p>
-					<p className={`${classes.item} ${classes.itemUSD}`}>${formaterNumber(internal.usd)}</p>
-					<p className={`${classes.item}`}>{formaterNumber(internal.osmo)} OSMO</p>
-					{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(internal.percent / 365)})</p>}
-				</div>
+				{hasInternal && (
+					<div className={classes.row}>
+						<span></span>
+						<p className={`${classes.item} ${classes.itemInfo}`}>Internal daily</p>
+						<p className={`${classes.item} ${classes.itemUSD}`}>${formaterNumber(internal.usd)}</p>
+						<p className={`${classes.item}`}>{formaterNumber(internal.osmo)} OSMO</p>
+						{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(internal.percent / 365)})</p>}
+					</div>
+				)}
 				{hasExternal && (
 					<div className={classes.row}>
 						<span></span>

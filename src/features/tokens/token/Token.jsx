@@ -191,7 +191,7 @@ const Token = ({ showToast }) => {
 				if (indexToken >= 0) {
 					let currentToken = allTokens[indexToken]
 					if (currentToken.main && settings.type === "frontier") {
-						updateSettings({ type: "main" })
+						updateSettings({ type: "app" })
 						showToast({
 							severity: "info",
 							text: "You are redirected to main because the token does not exist on frontier.",
