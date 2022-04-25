@@ -92,6 +92,75 @@ export const DashboardProvider = ({ children }) => {
 		return res
 	}
 
+	const getTrades = async ({ address, limit = 10, offset = 0, type }) => {
+		let url = `https://api-osmosis-chain.imperator.co/swap/v1/address/${address}?limit=${limit}&offset=${offset}`
+		if (type) url += `&type=${type}`
+		let response = await API.request({
+			url,
+			useCompleteURL: true,
+			type: "get",
+		})
+		let res = []
+		response.data.forEach((item) => {
+			let trx = {
+				status: "",
+				time: { display: "", value: null },
+				hash: { display: "", value: null },
+				pool: {},
+				tokenIn: {},
+				tokenOut: {},
+				address: {},
+			}
+
+			trx.status = item.code === 0 ? "success" : "failed"
+
+			let time = new Date(item.time_tx)
+			const tzOffset = new Date(item.time_tx).getTimezoneOffset()
+			let sourceDate = dayjs(item.time_tx).add(-tzOffset, "minute")
+			let timeAgo = dayjs(sourceDate).utc().fromNow(false)
+			trx.time.display = timeAgo
+			trx.time.value = time
+
+			let hash = item.tx_hash
+			let hashDisplay = hash.substring(0, 5) + "..." + hash.substring(hash.length - 5)
+			trx.hash.display = hashDisplay
+			trx.hash.value = hash
+
+			let addressDisplay = item.address.substring(0, 5) + "..." + item.address.substring(item.address.length - 5)
+			trx.address = { value: item.address, display: addressDisplay }
+
+			trx.tokenIn = { value: item.amount_in, symbol: item.symbol_in }
+			trx.tokenOut = { value: item.amount_out, symbol: item.symbol_out }
+
+			trx.usd = item.value_usd
+
+			let pools = {
+				images: [
+					`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${item.symbol_in.toLowerCase()}.png`,
+					`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${item.symbol_out.toLowerCase()}.png`,
+				],
+				name: `${item.symbol_in}/${item.symbol_out}`,
+				routes: item.swap_route.routes,
+			}
+			trx.pools = pools
+			trx.messages = [
+				{
+					type: getTypeDashboard("osmosis.gamm.v1beta1.MsgSwapExactAmountIn"),
+					pools_Ids: trx.pools.routes.reduce((pr, cr, ci) => {
+						if (ci === 0) return cr.poolId
+						else return pr + `, ${cr.poolId}`
+					}, ""),
+					sender: trx.address.value,
+					tokenIn: { value: item.amount_in, symbol: item.symbol_in, usd: item.value_usd },
+					tokenOut: { value: item.amount_out, symbol: item.symbol_out, usd: item.value_usd },
+				},
+			]
+			res.push(trx)
+		})
+
+		return res
+	}
+
 	const getAdresses = async () => {
 		let url = "https://api-osmosis-chain.imperator.co/swap/v1/pool/1?only_success=false&limit=50&offset=0"
 		let response = await API.request({
@@ -109,7 +178,7 @@ export const DashboardProvider = ({ children }) => {
 	}
 
 	return (
-		<DashboardContext.Provider value={{ address, getTypeTrx, getTrx, getAdresses }}>
+		<DashboardContext.Provider value={{ address, getTypeTrx, getTrx, getAdresses, getTrades }}>
 			{children}
 		</DashboardContext.Provider>
 	)

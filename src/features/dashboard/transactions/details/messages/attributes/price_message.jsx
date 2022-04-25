@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => {
 			paddingLeft: "5px",
 			color: theme.palette.table.cellDark,
 			fontSize: "12px",
-			maxWidth: "50px",
+			maxWidth: "75px",
 			overflow: "hidden",
 			textOverflow: "ellipsis",
 			display: "inline-block",
@@ -39,9 +39,8 @@ const useStyles = makeStyles((theme) => {
 		}
 	}
 })
-const PriceMessage = ({ denom, amount, name }) => {
+const PriceMessage = ({ denom, amount, name, usd=null }) => {
 	const classes = useStyles()
-	console.log("price_message.jsx -> 31: denom, amount, name", denom, amount, name)
 
 	let nameDisplay = capitalizeFirstLetter(name.replace("_", " "))
 	let splitNumber = formateNumberDecimalsAuto({ price: amount }).toString().split(".")
@@ -53,6 +52,7 @@ const PriceMessage = ({ denom, amount, name }) => {
 				<span className={classes.firstNumber}>{splitNumber[0]}</span>
 				{splitNumber.length > 1 ? <span className={classes.restNumber}>.{splitNumber[1]}</span> : null}
 				<span className={classes.symbol}>{denom}</span>
+				{usd ? <span className={classes.symbol}>$(~{usd})</span> : null}
 			</p>
 		</div>
 	)

@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => {
 			width: "100%",
 			height: "100%",
 			display: "grid",
-
+			backgroundColor: theme.palette.primary.dark2,
 			gridTemplateColumns: "2fr 1fr",
 			[theme.breakpoints.down("xs")]: {
 				gridTemplateColumns: "1fr",
@@ -27,12 +27,19 @@ const useStyles = makeStyles((theme) => {
 		},
 		mainContainer: {
 			position: "relative",
-			overflow: "hidden",
-			overflowY: "auto",
+			width: "100%",
 			backgroundColor: theme.palette.primary.dark2,
 			maxWidth: "1200px",
 			padding: "0 20px 20px 20px",
 		},
+		content:{
+			backgroundColor: theme.palette.primary.dark2,
+			overflow: "hidden",
+			overflowY: "auto",
+			display: "flex",
+			flexDirection: "column",
+			height: "100%",
+			alignItems: "center",		},
 		tableContainer: {
 			position: "relative",
 		},
@@ -40,20 +47,9 @@ const useStyles = makeStyles((theme) => {
 			margin: "8px 0",
 			padding: "12px 0 24px 0",
 		},
-		detailsConatainer: {
+		detailsContainer: {
 			borderLeft: `1px solid ${theme.palette.primary.light}`,
 			overflow: "hidden",
-		},
-		select: {
-			flexWrap: "wrap",
-			overflow: "hidden",
-			whiteSpace: "nowrap",
-			textOverflow: "ellipsis",
-			display: "flex",
-			alignItems: "center",
-			justifyContent: "center",
-			padding: "8px",
-			margin: "12px 8px",
 		},
 		icon: {
 			color: theme.palette.green.text,
@@ -95,7 +91,6 @@ const Transactions = () => {
 				let types = results[0]
 				let trx = results[1]
 				setTypes(types)
-				setCurrentTrx(trx[4])
 				setTrx(trx)
 				setLoadingTrx(false)
 			} catch (e) {
@@ -183,11 +178,13 @@ const Transactions = () => {
 	if (!address || address.length === 0) {
 		return (
 			<div className={classes.rootTransactions}>
-				<div className={classes.mainContainer}>
-					<div className={classes.titleContainer}>
-						<p className={classes.title}>Transactions</p>
+				<div className={classes.content}>
+					<div className={classes.mainContainer}>
+						<div className={classes.titleContainer}>
+							<p className={classes.title}>Transactions</p>
+						</div>
+						<p>Wallet not found.</p>
 					</div>
-					<p>Wallet not found.</p>
 				</div>
 			</div>
 		)
@@ -195,18 +192,20 @@ const Transactions = () => {
 
 	return (
 		<div className={classes.rootTransactions}>
-			<div className={classes.mainContainer}>
-				<div className={classes.titleContainer}>
-					<p className={classes.title}>Transactions</p>
-				</div>
-				<Types onChangeType={onChangeTypeTrx} types={types} currentType={typeTrx} />
-				<div className={classes.tableContainer}>
-					<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} />
-					<TableTrx data={trx} className={classes.table} onClickRow={onClickRow} cbEndPage={cbEndPage} />
+			<div className={classes.content}>
+				<div className={classes.mainContainer}>
+					<div className={classes.titleContainer}>
+						<p className={classes.title}>Transactions</p>
+					</div>
+					<Types onChangeType={onChangeTypeTrx} types={types} currentType={typeTrx} />
+					<div className={classes.tableContainer}>
+						<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} />
+						<TableTrx data={trx} className={classes.table} onClickRow={onClickRow} cbEndPage={cbEndPage} />
+					</div>
 				</div>
 			</div>
 			{size !== "xs" ? (
-				<div className={classes.detailsConatainer}>
+				<div className={classes.detailsContainer}>
 					<Details data={currentTrx} openJSON={openJSON} />
 				</div>
 			) : (

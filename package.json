@@ -31,8 +31,8 @@
 		"web-vitals": "^1.0.1"
 	},
 	"scripts": {
-		"startssl": "react-scripts --openssl-legacy-provider start",
-		"start": "react-scripts start",
+		"startssl": "env-cmd -f .env react-scripts --openssl-legacy-provider start",
+		"start": "env-cmd -f .env react-scripts start",
 		"build": "env-cmd -f .env react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"

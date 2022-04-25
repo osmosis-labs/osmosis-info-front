@@ -2,11 +2,12 @@ import { makeStyles, TableCell } from "@material-ui/core"
 import { formateNumberDecimalsAuto } from "../../../../helpers/helpers"
 const useStyles = makeStyles((theme) => {
 	return {
-		rootCellSymbol: {
+		rootCellFees: {
 			textAlign: "right",
 			width: "140px",
 			overflow: "hidden",
 			textOverflow: "ellipsis",
+			cursor: "pointer",
 		},
 		firstNumber: {
 			fontSize: "14px",
@@ -21,24 +22,28 @@ const useStyles = makeStyles((theme) => {
 		},
 	}
 })
-const CellSymbol = ({ cellKey, cellConfig, data }) => {
+const CellFees = ({ cellKey, cellConfig, data }) => {
 	const classes = useStyles()
-	let currentData = data[cellConfig.cellKey]
-	if (!currentData && !currentData.value) return <TableCell key={cellKey}>-</TableCell>
-	let splitNumber = formateNumberDecimalsAuto({ price: currentData.value }).toString().split(".")
-
 	const onClick = () => {
 		cellConfig.onClickCell(data)
 	}
+
+	if (!data.fees && !data.fees)
+		return (
+			<TableCell key={cellKey} onClick={onClick} className={classes.rootCellFees}>
+				-
+			</TableCell>
+		)
+	let splitNumber = formateNumberDecimalsAuto({ price: data.fees }).toString().split(".")
 	return (
-		<TableCell key={cellKey} className={classes.rootCellSymbol} onClick={cellConfig.onClickCell?onClick:null}>
-			<div className={classes.rootCellSymbol}>
+		<TableCell key={cellKey} className={classes.rootCellFees}>
+			<div className={classes.rootCellFees} onClick={onClick}>
 				<span className={classes.firstNumber}>{splitNumber[0]}</span>
 				{splitNumber.length > 1 ? <span className={classes.restNumber}>.{splitNumber[1]}</span> : null}
-				<span className={classes.symbol}>{currentData.symbol}</span>
+				<span className={classes.symbol}>osmo</span>
 			</div>
 		</TableCell>
 	)
 }
 
-export default CellSymbol
+export default CellFees
