@@ -40,7 +40,6 @@ export const DashboardProvider = ({ children }) => {
 			useCompleteURL: true,
 			type: "get",
 		})
-
 		let res = []
 		response.data.forEach((item) => {
 			let trx = {
