@@ -56,7 +56,7 @@ const Toast = ({ open, severity, message, handleClose }) => {
 				horizontal: "right",
 			}}
 			open={open}
-			autoHideDuration={2000}
+			autoHideDuration={5000}
 			onClose={handleClose}
 		>
 			<div className={`${classes.toastRoot} ${classes[severity]}`}>

@@ -196,7 +196,7 @@ export const TokensV2Provider = ({ children }) => {
 			})
 			setAllTokens(data)
 			if (settings.type === "app") {
-				data = response.data.filter((item) => item.main)
+				data = data.filter((item) => item.main)
 			} else {
 				data = data.filter((item) => !item.main)
 			}
