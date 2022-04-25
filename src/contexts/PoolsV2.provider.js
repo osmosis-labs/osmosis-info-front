@@ -184,7 +184,7 @@ export const PoolsV2Provider = ({ children }) => {
 						}
 						index++
 					}
-					return {
+					let pool = {
 						id: key,
 						name: row.reduce((acc, currentValue) => {
 							let symbolName = currentValue.symbol.length === 0 ? currentValue.denom : currentValue.symbol
@@ -199,6 +199,7 @@ export const PoolsV2Provider = ({ children }) => {
 						apr,
 						main,
 					}
+					return pool
 				})
 				setAllPools(data)
 				if (settings.type === "app") {

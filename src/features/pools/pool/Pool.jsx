@@ -151,7 +151,7 @@ const Pool = ({ showToast }) => {
 				if (indexPool >= 0) {
 					let currentPool = allPools[indexPool]
 					if (currentPool.main && settings.type === "frontier") {
-						updateSettings({ type: "main" })
+						updateSettings({ type: "app" })
 						showToast({
 							severity: "info",
 							text: "You are redirected to main because the pool does not exist on frontier.",
