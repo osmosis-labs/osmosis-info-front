@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => {
 	return {
-		rootType: {
+		rootTypeMessage: {
             display: "flex",
 			flexDirection: "row",
 			width: "100%",
@@ -27,11 +27,11 @@ const useStyles = makeStyles((theme) => {
         
 	}
 })
-const Type = ({ message, index, data }) => {
+const TypeMessage = ({ message, index, data }) => {
 	const classes = useStyles()
 
 	return (
-		<div className={`${classes.rootType}`}>
+		<div className={`${classes.rootTypeMessage}`}>
 			{" "}
 			<p className={classes.name}>Type</p>
 			<span className={classes.data}>{message.type}</span>
@@ -39,4 +39,4 @@ const Type = ({ message, index, data }) => {
 	)
 }
 
-export default Type
+export default TypeMessage

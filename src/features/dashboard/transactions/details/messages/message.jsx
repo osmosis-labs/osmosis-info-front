@@ -1,7 +1,10 @@
 import { makeStyles } from "@material-ui/core"
 import dayjs from "dayjs"
-import Default from "./attributes/default"
-import Type from "./attributes/type"
+import { isOsmoAddress } from "../../../../../helpers/helpers"
+import Address from "./attributes/address_message"
+import Default from "./attributes/default_message"
+import PriceMessage from "./attributes/price_message"
+import Type from "./attributes/type_message"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -33,18 +36,32 @@ const Message = ({ message, index, data }) => {
 	// )
 
 	const getArtribute = (key, i) => {
-		// console.log("message.jsx -> 36: key, message", key, message[key])
 		let res = null
-		switch (key) {
-			case "type":
-				res = <Type key={key + i} index={i} message={message} data={data} />
-				break
-			case "proof_commitment":
-				res = <Default key={key + i} data="Data-default" name="Title-default" />
-				break
-			default:
-				res = null
-				break
+		if (key === "type") res = <Type key={key + i} index={i} message={message} data={data} type={key} />
+		else {
+			let data = message[key]
+			let isObject = typeof data === "object" && !Array.isArray(data) && data !== null
+			let isArray = Array.isArray(data) && data !== null
+			// console.log(
+			// 	"%cmessage.jsx -> 42 TEAL: data: ",
+			// 	"background: #009688; color:#FFFFFF",
+			// 	data,
+			// 	" \nobject: ",
+			// 	isObject,
+			// 	"array: ",
+			// 	isArray,
+			// 	"key: ",
+			// 	key
+			// )
+			if (!isObject && !isArray && isOsmoAddress(data)) {
+				res = <Address key={key + i} index={i} address={data} name={key} type={key} />
+			}
+			if (isObject && data.amount && data.denom) {
+				let name = key
+				if (name === "tokenIn") name = "Token in"
+				if (name === "tokenOut") name = "Token out"
+				res = <PriceMessage key={key + i} index={i} amount={data.amount} denom={data.denom} name={name} type={key} />
+			}
 		}
 		return res
 	}
@@ -57,7 +74,13 @@ const Message = ({ message, index, data }) => {
 					: `${classes.rootMessage}`
 			}
 		>
-			{Object.keys(message).map((key, i) => getArtribute(key, i))}
+			{Object.keys(message)
+				.sort((a, b) => {
+					if (a === "type") return -1
+					if (b === "type") return 1
+					return 0
+				})
+				.map((key, i) => getArtribute(key, i))}
 		</div>
 	)
 }

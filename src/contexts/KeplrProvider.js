@@ -59,7 +59,8 @@ export const KeplrProvider = ({ children }) => {
 				disconnect,
 				address,
 				name,
-				CHAIN_ID
+				CHAIN_ID,
+				setAddress
 			}}
 		>
 			{children}

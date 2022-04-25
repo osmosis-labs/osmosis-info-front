@@ -4,7 +4,7 @@ import { useKeplr } from "./KeplrProvider"
 import relativeTime from "dayjs/plugin/relativeTime"
 import utc from "dayjs/plugin/utc"
 import dayjs from "dayjs"
-import typesDashboard from "../helpers/typesDashboard.json"
+import { getTypeDashboard } from "../helpers/helpers"
 const DashboardContext = createContext()
 dayjs.extend(relativeTime)
 dayjs.extend(utc)
@@ -20,7 +20,16 @@ export const DashboardProvider = ({ children }) => {
 			useCompleteURL: true,
 			type: "get",
 		})
-		return response.data
+		let res = response.data.map((type) => {
+			return {
+				type: getTypeDashboard(type.type),
+				count: type.count,
+			}
+		})
+		res.sort((a, b) => {
+			return b.count - a.count
+		})
+		return res
 	}
 
 	const getTrx = async ({ address, limit = 10, offset = 0, type }) => {
@@ -31,11 +40,7 @@ export const DashboardProvider = ({ children }) => {
 			useCompleteURL: true,
 			type: "get",
 		})
-		console.log(
-			"%cDashboard.provider.js -> 32 PURPLE: response.data",
-			"background: #9c27b0; color:#FFFFFF",
-			response.data
-		)
+
 		let res = []
 		response.data.forEach((item) => {
 			let trx = {
@@ -72,7 +77,7 @@ export const DashboardProvider = ({ children }) => {
 				let msg = { ...message }
 				let type = msg["@type"]
 				type = type.replace("/", "")
-				msg.type = typesDashboard[type]
+				msg.type = getTypeDashboard(type)
 				if (!msg.type) msg.type = type
 				msg.type
 				types.push(msg.type)
@@ -97,8 +102,6 @@ export const DashboardProvider = ({ children }) => {
 		})
 
 		let addresses = []
-		response.data.push({ address: "osmo1nzutmw5hqat76csr6qggnplemvqf5hczserhuv" })
-		response.data.push({ address: "osmo1ukzgv8ctsvsmwn6z7lhfqfs0cncy6d6f2kvl2v" })
 		response.data.forEach((item) => {
 			let address = item.address
 			if (!addresses.includes(address)) addresses.push(address)
@@ -107,7 +110,7 @@ export const DashboardProvider = ({ children }) => {
 	}
 
 	return (
-		<DashboardContext.Provider value={{ address, getTypeTrx, getTrx, typesDashboard, getAdresses }}>
+		<DashboardContext.Provider value={{ address, getTypeTrx, getTrx, getAdresses }}>
 			{children}
 		</DashboardContext.Provider>
 	)

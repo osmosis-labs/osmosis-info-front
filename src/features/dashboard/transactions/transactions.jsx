@@ -1,4 +1,4 @@
-import { makeStyles, MenuItem, Select, TextField } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core"
 import { useEffect, useRef, useState } from "react"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 import { useDashboard } from "../../../contexts/dashboard.provider"
@@ -6,9 +6,9 @@ import useSize from "../../../hooks/sizeHook"
 import Details from "./details/details"
 import DialogDetails from "./dialog_details"
 import TableTrx from "./tableTrx/table_trx"
-import CheckIcon from "@mui/icons-material/Check"
-import { IconButton } from "@mui/material"
 import ModalJSON from "./details/modal_json"
+import Types from "./types"
+import { getTypeDashboard } from "../../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -30,10 +30,14 @@ const useStyles = makeStyles((theme) => {
 			overflow: "hidden",
 			overflowY: "auto",
 			backgroundColor: theme.palette.primary.dark2,
+			maxWidth: "1200px",
+			padding: "0 20px 20px 20px",
 		},
-
+		tableContainer: {
+			position: "relative",
+		},
 		table: {
-			margin: "8px",
+			margin: "8px 0",
 			padding: "12px 0 24px 0",
 		},
 		detailsConatainer: {
@@ -54,6 +58,16 @@ const useStyles = makeStyles((theme) => {
 		icon: {
 			color: theme.palette.green.text,
 		},
+		titleContainer: {
+			display: "flex",
+			flexDirection: "row",
+			alignItems: "center",
+			margin: "20px 0 12px 0",
+		},
+		title: {
+			fontSize: "1.6rem",
+			color: theme.palette.gray.contrastText,
+		},
 	}
 })
 const Transactions = () => {
@@ -62,22 +76,15 @@ const Transactions = () => {
 	const [open, setOpen] = useState(false)
 	const { getTypeTrx, getTrx, getAdresses, ...other } = useDashboard()
 	const [currentTrx, setCurrentTrx] = useState({})
-	const [addresses, setAddresses] = useState([])
 	const [address, setAddress] = useState("")
-	const [addressTxt, setAddressTxt] = useState("")
 	const [openModalJSON, setOpenModalJSON] = useState(false)
 	const offset = useRef(0)
-	/*
-	osmo1nzutmw5hqat76csr6qggnplemvqf5hczserhuv
-	*/
+
 	const [loadingTrx, setLoadingTrx] = useState(true)
 
 	const [trx, setTrx] = useState([])
-
-	const handleChange = (event) => {
-		setAddress(event.target.value)
-		setAddressTxt(event.target.value)
-	}
+	const [types, setTypes] = useState([])
+	const [typeTrx, setTypeTrx] = useState("all")
 
 	useEffect(() => {
 		const fetch = async () => {
@@ -87,6 +94,7 @@ const Transactions = () => {
 				let results = await Promise.all(promises)
 				let types = results[0]
 				let trx = results[1]
+				setTypes(types)
 				setCurrentTrx(trx[4])
 				setTrx(trx)
 				setLoadingTrx(false)
@@ -102,21 +110,7 @@ const Transactions = () => {
 	}, [address])
 
 	useEffect(() => {
-		const fetch = async () => {
-			try {
-				let addresses = await getAdresses()
-				if (other.address.length > 0) {
-					addresses.unshift(other.address)
-				}
-				setAddresses(addresses)
-				setAddressTxt(addresses[0])
-				setAddress(addresses[0])
-			} catch (e) {
-				console.log("%ctransactions.jsx -> 53 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
-			}
-		}
-
-		fetch()
+		setAddress(other.address)
 	}, [other.address])
 
 	const onOpen = () => {
@@ -151,19 +145,16 @@ const Transactions = () => {
 		}
 	}
 
-	const validAdd = () => {
-		setAddress(addressTxt)
-	}
-
-	const onChange = (event) => {
-		setAddressTxt(event.target.value)
-	}
-
 	const cbEndPage = async () => {
 		try {
+			clogb
 			setLoadingTrx(true)
 			offset.current += 10
-			let results = await getTrx({ address, offset: offset.current })
+			let results = await getTrx({
+				address,
+				offset: offset.current,
+				type: typeTrx === "all" ? null : getTypeDashboard(typeTrx, true),
+			})
 			setTrx([...trx, ...results])
 			setLoadingTrx(false)
 		} catch (e) {
@@ -172,34 +163,35 @@ const Transactions = () => {
 		}
 	}
 
+	const onChangeTypeTrx = async (value) => {
+		try {
+			setLoadingTrx(true)
+			let type = value
+			if (type === typeTrx) {
+				type = "all"
+			}
+			setTypeTrx(value)
+			let results = await getTrx({ address, offset: 0, type: type === "all" ? null : getTypeDashboard(type, true) })
+			setTrx(results)
+			setLoadingTrx(false)
+		} catch (e) {
+			console.log("%ctransactions.jsx -> 165 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
+			setLoadingTrx(false)
+		}
+	}
+
+	
 	return (
 		<div className={classes.rootTransactions}>
 			<div className={classes.mainContainer}>
-				<div className={classes.select}>
-					<div className={classes.txt}>
-						<TextField id="outlined-basic" label="Address" variant="outlined" value={addressTxt} onChange={onChange} />
-						<IconButton aria-label="copy" className={classes.iconContainer} onClick={validAdd}>
-							<CheckIcon className={classes.icon} />
-						</IconButton>
-					</div>
-					<Select
-						labelId="demo-simple-select-label"
-						id="demo-simple-select"
-						value={address}
-						label="Address"
-						onChange={handleChange}
-					>
-						{addresses.map((address, index) => {
-							return (
-								<MenuItem key={address + index} value={address}>
-									{index}-{address}
-								</MenuItem>
-							)
-						})}
-					</Select>
+				<div className={classes.titleContainer}>
+					<p className={classes.title}>Transactions</p>
 				</div>
-				<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} />
-				<TableTrx data={trx} className={classes.table} onClickRow={onClickRow} cbEndPage={cbEndPage} />
+				<Types onChangeType={onChangeTypeTrx} types={types} currentType={typeTrx} />
+				<div className={classes.tableContainer}>
+					<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} />
+					<TableTrx data={trx} className={classes.table} onClickRow={onClickRow} cbEndPage={cbEndPage} />
+				</div>
 			</div>
 			{size !== "xs" ? (
 				<div className={classes.detailsConatainer}>
