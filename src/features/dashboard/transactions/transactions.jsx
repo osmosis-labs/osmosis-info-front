@@ -80,7 +80,7 @@ const Transactions = () => {
 	const [openModalJSON, setOpenModalJSON] = useState(false)
 	const offset = useRef(0)
 
-	const [loadingTrx, setLoadingTrx] = useState(true)
+	const [loadingTrx, setLoadingTrx] = useState(false)
 
 	const [trx, setTrx] = useState([])
 	const [types, setTypes] = useState([])
@@ -180,7 +180,19 @@ const Transactions = () => {
 		}
 	}
 
-	
+	if (!address || address.length === 0) {
+		return (
+			<div className={classes.rootTransactions}>
+				<div className={classes.mainContainer}>
+					<div className={classes.titleContainer}>
+						<p className={classes.title}>Transactions</p>
+					</div>
+					<p>Wallet not found.</p>
+				</div>
+			</div>
+		)
+	}
+
 	return (
 		<div className={classes.rootTransactions}>
 			<div className={classes.mainContainer}>
