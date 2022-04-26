@@ -1,11 +1,13 @@
 import typesDashboard from "./typesDashboard.json"
 
 export const getTypeDashboard = (type, reverse = false) => {
+	let res = type
 	if (reverse) {
-		return Object.keys(typesDashboard).find((key) => typesDashboard[key] === type)
+		res = Object.keys(typesDashboard).find((key) => typesDashboard[key] === type)
 	} else {
-		return typesDashboard[type]
+		res = typesDashboard[type]
 	}
+	return res
 }
 
 export const formateNumberPrice = (price) => {
