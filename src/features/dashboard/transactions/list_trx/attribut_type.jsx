@@ -3,7 +3,7 @@ import { useState } from "react"
 import PopoverTypes from "./popoverType"
 const useStyles = makeStyles((theme) => {
 	return {
-		rootcellType: {
+		rootAttributType: {
 			cursor: "pointer",
 			display: "flex",
 			flexDirection: "row",
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => {
 			backgroundColor: theme.palette.table.badgeBackground,
 			color: theme.palette.table.badgeText,
 			borderRadius: "16px",
-			fontSize: "14px",
+			fontSize: "12px",
 			padding: "2px 10px",
 			marginLeft: "5px",
 			maxWidth: "200px",
@@ -34,13 +34,9 @@ const useStyles = makeStyles((theme) => {
 		},
 	}
 })
-const cellType = ({ cellKey, cellConfig, data }) => {
+const AttributType = ({ data, config, itemConfig, itemKey }) => {
 	const classes = useStyles()
 	const [event, setEvent] = useState(null)
-
-	const onClick = () => {
-		cellConfig.onClickCell(data)
-	}
 
 	const onOpen = (event) => {
 		setEvent(event)
@@ -52,25 +48,16 @@ const cellType = ({ cellKey, cellConfig, data }) => {
 
 	const open = Boolean(event)
 	return (
-		<TableCell key={cellKey} onClick={onClick} onMouseEnter={onOpen} onMouseLeave={onClose}>
-			<div className={classes.rootcellType} onClick={onClick}>
-				<span className={classes.type} onClick={onClick}>
-					{data.types[0]}
-				</span>
-				{data.types.length > 1 ? <span className={classes.more}>+{data.types.length}</span> : null}
-				{data.types.length > 1 ? (
-					<PopoverTypes
-						types={data.types}
-						open={open}
-						onClose={onClose}
-						event={event}
-						key={cellKey + "ppovertype"}
-						id={cellKey + "poptype"}
-					/>
-				) : null}
-			</div>
-		</TableCell>
+		<div className={classes.rootAttributType} onMouseEnter={onOpen} onMouseLeave={onClose}>
+			<span className={classes.type} >
+				{data.types[0].display}
+			</span>
+			{data.types.length > 1 ? <span className={classes.more}>+{data.types.length}</span> : null}
+			{data.types.length > 1 ? (
+				<PopoverTypes types={data.types} open={open} onClose={onClose} event={event} id={itemKey + "poptype"} />
+			) : null}
+		</div>
 	)
 }
 
-export default cellType
+export default AttributType

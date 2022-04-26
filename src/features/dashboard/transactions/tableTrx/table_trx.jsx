@@ -59,9 +59,9 @@ const TableTrx = ({ data, className, onClickRow, cbEndPage }) => {
 				res = 1
 			}
 		} else if (a.fees && !b.fees) {
-			res = order === "asc" ? -1 : 1
+			res = -1
 		} else if (!a.fees && b.fees) {
-			res = order === "asc" ? 1 : -1
+			res = 1
 		} else {
 			res = 0
 		}
@@ -153,9 +153,9 @@ const TableTrx = ({ data, className, onClickRow, cbEndPage }) => {
 	}
 
 	return (
-		<Paper className={`${classes.rootTableTrx} ${className}`}>
+		<div className={`${classes.rootTableTrx} ${className}`}>
 			<TableCustom config={TableTrxConfig} data={data} customClass={classes.TableTrx} />
-		</Paper>
+		</div>
 	)
 }
 

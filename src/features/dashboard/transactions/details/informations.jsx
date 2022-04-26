@@ -11,6 +11,7 @@ import {  formateNumberDecimalsAuto } from "../../../../helpers/helpers"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootInformations: {
+			width: "100%",
 			[theme.breakpoints.down("xs")]: {},
 		},
 		title: {
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme) => {
 			backgroundColor: theme.palette.primary.light,
 		},
 		rowMiddle: {
-			borderBottom: `1px solid ${theme.palette.gray.textLight2}`,
+			borderBottom: `1px solid ${theme.palette.primary.main2}`,
 		},
 		rowEnd: {
 			padding: "0 20px 12px 20px",
@@ -59,7 +60,7 @@ const useStyles = makeStyles((theme) => {
 			cursor: "pointer",
 			overflow: "hidden",
 			textOverflow: "ellipsis",
-			color: `${theme.palette.table.link} !important`,
+			color: `${theme.palette.table.link2} !important`,
 		},
 		iconContainer: {
 			backgroundColor: `${theme.palette.primary.dark} !important`,
@@ -121,10 +122,8 @@ const Informations = ({ data }) => {
 			})
 		}
 	}
-
 	let dateToShow = dayjs(data.time.value.toString()).format("YYYY-MM-DD HH:mm:ss")
 	let hashDisplay = data.hash.value.substring(0, 10) + "..." + data.hash.value.substring(data.hash.value.length - 10)
-	data.fees = 0.0032
 	let usdFees = formateNumberDecimalsAuto({ price: data.fees * priceOsmoBrut })
 	return (
 		<div className={classes.rootInformations}>
@@ -136,7 +135,7 @@ const Informations = ({ data }) => {
 			<div className={`${classes.row}`}>
 				<p className={classes.subTitle}>TxHash</p>
 				<div className={`${classes.info}  ${classes.rowMiddle} ${classes.hashContainer}`}>
-					<p className={`${classes.hash}`} onClick={onClickHash}>
+					<p className={`${classes.hash}`} onClick={copyHash}>
 						{hashDisplay}
 					</p>
 					<IconButton aria-label="copy" className={classes.iconContainer} onClick={copyHash}>
@@ -146,7 +145,7 @@ const Informations = ({ data }) => {
 			</div>
 			<div className={`${classes.row} `}>
 				<p className={classes.subTitle}>Status</p>
-				<p className={` ${classes.textStatus} ${classes.rowMiddle}`} onClick={onClickHash}>
+				<p className={` ${classes.textStatus} ${classes.rowMiddle}`} onClick={copyHash}>
 					{data.status === "success" ? (
 						<CheckIcon className={` ${classes.iconStatus} ${classes.success}`} />
 					) : (

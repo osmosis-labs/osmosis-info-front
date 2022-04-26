@@ -16,6 +16,8 @@ const useStyles = makeStyles((theme) => {
 			backgroundColor: theme.palette.primary.main,
 			display: "flex",
 			flexDirection: "column",
+			justifyContent: "center",
+			alignItems: "center",
 			height: "100%",
 			[theme.breakpoints.down("xs")]: {},
 		},
@@ -24,10 +26,19 @@ const useStyles = makeStyles((theme) => {
 			backgroundColor: theme.palette.primary.main,
 			display: "flex",
 			flexDirection: "column",
+			justifyContent: "center",
 			alignItems: "center",
 			justifyContent: "center",
 			height: "100%",
 			[theme.breakpoints.down("xs")]: {},
+		},
+		detailsContainer: {
+			display: "flex",
+			flexDirection: "column",
+			alignItems: "center",
+			width: "100%",
+			maxWidth: "460px",
+			height: "100%",
 		},
 		imgNoData: {
 			width: "70px",
@@ -50,11 +61,13 @@ const useStyles = makeStyles((theme) => {
 		},
 		header: {
 			position: "relative",
+			width: "100%",
 			marginTop: "16px",
 			marginBottom: "32px",
 		},
 		title: {
 			margin: "0px 0 8px 0",
+			width: "100%",
 			textAlign: "center",
 			fontSize: "18px",
 			color: theme.palette.primary.contrastText,
@@ -66,7 +79,7 @@ const useStyles = makeStyles((theme) => {
 		iconContainer: {
 			top: "50%",
 			right: "10%",
-			transform:"translate(-50%, -50%)",
+			transform: "translate(-50%, -50%)",
 			position: "absolute !important",
 			backgroundColor: `${theme.palette.primary.dark} !important`,
 			borderRadius: "50% !important",
@@ -94,18 +107,19 @@ const Details = ({ data, openJSON }) => {
 
 	let dateToShow = dayjs(data.time.value.toString()).format("h:m a, D MMM YYYY")
 
-
 	return (
 		<div className={classes.rootDetails}>
-			<div className={classes.header}>
-				<p className={classes.title}>Transaction Details</p>
-				<p className={classes.subTitle}>{dateToShow}</p>
-				<IconButton aria-label="open" className={classes.iconContainer} onClick={openJSON}>
-					<IntegrationInstructionsIcon className={classes.icon} />
-				</IconButton>
+			<div className={classes.detailsContainer}>
+				<div className={classes.header}>
+					<p className={classes.title}>Transaction Details</p>
+					<p className={classes.subTitle}>{dateToShow}</p>
+					<IconButton aria-label="open" className={classes.iconContainer} onClick={openJSON}>
+						<IntegrationInstructionsIcon className={classes.icon} />
+					</IconButton>
+				</div>
+				<Informations data={data} />
+				<Messages data={data} />
 			</div>
-			<Informations data={data} />
-			<Messages data={data} />
 		</div>
 	)
 }

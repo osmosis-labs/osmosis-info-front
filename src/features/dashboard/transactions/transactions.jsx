@@ -9,6 +9,7 @@ import TableTrx from "./tableTrx/table_trx"
 import ModalJSON from "./details/modal_json"
 import Types from "./types"
 import { getTypeDashboard } from "../../../helpers/helpers"
+import ListTrx from "./list_trx/list_trx"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -32,14 +33,15 @@ const useStyles = makeStyles((theme) => {
 			maxWidth: "1200px",
 			padding: "0 20px 20px 20px",
 		},
-		content:{
+		content: {
 			backgroundColor: theme.palette.primary.dark2,
 			overflow: "hidden",
 			overflowY: "auto",
 			display: "flex",
 			flexDirection: "column",
 			height: "100%",
-			alignItems: "center",		},
+			alignItems: "center",
+		},
 		tableContainer: {
 			position: "relative",
 		},
@@ -64,6 +66,8 @@ const useStyles = makeStyles((theme) => {
 			fontSize: "1.6rem",
 			color: theme.palette.gray.contrastText,
 		},
+		listContainer:{},
+		list:{},
 	}
 })
 const Transactions = () => {
@@ -142,7 +146,6 @@ const Transactions = () => {
 
 	const cbEndPage = async () => {
 		try {
-			clogb
 			setLoadingTrx(true)
 			offset.current += 10
 			let results = await getTrx({
@@ -165,7 +168,7 @@ const Transactions = () => {
 			if (type === typeTrx) {
 				type = "all"
 			}
-			setTypeTrx(value)
+			setTypeTrx(type)
 			let results = await getTrx({ address, offset: 0, type: type === "all" ? null : getTypeDashboard(type, true) })
 			setTrx(results)
 			setLoadingTrx(false)
@@ -198,9 +201,12 @@ const Transactions = () => {
 						<p className={classes.title}>Transactions</p>
 					</div>
 					<Types onChangeType={onChangeTypeTrx} types={types} currentType={typeTrx} />
-					<div className={classes.tableContainer}>
+					{/* <div className={classes.tableContainer}>
 						<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} />
-						<TableTrx data={trx} className={classes.table} onClickRow={onClickRow} cbEndPage={cbEndPage} />
+						<TableTrx data={trx} className={classes.table} onClickRow={onClickRow} cbEndPage={cbEndPage} /> 
+					</div> */}
+					<div className={classes.listContainer}>
+						<ListTrx data={trx} className={classes.list} onClickRow={onClickRow} loadMore={cbEndPage} isLoading={loadingTrx}/>
 					</div>
 				</div>
 			</div>

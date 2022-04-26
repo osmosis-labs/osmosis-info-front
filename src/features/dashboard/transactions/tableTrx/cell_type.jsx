@@ -55,7 +55,7 @@ const cellType = ({ cellKey, cellConfig, data }) => {
 		<TableCell key={cellKey} onClick={onClick} onMouseEnter={onOpen} onMouseLeave={onClose}>
 			<div className={classes.rootcellType} onClick={onClick}>
 				<span className={classes.type} onClick={onClick}>
-					{data.types[0]}
+					{data.types[0].display}
 				</span>
 				{data.types.length > 1 ? <span className={classes.more}>+{data.types.length}</span> : null}
 				{data.types.length > 1 ? (

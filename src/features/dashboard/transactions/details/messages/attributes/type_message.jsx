@@ -3,17 +3,17 @@ import { makeStyles } from "@material-ui/core"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootTypeMessage: {
-            display: "flex",
+			display: "flex",
 			flexDirection: "row",
 			width: "100%",
 			alignContent: "center",
 			justifyContent: "space-between",
-            margin: "6px 0",
+			margin: "6px 0",
 			[theme.breakpoints.down("xs")]: {},
 		},
-        name: {
+		name: {
 			fontSize: "12px",
-            color: theme.palette.primary.contrastText,
+			color: theme.palette.primary.contrastText,
 		},
 		data: {
 			pointerEvents: "none",
@@ -24,17 +24,16 @@ const useStyles = makeStyles((theme) => {
 			padding: "2px 10px",
 			marginLeft: "5px",
 		},
-        
 	}
 })
-const TypeMessage = ({ message, index, data }) => {
+const TypeMessage = ({ data }) => {
 	const classes = useStyles()
 
 	return (
 		<div className={`${classes.rootTypeMessage}`}>
 			{" "}
 			<p className={classes.name}>Type</p>
-			<span className={classes.data}>{message.type}</span>
+			<span className={classes.data}>{data.display}</span>
 		</div>
 	)
 }

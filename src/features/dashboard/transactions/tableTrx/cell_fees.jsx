@@ -30,8 +30,11 @@ const CellFees = ({ cellKey, cellConfig, data }) => {
 
 	if (!data.fees && !data.fees)
 		return (
-			<TableCell key={cellKey} onClick={onClick} className={classes.rootCellFees}>
-				-
+			<TableCell key={cellKey} className={classes.rootCellFees}>
+				<div className={classes.rootCellFees} onClick={onClick}>
+					<span className={classes.firstNumber}>{0}</span>
+					<span className={classes.symbol}>OSMO</span>
+				</div>
 			</TableCell>
 		)
 	let splitNumber = formateNumberDecimalsAuto({ price: data.fees }).toString().split(".")
@@ -40,7 +43,7 @@ const CellFees = ({ cellKey, cellConfig, data }) => {
 			<div className={classes.rootCellFees} onClick={onClick}>
 				<span className={classes.firstNumber}>{splitNumber[0]}</span>
 				{splitNumber.length > 1 ? <span className={classes.restNumber}>.{splitNumber[1]}</span> : null}
-				<span className={classes.symbol}>osmo</span>
+				<span className={classes.symbol}>OSMO</span>
 			</div>
 		</TableCell>
 	)

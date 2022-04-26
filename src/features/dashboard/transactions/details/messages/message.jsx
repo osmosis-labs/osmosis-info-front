@@ -4,7 +4,7 @@ import { isOsmoAddress } from "../../../../../helpers/helpers"
 import AddressMessage from "./attributes/address_message"
 import DefaultMessage from "./attributes/default_message"
 import PriceMessage from "./attributes/price_message"
-import Type from "./attributes/type_message"
+import TypeMessage from "./attributes/type_message"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -30,29 +30,36 @@ const Message = ({ message, index, data }) => {
 
 	const getArtribute = (key, i) => {
 		let res = null
-		if (key === "type") res = <Type key={key + i} index={i} message={message} data={data} type={key} />
-		else {
-			let data = message[key]
-			let isObject = typeof data === "object" && !Array.isArray(data) && data !== null
-			let isArray = Array.isArray(data) && data !== null
-			
-			if ((key === "tokenOut" || key === "tokenIn") && !data.amount && !data.denom) {
+		let data = message[key]
+		let isObject = typeof data === "object" && !Array.isArray(data) && data !== null
+		let isArray = Array.isArray(data) && data !== null
+		if (key === "type") res = <TypeMessage key={key + i} index={i} data={data} type={key}/>
+		else if ((key === "tokenOut" || key === "tokenIn") && !data.amount && !data.denom) {
+			let name = key
+			if (name === "tokenIn") name = "Token in"
+			if (name === "tokenOut") name = "Token out"
+			res = (
+				<PriceMessage
+					key={key + i}
+					index={i}
+					amount={data.value}
+					denom={data.symbol}
+					name={name}
+					type={key}
+					usd={data.usd}
+				/>
+			)
+		} else if (key === "pools_Ids") {
+			let name = key
+			res = <DefaultMessage key={key + i} index={i} data={data} name={name} />
+		} else {
+			if (!isObject && !isArray && isOsmoAddress(data)) {
+				res = <AddressMessage key={key + i} index={i} address={data} name={key} type={key} />
+			} else if (isObject && data.amount && data.denom) {
 				let name = key
 				if (name === "tokenIn") name = "Token in"
 				if (name === "tokenOut") name = "Token out"
-				res = <PriceMessage key={key + i} index={i} amount={data.value} denom={data.symbol} name={name} type={key} usd={data.usd}/>
-			} else if (key === "pools_Ids") {
-				let name = key
-				res = <DefaultMessage key={key + i} index={i} data={data} name={name} />
-			} else {
-				if (!isObject && !isArray && isOsmoAddress(data)) {
-					res = <AddressMessage key={key + i} index={i} address={data} name={key} type={key} />
-				} else if (isObject && data.amount && data.denom) {
-					let name = key
-					if (name === "tokenIn") name = "Token in"
-					if (name === "tokenOut") name = "Token out"
-					res = <PriceMessage key={key + i} index={i} amount={data.amount} denom={data.denom} name={name} type={key} />
-				}
+				res = <PriceMessage key={key + i} index={i} amount={data.amount} denom={data.denom} name={name} type={key} />
 			}
 		}
 		return res

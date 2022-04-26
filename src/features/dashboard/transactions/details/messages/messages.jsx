@@ -5,6 +5,7 @@ import Message from "./message"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootMessages: {
+			width: "100%",
 			marginTop: "24px",
 			[theme.breakpoints.down("xs")]: {},
 		},

@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core"
 import { useToast } from "../../../../../../contexts/Toast.provider"
-import { capitalizeFirstLetter } from "../../../../../../helpers/helpers"
+import { capitalizeFirstLetter, isOsmoAddress } from "../../../../../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => {
 			cursor: "pointer",
 			overflow: "hidden",
 			textOverflow: "ellipsis",
-			color: `${theme.palette.table.link} !important`,
+			color: `${theme.palette.table.link2} !important`,
 		},
 	}
 })
@@ -45,7 +45,10 @@ const AddressMessage = ({ address, name }) => {
 		}
 	}
 
-	let addressDisplay = address.substring(0, 5) + "..." + address.substring(address.length - 5)
+	let addressDisplay = address
+	if (!isOsmoAddress(address)) {
+		addressDisplay = address.substring(0, 5) + "..." + address.substring(address.length - 5)
+	}
 	let nameDisplay = capitalizeFirstLetter(name.replace("_", " "))
 
 	return (

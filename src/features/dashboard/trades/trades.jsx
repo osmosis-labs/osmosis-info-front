@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => {
 			margin: "8px 0",
 			padding: "12px 0 24px 0",
 		},
-		
+
 		titleContainer: {
 			display: "flex",
 			flexDirection: "row",
@@ -67,7 +67,7 @@ const Trades = () => {
 	const classes = useStyles()
 	const size = useSize()
 	const [open, setOpen] = useState(false)
-	const { getTrades, ...other } = useDashboard()
+	const { getTrades, getInfoTrx, ...other } = useDashboard()
 	const [currentTrade, setCurrentTrade] = useState({})
 	const [trades, setTrades] = useState([])
 	const [address, setAddress] = useState("")
@@ -122,8 +122,9 @@ const Trades = () => {
 		}
 	}
 
-	const onClickRow = (data) => {
-		setCurrentTrade({ ...data })
+	const onClickRow = async (data) => {
+		let detailsTrx = await getInfoTrx({hashTRX: data.hash.value})
+		setCurrentTrade({ ...detailsTrx })
 		if (size === "xs") {
 			onOpen()
 		}

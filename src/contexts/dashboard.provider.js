@@ -76,9 +76,15 @@ export const DashboardProvider = ({ children }) => {
 				let msg = { ...message }
 				let type = msg["@type"]
 				type = type.replace("/", "")
-				msg.type = getTypeDashboard(type)
-				if (!msg.type) msg.type = type
-				msg.type
+				msg.type = { value: type, display: getTypeDashboard(type) }
+				if (!msg.type.display) msg.type.display = type
+				if (msg.type.value === "cosmos.bank.v1beta1.MsgSend") {
+					if (msg.to_address === address) {
+						msg.type.display = "Receive"
+					} else {
+						msg.type.display = "Send"
+					}
+				}
 				types.push(msg.type)
 				return msg
 			})
@@ -134,6 +140,9 @@ export const DashboardProvider = ({ children }) => {
 
 			trx.usd = item.value_usd
 
+			let types = [{ value: "cosmos.bank.v1beta1.MsgSend", display: getTypeDashboard("cosmos.bank.v1beta1.MsgSend") }]
+			trx.types = types
+
 			let pools = {
 				images: [
 					`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${item.symbol_in.toLowerCase()}.png`,
@@ -145,7 +154,7 @@ export const DashboardProvider = ({ children }) => {
 			trx.pools = pools
 			trx.messages = [
 				{
-					type: getTypeDashboard("osmosis.gamm.v1beta1.MsgSwapExactAmountIn"),
+					type: types[0],
 					pools_Ids: trx.pools.routes.reduce((pr, cr, ci) => {
 						if (ci === 0) return cr.poolId
 						else return pr + `, ${cr.poolId}`
@@ -159,6 +168,67 @@ export const DashboardProvider = ({ children }) => {
 		})
 
 		return res
+	}
+
+	const getInfoTrx = async ({ hashTRX }) => {
+		let url = `https://api-osmosis-chain.imperator.co/txs/v1/tx/hash/${hashTRX}`
+		let response = await API.request({
+			url,
+			useCompleteURL: true,
+			type: "get",
+		})
+		let trx = {
+			status: "",
+			time: { display: "", value: null },
+			hash: { display: "", value: null },
+			types: [],
+			fees: 0,
+			height: 0,
+			messages: [],
+			chainId: "",
+		}
+
+		let item = response.data[0]
+		trx.status = item.tx_response.code === 0 ? "success" : "failed"
+
+		let time = new Date(item.time_tx)
+		const tzOffset = new Date(item.time_tx).getTimezoneOffset()
+		let sourceDate = dayjs(item.time_tx).add(-tzOffset, "minute")
+		let timeAgo = dayjs(sourceDate).utc().fromNow(false)
+		trx.time.display = timeAgo
+		trx.time.value = time
+
+		let hash = item.tx_response.txhash
+		let hashDisplay = hash.substring(0, 5) + "..." + hash.substring(hash.length - 5)
+		trx.hash.display = hashDisplay
+		trx.hash.value = hash
+
+		let fees = item.tx_response.tx.auth_info.fee
+		trx.fees = fees.amount.reduce((pr, cr) => pr + cr.amount, 0) / 1_000_000
+
+		trx.height = item.height
+		let types = []
+		trx.messages = item.tx_response.tx.body.messages.map((message) => {
+			let msg = { ...message }
+			let type = msg["@type"]
+			type = type.replace("/", "")
+			msg.type = { value: type, display: getTypeDashboard(type) }
+			if (!msg.type.display) msg.type.display = type
+			if (msg.type.value === "cosmos.bank.v1beta1.MsgSend") {
+				if (msg.to_address === address) {
+					msg.type.display = "Receive"
+				} else {
+					msg.type.display = "Send"
+				}
+			}
+			types.push(msg.type)
+			return msg
+		})
+		trx.types = types
+
+		trx.chainId = CHAIN_ID
+
+		return trx
 	}
 
 	const getAdresses = async () => {
@@ -178,7 +248,7 @@ export const DashboardProvider = ({ children }) => {
 	}
 
 	return (
-		<DashboardContext.Provider value={{ address, getTypeTrx, getTrx, getAdresses, getTrades }}>
+		<DashboardContext.Provider value={{ address, getTypeTrx, getTrx, getAdresses, getTrades, getInfoTrx }}>
 			{children}
 		</DashboardContext.Provider>
 	)

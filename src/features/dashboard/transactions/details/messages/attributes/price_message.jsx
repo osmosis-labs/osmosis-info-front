@@ -31,18 +31,21 @@ const useStyles = makeStyles((theme) => {
 			textOverflow: "ellipsis",
 			display: "inline-block",
 		},
-		price:{
+		price: {
 			display: "flex",
 			flexDirection: "row",
 			alignItems: "center",
-			
-		}
+		},
 	}
 })
-const PriceMessage = ({ denom, amount, name, usd=null }) => {
+const PriceMessage = ({ denom, amount, name, usd = null }) => {
 	const classes = useStyles()
 
 	let nameDisplay = capitalizeFirstLetter(name.replace("_", " "))
+	if (denom === "uosmo") {
+		amount /= 1_000_000
+		denom = "OSMO"
+	}
 	let splitNumber = formateNumberDecimalsAuto({ price: amount }).toString().split(".")
 
 	return (

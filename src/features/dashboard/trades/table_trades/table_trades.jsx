@@ -140,9 +140,9 @@ const TableTrades = ({ data, className, onClickRow, cbEndPage }) => {
 	}
 
 	return (
-		<Paper className={`${classes.rootTableTrades} ${className}`}>
+		<div className={`${classes.rootTableTrades} ${className}`}>
 			<TableCustom config={TableTradesConfig} data={data} customClass={classes.TableTrades} />
-		</Paper>
+		</div>
 	)
 }
 

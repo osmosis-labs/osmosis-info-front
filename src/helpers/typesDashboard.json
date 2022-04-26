@@ -3,7 +3,7 @@
   "ibc.core.client.v1.MsgUpdateClient": "IBC UpdateClient",
   "ibc.core.channel.v1.MsgAcknowledgement": "IBC Acknowledgement",
   "ibc.core.channel.v1.MsgRecvPacket": "IBC Recv Packet",
-  "cosmos.bank.v1beta1.MsgSend": "Send",
+  "cosmos.bank.v1beta1.MsgSend": "Send/Receive",
   "cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward": "Withdraw Reward",
   "ibc.applications.transfer.v1.MsgTransfer": "IBC Transfer",
   "osmosis.lockup.MsgLockTokens": "Lock Tokens",

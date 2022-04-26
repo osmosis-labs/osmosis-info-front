@@ -39,7 +39,7 @@ import { DebugProvider } from "../../contexts/debug.provider"
 import DebugModal from "../_debug/debug_modal"
 
 const MODE = process.env.REACT_APP_MODE
-console.log("MODE", MODE  )
+console.log("MODE", MODE)
 const useStyles = makeStyles((theme) => {
 	return {
 		appRoot: {

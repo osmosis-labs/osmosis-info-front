@@ -40,7 +40,7 @@ export const ThemeCustomProvider = ({ children }) => {
 			other: "#2C2F36",
 			contrastText: "#FFFFFF",
 		},
-		
+
 		gray: {
 			light: "#40444f",
 			main: "#c3c5cb",
@@ -103,6 +103,7 @@ export const ThemeCustomProvider = ({ children }) => {
 			badgeBackground: "#C4A46A1F",
 			badgeText: "#C4A46A",
 			link: "#4885ff",
+			link2: "#8d8bff",
 			hover: "rgba(255, 255, 255, 0.08)",
 		},
 	}
@@ -123,6 +124,7 @@ export const ThemeCustomProvider = ({ children }) => {
 			badgeBackground: "#C4A46A1F",
 			badgeText: "#C4A46A",
 			link: "#4885ff",
+			link2: "#8d8bff",
 			hover: "rgba(255, 255, 255, 0.08)",
 		},
 	}
