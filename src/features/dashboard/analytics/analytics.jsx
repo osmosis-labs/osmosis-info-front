@@ -1,9 +1,12 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect } from "react"
 import { useDashboard } from "../../../contexts/dashboard.provider"
+import Overview from "./overview"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootAnalytics: {
+            width: "100%",
+
 			[theme.breakpoints.down("xs")]: {},
 		},
 	}
@@ -23,7 +26,7 @@ const Analytics = () => {
 
 	return (
 		<div className={classes.rootAnalytics}>
-			<h1>Analytics</h1>
+			<Overview />
 		</div>
 	)
 }
