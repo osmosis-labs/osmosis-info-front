@@ -3,11 +3,10 @@ import { useEffect, useRef, useState } from "react"
 import { useDashboard } from "../../../contexts/dashboard.provider"
 import ModalJSON from "../transactions/details/modal_json"
 import DialogDetails from "../transactions/dialog_details"
-import TableTrades from "./table_trades/table_trades"
 import useSize from "../../../hooks/sizeHook"
-import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 import Details from "../transactions/details/details"
 import ListTrades from "./list_trades/list_trades"
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -62,6 +61,25 @@ const useStyles = makeStyles((theme) => {
 			borderLeft: `1px solid ${theme.palette.primary.light}`,
 			overflow: "hidden",
 		},
+		containerNotFound: {
+			display: "flex",
+			flexDirection: "column",
+			alignItems: "center",
+			justifyContent: "center",
+		},
+		iconNotFound: {
+			width: "110px !important",
+			height: "110px !important",
+			color: theme.palette.primary.light2,
+			padding: "24px",
+			borderRadius: "50%",
+			backgroundColor: theme.palette.primary.main,
+		},
+		textNotFound: {
+			marginTop: "16px",
+			color: theme.palette.primary.light2,
+			fontSize: "20px",
+		},
 	}
 })
 const Trades = () => {
@@ -81,7 +99,7 @@ const Trades = () => {
 			try {
 				setLoadingTrades(true)
 				let trades = await getTrades({ address })
-				console.log("trades.jsx -> 84: trades", trades  )
+				console.log("trades.jsx -> 84: trades", trades)
 				tradesRef.current = trades
 				setLoadingTrades(false)
 			} catch (e) {
@@ -154,11 +172,21 @@ const Trades = () => {
 				<div className={classes.content}>
 					<div className={classes.mainContainer}>
 						<div className={classes.titleContainer}>
-							<p className={classes.title}>History Trading</p>
+							<p className={classes.title}>Transactions</p>
 						</div>
-						<p>Wallet not found.</p>
+						<div className={classes.containerNotFound}>
+							<AccountBalanceWalletIcon className={classes.iconNotFound} />
+							<p className={classes.textNotFound}>Wallet not found.</p>
+						</div>
 					</div>
 				</div>
+				{size !== "xs" ? (
+					<div className={classes.detailsContainer}>
+						<Details data={{}} openJSON={openJSON} />
+					</div>
+				) : (
+					<DialogDetails open={open} onClose={onClose} data={{}} openJSON={openJSON} />
+				)}
 			</div>
 		)
 	}

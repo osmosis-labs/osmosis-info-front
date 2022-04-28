@@ -257,8 +257,41 @@ export const DashboardProvider = ({ children }) => {
 		return addresses
 	}
 
+	const getWalletInfo = async ({ address }) => {
+		let results = await Promise.all([
+			API.request({
+				url: `https://api-osmosis-chain.imperator.co/account/v1/balance/${address}`,
+				useCompleteURL: true,
+				type: "get",
+			}),
+			API.request({
+				url: `https://api-osmosis-chain.imperator.co/account/v1/exposure/${address}`,
+				useCompleteURL: true,
+				type: "get",
+			}),
+		])
+
+		let balance = results[0].data
+		let exposure = results[1].data
+		let worth = balance.osmo_staked_value + balance.token_value_wallet + exposure.value_exposure
+		let profit = 3554154.45
+		let return7d = { value: 1000, percent: 5.91 }
+		let wallet = {
+			worth,
+			profit,
+			return7d,
+			balance,
+			exposure,
+		}
+
+		console.log("%cdashboard.provider.js -> 285 ERROR: TO DO", "background: #FF0000; color:#FFFFFF")
+		return wallet
+	}
+
 	return (
-		<DashboardContext.Provider value={{ address, getTypeTrx, getTrx, getAdresses, getTrades, getInfoTrx }}>
+		<DashboardContext.Provider
+			value={{ address, getTypeTrx, getTrx, getAdresses, getTrades, getInfoTrx, getWalletInfo }}
+		>
 			{children}
 		</DashboardContext.Provider>
 	)

@@ -1,16 +1,14 @@
 import { makeStyles } from "@material-ui/core"
 import { memo, useEffect, useRef, useState } from "react"
-import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 import { useDashboard } from "../../../contexts/dashboard.provider"
 import useSize from "../../../hooks/sizeHook"
 import Details from "./details/details"
 import DialogDetails from "./dialog_details"
-import TableTrx from "./tableTrx/table_trx"
 import ModalJSON from "./details/modal_json"
 import Types from "./types"
 import { getTypeDashboard } from "../../../helpers/helpers"
 import ListTrx from "./list_trx/list_trx"
-
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootTransactions: {
@@ -68,6 +66,25 @@ const useStyles = makeStyles((theme) => {
 		},
 		listContainer: {},
 		list: {},
+		containerNotFound: {
+			display: "flex",
+			flexDirection: "column",
+			alignItems: "center",
+			justifyContent: "center",
+		},
+		iconNotFound: {
+			width: "110px !important",
+			height: "110px !important",
+			color: theme.palette.primary.light2,
+			padding: "24px",
+			borderRadius: "50%",
+			backgroundColor: theme.palette.primary.main,
+		},
+		textNotFound: {
+			marginTop: "16px",
+			color: theme.palette.primary.light2,
+			fontSize: "20px",
+		},
 	}
 })
 const Transactions = () => {
@@ -184,9 +201,19 @@ const Transactions = () => {
 						<div className={classes.titleContainer}>
 							<p className={classes.title}>Transactions</p>
 						</div>
-						<p>Wallet not found.</p>
+						<div className={classes.containerNotFound}>
+							<AccountBalanceWalletIcon className={classes.iconNotFound} />
+							<p className={classes.textNotFound}>Wallet not found.</p>
+						</div>
 					</div>
 				</div>
+				{size !== "xs" ? (
+					<div className={classes.detailsContainer}>
+						<Details data={currentTrx} openJSON={openJSON} />
+					</div>
+				) : (
+					<DialogDetails open={open} onClose={onClose} data={currentTrx} openJSON={openJSON} />
+				)}
 			</div>
 		)
 	}
@@ -203,6 +230,7 @@ const Transactions = () => {
 						<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} />
 						<TableTrx data={trx} className={classes.table} onClickRow={onClickRow} cbEndPage={cbEndPage} /> 
 					</div> */}
+
 					<div className={classes.listContainer}>
 						<ListTrx
 							data={trxRef.current}

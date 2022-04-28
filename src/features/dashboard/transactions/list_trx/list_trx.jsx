@@ -5,9 +5,30 @@ import { getTypeDashboard } from "../../../../helpers/helpers"
 import AttributFees from "./attribut_fees"
 import AttributStatus from "./attribut_status"
 import AttributType from "./attribut_type"
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 
 const useStyles = makeStyles((theme) => {
-	return {}
+	return {
+		containerNotFound:{
+			display: "flex",
+			flexDirection: "column",
+			alignItems: "center",
+			justifyContent: "center",
+		},
+		iconNotFound: {
+			width: "110px !important",
+			height: "110px !important",
+			color: theme.palette.primary.light2,
+			padding: "24px",
+			borderRadius: "50%",
+			backgroundColor: theme.palette.primary.main,
+		},
+		textNotFound: {
+			marginTop: "16px",
+			color: theme.palette.primary.light2,
+			fontSize: "20px",
+		},
+	}
 })
 
 const ListTrx = ({ data: currentData, onClickRow, isLoading, loadMore }) => {
@@ -150,8 +171,16 @@ const ListTrx = ({ data: currentData, onClickRow, isLoading, loadMore }) => {
 			},
 		],
 	}
-
-	return <List data={data} config={config} isLoading={isLoading} />
+	if (!isLoading && data.length === 0) {
+		return (
+			<div className={classes.containerNotFound}>
+				<AccountBalanceWalletIcon className={classes.iconNotFound} />
+				<p className={classes.textNotFound}>Transaction not found.</p>
+			</div>
+		)
+	} else {
+		return <List data={data} config={config} isLoading={isLoading} />
+	}
 }
 
 export default ListTrx
