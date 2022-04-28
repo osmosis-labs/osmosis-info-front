@@ -27,7 +27,6 @@ const MyWallet = () => {
 	useEffect(() => {
 		const fetch = async () => {
 			let { balance } = await getWalletInfo({ address })
-			console.log("my_wallet.jsx -> 19: balance", balance)
 			setData(balance.wallet ? balance.wallet : [])
 		}
 		if (address && address.length > 0) {

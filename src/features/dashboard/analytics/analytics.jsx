@@ -1,6 +1,9 @@
 import { makeStyles } from "@material-ui/core"
+import Exposure from "./exposure/exposure"
+import LiquidityReward from "./liquidity_reward/liquidity_reward"
 import MyWallet from "./my_wallet/my_wallet"
 import Overview from "./overview"
+import StackingRewards from "./stacking_reward/stacking_rewards"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootAnalytics: {
@@ -9,6 +12,7 @@ const useStyles = makeStyles((theme) => {
 			[theme.breakpoints.down("xs")]: {},
 		},
 		container: {
+			margin: "20px 0",
 			width: "100%",
 			display: "flex",
 			flexDirection: "column",
@@ -40,11 +44,11 @@ const Analytics = () => {
 			<Overview />
 			<div className={classes.container}>
 				<div className={classes.rowOne}>
-					<span>1</span>
-					<span>2</span>
+					<StackingRewards />
+					<LiquidityReward />
 				</div>
 				<div className={classes.rowTwo}>
-					<span>3</span>
+					<Exposure />
 					<MyWallet />
 				</div>
 			</div>

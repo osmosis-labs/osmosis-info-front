@@ -24,13 +24,14 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const ChartPrice = ({ data, crossMove, onMouseLeave }) => {
+const ChartPrice = ({ data: a, crossMove, onMouseLeave }) => {
 	const classes = useStyles()
 	const chartRef = useRef(null)
 	const containerRef = useRef(null)
 	const serieRef = useRef(null)
 	const resizeObserver = useRef(null)
 	const matchXS = useMediaQuery((theme) => theme.breakpoints.down("xs"))
+	const data = [{ value: 0, time: 1642425322 }, { value: 8, time: 1642511722 }, { value: 10, time: 1642598122 }, { value: 20, time: 1642684522 }, { value: 3, time: 1642770922 }, { value: 43, time: 1642857322 }, { value: 41, time: 1642943722 }, { value: 43, time: 1643030122 }, { value: 56, time: 1643116522 }, { value: 46, time: 1643202922 }];
 
 	useEffect(() => {
 		resizeObserver.current = new ResizeObserver((entries, b) => {
@@ -81,8 +82,7 @@ const ChartPrice = ({ data, crossMove, onMouseLeave }) => {
 				},
 			})
 
-		
-			serieRef.current = chart.addCandlestickSeries()
+			serieRef.current = chart.addLineSeries({ color: '#2962FF' })
 			chartRef.current = chart
 		}
 		const hover = (event) => {

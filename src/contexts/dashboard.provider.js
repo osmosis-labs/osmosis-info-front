@@ -1,10 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useRef, useState } from "react"
 import API from "../helpers/API"
 import { useKeplr } from "./KeplrProvider"
 import relativeTime from "dayjs/plugin/relativeTime"
 import utc from "dayjs/plugin/utc"
 import dayjs from "dayjs"
-import { getTypeDashboard } from "../helpers/helpers"
+import { getDaysInMonth, getName, getTypeDashboard, getWeekNumber, timeToDateUTC } from "../helpers/helpers"
 const DashboardContext = createContext()
 dayjs.extend(relativeTime)
 dayjs.extend(utc)
@@ -13,6 +13,7 @@ export const useDashboard = () => useContext(DashboardContext)
 
 export const DashboardProvider = ({ children }) => {
 	const { address, CHAIN_ID } = useKeplr()
+	const cache = useRef({})
 
 	const getTypeTrx = async ({ address }) => {
 		let response = await API.request({
@@ -274,23 +275,123 @@ export const DashboardProvider = ({ children }) => {
 		let balance = results[0].data
 		let exposure = results[1].data
 		let worth = balance.osmo_staked_value + balance.token_value_wallet + exposure.value_exposure
-		let profit = 3554154.45
-		let return7d = { value: 1000, percent: 5.91 }
 		let wallet = {
 			worth,
-			profit,
-			return7d,
 			balance,
 			exposure,
 		}
 
-		console.log("%cdashboard.provider.js -> 285 ERROR: TO DO", "background: #FF0000; color:#FFFFFF")
 		return wallet
+	}
+
+	const getChartStacking = async ({ address, range }) => {
+		if (
+			cache.current[getName("stacking", range, address)] &&
+			cache.current[getName("stacking", range, address)].length > 0
+		) {
+			return cache.current[getName("stacking", range, address)]
+		} else {
+			let url = `https://api-osmosis-chain.imperator.co/staking/v1/rewards/historical/${address}`
+			let response = await API.request({
+				url,
+				useCompleteURL: true,
+				type: "get",
+			})
+			if (response.data.length > 0) {
+				const data = response.data.map((item) => {
+					return { time: item.day, value: item.amount }
+				})
+
+				let nbDaysLastThreeMonths = 0
+				let startDate = new Date(data[0].time)
+				let startDateMoreOne = new Date(new Date().setMonth(startDate.getMonth() + 1))
+				let startDateMoreTwo = new Date(new Date().setMonth(startDateMoreOne.getMonth() + 2))
+				nbDaysLastThreeMonths += getDaysInMonth(startDate.getMonth(), startDate.getFullYear())
+				nbDaysLastThreeMonths += getDaysInMonth(startDateMoreOne.getMonth(), startDateMoreOne.getFullYear())
+				nbDaysLastThreeMonths += getDaysInMonth(startDateMoreTwo.getMonth(), startDateMoreTwo.getFullYear())
+
+				if (nbDaysLastThreeMonths > data.length) {
+					nbDaysLastThreeMonths = data.length
+				}
+				const dataM = data.slice(0, nbDaysLastThreeMonths)
+				const dataD = data.slice(0, 7)
+
+				cache.current = { ...cache.current, [getName("stacking", "7d", address)]: dataD }
+				cache.current = { ...cache.current, [getName("stacking", "3m", address)]: dataM }
+				cache.current = { ...cache.current, [getName("stacking", "all", address)]: data }
+				if (range === "7d") return dataD
+				else if (range === "3m") return dataW
+				else if (range === "all") return data
+			} else return []
+		}
+	}
+
+	const getLiquidityToken = async ({ address }) => {
+		let url = `https://api-osmosis-chain.imperator.co/lp/v1/rewards/token/${address}`
+		let response = await API.request({
+			url,
+			useCompleteURL: true,
+			type: "get",
+		})
+		return response.data.map((item) => item.token)
+	}
+
+	const getLiquidity = async ({ address, range, token }) => {
+		if (
+			cache.current[getName("liquidity", token, range, address)] &&
+			cache.current[getName("liquidity", token, range, address)].length > 0
+		) {
+			return cache.current[getName("liquidity", token, range, address)]
+		} else {
+			let url = `https://api-osmosis-chain.imperator.co/lp/v1/rewards/historical/${address}/${token}`
+			let response = await API.request({
+				url,
+				useCompleteURL: true,
+				type: "get",
+			})
+			if (response.data.length > 0) {
+				const data = response.data.map((item) => {
+					return { time: item.day, value: item.amount }
+				})
+
+				let nbDaysLastThreeMonths = 0
+				let startDate = new Date(data[0].time)
+				let startDateMoreOne = new Date(new Date().setMonth(startDate.getMonth() + 1))
+				let startDateMoreTwo = new Date(new Date().setMonth(startDateMoreOne.getMonth() + 2))
+				nbDaysLastThreeMonths += getDaysInMonth(startDate.getMonth(), startDate.getFullYear())
+				nbDaysLastThreeMonths += getDaysInMonth(startDateMoreOne.getMonth(), startDateMoreOne.getFullYear())
+				nbDaysLastThreeMonths += getDaysInMonth(startDateMoreTwo.getMonth(), startDateMoreTwo.getFullYear())
+
+				if (nbDaysLastThreeMonths > data.length) {
+					nbDaysLastThreeMonths = data.length
+				}
+				const dataM = JSON.parse(JSON.stringify(data.slice(0, nbDaysLastThreeMonths)))
+				const dataD = JSON.parse(JSON.stringify(data.slice(0, 7)))
+
+				cache.current = { ...cache.current, [getName("liquidity", token, "7d", address)]: [...dataD] }
+				cache.current = { ...cache.current, [getName("liquidity", token, "3m", address)]: [...dataM] }
+				cache.current = { ...cache.current, [getName("liquidity", token, "all", address)]: [...data] }
+				if (range === "7d") return [...dataD]
+				else if (range === "3m") return [...dataM]
+				else if (range === "all") return [...data]
+			} else return []
+		}
 	}
 
 	return (
 		<DashboardContext.Provider
-			value={{ address, getTypeTrx, getTrx, getAdresses, getTrades, getInfoTrx, getWalletInfo }}
+			value={{
+				address,
+				getTypeTrx,
+				getTrx,
+				getAdresses,
+				getTrades,
+				getInfoTrx,
+				getWalletInfo,
+				getChartStacking,
+				getLiquidity,
+				getLiquidityToken,
+			}}
 		>
 			{children}
 		</DashboardContext.Provider>

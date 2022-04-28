@@ -45,11 +45,7 @@ const useStyles = makeStyles((theme) => {
 			fontSize: "1.6rem",
 			color: theme.palette.primary.contrastText,
 		},
-		dataInfoReturn: {
-			display: "flex",
-
-			flexDirection: "row",
-		},
+		
 		up: {
 			color: theme.palette.green.text,
 		},
@@ -60,14 +56,19 @@ const useStyles = makeStyles((theme) => {
 			fontSize: "16px",
 			alignSelf: "center",
 		},
-		returnValue: {
+		dataInfoReturn: {
 			fontSize: "1.6rem",
 			color: theme.palette.primary.contrastText,
-			margin: "0 4px",
+			display: "flex",
+			flexDirection: "row",
+			justifyContent: "flex-end",
+			alignItems: "flex-end",
 		},
-		percent: {
+		token: {
 			fontSize: "16px",
-			alignSelf: "flex-end",
+			marginLeft: "4px",
+			marginBottom: "2px",
+            color: theme.palette.table.cellDark
 		},
 	}
 })
@@ -76,16 +77,14 @@ const Overview = () => {
 	const { address, getWalletInfo } = useDashboard()
 	const [profit, setProfit] = useState(0)
 	const [worth, setWorth] = useState(0)
-	const [d7, setD7] = useState(0)
-	const [d7Percent, setD7Percent] = useState(0)
+	const [osmosStacked, setOsmosStacked] = useState(0)
 
 	useEffect(() => {
 		const fetch = async () => {
-			let { worth, profit, return7d } = await getWalletInfo({ address })
+			let { worth, balance } = await getWalletInfo({ address })
 			setWorth(worth)
-			setProfit(profit)
-			setD7(return7d.value)
-			setD7Percent(return7d.percent)
+			setProfit(0)
+			setOsmosStacked(balance.token_value_wallet)
 		}
 
 		if (address && address.length > 0) {
@@ -126,11 +125,10 @@ const Overview = () => {
 						</p>
 					</div>
 					<div className={classes.info}>
-						<p className={classes.titleInfo}>7 days return</p>
+						<p className={classes.titleInfo}>Osmos liquidity</p>
 						<p className={classes.dataInfoReturn}>
-							{getArrow(d7)}
-							<span className={classes.returnValue}>${formateNumberDecimalsAuto({ price: d7 })}</span>
-							{getPercentDisplay(d7Percent)}
+							{formateNumberDecimalsAuto({ price: osmosStacked })}
+							<span className={classes.token}>OSMOS</span>
 						</p>
 					</div>
 				</div>
