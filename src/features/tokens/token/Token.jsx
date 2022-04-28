@@ -220,7 +220,7 @@ const Token = ({ showToast }) => {
 			try {
 				setDataIsLoaded(false)
 				let tokenData = await getTokenData(token.symbol)
-				let dataPrice = await getDataPrice(10080)
+				let dataPrice = await getDataPrice(60)
 				priceDecimals.current = dataPrice.length > 0 ? detectBestDecimalsDisplay(dataPrice[0].close) : 2
 				setToken({ ...tokenData, price: dataPrice[dataPrice.length - 1].close })
 				setDataIsLoaded(true)

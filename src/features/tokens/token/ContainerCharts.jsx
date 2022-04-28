@@ -88,7 +88,7 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 	const classes = useStyles()
 	const [typeChart, setTypeChart] = useState("price") // price, volume, liquidity
 
-	const [rangePrice, setRangePrice] = useState(1440)
+	const [rangePrice, setRangePrice] = useState(60)
 	const [rangeVolume, setRangeVolume] = useState("d")
 	const [rangeLiquidity, setRangeLiquidity] = useState("d")
 
@@ -104,7 +104,7 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 
 	useEffect(() => {
 		if (dataIsLoaded) {
-			onChangeRangePrice(1440)
+			onChangeRangePrice(60)
 		}
 	}, [dataIsLoaded])
 
