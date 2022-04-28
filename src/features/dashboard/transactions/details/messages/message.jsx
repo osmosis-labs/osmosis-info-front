@@ -27,12 +27,13 @@ const useStyles = makeStyles((theme) => {
 })
 const Message = ({ message, index, data }) => {
 	const classes = useStyles()
-
+	console.log("%cmessage.jsx -> 30 BLUE: message",'background: #2196f3; color:#FFFFFF', message  )
 	const getArtribute = (key, i) => {
 		let res = null
 		let data = message[key]
 		let isObject = typeof data === "object" && !Array.isArray(data) && data !== null
 		let isArray = Array.isArray(data) && data !== null
+		console.log("message.jsx -> 36: data, key,", data, key,  )
 		if (key === "type") res = <TypeMessage key={key + i} index={i} data={data} type={key}/>
 		else if ((key === "tokenOut" || key === "tokenIn") && !data.amount && !data.denom) {
 			let name = key
@@ -49,7 +50,7 @@ const Message = ({ message, index, data }) => {
 					usd={data.usd}
 				/>
 			)
-		} else if (key === "pools_Ids") {
+		} else if (key === "pools") {
 			let name = key
 			res = <DefaultMessage key={key + i} index={i} data={data} name={name} />
 		} else {

@@ -3,6 +3,7 @@ import { useTheme } from "@material-ui/core"
 import ReactJson from "react-json-view"
 
 import CloseIcon from "@mui/icons-material/Close"
+import { memo, useMemo } from "react"
 const useStyles = makeStyles((theme) => {
 	return {
 		detailsDialog: {
@@ -54,6 +55,7 @@ const useStyles = makeStyles((theme) => {
 const ModalJSON = ({ data, open, onClose }) => {
 	const classes = useStyles()
 	const theme = useTheme()
+	const style = { backgroundColor: theme.palette.primary.main }
 
 	return (
 		<div
@@ -72,10 +74,10 @@ const ModalJSON = ({ data, open, onClose }) => {
 				</Toolbar>
 			</AppBar>
 			<div className={classes.detailsContainer}>
-				<ReactJson src={data} theme="paraiso" style={{ backgroundColor: theme.palette.primary.main }} />
+				<ReactJson src={data} theme="paraiso" style={style} />
 			</div>
 		</div>
 	)
 }
-
-export default ModalJSON
+ModalJSON.whyDidYouRender = false
+export default memo(ModalJSON)

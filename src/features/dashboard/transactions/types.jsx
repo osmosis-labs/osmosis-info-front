@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core"
+import { useEffect, useState } from "react"
 import HubIcon from "@mui/icons-material/Hub"
 import SwapVerticalCircleIcon from "@mui/icons-material/SwapVerticalCircle"
 import LockOpenIcon from "@mui/icons-material/LockOpen"
@@ -17,17 +18,12 @@ import HowToVoteIcon from "@mui/icons-material/HowToVote"
 import StartIcon from "@mui/icons-material/Start"
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange"
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz"
+import InputScroll from "../../../components/input_scroll/input_scroll"
+
 const useStyles = makeStyles((theme) => {
 	return {
 		rootTypes: {
-			display: "flex",
-			flexDirection: "row",
-			alignItems: "center",
-			overflow: "hidden",
-			overflowX: "auto",
-			width: "100%",
-			marginBottom: "20px",
-			padding: "16px 8px",
+			margin: "0 0 16px 0",
 			[theme.breakpoints.down("xs")]: {},
 		},
 		type: {
@@ -60,8 +56,19 @@ const useStyles = makeStyles((theme) => {
 		},
 	}
 })
-const Types = ({ types, onChangeType, currentType }) => {
+const Types = ({ types, onChangeType }) => {
 	const classes = useStyles()
+	const [currentType, setCurrentType] = useState("all")
+
+	const onChange = (value) => {
+		let type = value
+		if (type === currentType) {
+			type = "all"
+		}
+		setCurrentType(type)
+		onChangeType(type)
+	}
+
 	const getIcon = (type) => {
 		type = getTypeDashboard(type, true)
 		if (type.includes("ibc.core.")) return <HubIcon className={classes.icon} />
@@ -94,22 +101,23 @@ const Types = ({ types, onChangeType, currentType }) => {
 	}
 	return (
 		<div className={classes.rootTypes}>
-			{types.map((type, index) => {
-				return (
-					<div
-						className={currentType === type.type ? `${classes.type} ${classes.typeSelected}` : classes.type}
-						key={type.type}
-						onClick={() => {
-							onChangeType(type.type)
-						}}
-					>
-						{getIcon(type.type)}
-						{type.type} ({type.count})
-					</div>
-				)
-			})}
+			<InputScroll>
+				{types.map((type, index) => {
+					return (
+						<div
+							className={currentType === type.type ? `${classes.type} ${classes.typeSelected}` : classes.type}
+							key={type.type}
+							onClick={() => {
+								onChange(type.type)
+							}}
+						>
+							{getIcon(type.type)}
+							{type.type} ({type.count})
+						</div>
+					)
+				})}
+			</InputScroll>
 		</div>
 	)
 }
-
 export default Types

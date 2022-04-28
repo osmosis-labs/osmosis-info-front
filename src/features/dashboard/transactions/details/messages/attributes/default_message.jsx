@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core"
+import { capitalizeFirstLetter } from "../../../../../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -23,10 +24,11 @@ const useStyles = makeStyles((theme) => {
 })
 const DefaultMessage = ({ data, name }) => {
 	const classes = useStyles()
+	let nameDisplay = capitalizeFirstLetter(name.replace("_", " "))
 
 	return (
 		<div className={`${classes.rootDefaultMessage}`}>
-			<p className={classes.name}>{name}</p>
+			<p className={classes.name}>{nameDisplay}</p>
 			<p className={classes.data}>{data}</p>
 		</div>
 	)

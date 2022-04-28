@@ -124,7 +124,7 @@ const Trades = () => {
 
 	const onClickRow = async (data) => {
 		let detailsTrx = await getInfoTrx({hashTRX: data.hash.value})
-		setCurrentTrade({ ...detailsTrx })
+		setCurrentTrade({ ...detailsTrx, ...data })
 		if (size === "xs") {
 			onOpen()
 		}

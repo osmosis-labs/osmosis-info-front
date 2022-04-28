@@ -1,5 +1,7 @@
 import { makeStyles } from "@material-ui/core"
+import { useEffect, useState } from "react"
 import List from "../../../../components/list/list"
+import { getTypeDashboard } from "../../../../helpers/helpers"
 import AttributFees from "./attribut_fees"
 import AttributStatus from "./attribut_status"
 import AttributType from "./attribut_type"
@@ -8,8 +10,15 @@ const useStyles = makeStyles((theme) => {
 	return {}
 })
 
-const ListTrx = ({ data, onClickRow, isLoading, loadMore }) => {
+const ListTrx = ({ data: currentData, onClickRow, isLoading, loadMore }) => {
 	const classes = useStyles()
+	const [data, setData] = useState([])
+
+	useEffect(() => {
+		const type = "osmosis.gamm.v1beta1.MsgSwapExactAmountIn"
+		let data = currentData.filter((item) => item.types[0].value !== type)
+		setData(data)
+	}, [currentData])
 
 	const onLoadMore = () => {
 		loadMore()

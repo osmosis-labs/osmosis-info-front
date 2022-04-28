@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => {
 })
 const Messages = ({ data }) => {
 	const classes = useStyles()
+	console.log("%cmessages.jsx -> 32 ORANGE: data",'background: #607d8b; color:#FFFFFF', data  )
 
 	return (
 		<div className={classes.rootMessages}>

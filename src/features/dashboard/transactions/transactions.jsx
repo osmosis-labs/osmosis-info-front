@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core"
-import { useEffect, useRef, useState } from "react"
+import { memo, useEffect, useRef, useState } from "react"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 import { useDashboard } from "../../../contexts/dashboard.provider"
 import useSize from "../../../hooks/sizeHook"
@@ -66,8 +66,8 @@ const useStyles = makeStyles((theme) => {
 			fontSize: "1.6rem",
 			color: theme.palette.gray.contrastText,
 		},
-		listContainer:{},
-		list:{},
+		listContainer: {},
+		list: {},
 	}
 })
 const Transactions = () => {
@@ -82,9 +82,9 @@ const Transactions = () => {
 
 	const [loadingTrx, setLoadingTrx] = useState(false)
 
-	const [trx, setTrx] = useState([])
+	const trxRef = useRef([])
 	const [types, setTypes] = useState([])
-	const [typeTrx, setTypeTrx] = useState("all")
+	const typeTrx = useRef("all")
 
 	useEffect(() => {
 		const fetch = async () => {
@@ -93,9 +93,11 @@ const Transactions = () => {
 				let promises = [getTypeTrx({ address }), getTrx({ address })]
 				let results = await Promise.all(promises)
 				let types = results[0]
+				const type = getTypeDashboard("osmosis.gamm.v1beta1.MsgSwapExactAmountIn")
+				types = types.filter((t) => t.type !== type)
 				let trx = results[1]
 				setTypes(types)
-				setTrx(trx)
+				trxRef.current = trx
 				setLoadingTrx(false)
 			} catch (e) {
 				console.log("%ctransactions.jsx -> 53 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
@@ -153,7 +155,7 @@ const Transactions = () => {
 				offset: offset.current,
 				type: typeTrx === "all" ? null : getTypeDashboard(typeTrx, true),
 			})
-			setTrx([...trx, ...results])
+			trxRef.current = [...trx, ...results]
 			setLoadingTrx(false)
 		} catch (e) {
 			setLoadingTrx(false)
@@ -161,16 +163,12 @@ const Transactions = () => {
 		}
 	}
 
-	const onChangeTypeTrx = async (value) => {
+	const onChangeTypeTrx = async (type) => {
 		try {
 			setLoadingTrx(true)
-			let type = value
-			if (type === typeTrx) {
-				type = "all"
-			}
-			setTypeTrx(type)
+			typeTrx.current = type
 			let results = await getTrx({ address, offset: 0, type: type === "all" ? null : getTypeDashboard(type, true) })
-			setTrx(results)
+			trxRef.current = results
 			setLoadingTrx(false)
 		} catch (e) {
 			console.log("%ctransactions.jsx -> 165 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
@@ -200,13 +198,19 @@ const Transactions = () => {
 					<div className={classes.titleContainer}>
 						<p className={classes.title}>Transactions</p>
 					</div>
-					<Types onChangeType={onChangeTypeTrx} types={types} currentType={typeTrx} />
+					<Types onChangeType={onChangeTypeTrx} types={types} />
 					{/* <div className={classes.tableContainer}>
 						<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} />
 						<TableTrx data={trx} className={classes.table} onClickRow={onClickRow} cbEndPage={cbEndPage} /> 
 					</div> */}
 					<div className={classes.listContainer}>
-						<ListTrx data={trx} className={classes.list} onClickRow={onClickRow} loadMore={cbEndPage} isLoading={loadingTrx}/>
+						<ListTrx
+							data={trxRef.current}
+							className={classes.list}
+							onClickRow={onClickRow}
+							loadMore={cbEndPage}
+							isLoading={loadingTrx}
+						/>
 					</div>
 				</div>
 			</div>
@@ -222,4 +226,4 @@ const Transactions = () => {
 	)
 }
 
-export default Transactions
+export default memo(Transactions)

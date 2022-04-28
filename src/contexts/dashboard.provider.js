@@ -142,12 +142,19 @@ export const DashboardProvider = ({ children }) => {
 
 			let types = [{ value: "cosmos.bank.v1beta1.MsgSend", display: getTypeDashboard("cosmos.bank.v1beta1.MsgSend") }]
 			trx.types = types
-
+			let images = []
+			if (item.symbol_in) {
+				images.push(
+					`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${item.symbol_in.toLowerCase()}.png`
+				)
+			}
+			if (item.symbol_out) {
+				images.push(
+					`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${item.symbol_out.toLowerCase()}.png`
+				)
+			}
 			let pools = {
-				images: [
-					`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${item.symbol_in.toLowerCase()}.png`,
-					`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${item.symbol_out.toLowerCase()}.png`,
-				],
+				images,
 				name: `${item.symbol_in}/${item.symbol_out}`,
 				routes: item.swap_route.routes,
 			}
@@ -155,7 +162,7 @@ export const DashboardProvider = ({ children }) => {
 			trx.messages = [
 				{
 					type: types[0],
-					pools_Ids: trx.pools.routes.reduce((pr, cr, ci) => {
+					pools: trx.pools.routes.reduce((pr, cr, ci) => {
 						if (ci === 0) return cr.poolId
 						else return pr + `, ${cr.poolId}`
 					}, ""),
@@ -164,7 +171,11 @@ export const DashboardProvider = ({ children }) => {
 					tokenOut: { value: item.amount_out, symbol: item.symbol_out, usd: item.value_usd },
 				},
 			]
-			res.push(trx)
+			console.log("%cDashboard.provider.js -> 174 GREEN: trx",'background: #cddc39; color:#212121', trx  )
+			if (item.symbol_in && item.symbol_out) {
+				console.log("%cDashboard.provider.js -> 176 ERROR: TO DO",'background: #FF0000; color:#FFFFFF',  )
+				res.push(trx)
+			}
 		})
 
 		return res

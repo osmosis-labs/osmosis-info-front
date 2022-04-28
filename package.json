@@ -51,6 +51,7 @@
 		]
 	},
 	"devDependencies": {
+		"@welldone-software/why-did-you-render": "^7.0.1",
 		"prettier": "2.5.1"
 	}
 }

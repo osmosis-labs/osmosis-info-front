@@ -7,5 +7,6 @@
 	box-sizing: border-box;
 	font-feature-settings: inherit;
 	font-variant-numeric: tabular-nums;
+	scroll-behavior: smooth;
 }
 
