@@ -98,9 +98,8 @@ export const DashboardProvider = ({ children }) => {
 		return res
 	}
 
-	const getTrades = async ({ address, limit = 10, offset = 0, type }) => {
+	const getTrades = async ({ address, limit = 10, offset = 0 }) => {
 		let url = `https://api-osmosis-chain.imperator.co/swap/v1/address/${address}?limit=${limit}&offset=${offset}`
-		if (type) url += `&type=${type}`
 		let response = await API.request({
 			url,
 			useCompleteURL: true,
@@ -136,7 +135,7 @@ export const DashboardProvider = ({ children }) => {
 			trx.address = { value: item.address, display: addressDisplay }
 
 			trx.tokenIn = { value: item.amount_in, symbol: item.symbol_in }
-			trx.tokenOut = { value: item.amount_out, symbol: item.symbol_out }
+			trx.tokenOut = { value: item.amount_out ? item.amount_out : 0, symbol: item.symbol_out ? item.symbol_out : "" }
 
 			trx.usd = item.value_usd
 
@@ -168,14 +167,14 @@ export const DashboardProvider = ({ children }) => {
 					}, ""),
 					sender: trx.address.value,
 					tokenIn: { value: item.amount_in, symbol: item.symbol_in, usd: item.value_usd },
-					tokenOut: { value: item.amount_out, symbol: item.symbol_out, usd: item.value_usd },
+					tokenOut: {
+						value: item.amount_out ? item.amount_out : 0,
+						symbol: item.symbol_out ? item.symbol_out : "",
+						usd: 0,
+					},
 				},
 			]
-			console.log("%cDashboard.provider.js -> 174 GREEN: trx",'background: #cddc39; color:#212121', trx  )
-			if (item.symbol_in && item.symbol_out) {
-				console.log("%cDashboard.provider.js -> 176 ERROR: TO DO",'background: #FF0000; color:#FFFFFF',  )
-				res.push(trx)
-			}
+			res.push(trx)
 		})
 
 		return res

@@ -155,7 +155,7 @@ const Transactions = () => {
 				offset: offset.current,
 				type: typeTrx === "all" ? null : getTypeDashboard(typeTrx, true),
 			})
-			trxRef.current = [...trx, ...results]
+			trxRef.current = [...trxRef.current, ...results]
 			setLoadingTrx(false)
 		} catch (e) {
 			setLoadingTrx(false)

@@ -7,6 +7,7 @@ import TableTrades from "./table_trades/table_trades"
 import useSize from "../../../hooks/sizeHook"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 import Details from "../transactions/details/details"
+import ListTrades from "./list_trades/list_trades"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			flexDirection: "row",
 			alignItems: "center",
-			margin: "20px 0 12px 0",
+			margin: "32px 0 32px 0",
 		},
 		title: {
 			fontSize: "1.6rem",
@@ -69,7 +70,7 @@ const Trades = () => {
 	const [open, setOpen] = useState(false)
 	const { getTrades, getInfoTrx, ...other } = useDashboard()
 	const [currentTrade, setCurrentTrade] = useState({})
-	const [trades, setTrades] = useState([])
+	const tradesRef = useRef([])
 	const [address, setAddress] = useState("")
 	const [openModalJSON, setOpenModalJSON] = useState(false)
 	const offset = useRef(0)
@@ -80,7 +81,8 @@ const Trades = () => {
 			try {
 				setLoadingTrades(true)
 				let trades = await getTrades({ address })
-				setTrades(trades)
+				console.log("trades.jsx -> 84: trades", trades  )
+				tradesRef.current = trades
 				setLoadingTrades(false)
 			} catch (e) {
 				console.log("%cTrades.jsx -> 53 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
@@ -123,7 +125,7 @@ const Trades = () => {
 	}
 
 	const onClickRow = async (data) => {
-		let detailsTrx = await getInfoTrx({hashTRX: data.hash.value})
+		let detailsTrx = await getInfoTrx({ hashTRX: data.hash.value })
 		setCurrentTrade({ ...detailsTrx, ...data })
 		if (size === "xs") {
 			onOpen()
@@ -137,9 +139,8 @@ const Trades = () => {
 			let results = await getTrades({
 				address,
 				offset: offset.current,
-				type: typeTrades === "all" ? null : getTypeDashboard(typeTrades, true),
 			})
-			setTrades([...Trades, ...results])
+			tradesRef.current = [...tradesRef.current, ...results]
 			setLoadingTrades(false)
 		} catch (e) {
 			setLoadingTrades(false)
@@ -168,9 +169,14 @@ const Trades = () => {
 					<div className={classes.titleContainer}>
 						<p className={classes.title}>History Trading</p>
 					</div>
-					<div className={classes.tableContainer}>
-						<BlocLoaderOsmosis open={loadingTrades} classNameLoading={classes.loading} />
-						<TableTrades data={trades} className={classes.table} onClickRow={onClickRow} cbEndPage={cbEndPage} />
+					<div className={classes.listContainer}>
+						<ListTrades
+							data={tradesRef.current}
+							className={classes.list}
+							onClickRow={onClickRow}
+							loadMore={cbEndPage}
+							isLoading={loadingTrades}
+						/>
 					</div>
 				</div>
 			</div>
