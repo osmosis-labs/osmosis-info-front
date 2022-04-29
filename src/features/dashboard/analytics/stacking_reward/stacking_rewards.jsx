@@ -1,9 +1,10 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
+import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
 import { useDashboard } from "../../../../contexts/dashboard.provider"
-import { formateNumberDecimalsAuto, formaterNumber, getPercent } from "../../../../helpers/helpers"
+import { formateNumberDecimalsAuto, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
 import ButtonChart from "./button_chart"
 import Chart from "./chart"
 const useStyles = makeStyles((theme) => {
@@ -17,7 +18,12 @@ const useStyles = makeStyles((theme) => {
 		title: {
 			fontSize: "1.4rem",
 			color: theme.palette.gray.contrastText,
-			marginBottom: "20px",
+			marginRight: "20px",
+		},
+		containerTitle: {
+			display: "flex",
+			marginBottom: "8px",
+			alignItems: "center",
 		},
 		loading: {
 			backgroundColor: theme.palette.primary.light,
@@ -106,6 +112,21 @@ const StackingRewards = () => {
 		setData(data)
 	}
 
+	const donwloadStacking = () => {
+		let dataDownload = [
+			["time", "value"],
+			...data.map((d) => [`${d.time.year}-${twoNumber(d.time.month)}-${twoNumber(d.time.day)}`, d.value]),
+		]
+		let csv = dataDownload.map((row) => row.join(",")).join("\n")
+		let a = document.createElement("a")
+		a.href = `data:attachment/csv,${encodeURIComponent(csv)}`
+		a.target = "_blank"
+		a.download = `staking_reward_${range}.csv`
+		document.body.appendChild(a)
+		a.click()
+		document.body.removeChild(a)
+	}
+
 	const getPercentDisplay = () => {
 		let percent = 0
 		if (osmoStaked > 0) percent = (total * 100) / osmoStaked
@@ -116,29 +137,39 @@ const StackingRewards = () => {
 
 	return (
 		<div className={classes.rootStackingRewards}>
-			<p className={classes.title}>Stacking Rewards</p>
+			<div className={classes.containerTitle}>
+				<p className={classes.title}>Stacking Rewards</p>
+				<ButtonCSV onClick={donwloadStacking} disabled={isLoading || data.length === 0}>
+					.CSV
+				</ButtonCSV>
+			</div>
 			<Paper className={classes.paper}>
 				<BlocLoaderOsmosis open={isLoading} classNameLoading={classes.loading} />
-
-				<div className={classes.chartContainer}>
-					<Chart data={data} />
-				</div>
-				<div className={classes.chartInfo}>
-					<ButtonChart range={range} onChangeRange={onChangeRange} />
-					<div className={classes.rowInfo}>
-						<p className={classes.name}>Total staked</p>
-						<p className={classes.value}>
-							{formaterNumber(osmoStaked)} <span className={classes.token}>OSMO</span>
-						</p>
-					</div>
-					<div className={classes.rowInfo}>
-						<p className={classes.name}>Total reward</p>
-						<p className={classes.value}>
-							{formaterNumber(total)} <span className={classes.token}>OSMO</span>
-							{getPercentDisplay()}
-						</p>
-					</div>
-				</div>
+				{data.length > 0 ? (
+					<>
+						<div className={classes.chartContainer}>
+							<Chart data={data} />
+						</div>
+						<div className={classes.chartInfo}>
+							<ButtonChart range={range} onChangeRange={onChangeRange} />
+							<div className={classes.rowInfo}>
+								<p className={classes.name}>Total staked</p>
+								<p className={classes.value}>
+									{formaterNumber(osmoStaked)} <span className={classes.token}>OSMO</span>
+								</p>
+							</div>
+							<div className={classes.rowInfo}>
+								<p className={classes.name}>Total reward</p>
+								<p className={classes.value}>
+									{formaterNumber(total)} <span className={classes.token}>OSMO</span>
+									{getPercentDisplay()}
+								</p>
+							</div>
+						</div>
+					</>
+				) : (
+					<p className={classes.textNotFound}>No data found.</p>
+				)}
 			</Paper>
 		</div>
 	)

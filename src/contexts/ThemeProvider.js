@@ -16,6 +16,10 @@ export const ThemeCustomProvider = ({ children }) => {
 			backgroundDisabled: "#FFFFFF67",
 			colorDisabled: "#FFFFFF61",
 		},
+		yellowButton: {
+			background: "#C4A46A14",
+			backgroundHover: "#92753e14",
+		},
 		error: {
 			light: "#ff8080",
 			main: "#EF3456",

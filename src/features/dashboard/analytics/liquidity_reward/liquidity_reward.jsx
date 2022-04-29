@@ -1,10 +1,11 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
+import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
 import { useDashboard } from "../../../../contexts/dashboard.provider"
 import { usePrices } from "../../../../contexts/PricesProvider"
-import { formateNumberDecimalsAuto, formaterNumber, getPercent } from "../../../../helpers/helpers"
+import { formateNumberDecimalsAuto, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
 import ButtonChart from "../stacking_reward/button_chart"
 import Chart from "../stacking_reward/chart"
 import SelectToken from "./select_token"
@@ -19,7 +20,12 @@ const useStyles = makeStyles((theme) => {
 		title: {
 			fontSize: "1.4rem",
 			color: theme.palette.gray.contrastText,
-			marginBottom: "20px",
+			marginRight: "20px",
+		},
+		containerTitle: {
+			display: "flex",
+			marginBottom: "8px",
+			alignItems: "center",
 		},
 		loading: {
 			backgroundColor: theme.palette.primary.light,
@@ -165,29 +171,55 @@ const LiquidityReward = () => {
 		)
 	}
 
+	const donwloadStacking = () => {
+		let dataDownload = [
+			["time", "value"],
+			...data.map((d) => [`${d.time.year}-${twoNumber(d.time.month)}-${twoNumber(d.time.day)}`, d.value]),
+		]
+		let csv = dataDownload.map((row) => row.join(",")).join("\n")
+		let a = document.createElement("a")
+		a.href = `data:attachment/csv,${encodeURIComponent(csv)}`
+		a.target = "_blank"
+		a.download = `liquidity_reward_${range}.csv`
+		document.body.appendChild(a)
+		a.click()
+		document.body.removeChild(a)
+	}
+
 	return (
 		<div className={classes.rootLiquidityReward}>
-			<p className={classes.title}>Liquidity Rewards</p>
+			<div className={classes.containerTitle}>
+				<p className={classes.title}>Liquidity Rewards</p>
+				<ButtonCSV onClick={donwloadStacking} disabled={isLoading || data.length === 0}>
+					.CSV
+				</ButtonCSV>
+			</div>
 			<Paper className={classes.paper}>
 				<BlocLoaderOsmosis open={isLoading} classNameLoading={classes.loading} />
-				<div className={classes.chartContainer}>
-					<Chart data={data} />
-				</div>
-				<div className={classes.chartInfo}>
-					<ButtonChart range={range} onChangeRange={onChangeRange} />
-					<SelectToken tokens={tokens} onChangeToken={onChangeToken} currentToken={currentToken} />
-					<div className={classes.rowInfo}>
-						<p className={classes.name}>{currentToken} Balance</p>
-						<p className={classes.value}>${formaterNumber(currentBalance.value)}</p>
-						<p className={classes.value}>{getDiplayBalance(currentBalance)}</p>
-					</div>
-					<div className={classes.rowInfo}>
-						<p className={classes.name}>Total reward</p>
-						<p className={classes.value}>
-							{formaterNumber(total)} <span className={classes.token}>{currentToken}</span>
-						</p>
-					</div>
-				</div>
+				{data.length > 0 ? (
+					<>
+						<div className={classes.chartContainer}>
+							<Chart data={data} />
+						</div>
+						<div className={classes.chartInfo}>
+							<ButtonChart range={range} onChangeRange={onChangeRange} />
+							<SelectToken tokens={tokens} onChangeToken={onChangeToken} currentToken={currentToken} />
+							<div className={classes.rowInfo}>
+								<p className={classes.name}>{currentToken} Balance</p>
+								<p className={classes.value}>${formaterNumber(currentBalance.value)}</p>
+								<p className={classes.value}>{getDiplayBalance(currentBalance)}</p>
+							</div>
+							<div className={classes.rowInfo}>
+								<p className={classes.name}>Total reward</p>
+								<p className={classes.value}>
+									{formaterNumber(total)} <span className={classes.token}>{currentToken}</span>
+								</p>
+							</div>
+						</div>
+					</>
+				) : (
+					<p className={classes.textNotFound}>No data found.</p>
+				)}
 			</Paper>
 		</div>
 	)
