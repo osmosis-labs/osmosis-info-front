@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "center",
 
 		},
-		disabled: {
+		notAvalaible: {
 			backgroundColor: theme.palette.blueButton.backgroundDisabled,
 			color: theme.palette.blueButton.colorDisabled,
 			transition: "all 0.3s ease-in-out",
@@ -33,7 +33,7 @@ const ButtonChart = ({ onChangeType, type }) => {
 				onClick={() => {
 					onClick("asset")
 				}}
-				className={actived === "asset" ? null : classes.disabled}
+				className={actived === "asset" ? null : classes.notAvalaible}
 			>
 				Asset Exposure
 			</ThemeButton>
@@ -41,7 +41,7 @@ const ButtonChart = ({ onChangeType, type }) => {
 				onClick={() => {
 					onClick("pool")
 				}}
-				className={actived === "pool" ? null : classes.disabled}
+				className={actived === "pool" ? null : classes.notAvalaible}
 			>
 				Pools Exposure
 			</ThemeButton>

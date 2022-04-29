@@ -40,15 +40,22 @@ const MyWallet = () => {
 	const { address, getWalletInfo } = useDashboard()
 	const [data, setData] = useState([])
 	const [isLoading, setIsLoading] = useState(false)
+	const [order, setOrder] = useState("desc")
+	const [orderBy, setOrderBy] = useState("value")
+
+	const onSort = (name) => {
+		let newOrder = order === "desc" ? "asc" : "desc"
+		setOrder(newOrder)
+		setOrderBy(name)
+	}
+
 	useEffect(() => {
 		const fetch = async () => {
 			setIsLoading(true)
 			let { balance } = await getWalletInfo({ address })
 			let data = []
 			if (balance.wallet) data = balance.wallet
-			data.sort((a, b) => {
-				return b.value - a.balance
-			})
+
 			setData(data)
 			setIsLoading(false)
 		}
@@ -57,15 +64,22 @@ const MyWallet = () => {
 		}
 	}, [address])
 
+	const displayData = (data) => {
+		return [...data].sort((a, b) => {
+			let res = b[orderBy] - a[orderBy]
+			return order === "desc" ? -res : res
+		})
+	}
+
 	return (
 		<div className={classes.rootMyWallet}>
 			<p className={classes.title}>My Wallet</p>
 			<Paper className={classes.paper}>
 				<BlocLoaderOsmosis open={isLoading} classNameLoading={classes.loading} />
-				<WalletHeader />
+				<WalletHeader onSort={onSort} order={order} orderBy={orderBy} />
 				<div className={classes.list}>
 					{data.length === 0 ? <p>No item found</p> : null}
-					{data.map((item, index) => {
+					{displayData(data).map((item, index) => {
 						return <WalletItem key={item.denom} data={item} />
 					})}
 				</div>

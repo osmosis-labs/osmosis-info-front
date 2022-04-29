@@ -27,12 +27,13 @@ const useStyles = makeStyles((theme) => {
 const AttributSymbol = ({ data, config, itemConfig, itemKey }) => {
 	const classes = useStyles()
 	let currentData = data[itemConfig.key]
+	console.log("attribut_symbol.jsx -> 30: currentData", currentData  )
 
 	if (!data && !data.value)
 		return (
 			<div className={classes.rootAttributSymbol}>
 				<span className={classes.firstNumber}>{0}</span>
-				<span className={classes.symbol}>OSMO</span>
+				<span className={classes.symbol}>{currentData.symbol}</span>
 			</div>
 		)
 	let splitNumber = formateNumberDecimalsAuto({ price: currentData.value }).toString().split(".")
@@ -41,7 +42,7 @@ const AttributSymbol = ({ data, config, itemConfig, itemKey }) => {
 		<div className={classes.rootAttributSymbol}>
 			<span className={classes.firstNumber}>{splitNumber[0]}</span>
 			{splitNumber.length > 1 ? <span className={classes.restNumber}>.{splitNumber[1]}</span> : null}
-			<span className={classes.symbol}>OSMO</span>
+			<span className={classes.symbol}>{currentData.symbol}</span>
 		</div>
 	)
 }

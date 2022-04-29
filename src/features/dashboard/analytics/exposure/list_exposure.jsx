@@ -43,7 +43,7 @@ const ListExposure = ({ data }) => {
 					<div key={index} className={classes.item}>
 						<span className={classes.buble} style={{ backgroundColor: item.color }} />
 						<span className={`${classes.data} ${classes.data}`}>{item.name}</span>
-						<span className={`${classes.data} ${classes.data}`}>{formaterNumber(item.value)}</span>
+						<span className={`${classes.data} ${classes.data}`}>${formaterNumber(item.value)}</span>
 						<span className={`${classes.data} ${classes.percent}`}>{getPercent(item.percent)}</span>
 					</div>
 				)

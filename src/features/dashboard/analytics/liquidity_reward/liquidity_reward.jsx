@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => {
 		paper: {
 			position: "relative",
 			display: "grid",
-			gridTemplateColumns: "3fr 1.5fr",
+			gridTemplateColumns: "3fr 1fr",
 			height: "350px",
 			overflow: "hidden",
 		},
@@ -91,6 +91,7 @@ const LiquidityReward = () => {
 	const [tokens, setTokens] = useState([])
 	const [currentBalance, setCurrentBalance] = useState({ value: 0, percent: 0, change: 0 })
 	const [isLoading, setIsLoading] = useState(false)
+	const [walletSaved, setWalletSaved] = useState({})
 
 	useEffect(() => {
 		const fetch = async () => {
@@ -110,6 +111,7 @@ const LiquidityReward = () => {
 
 				setData([...data])
 			}
+			setWalletSaved(wallet)
 			setIsLoading(false)
 		}
 		if (address && address.length > 0) {
@@ -144,6 +146,7 @@ const LiquidityReward = () => {
 		console.log("liquidity_reward.jsx -> 135: tkn", tkn)
 		let data = await getLiquidity({ address, range, token: tkn })
 		console.log("liquidity_reward.jsx -> 137: data", data)
+		getCurrentWallet(walletSaved, tkn)
 		setCurrentToken(tkn)
 		setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
 		setData([...data])

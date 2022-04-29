@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => {
 		paper: {
 			position: "relative",
 			display: "grid",
-			gridTemplateColumns: "3fr 1.5fr",
+			gridTemplateColumns: "3fr 1fr",
 			height: "350px",
 			overflow: "hidden",
 		},
@@ -162,8 +162,8 @@ const StackingRewards = () => {
 								<p className={classes.name}>Total reward</p>
 								<p className={classes.value}>
 									{formaterNumber(total)} <span className={classes.token}>OSMO</span>
-									{getPercentDisplay()}
 								</p>
+								<p className={classes.value}>{getPercentDisplay()}</p>
 							</div>
 						</div>
 					</>

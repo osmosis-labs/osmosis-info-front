@@ -154,7 +154,7 @@ const Overview = () => {
 			<BlocLoaderOsmosis open={isLoading} classNameLoading={classes.loading} />
 
 			<div className={classes.container}>
-				<p className={classes.title}>History Trading</p>
+				<p className={classes.title}>Analytics</p>
 				<div className={classes.containerInfo}>
 					<div className={classes.info}>
 						<p className={classes.titleInfo}>Total worth</p>
@@ -167,10 +167,10 @@ const Overview = () => {
 						</p>
 					</div>
 					<div className={classes.info}>
-						<p className={classes.titleInfo}>Osmos liquidity</p>
+						<p className={classes.titleInfo}>Available liquidity</p>
 						<p className={classes.dataInfoReturn}>
-							{formateNumberDecimalsAuto({ price: osmosStaked })}
-							<span className={classes.token}>OSMOS</span>
+							${formateNumberDecimalsAuto({ price: osmosStaked })}
+							{/* <span className={classes.token}>OSMOS</span> */}
 						</p>
 					</div>
 				</div>
