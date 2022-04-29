@@ -4,7 +4,6 @@ import Paper from "../../../../components/paper/Paper"
 import { useDashboard } from "../../../../contexts/dashboard.provider"
 import WalletHeader from "./wallet_header"
 import WalletItem from "./wallet_item"
-import TableWallet from "./wallet_item"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootMyWallet: {
@@ -18,6 +17,14 @@ const useStyles = makeStyles((theme) => {
 			color: theme.palette.gray.contrastText,
 			marginBottom: "20px",
 		},
+		paper: {
+			height: "350px",
+			overflow: "hidden",
+		},
+		list: {
+			overflowY: "auto",
+			maxHeight: "92%",
+		},
 	}
 })
 const MyWallet = () => {
@@ -27,7 +34,12 @@ const MyWallet = () => {
 	useEffect(() => {
 		const fetch = async () => {
 			let { balance } = await getWalletInfo({ address })
-			setData(balance.wallet ? balance.wallet : [])
+			let data = []
+			if (balance.wallet) data = balance.wallet
+			data.sort((a, b) => {
+				return b.value - a.balance
+			})
+			setData(data)
 		}
 		if (address && address.length > 0) {
 			fetch()
@@ -39,10 +51,12 @@ const MyWallet = () => {
 			<p className={classes.title}>My Wallet</p>
 			<Paper className={classes.paper}>
 				<WalletHeader />
-				{data.length === 0 ? <p>No item found</p> : null}
-				{data.map((item, index) => {
-					return <WalletItem key={item.denom} data={item} />
-				})}
+				<div className={classes.list}>
+					{data.length === 0 ? <p>No item found</p> : null}
+					{data.map((item, index) => {
+						return <WalletItem key={item.denom} data={item} />
+					})}
+				</div>
 			</Paper>
 		</div>
 	)

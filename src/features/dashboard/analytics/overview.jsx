@@ -77,14 +77,14 @@ const Overview = () => {
 	const { address, getWalletInfo } = useDashboard()
 	const [profit, setProfit] = useState(0)
 	const [worth, setWorth] = useState(0)
-	const [osmosStacked, setOsmosStacked] = useState(0)
+	const [osmosStaked, setOsmosStaked] = useState(0)
 
 	useEffect(() => {
 		const fetch = async () => {
 			let { worth, balance } = await getWalletInfo({ address })
 			setWorth(worth)
 			setProfit(0)
-			setOsmosStacked(balance.token_value_wallet)
+			setOsmosStaked(balance.tokenValueWallet)
 		}
 
 		if (address && address.length > 0) {
@@ -127,7 +127,7 @@ const Overview = () => {
 					<div className={classes.info}>
 						<p className={classes.titleInfo}>Osmos liquidity</p>
 						<p className={classes.dataInfoReturn}>
-							{formateNumberDecimalsAuto({ price: osmosStacked })}
+							{formateNumberDecimalsAuto({ price: osmosStaked })}
 							<span className={classes.token}>OSMOS</span>
 						</p>
 					</div>

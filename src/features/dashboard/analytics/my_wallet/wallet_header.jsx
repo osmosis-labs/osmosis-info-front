@@ -22,7 +22,7 @@ const WalletHeader = ({}) => {
 		<div className={classes.rootWalletHeader}>
 			<span className={classes.name}>Name</span>
 			<span className={classes.name}>Balance</span>
-			<span className={classes.name}>Price</span>
+			<span className={classes.name}>Change</span>
 			<span className={classes.name}>Value (USD)</span>
 		</div>
 	)

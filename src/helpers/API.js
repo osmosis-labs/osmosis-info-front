@@ -26,6 +26,6 @@ class API {
 	}
 }
 
-const instance = new API()
+const instance = new API()	
 
 export default instance

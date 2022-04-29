@@ -9,6 +9,13 @@ export const ThemeCustomProvider = ({ children }) => {
 	const { settings } = useSettings()
 	let colors = {
 		type: "dark",
+		blueButton: {
+			color: "#FFFFFF",
+			background: "#322DC2",
+			backgroundHover: "#534bae",
+			backgroundDisabled: "#FFFFFF67",
+			colorDisabled: "#FFFFFF61",
+		},
 		error: {
 			light: "#ff8080",
 			main: "#EF3456",

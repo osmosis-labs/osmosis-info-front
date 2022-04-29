@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core"
 import Image from "../../../../components/image/Image"
-import { formateNumberDecimalsAuto } from "../../../../helpers/helpers"
+import { formateNumberDecimalsAuto, getPercent } from "../../../../helpers/helpers"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootWalletItem: {
@@ -13,37 +13,47 @@ const useStyles = makeStyles((theme) => {
 			fontSize: "14px",
 			[theme.breakpoints.down("xs")]: {},
 		},
-		nameContainer:{
+		nameContainer: {
 			display: "flex",
 			alignItems: "center",
-
 		},
-		image:{
+		image: {
 			width: "32px",
 			marginRight: "8px",
 			padding: "2px",
 			borderRadius: "50%",
 			border: `1px solid ${theme.palette.yellow.gold}`,
 		},
-		names:{
+		names: {
 			display: "flex",
 			flexDirection: "column",
 		},
 		name: {
 			fontSize: "12px",
-            color: theme.palette.table.cellDark,
-
+			color: theme.palette.table.cellDark,
 		},
-		data:{
+		data: {
 			display: "flex",
 			flexDirection: "column",
 			justifyContent: "center",
-		}
+		},
+		up: {
+			color: theme.palette.green.text,
+		},
+		down: {
+			color: theme.palette.error.main,
+		},
 	}
 })
 
 const WalletItem = ({ data }) => {
 	const classes = useStyles()
+
+	const getPercentDisplay = (percent) => {
+		if (percent === 0) return <span className={classes.data}>{getPercent(percent)}</span>
+		else if (percent > 0) return <span className={`${classes.data}  ${classes.up}`}>↑ {getPercent(percent)}</span>
+		return <span className={` ${classes.data} ${classes.down}`}>↓ {getPercent(percent)}</span>
+	}
 
 	return (
 		<div className={classes.rootWalletItem}>
@@ -61,7 +71,7 @@ const WalletItem = ({ data }) => {
 				</div>
 			</div>
 			<span className={classes.data}>{formateNumberDecimalsAuto({ price: data.amount })} </span>
-			<span className={classes.data}>${formateNumberDecimalsAuto({ price: data.price })} </span>
+			{getPercentDisplay(data.valueChange)}
 			<span className={classes.data}>${formateNumberDecimalsAuto({ price: data.value })} </span>
 		</div>
 	)

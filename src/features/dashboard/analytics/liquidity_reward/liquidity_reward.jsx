@@ -23,6 +23,8 @@ const useStyles = makeStyles((theme) => {
 		paper: {
 			display: "grid",
 			gridTemplateColumns: "3fr 1.5fr",
+			height: "350px",
+			overflow: "hidden",
 		},
 		chartContainer: {
 			minHeight: "300px",
@@ -105,7 +107,7 @@ const LiquidityReward = () => {
 		let currentWallet = wallet.find((item) => item.symbol === token)
 		if (currentWallet) {
 			let res = { value: 0, percent: 0, change: 0 }
-			res.percent = currentWallet.value_change
+			res.percent = currentWallet.valueChange
 			res.value = currentWallet.value
 			res.change = res.value * (res.percent / 100)
 
@@ -151,7 +153,7 @@ const LiquidityReward = () => {
 
 	return (
 		<div className={classes.rootLiquidityReward}>
-			<p className={classes.title}>Stacking Rewards</p>
+			<p className={classes.title}>Liquidity Rewards</p>
 			<Paper className={classes.paper}>
 				<div className={classes.chartContainer}>
 					<Chart data={data} />

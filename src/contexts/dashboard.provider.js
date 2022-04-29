@@ -1,19 +1,18 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react"
 import API from "../helpers/API"
+import cache from "../helpers/cache"
 import { useKeplr } from "./KeplrProvider"
 import relativeTime from "dayjs/plugin/relativeTime"
 import utc from "dayjs/plugin/utc"
 import dayjs from "dayjs"
-import { getDaysInMonth, getName, getTypeDashboard, getWeekNumber, timeToDateUTC } from "../helpers/helpers"
+import { getDaysInMonth, getTypeDashboard, getWeekNumber, timeToDateUTC } from "../helpers/helpers"
 const DashboardContext = createContext()
 dayjs.extend(relativeTime)
 dayjs.extend(utc)
-
 export const useDashboard = () => useContext(DashboardContext)
 
 export const DashboardProvider = ({ children }) => {
 	const { address, CHAIN_ID } = useKeplr()
-	const cache = useRef({})
 
 	const getTypeTrx = async ({ address }) => {
 		let response = await API.request({
@@ -259,6 +258,14 @@ export const DashboardProvider = ({ children }) => {
 	}
 
 	const getWalletInfo = async ({ address }) => {
+		let cachedResult = cache.getCache(
+			cache.getName("walletInfo", address),
+			(cachedData) => cachedData.balance.wallet.length > 0 && cachedData.exposure.pools.length > 0
+		)
+		if (cachedResult) {
+			return cachedResult
+		}
+
 		let results = await Promise.all([
 			API.request({
 				url: `https://api-osmosis-chain.imperator.co/account/v1/balance/${address}`,
@@ -271,59 +278,76 @@ export const DashboardProvider = ({ children }) => {
 				type: "get",
 			}),
 		])
+		let reponseBalance = results[0].data
+		let reponseExposure = results[1].data
+		let balance = { osmoStaked: 0, osmoStakedValue: 0, tokenValueWallet: 0, wallet: [] }
+		let exposure = { totalExposure: 0, pools: [] }
+		let res = { worth: 0, balance, exposure }
 
-		let balance = results[0].data
-		let exposure = results[1].data
-		let worth = balance.osmo_staked_value + balance.token_value_wallet + exposure.value_exposure
-		let wallet = {
-			worth,
-			balance,
-			exposure,
+		if (reponseBalance.wallet.length > 0) {
+			balance.osmoStaked = reponseBalance.osmo_staked
+			balance.osmoStakedValue = reponseBalance.osmo_staked_value
+			balance.tokenValueWallet = reponseBalance.token_value_wallet
+
+			balance.wallet = reponseBalance.wallet.map((item) => {
+				return {
+					name: item.name,
+					name: item.name,
+					denom: item.denom,
+					symbol: item.symbol,
+					price: item.price,
+					amount: item.amount,
+					value: item.value,
+					valueChange: item.value_change,
+					tokenPercent: item.token_percent,
+				}
+			})
+			res.worth += balance.osmoStakedValue + balance.tokenValueWallet
+			res.balance = balance
 		}
 
-		return wallet
+		if (reponseExposure.value_exposure > 0) {
+			exposure.valueExposure = reponseExposure.value_exposure
+			exposure.pools = reponseExposure.pool_exposure.map((pool) => {
+				return { poolId: pool.pool_id, tokens: pool.token, value: pool.value_pool, percent: pool.pool_percent }
+			})
+			res.worth += exposure.valueExposure
+			res.exposure = exposure
+		}
+
+		cache.setCache(cache.getName("walletInfo", address), res)
+		return res
 	}
 
 	const getChartStacking = async ({ address, range }) => {
-		if (
-			cache.current[getName("stacking", range, address)] &&
-			cache.current[getName("stacking", range, address)].length > 0
-		) {
-			return cache.current[getName("stacking", range, address)]
-		} else {
-			let url = `https://api-osmosis-chain.imperator.co/staking/v1/rewards/historical/${address}`
-			let response = await API.request({
-				url,
-				useCompleteURL: true,
-				type: "get",
+		let url = `https://api-osmosis-chain.imperator.co/staking/v1/rewards/historical/${address}`
+		let response = await API.request({
+			url,
+			useCompleteURL: true,
+			type: "get",
+		})
+		if (response.data.length > 0) {
+			const data = response.data.map((item) => {
+				return { time: item.day, value: item.amount }
 			})
-			if (response.data.length > 0) {
-				const data = response.data.map((item) => {
-					return { time: item.day, value: item.amount }
-				})
 
-				let nbDaysLastThreeMonths = 0
-				let startDate = new Date(data[0].time)
-				let startDateMoreOne = new Date(new Date().setMonth(startDate.getMonth() + 1))
-				let startDateMoreTwo = new Date(new Date().setMonth(startDateMoreOne.getMonth() + 2))
-				nbDaysLastThreeMonths += getDaysInMonth(startDate.getMonth(), startDate.getFullYear())
-				nbDaysLastThreeMonths += getDaysInMonth(startDateMoreOne.getMonth(), startDateMoreOne.getFullYear())
-				nbDaysLastThreeMonths += getDaysInMonth(startDateMoreTwo.getMonth(), startDateMoreTwo.getFullYear())
+			let nbDaysLastThreeMonths = 0
+			let startDate = new Date(data[0].time)
+			let startDateMoreOne = new Date(new Date().setMonth(startDate.getMonth() + 1))
+			let startDateMoreTwo = new Date(new Date().setMonth(startDateMoreOne.getMonth() + 2))
+			nbDaysLastThreeMonths += getDaysInMonth(startDate.getMonth(), startDate.getFullYear())
+			nbDaysLastThreeMonths += getDaysInMonth(startDateMoreOne.getMonth(), startDateMoreOne.getFullYear())
+			nbDaysLastThreeMonths += getDaysInMonth(startDateMoreTwo.getMonth(), startDateMoreTwo.getFullYear())
 
-				if (nbDaysLastThreeMonths > data.length) {
-					nbDaysLastThreeMonths = data.length
-				}
-				const dataM = data.slice(0, nbDaysLastThreeMonths)
-				const dataD = data.slice(0, 7)
-
-				cache.current = { ...cache.current, [getName("stacking", "7d", address)]: dataD }
-				cache.current = { ...cache.current, [getName("stacking", "3m", address)]: dataM }
-				cache.current = { ...cache.current, [getName("stacking", "all", address)]: data }
-				if (range === "7d") return dataD
-				else if (range === "3m") return dataW
-				else if (range === "all") return data
-			} else return []
-		}
+			if (nbDaysLastThreeMonths > data.length) {
+				nbDaysLastThreeMonths = data.length
+			}
+			const dataM = data.slice(0, nbDaysLastThreeMonths)
+			const dataD = data.slice(0, 7)
+			if (range === "7d") return dataD
+			else if (range === "3m") return dataM
+			else if (range === "all") return data
+		} else return []
 	}
 
 	const getLiquidityToken = async ({ address }) => {
@@ -337,45 +361,38 @@ export const DashboardProvider = ({ children }) => {
 	}
 
 	const getLiquidity = async ({ address, range, token }) => {
-		if (
-			cache.current[getName("liquidity", token, range, address)] &&
-			cache.current[getName("liquidity", token, range, address)].length > 0
-		) {
-			return cache.current[getName("liquidity", token, range, address)]
-		} else {
-			let url = `https://api-osmosis-chain.imperator.co/lp/v1/rewards/historical/${address}/${token}`
-			let response = await API.request({
-				url,
-				useCompleteURL: true,
-				type: "get",
+		let url = `https://api-osmosis-chain.imperator.co/lp/v1/rewards/historical/${address}/${token}`
+		let response = await API.request({
+			url,
+			useCompleteURL: true,
+			type: "get",
+		})
+		if (response.data.length > 0) {
+			const data = response.data.map((item) => {
+				return { time: item.day, value: item.amount }
 			})
-			if (response.data.length > 0) {
-				const data = response.data.map((item) => {
-					return { time: item.day, value: item.amount }
-				})
 
-				let nbDaysLastThreeMonths = 0
-				let startDate = new Date(data[0].time)
-				let startDateMoreOne = new Date(new Date().setMonth(startDate.getMonth() + 1))
-				let startDateMoreTwo = new Date(new Date().setMonth(startDateMoreOne.getMonth() + 2))
-				nbDaysLastThreeMonths += getDaysInMonth(startDate.getMonth(), startDate.getFullYear())
-				nbDaysLastThreeMonths += getDaysInMonth(startDateMoreOne.getMonth(), startDateMoreOne.getFullYear())
-				nbDaysLastThreeMonths += getDaysInMonth(startDateMoreTwo.getMonth(), startDateMoreTwo.getFullYear())
+			let nbDaysLastThreeMonths = 0
+			let startDate = new Date(data[0].time)
+			let startDateMoreOne = new Date(new Date().setMonth(startDate.getMonth() + 1))
+			let startDateMoreTwo = new Date(new Date().setMonth(startDateMoreOne.getMonth() + 2))
+			nbDaysLastThreeMonths += getDaysInMonth(startDate.getMonth(), startDate.getFullYear())
+			nbDaysLastThreeMonths += getDaysInMonth(startDateMoreOne.getMonth(), startDateMoreOne.getFullYear())
+			nbDaysLastThreeMonths += getDaysInMonth(startDateMoreTwo.getMonth(), startDateMoreTwo.getFullYear())
 
-				if (nbDaysLastThreeMonths > data.length) {
-					nbDaysLastThreeMonths = data.length
-				}
-				const dataM = JSON.parse(JSON.stringify(data.slice(0, nbDaysLastThreeMonths)))
-				const dataD = JSON.parse(JSON.stringify(data.slice(0, 7)))
+			if (nbDaysLastThreeMonths > data.length) {
+				nbDaysLastThreeMonths = data.length
+			}
+			const dataM = JSON.parse(JSON.stringify(data.slice(0, nbDaysLastThreeMonths)))
+			const dataD = JSON.parse(JSON.stringify(data.slice(0, 7)))
 
-				cache.current = { ...cache.current, [getName("liquidity", token, "7d", address)]: [...dataD] }
-				cache.current = { ...cache.current, [getName("liquidity", token, "3m", address)]: [...dataM] }
-				cache.current = { ...cache.current, [getName("liquidity", token, "all", address)]: [...data] }
-				if (range === "7d") return [...dataD]
-				else if (range === "3m") return [...dataM]
-				else if (range === "all") return [...data]
-			} else return []
-		}
+			cache.current = { ...cache.current, [cache.getName("liquidity", token, "7d", address)]: [...dataD] }
+			cache.current = { ...cache.current, [cache.getName("liquidity", token, "3m", address)]: [...dataM] }
+			cache.current = { ...cache.current, [cache.getName("liquidity", token, "all", address)]: [...data] }
+			if (range === "7d") return [...dataD]
+			else if (range === "3m") return [...dataM]
+			else if (range === "all") return [...data]
+		} else return []
 	}
 
 	return (

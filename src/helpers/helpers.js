@@ -10,16 +10,6 @@ export const getTypeDashboard = (type, reverse = false) => {
 	return res
 }
 
-export const getName = (...args) => {
-	let res = ""
-	if (Array.isArray(args)) {
-		res = args.join("-")
-	} else if (typeof args === "object") {
-		res = Object.keys(args).join("-")
-	}
-	return res
-}
-
 export const getDaysInMonth = (month, year) => new Date(year, month, 0).getDate()
 
 export const formateNumberPrice = (price) => {
