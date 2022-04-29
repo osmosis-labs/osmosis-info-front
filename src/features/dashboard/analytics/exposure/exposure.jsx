@@ -1,5 +1,6 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
+import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
 import { useDashboard } from "../../../../contexts/dashboard.provider"
 import ChartContainer from "./chart/chart_container"
@@ -18,7 +19,11 @@ const useStyles = makeStyles((theme) => {
 			color: theme.palette.gray.contrastText,
 			marginBottom: "20px",
 		},
+		loading: {
+			backgroundColor: theme.palette.primary.light,
+		},
 		paper: {
+			position: "relative",
 			display: "grid",
 			gridTemplateColumns: "1fr 1.2fr",
 			height: "350px",
@@ -37,9 +42,11 @@ const Exposure = () => {
 	const [currentExposure, setCurrentExposure] = useState("asset")
 	const [listExposureAsset, setListExposureAsset] = useState([])
 	const [listExposurePool, setListExposurePool] = useState([])
+	const [isLoading, setIsLoading] = useState(false)
 
 	useEffect(() => {
 		const fetch = async () => {
+			setIsLoading(true)
 			let { balance, exposure } = await getWalletInfo({ address })
 			let indexColor = 0
 			let sortedExposureAsset = exposure.pools.sort((a, b) => {
@@ -93,6 +100,7 @@ const Exposure = () => {
 
 			setListExposureAsset(listExposureAsset)
 			setListExposurePool(listExposurePool)
+			setIsLoading(false)
 		}
 		if (address && address.length > 0) {
 			fetch()
@@ -107,6 +115,7 @@ const Exposure = () => {
 		<div className={classes.rootExposure}>
 			<p className={classes.title}>My Exposure</p>
 			<Paper className={classes.paper}>
+				<BlocLoaderOsmosis open={isLoading} classNameLoading={classes.loading} />
 				<ChartContainer
 					data={currentExposure === "asset" ? listExposureAsset : listExposurePool}
 					colorOther={colorOther}

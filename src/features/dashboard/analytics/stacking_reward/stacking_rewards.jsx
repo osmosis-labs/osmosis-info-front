@@ -1,8 +1,8 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
+import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
 import { useDashboard } from "../../../../contexts/dashboard.provider"
-import { usePrices } from "../../../../contexts/PricesProvider"
 import { formateNumberDecimalsAuto, formaterNumber, getPercent } from "../../../../helpers/helpers"
 import ButtonChart from "./button_chart"
 import Chart from "./chart"
@@ -19,7 +19,11 @@ const useStyles = makeStyles((theme) => {
 			color: theme.palette.gray.contrastText,
 			marginBottom: "20px",
 		},
+		loading: {
+			backgroundColor: theme.palette.primary.light,
+		},
 		paper: {
+			position: "relative",
 			display: "grid",
 			gridTemplateColumns: "3fr 1.5fr",
 			height: "350px",
@@ -76,9 +80,11 @@ const StackingRewards = () => {
 	const [total, setTotal] = useState(0)
 	const [range, setRange] = useState("7d")
 	const [osmoStaked, setOsmoStacted] = useState(0)
+	const [isLoading, setIsLoading] = useState(false)
 
 	useEffect(() => {
 		const fetch = async () => {
+			setIsLoading(true)
 			let promises = [getChartStacking({ address: address, range }), getWalletInfo({ address })]
 			let results = await Promise.all(promises)
 			let data = await results[0]
@@ -86,6 +92,7 @@ const StackingRewards = () => {
 			setOsmoStacted(balance.osmoStaked)
 			setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
 			setData(data)
+			setIsLoading(false)
 		}
 		if (address && address.length > 0) {
 			fetch()
@@ -111,6 +118,8 @@ const StackingRewards = () => {
 		<div className={classes.rootStackingRewards}>
 			<p className={classes.title}>Stacking Rewards</p>
 			<Paper className={classes.paper}>
+				<BlocLoaderOsmosis open={isLoading} classNameLoading={classes.loading} />
+
 				<div className={classes.chartContainer}>
 					<Chart data={data} />
 				</div>

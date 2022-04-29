@@ -1,9 +1,11 @@
 import { makeStyles } from "@material-ui/core"
+import { useDashboard } from "../../../contexts/dashboard.provider"
 import Exposure from "./exposure/exposure"
 import LiquidityReward from "./liquidity_reward/liquidity_reward"
 import MyWallet from "./my_wallet/my_wallet"
 import Overview from "./overview"
 import StackingRewards from "./stacking_reward/stacking_rewards"
+
 const useStyles = makeStyles((theme) => {
 	return {
 		rootAnalytics: {
@@ -38,6 +40,14 @@ const useStyles = makeStyles((theme) => {
 })
 const Analytics = () => {
 	const classes = useStyles()
+	const { address } = useDashboard()
+
+	if (!address)
+		return (
+			<div className={classes.rootAnalytics}>
+				<Overview />
+			</div>
+		)
 
 	return (
 		<div className={classes.rootAnalytics}>

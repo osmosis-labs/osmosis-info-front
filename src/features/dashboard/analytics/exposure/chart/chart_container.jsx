@@ -40,7 +40,7 @@ const ChartContainer = ({ data, colorOther }) => {
 	useEffect(() => {
 		let formattedData = []
 		let other = {
-			title: "Others",
+			name: "Others",
 			color: colorOther,
 			value: 0,
 		}

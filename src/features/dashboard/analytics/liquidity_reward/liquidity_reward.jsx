@@ -1,5 +1,6 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
+import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
 import { useDashboard } from "../../../../contexts/dashboard.provider"
 import { usePrices } from "../../../../contexts/PricesProvider"
@@ -20,7 +21,11 @@ const useStyles = makeStyles((theme) => {
 			color: theme.palette.gray.contrastText,
 			marginBottom: "20px",
 		},
+		loading: {
+			backgroundColor: theme.palette.primary.light,
+		},
 		paper: {
+			position: "relative",
 			display: "grid",
 			gridTemplateColumns: "3fr 1.5fr",
 			height: "350px",
@@ -79,9 +84,11 @@ const LiquidityReward = () => {
 	const [currentToken, setCurrentToken] = useState("")
 	const [tokens, setTokens] = useState([])
 	const [currentBalance, setCurrentBalance] = useState({ value: 0, percent: 0, change: 0 })
+	const [isLoading, setIsLoading] = useState(false)
 
 	useEffect(() => {
 		const fetch = async () => {
+			setIsLoading(true)
 			let promises = [getLiquidityToken({ address }), getWalletInfo({ address })]
 			let results = await Promise.all(promises)
 			let tokens = results[0]
@@ -97,6 +104,7 @@ const LiquidityReward = () => {
 
 				setData([...data])
 			}
+			setIsLoading(false)
 		}
 		if (address && address.length > 0) {
 			fetch()
@@ -117,17 +125,23 @@ const LiquidityReward = () => {
 	}
 
 	const onChangeRange = async (rge) => {
+		setIsLoading(true)
 		setRange(rge)
 		let data = await getLiquidity({ address, range: rge, token: currentToken })
 		setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
 		setData([...data])
+		setIsLoading(false)
 	}
 
 	const onChangeToken = async (tkn) => {
-		setCurrentToken(tkn)
+		setIsLoading(true)
+		console.log("liquidity_reward.jsx -> 135: tkn", tkn)
 		let data = await getLiquidity({ address, range, token: tkn })
+		console.log("liquidity_reward.jsx -> 137: data", data)
+		setCurrentToken(tkn)
 		setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
 		setData([...data])
+		setIsLoading(false)
 	}
 
 	const getDiplayBalance = (balance) => {
@@ -155,6 +169,7 @@ const LiquidityReward = () => {
 		<div className={classes.rootLiquidityReward}>
 			<p className={classes.title}>Liquidity Rewards</p>
 			<Paper className={classes.paper}>
+				<BlocLoaderOsmosis open={isLoading} classNameLoading={classes.loading} />
 				<div className={classes.chartContainer}>
 					<Chart data={data} />
 				</div>

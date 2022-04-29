@@ -2,15 +2,22 @@ import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
 import { useDashboard } from "../../../contexts/dashboard.provider"
 import { formateNumberDecimalsAuto, getPercent } from "../../../helpers/helpers"
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
+import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
+
 const useStyles = makeStyles((theme) => {
 	return {
 		rootOverview: {
+			position: "relative",
 			width: "100%",
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "center",
 			backgroundColor: theme.palette.primary.dark2,
 			[theme.breakpoints.down("xs")]: {},
+		},
+		loading: {
+			backgroundColor: theme.palette.primary.dark2,
 		},
 		container: {
 			padding: "40px 0",
@@ -45,7 +52,7 @@ const useStyles = makeStyles((theme) => {
 			fontSize: "1.6rem",
 			color: theme.palette.primary.contrastText,
 		},
-		
+
 		up: {
 			color: theme.palette.green.text,
 		},
@@ -68,7 +75,26 @@ const useStyles = makeStyles((theme) => {
 			fontSize: "16px",
 			marginLeft: "4px",
 			marginBottom: "2px",
-            color: theme.palette.table.cellDark
+			color: theme.palette.table.cellDark,
+		},
+		containerNotFound: {
+			display: "flex",
+			flexDirection: "column",
+			alignItems: "center",
+			justifyContent: "center",
+		},
+		iconNotFound: {
+			width: "110px !important",
+			height: "110px !important",
+			color: theme.palette.primary.light2,
+			padding: "24px",
+			borderRadius: "50%",
+			backgroundColor: theme.palette.primary.main,
+		},
+		textNotFound: {
+			marginTop: "16px",
+			color: theme.palette.primary.light2,
+			fontSize: "20px",
 		},
 	}
 })
@@ -78,13 +104,16 @@ const Overview = () => {
 	const [profit, setProfit] = useState(0)
 	const [worth, setWorth] = useState(0)
 	const [osmosStaked, setOsmosStaked] = useState(0)
+	const [isLoading, setIsLoading] = useState(false)
 
 	useEffect(() => {
 		const fetch = async () => {
+			setIsLoading(true)
 			let { worth, balance } = await getWalletInfo({ address })
 			setWorth(worth)
 			setProfit(0)
 			setOsmosStaked(balance.tokenValueWallet)
+			setIsLoading(false)
 		}
 
 		if (address && address.length > 0) {
@@ -92,7 +121,6 @@ const Overview = () => {
 		}
 	}, [address])
 
-	
 	const getArrow = (value) => {
 		if (value > 0) {
 			return <span className={`${classes.arrow} ${classes.up}`}>↑</span>
@@ -108,9 +136,23 @@ const Overview = () => {
 			return <span className={`${classes.percent} ${classes.down}`}>{getPercent(value)}</span>
 		} else return <span className={`${classes.percent}`}>{getPercent(value)}</span>
 	}
+	if (!address || address.length === 0)
+		return (
+			<div className={classes.rootOverview}>
+				<div className={classes.container}>
+					<p className={classes.title}>History Trading</p>
+					<div className={classes.containerNotFound}>
+						<AccountBalanceWalletIcon className={classes.iconNotFound} />
+						<p className={classes.textNotFound}>Wallet not found.</p>
+					</div>
+				</div>
+			</div>
+		)
 
 	return (
 		<div className={classes.rootOverview}>
+			<BlocLoaderOsmosis open={isLoading} classNameLoading={classes.loading} />
+
 			<div className={classes.container}>
 				<p className={classes.title}>History Trading</p>
 				<div className={classes.containerInfo}>

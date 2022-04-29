@@ -320,6 +320,13 @@ export const DashboardProvider = ({ children }) => {
 	}
 
 	const getChartStacking = async ({ address, range }) => {
+		let cachedResult = cache.getCache(
+			cache.getName("chartStacking", address, range),
+			(cachedData) => cachedData.length > 0
+		)
+		if (cachedResult) {
+			return cachedResult
+		}
 		let url = `https://api-osmosis-chain.imperator.co/staking/v1/rewards/historical/${address}`
 		let response = await API.request({
 			url,
@@ -344,6 +351,10 @@ export const DashboardProvider = ({ children }) => {
 			}
 			const dataM = data.slice(0, nbDaysLastThreeMonths)
 			const dataD = data.slice(0, 7)
+			cache.setCache(cache.getName("chartStacking", address, "7d"), dataD)
+			cache.setCache(cache.getName("chartStacking", address, "3m"), dataM)
+			cache.setCache(cache.getName("chartStacking", address, "all"), data)
+
 			if (range === "7d") return dataD
 			else if (range === "3m") return dataM
 			else if (range === "all") return data
@@ -361,6 +372,13 @@ export const DashboardProvider = ({ children }) => {
 	}
 
 	const getLiquidity = async ({ address, range, token }) => {
+		let cachedResult = cache.getCache(
+			cache.getName("chartStackingLiquidity", address, range, token),
+			(cachedData) => cachedData.length > 0
+		)
+		if (cachedResult) {
+			return cachedResult
+		}
 		let url = `https://api-osmosis-chain.imperator.co/lp/v1/rewards/historical/${address}/${token}`
 		let response = await API.request({
 			url,
@@ -386,9 +404,9 @@ export const DashboardProvider = ({ children }) => {
 			const dataM = JSON.parse(JSON.stringify(data.slice(0, nbDaysLastThreeMonths)))
 			const dataD = JSON.parse(JSON.stringify(data.slice(0, 7)))
 
-			cache.current = { ...cache.current, [cache.getName("liquidity", token, "7d", address)]: [...dataD] }
-			cache.current = { ...cache.current, [cache.getName("liquidity", token, "3m", address)]: [...dataM] }
-			cache.current = { ...cache.current, [cache.getName("liquidity", token, "all", address)]: [...data] }
+			cache.setCache(cache.getName("chartStackingLiquidity", address, "7d", token), dataD)
+			cache.setCache(cache.getName("chartStackingLiquidity", address, "3m", token), dataM)
+			cache.setCache(cache.getName("chartStackingLiquidity", address, "all", token), data)
 			if (range === "7d") return [...dataD]
 			else if (range === "3m") return [...dataM]
 			else if (range === "all") return [...data]
