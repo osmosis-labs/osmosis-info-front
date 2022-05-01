@@ -158,7 +158,7 @@ const AppBarDesktop = ({ type, onChangeType }) => {
 					</div>
 				</div>
 				<div className={classes.right}>
-					<ButtonOsmo address={address} osmoStaked={osmoStaked}/>
+					{address && address.length > 0 && <ButtonOsmo address={address} osmoStaked={osmoStaked} />}
 					<Toggle color="primary" value={type} exclusive onChange={onChangeType}>
 						<ToggleItem value="app">App</ToggleItem>
 						<ToggleItem value="frontier">Frontier</ToggleItem>
