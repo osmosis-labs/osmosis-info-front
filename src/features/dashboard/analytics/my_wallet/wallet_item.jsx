@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme) => {
 		rootWalletItem: {
 			width: "100%",
 			display: "grid",
-			gridTemplateColumns: "2fr repeat(3, 1fr)",
+			gridTemplateColumns: "1fr 1fr 1fr 1fr",
 			padding: "8px 0",
 			borderBottom: `1px solid ${theme.palette.table.hover}`,
 			color: theme.palette.primary.contrastText,

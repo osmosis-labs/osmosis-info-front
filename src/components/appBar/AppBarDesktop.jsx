@@ -7,6 +7,9 @@ import Search from "./Search"
 import Toggle from "../toggle/Toggle"
 import ToggleItem from "../toggle/ToggleItem"
 import SelectDashboard from "./selectDashboard/select_dashboard"
+import { useDashboard } from "../../contexts/dashboard.provider"
+import ButtonOsmo from "../../features/dashboard/button_osmo"
+import { formaterNumber } from "../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -97,10 +100,22 @@ const AppBarDesktop = ({ type, onChangeType }) => {
 	const history = useHistory()
 	let location = useLocation()
 	const [currentPath, setCurrentPath] = useState("/")
+	const { address, getWalletInfo } = useDashboard()
+	const [osmoStaked, setOsmoStaked] = useState(0)
 
 	useEffect(() => {
 		setCurrentPath(location.pathname)
 	}, [location.pathname, setCurrentPath])
+
+	useEffect(() => {
+		const fetch = async () => {
+			let { balance } = await getWalletInfo({ address })
+			setOsmoStaked(formaterNumber(balance.osmoStaked))
+		}
+		if (address && address.length > 0) {
+			fetch()
+		}
+	}, [address])
 
 	return (
 		<div className={classes.appBarDesktopRoot}>
@@ -139,10 +154,11 @@ const AppBarDesktop = ({ type, onChangeType }) => {
 						>
 							IBC Status
 						</Link>
-						<SelectDashboard/>
+						<SelectDashboard />
 					</div>
 				</div>
 				<div className={classes.right}>
+					<ButtonOsmo address={address} osmoStaked={osmoStaked}/>
 					<Toggle color="primary" value={type} exclusive onChange={onChangeType}>
 						<ToggleItem value="app">App</ToggleItem>
 						<ToggleItem value="frontier">Frontier</ToggleItem>

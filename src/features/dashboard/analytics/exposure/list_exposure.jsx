@@ -35,7 +35,6 @@ const useStyles = makeStyles((theme) => {
 })
 const ListExposure = ({ data }) => {
 	const classes = useStyles()
-
 	return (
 		<div className={classes.rootListExposure}>
 			{data.map((item, index) => {

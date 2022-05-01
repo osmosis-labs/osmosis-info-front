@@ -268,7 +268,7 @@ export const DashboardProvider = ({ children }) => {
 
 		let results = await Promise.all([
 			API.request({
-				url: `https://api-osmosis-chain.imperator.co/account/v1/balance/${address}`,
+					url: `https://api-osmosis-chain.imperator.co/account/v1/balance/${address}`,
 				useCompleteURL: true,
 				type: "get",
 			}),
@@ -279,26 +279,27 @@ export const DashboardProvider = ({ children }) => {
 			}),
 		])
 		let reponseBalance = results[0].data
-		let reponseExposure = results[1].data
-		let balance = { osmoStaked: 0, osmoStakedValue: 0, tokenValueWallet: 0, wallet: [] }
-		let exposure = { totalExposure: 0, pools: [] }
+		let responseExposure = results[1].data
+		let balance = { osmoStaked: 0, osmoStakedValue: 0, tokenValueWallet: 0, tokenValuePnl24h:0, tokenValueChange24h:0, wallet: [] }
+		let exposure = { totalExposure: 0, pools: [], assets:[] }
 		let res = { worth: 0, balance, exposure }
 
 		if (reponseBalance.wallet.length > 0) {
 			balance.osmoStaked = reponseBalance.osmo_staked
 			balance.osmoStakedValue = reponseBalance.osmo_staked_value
 			balance.tokenValueWallet = reponseBalance.token_value_wallet
+			balance.tokenValuePnl24h = reponseBalance.token_value_pnl_24h
+			balance.tokenValueChange24h = reponseBalance.token_value_change_24h
 
 			balance.wallet = reponseBalance.wallet.map((item) => {
 				return {
-					name: item.name,
 					name: item.name,
 					denom: item.denom,
 					symbol: item.symbol,
 					price: item.price,
 					amount: item.amount,
 					value: item.value,
-					valueChange: item.value_change,
+					valueChange: item.value_change_24h,
 					tokenPercent: item.token_percent,
 				}
 			})
@@ -306,10 +307,21 @@ export const DashboardProvider = ({ children }) => {
 			res.balance = balance
 		}
 
-		if (reponseExposure.value_exposure > 0) {
-			exposure.valueExposure = reponseExposure.value_exposure
-			exposure.pools = reponseExposure.pool_exposure.map((pool) => {
-				return { poolId: pool.pool_id, tokens: pool.token, value: pool.value_pool, percent: pool.pool_percent }
+		if (responseExposure.value_exposure > 0) {
+			exposure.valueExposure = responseExposure.value_exposure
+			exposure.totalExposure = responseExposure.value_exposure
+			exposure.pools = responseExposure.pool_exposure.map((pool) => {
+				return { poolId: pool.pool_id, tokens: pool.token, value: pool.pool_value, percent: pool.pool_percent }
+			})
+			exposure.assets = responseExposure.token_exposure.map((token)=>{
+				return {
+					name: token.name,
+					symbol: token.symbol,
+					amount: token.amount,
+					value: token.value,
+					address: token.address,
+					tokenPercent: token.token_percent,
+				}
 			})
 			res.worth += exposure.valueExposure
 			res.exposure = exposure

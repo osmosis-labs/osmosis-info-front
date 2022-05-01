@@ -40,7 +40,7 @@ const MyWallet = () => {
 	const { address, getWalletInfo } = useDashboard()
 	const [data, setData] = useState([])
 	const [isLoading, setIsLoading] = useState(false)
-	const [order, setOrder] = useState("desc")
+	const [order, setOrder] = useState("asc")
 	const [orderBy, setOrderBy] = useState("value")
 
 	const onSort = (name) => {

@@ -61,7 +61,7 @@ const ButtonConnection = () => {
 				className={classes.rootButtonConnection}
 				startIcon={<AccountBalanceWalletIcon />}
 			>
-				Connect wallet
+				Connect
 			</Button>
 		)
 	}

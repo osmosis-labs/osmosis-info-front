@@ -114,8 +114,8 @@ const StackingRewards = () => {
 
 	const donwloadStacking = () => {
 		let dataDownload = [
-			["time", "value"],
-			...data.map((d) => [`${d.time.year}-${twoNumber(d.time.month)}-${twoNumber(d.time.day)}`, d.value]),
+			["time", "value", "token"],
+			...data.map((d) => [`${d.time.year}-${twoNumber(d.time.month)}-${twoNumber(d.time.day)}`, d.value,"OSMO"]),
 		]
 		let csv = dataDownload.map((row) => row.join(",")).join("\n")
 		let a = document.createElement("a")

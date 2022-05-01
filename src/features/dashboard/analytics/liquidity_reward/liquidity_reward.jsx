@@ -143,9 +143,7 @@ const LiquidityReward = () => {
 
 	const onChangeToken = async (tkn) => {
 		setIsLoading(true)
-		console.log("liquidity_reward.jsx -> 135: tkn", tkn)
 		let data = await getLiquidity({ address, range, token: tkn })
-		console.log("liquidity_reward.jsx -> 137: data", data)
 		getCurrentWallet(walletSaved, tkn)
 		setCurrentToken(tkn)
 		setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
@@ -155,29 +153,15 @@ const LiquidityReward = () => {
 
 	const getDiplayBalance = (balance) => {
 		let percent = balance.percent
-		if (percent === 0)
-			return (
-				<span className={classes.percent}>
-					{getPercent(percent)} (${formateNumberDecimalsAuto({ price: balance.change })})
-				</span>
-			)
-		else if (percent > 0)
-			return (
-				<span className={`${classes.percent} ${classes.up}`}>
-					↑ {getPercent(percent)} (${formateNumberDecimalsAuto({ price: balance.change })})
-				</span>
-			)
-		return (
-			<span className={`${classes.percent} ${classes.down}`}>
-				↓ {getPercent(percent)} (${formateNumberDecimalsAuto({ price: balance.change })})
-			</span>
-		)
+		if (percent === 0) return <span className={classes.percent}>{getPercent(percent)}</span>
+		else if (percent > 0) return <span className={`${classes.percent} ${classes.up}`}>↑ {getPercent(percent)}</span>
+		return <span className={`${classes.percent} ${classes.down}`}>↓ {getPercent(percent)}</span>
 	}
 
 	const donwloadStacking = () => {
 		let dataDownload = [
-			["time", "value"],
-			...data.map((d) => [`${d.time.year}-${twoNumber(d.time.month)}-${twoNumber(d.time.day)}`, d.value]),
+			["time", "value", "token"],
+			...data.map((d) => [`${d.time.year}-${twoNumber(d.time.month)}-${twoNumber(d.time.day)}`, d.value, currentToken]),
 		]
 		let csv = dataDownload.map((row) => row.join(",")).join("\n")
 		let a = document.createElement("a")

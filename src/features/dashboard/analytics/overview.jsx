@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme) => {
 		containerInfo: {
 			display: "flex",
 			flexDirection: "row",
-			justifyContent: "space-between",
 			flexWrap: "wrap",
 		},
 		info: {
@@ -42,6 +41,7 @@ const useStyles = makeStyles((theme) => {
 			flexDirection: "column",
 			alignItems: "flex-start",
 			justifyContent: "center",
+			marginRight: "80px"
 		},
 		titleInfo: {
 			margin: "32px 0 16px 0",
@@ -96,12 +96,16 @@ const useStyles = makeStyles((theme) => {
 			color: theme.palette.primary.light2,
 			fontSize: "20px",
 		},
+		percent:{
+			marginLeft: "6px",
+			fontSize: "20px"
+		}
 	}
 })
 const Overview = () => {
 	const classes = useStyles()
 	const { address, getWalletInfo } = useDashboard()
-	const [profit, setProfit] = useState(0)
+	const [balance, setBalance] = useState(0)
 	const [worth, setWorth] = useState(0)
 	const [osmosStaked, setOsmosStaked] = useState(0)
 	const [isLoading, setIsLoading] = useState(false)
@@ -111,7 +115,7 @@ const Overview = () => {
 			setIsLoading(true)
 			let { worth, balance } = await getWalletInfo({ address })
 			setWorth(worth)
-			setProfit(0)
+			setBalance(balance)
 			setOsmosStaked(balance.tokenValueWallet)
 			setIsLoading(false)
 		}
@@ -131,11 +135,14 @@ const Overview = () => {
 
 	const getPercentDisplay = (value) => {
 		if (value > 0) {
-			return <span className={`${classes.percent} ${classes.up}`}>{getPercent(value)}</span>
+			return <span className={`${classes.percent} ${classes.up}`}>↑{getPercent(value)}</span>
 		} else if (value < 0) {
-			return <span className={`${classes.percent} ${classes.down}`}>{getPercent(value)}</span>
+			return <span className={`${classes.percent} ${classes.down}`}>↓{getPercent(Math.abs(value))}</span>
 		} else return <span className={`${classes.percent}`}>{getPercent(value)}</span>
 	}
+
+	const getProfit = () => {}
+
 	if (!address || address.length === 0)
 		return (
 			<div className={classes.rootOverview}>
@@ -161,9 +168,12 @@ const Overview = () => {
 						<p className={classes.dataInfo}>${formateNumberDecimalsAuto({ price: worth })}</p>
 					</div>
 					<div className={classes.info}>
-						<p className={classes.titleInfo}>Profit / Loss</p>
+						<p className={classes.titleInfo}>Profit / Loss (24h)</p>
 						<p className={classes.dataInfo}>
-							{profit > 0 ? "+" : ""} ${formateNumberDecimalsAuto({ price: profit })}
+							{getProfit()}
+							{balance.tokenValuePnl24h == 0 ? "" : balance.tokenValuePnl24h > 0 ? "+" : "-"} $
+							{formateNumberDecimalsAuto({ price: Math.abs(balance.tokenValuePnl24h) })}
+							{getPercentDisplay(balance.tokenValueChange24h)}
 						</p>
 					</div>
 					<div className={classes.info}>

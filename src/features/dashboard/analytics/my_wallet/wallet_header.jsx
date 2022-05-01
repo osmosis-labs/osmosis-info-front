@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme) => {
 		rootWalletHeader: {
 			width: "100%",
 			display: "grid",
-			gridTemplateColumns: "1.5fr 1fr 1fr 1fr",
+			gridTemplateColumns: "1fr 1fr 1fr 1fr 17px",
 			paddingBottom: "8px",
 			borderBottom: `1px solid ${theme.palette.table.hover}`,
 			transition: "all 0.3s ease !important",
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => {
 			color: theme.palette.table.cellDark,
 			display: "flex",
 			alignItems: "center",
-			fontSize: "14px",
+			fontSize: "12px",
 		},
 		sortable: {
 			cursor: "pointer",
@@ -69,8 +69,8 @@ const WalletHeader = ({ order, orderBy, onSort }) => {
 				}}
 				className={getClassName("amount")}
 			>
-				{" "}
-				<ArrowDownwardIcon className={getClassIcon("amount")} /> Balance
+				Balance
+				<ArrowDownwardIcon className={getClassIcon("amount")} /> 
 			</span>
 			<span
 				onClick={() => {
@@ -78,8 +78,8 @@ const WalletHeader = ({ order, orderBy, onSort }) => {
 				}}
 				className={getClassName("valueChange")}
 			>
-				{" "}
-				<ArrowDownwardIcon className={getClassIcon("valueChange")} /> Change
+				 Change (24h)
+				<ArrowDownwardIcon className={getClassIcon("valueChange")} />
 			</span>
 			<span
 				onClick={() => {
@@ -87,8 +87,8 @@ const WalletHeader = ({ order, orderBy, onSort }) => {
 				}}
 				className={getClassName("value")}
 			>
-				{" "}
-				<ArrowDownwardIcon className={getClassIcon("value")} /> Value (USD)
+				 Value (USD)
+				<ArrowDownwardIcon className={getClassIcon("value")} />
 			</span>
 		</div>
 	)

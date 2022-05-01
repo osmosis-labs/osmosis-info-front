@@ -31,10 +31,9 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const ChartContainer = ({ data, colorOther }) => {
+const ChartContainer = ({ data, colorOther, totalExposure }) => {
 	const classes = useStyles()
 	const [currentData, setCurrentData] = useState([])
-	const [total, setTotal] = useState(0)
 	const [hovered, setHovered] = useState(null)
 
 	useEffect(() => {
@@ -44,9 +43,7 @@ const ChartContainer = ({ data, colorOther }) => {
 			color: colorOther,
 			value: 0,
 		}
-		let total = 0
 		data.forEach((item, index) => {
-			total += item.value
 			if (item.inOther) {
 				other.value += item.percent
 			} else {
@@ -59,7 +56,6 @@ const ChartContainer = ({ data, colorOther }) => {
 		})
 		other.value = parseFloat(formaterNumber(other.value))
 		formattedData.push(other)
-		setTotal(total)
 		setCurrentData(formattedData)
 	}, [data])
 
@@ -75,7 +71,7 @@ const ChartContainer = ({ data, colorOther }) => {
 		<div className={classes.rootChartContainer} data-tip="" data-for="chart">
 			<div className={classes.title}>
 				<p>Total Expose Value</p>
-				<p className={classes.total}>${formateNumber(total)}</p>
+				<p className={classes.total}>${formateNumber(totalExposure)}</p>
 			</div>
 			<PieChart
 				data={currentData}

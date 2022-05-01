@@ -42,6 +42,7 @@ const Exposure = () => {
 	const [currentExposure, setCurrentExposure] = useState("asset")
 	const [listExposureAsset, setListExposureAsset] = useState([])
 	const [listExposurePool, setListExposurePool] = useState([])
+	const [totalExposure, setTotalExposure] = useState(0)
 	const [isLoading, setIsLoading] = useState(false)
 
 	useEffect(() => {
@@ -49,10 +50,11 @@ const Exposure = () => {
 			setIsLoading(true)
 			let { balance, exposure } = await getWalletInfo({ address })
 			let indexColor = 0
-			let sortedExposureAsset = exposure.pools.sort((a, b) => {
+			setTotalExposure(exposure.totalExposure)
+			let sortedExposurePool = exposure.pools.sort((a, b) => {
 				return b.percent - a.percent
 			})
-			let listExposureAsset = sortedExposureAsset.map((pool, i) => {
+			let listExposurePool = sortedExposurePool.map((pool, i) => {
 				if (indexColor === colorsChart.length) indexColor = 0
 				let color = colorOther
 				let inOther = true
@@ -77,10 +79,10 @@ const Exposure = () => {
 				}
 			})
 			indexColor = 0
-			let sortedExposurePool = balance.wallet.sort((a, b) => {
+			let sortedExposureAsset = balance.wallet.sort((a, b) => {
 				return b.tokenPercent - a.tokenPercent
 			})
-			let listExposurePool = sortedExposurePool.map((token) => {
+			let listExposureAsset = sortedExposureAsset.map((token) => {
 				if (indexColor === colorsChart.length) indexColor = 0
 				let color = colorOther
 				let inOther = true
@@ -119,6 +121,7 @@ const Exposure = () => {
 				<ChartContainer
 					data={currentExposure === "asset" ? listExposureAsset : listExposurePool}
 					colorOther={colorOther}
+					totalExposure={totalExposure}
 				/>
 				<Info
 					onChangeExposure={onChangeExposure}

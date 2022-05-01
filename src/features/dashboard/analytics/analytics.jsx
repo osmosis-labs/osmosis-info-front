@@ -13,6 +13,12 @@ const useStyles = makeStyles((theme) => {
 
 			[theme.breakpoints.down("xs")]: {},
 		},
+		rootAnalyticsNot:{
+			width: "100%",
+			height: "100%",
+			backgroundColor: theme.palette.primary.dark2,
+
+		},
 		container: {
 			margin: "20px 0",
 			width: "100%",
@@ -44,7 +50,7 @@ const Analytics = () => {
 
 	if (!address)
 		return (
-			<div className={classes.rootAnalytics}>
+			<div className={classes.rootAnalyticsNot}>
 				<Overview />
 			</div>
 		)
