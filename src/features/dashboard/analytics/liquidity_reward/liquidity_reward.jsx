@@ -86,7 +86,7 @@ const LiquidityReward = () => {
 	const { address, getLiquidity, getLiquidityToken, getWalletInfo } = useDashboard()
 	const [data, setData] = useState([])
 	const [total, setTotal] = useState(0)
-	const [range, setRange] = useState("all")
+	const [range, setRange] = useState("3m")
 	const [currentToken, setCurrentToken] = useState("")
 	const [tokens, setTokens] = useState([])
 	const [currentBalance, setCurrentBalance] = useState({ value: 0, percent: 0, change: 0 })
@@ -102,11 +102,17 @@ const LiquidityReward = () => {
 			let {
 				balance: { wallet },
 			} = results[1]
-			getCurrentWallet(wallet, tokens[0])
+			let osmoToken = tokens.find((token) => token === "OSMO")
+
+			let firstToken = tokens[0]
+			if (osmoToken) {
+				firstToken = osmoToken
+			}
+			getCurrentWallet(wallet, firstToken)
 			setTokens(tokens)
 			if (tokens.length > 0) {
-				setCurrentToken(tokens[0])
-				let data = await getLiquidity({ address, range, token: tokens[0] })
+				setCurrentToken(firstToken)
+				let data = await getLiquidity({ address, range, token: firstToken })
 				setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
 
 				setData([...data])

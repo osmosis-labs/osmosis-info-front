@@ -203,7 +203,7 @@ const Transactions = () => {
 						</div>
 						<div className={classes.containerNotFound}>
 							<AccountBalanceWalletIcon className={classes.iconNotFound} />
-							<p className={classes.textNotFound}>Wallet not found.</p>
+							<p className={classes.textNotFound}>Connect your wallet.</p>
 						</div>
 					</div>
 				</div>

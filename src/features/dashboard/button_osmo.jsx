@@ -14,14 +14,14 @@ const useStyles = makeStyles((theme) => {
 		},
 		text: {
 			color: theme.palette.primary.contrastText,
-			fontSize: "10px",
+			fontSize: "12px",
 			marginLeft: "2px",
 		},
 		container: {
 			height:"20px",
 			display: "flex",
 			alignItems: "center",
-			padding: "2px 4px",
+			padding: "13px 10px 13px 8px",
 			backgroundColor: theme.palette.blue.main,
 			"&:first-child": {
 				marginRight: "2px",

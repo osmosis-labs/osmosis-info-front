@@ -84,7 +84,7 @@ const StackingRewards = () => {
 	const { address, getChartStacking, getWalletInfo } = useDashboard()
 	const [data, setData] = useState([])
 	const [total, setTotal] = useState(0)
-	const [range, setRange] = useState("7d")
+	const [range, setRange] = useState("3m")
 	const [osmoStaked, setOsmoStacted] = useState(0)
 	const [isLoading, setIsLoading] = useState(false)
 

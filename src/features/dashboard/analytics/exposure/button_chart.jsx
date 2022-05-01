@@ -8,7 +8,6 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			justifyContent: "space-between",
 			alignItems: "center",
-
 		},
 		notAvalaible: {
 			backgroundColor: theme.palette.blueButton.backgroundDisabled,
@@ -31,19 +30,19 @@ const ButtonChart = ({ onChangeType, type }) => {
 		<div className={classes.rootButtonChart}>
 			<ThemeButton
 				onClick={() => {
-					onClick("asset")
-				}}
-				className={actived === "asset" ? null : classes.notAvalaible}
-			>
-				Asset Exposure
-			</ThemeButton>
-			<ThemeButton
-				onClick={() => {
 					onClick("pool")
 				}}
 				className={actived === "pool" ? null : classes.notAvalaible}
 			>
 				Pools Exposure
+			</ThemeButton>
+			<ThemeButton
+				onClick={() => {
+					onClick("asset")
+				}}
+				className={actived === "asset" ? null : classes.notAvalaible}
+			>
+				Asset Exposure
 			</ThemeButton>
 		</div>
 	)

@@ -39,7 +39,7 @@ const min = 2
 const Exposure = () => {
 	const classes = useStyles()
 	const { address, getWalletInfo } = useDashboard()
-	const [currentExposure, setCurrentExposure] = useState("asset")
+	const [currentExposure, setCurrentExposure] = useState("pool")
 	const [listExposureAsset, setListExposureAsset] = useState([])
 	const [listExposurePool, setListExposurePool] = useState([])
 	const [totalExposure, setTotalExposure] = useState(0)
@@ -79,7 +79,7 @@ const Exposure = () => {
 				}
 			})
 			indexColor = 0
-			let sortedExposureAsset = balance.wallet.sort((a, b) => {
+			let sortedExposureAsset = exposure.assets.sort((a, b) => {
 				return b.tokenPercent - a.tokenPercent
 			})
 			let listExposureAsset = sortedExposureAsset.map((token) => {

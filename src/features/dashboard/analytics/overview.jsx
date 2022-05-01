@@ -147,10 +147,10 @@ const Overview = () => {
 		return (
 			<div className={classes.rootOverview}>
 				<div className={classes.container}>
-					<p className={classes.title}>History Trading</p>
+					<p className={classes.title}>Analytics</p>
 					<div className={classes.containerNotFound}>
 						<AccountBalanceWalletIcon className={classes.iconNotFound} />
-						<p className={classes.textNotFound}>Wallet not found.</p>
+						<p className={classes.textNotFound}>Connect your wallet.</p>
 					</div>
 				</div>
 			</div>
