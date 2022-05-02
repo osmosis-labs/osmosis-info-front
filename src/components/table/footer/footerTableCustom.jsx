@@ -1,6 +1,7 @@
 import { IconButton, makeStyles, MenuItem, Select } from "@material-ui/core"
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore"
 import NavigateNextIcon from "@material-ui/icons/NavigateNext"
+import { useEffect, useRef } from "react"
 const useStyles = makeStyles((theme) => {
 	return {
 		footerTableCustomRoot: {
@@ -21,7 +22,7 @@ const useStyles = makeStyles((theme) => {
 			color: theme.palette.table.cellDark,
 		},
 		left: {
-			paddingLeft:"25px",
+			paddingLeft: "25px",
 			width: "33%",
 			display: "flex",
 			flexDirection: "row",
@@ -54,14 +55,22 @@ const FooterTableCustom = ({
 	callBackEndPage = null,
 }) => {
 	const classes = useStyles()
+	const needToChangePage = useRef(false)
+
+	useEffect(() => {
+		if (needToChangePage.current) {
+			needToChangePage.current = false
+			if ((page + 1) * rowsPerPage < count) {
+				onChangePage(page + 1)
+			}
+		}
+	}, [count])
+
 	const onClickChangePage = (next) => {
 		if (next) {
-			if ((page + 1) * rowsPerPage <= count) {
+			if ((page + 1) * rowsPerPage < count) {
 				onChangePage(page + 1)
-				if ((page + 2) * rowsPerPage === count) {
-					if (callBackEndPage) callBackEndPage()
-				}
-			}
+			} else if (callBackEndPage) cbBackEndPage()
 		} else {
 			if (page > 0) {
 				onChangePage(page - 1)
@@ -69,6 +78,11 @@ const FooterTableCustom = ({
 		}
 	}
 	const maxPage = (page + 1) * rowsPerPage
+
+	const cbBackEndPage = async () => {
+		needToChangePage.current = true
+		await callBackEndPage()
+	}
 	return (
 		<div className={classes.footerTableCustomRoot}>
 			<div className={classes.left}>
@@ -98,7 +112,7 @@ const FooterTableCustom = ({
 					onClick={() => {
 						onClickChangePage(true)
 					}}
-					disabled={maxPage >= count}
+					disabled={maxPage >= count && !callBackEndPage}
 					component="span"
 				>
 					<NavigateNextIcon />

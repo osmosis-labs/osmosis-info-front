@@ -1,5 +1,7 @@
 import { makeStyles } from "@material-ui/core"
+import { Button } from "@mui/material"
 import { useEffect, useState } from "react"
+import { useDebug } from "../../contexts/debug.provider"
 import { usePrices } from "../../contexts/PricesProvider"
 const useStyles = makeStyles((theme) => {
 	return {
@@ -79,6 +81,7 @@ const InfoBar = () => {
 	const classes = useStyles()
 	const { priceOsmo, priceIon } = usePrices()
 	const [time, setTime] = useState(0)
+	const { MODE, setOpen } = useDebug()
 
 	useEffect(() => {
 		const timer = setInterval(() => {
@@ -89,6 +92,10 @@ const InfoBar = () => {
 
 	const reload = () => {
 		document.location.reload()
+	}
+
+	const onOpenDebug = () => {
+		setOpen(true)
 	}
 	return (
 		<div className={classes.infoBarRoot}>
@@ -105,6 +112,11 @@ const InfoBar = () => {
 					</p>
 				</div>
 				<div className={classes.right}>
+					{MODE === "dev" && (
+						<Button variant="outlined" color="primary" className={classes.link} onClick={onOpenDebug}>
+							Debug
+						</Button>
+					)}
 					<a className={classes.link} href="https://github.com/osmosis-labs" target="_blank">
 						Github
 					</a>

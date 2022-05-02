@@ -1,3 +1,17 @@
+import typesDashboard from "./typesDashboard.json"
+
+export const getTypeDashboard = (type, reverse = false) => {
+	let res = type
+	if (reverse) {
+		res = Object.keys(typesDashboard).find((key) => typesDashboard[key] === type)
+	} else {
+		res = typesDashboard[type]
+	}
+	return res
+}
+
+export const getDaysInMonth = (month, year) => new Date(year, month, 0).getDate()
+
 export const formateNumberPrice = (price) => {
 	return new Intl.NumberFormat("en-US", {
 		style: "currency",
@@ -116,6 +130,13 @@ export const getInclude = (list, condition) => {
 	}
 	return -1
 }
+
+export const isOsmoAddress = (str) => {
+	let regexOsmo = /^osmo[a-z0-9]{39,39}/
+	return regexOsmo.test(str)
+}
+
+export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1)
 
 export const getItemInclude = (list, condition) => {
 	let i = 0
