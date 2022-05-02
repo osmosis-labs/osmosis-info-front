@@ -111,7 +111,7 @@ const SelectDashboard = ({ callback }) => {
 				<div className={classes.itemsContainer}>
 					<ItemSelectDashboard exact={true} name="Analytics" path="/dashboard/" onClickItem={onClickItem} />
 					<ItemSelectDashboard name="Transactions" path="/dashboard/transactions" onClickItem={onClickItem} />
-					<ItemSelectDashboard name="History Trade" path="/dashboard/trades" onClickItem={onClickItem} />
+					<ItemSelectDashboard name="Trades" path="/dashboard/trades" onClickItem={onClickItem} />
 				</div>
 			</Popover>
 		</div>
