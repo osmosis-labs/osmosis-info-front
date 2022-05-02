@@ -108,6 +108,7 @@ const Overview = () => {
 	const [balance, setBalance] = useState(0)
 	const [worth, setWorth] = useState(0)
 	const [osmosStaked, setOsmosStaked] = useState(0)
+	const [return24h, setreturn24h] = useState(0)
 	const [isLoading, setIsLoading] = useState(false)
 
 	useEffect(() => {
@@ -116,6 +117,7 @@ const Overview = () => {
 			let { worth, balance } = await getWalletInfo({ address })
 			setWorth(worth)
 			setBalance(balance)
+			setreturn24h(balance.tokenReturn24)
 			setOsmosStaked(balance.tokenValueWallet)
 			setIsLoading(false)
 		}
@@ -167,7 +169,7 @@ const Overview = () => {
 						<p className={classes.titleInfo}>Total worth</p>
 						<p className={classes.dataInfo}>${formateNumberDecimalsAuto({ price: worth })}</p>
 					</div>
-					<div className={classes.info}>
+					{/* <div className={classes.info}>
 						<p className={classes.titleInfo}>Profit / Loss (24h)</p>
 						<p className={classes.dataInfo}>
 							{getProfit()}
@@ -175,11 +177,18 @@ const Overview = () => {
 							{formateNumberDecimalsAuto({ price: Math.abs(balance.tokenValuePnl24h) })}
 							{getPercentDisplay(balance.tokenValueChange24h)}
 						</p>
-					</div>
+					</div> */}
 					<div className={classes.info}>
 						<p className={classes.titleInfo}>Available liquidity</p>
 						<p className={classes.dataInfoReturn}>
 							${formateNumberDecimalsAuto({ price: osmosStaked })}
+							{/* <span className={classes.token}>OSMOS</span> */}
+						</p>
+					</div>
+					<div className={classes.info}>
+						<p className={classes.titleInfo}>Return 24h</p>
+						<p className={classes.dataInfoReturn}>
+							${formateNumberDecimalsAuto({ price: return24h })}
 							{/* <span className={classes.token}>OSMOS</span> */}
 						</p>
 					</div>

@@ -280,7 +280,7 @@ export const DashboardProvider = ({ children }) => {
 		])
 		let reponseBalance = results[0].data
 		let responseExposure = results[1].data
-		let balance = { osmoStaked: 0, osmoStakedValue: 0, tokenValueWallet: 0, tokenValuePnl24h:0, tokenValueChange24h:0, wallet: [] }
+		let balance = { osmoStaked: 0, osmoStakedValue: 0, tokenValueWallet: 0, tokenValuePnl24h:0, tokenValueChange24h:0, tokenReturn24:0, wallet: [] }
 		let exposure = { totalExposure: 0, pools: [], assets:[] }
 		let res = { worth: 0, balance, exposure }
 
@@ -290,6 +290,7 @@ export const DashboardProvider = ({ children }) => {
 			balance.tokenValueWallet = reponseBalance.token_value_wallet
 			balance.tokenValuePnl24h = reponseBalance.token_value_pnl_24h
 			balance.tokenValueChange24h = reponseBalance.token_value_change_24h
+			balance.tokenReturn24 = reponseBalance.token_return_24h
 
 			balance.wallet = reponseBalance.wallet.map((item) => {
 				return {
