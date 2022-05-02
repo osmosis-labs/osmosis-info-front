@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const ButtonOsmo = ({ address, osmoStaked }) => {
+const ButtonOsmo = ({ address, osmo }) => {
 	const classes = useStyles()
 
 	let addressDisplay = address.substring(0, 7) + "..." + address.substring(address.length - 3)
@@ -47,7 +47,7 @@ const ButtonOsmo = ({ address, osmoStaked }) => {
 				<span className={classes.text}>{addressDisplay}</span>
 			</div>
 			<div className={classes.container}>
-				<span className={classes.text}>{osmoStaked}</span>
+				<span className={classes.text}>{osmo}</span>
 				<span className={classes.text}>OSMO</span>
 			</div>
 		</div>

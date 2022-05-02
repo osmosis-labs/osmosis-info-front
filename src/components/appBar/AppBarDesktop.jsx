@@ -101,7 +101,7 @@ const AppBarDesktop = ({ type, onChangeType }) => {
 	let location = useLocation()
 	const [currentPath, setCurrentPath] = useState("/")
 	const { address, getWalletInfo } = useDashboard()
-	const [osmoStaked, setOsmoStaked] = useState(0)
+	const [osmo, setOsmo] = useState(0)
 
 	useEffect(() => {
 		setCurrentPath(location.pathname)
@@ -110,7 +110,12 @@ const AppBarDesktop = ({ type, onChangeType }) => {
 	useEffect(() => {
 		const fetch = async () => {
 			let { balance } = await getWalletInfo({ address })
-			setOsmoStaked(formaterNumber(balance.osmoStaked))
+			let osmos = 0
+			let walletOsmo = balance.wallet.find((item) => item.symbol === "OSMO")
+			if(walletOsmo){
+				osmos = walletOsmo.amount
+			}
+			setOsmo(formaterNumber(osmos))
 		}
 		if (address && address.length > 0) {
 			fetch()
@@ -158,7 +163,7 @@ const AppBarDesktop = ({ type, onChangeType }) => {
 					</div>
 				</div>
 				<div className={classes.right}>
-					{address && address.length > 0 && <ButtonOsmo address={address} osmoStaked={osmoStaked} />}
+					{address && address.length > 0 && <ButtonOsmo address={address} osmo={osmo} />}
 					<Toggle color="primary" value={type} exclusive onChange={onChangeType}>
 						<ToggleItem value="app">App</ToggleItem>
 						<ToggleItem value="frontier">Frontier</ToggleItem>
