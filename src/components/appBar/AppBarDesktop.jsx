@@ -1,10 +1,15 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
 import { Link, useHistory, useLocation } from "react-router-dom"
+import ButtonConnection from "./button_connection"
 import logo from "./logo.png"
 import Search from "./Search"
 import Toggle from "../toggle/Toggle"
 import ToggleItem from "../toggle/ToggleItem"
+import SelectDashboard from "./selectDashboard/select_dashboard"
+import { useDashboard } from "../../contexts/dashboard.provider"
+import ButtonOsmo from "../../features/dashboard/button_osmo"
+import { formaterNumber } from "../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -86,6 +91,7 @@ const useStyles = makeStyles((theme) => {
 			backgroundColor: theme.palette.primary.light,
 			borderRadius: theme.spacing(1),
 		},
+		toggle: { marginLeft: "12px" },
 	}
 })
 
@@ -94,10 +100,27 @@ const AppBarDesktop = ({ type, onChangeType }) => {
 	const history = useHistory()
 	let location = useLocation()
 	const [currentPath, setCurrentPath] = useState("/")
+	const { address, getWalletInfo } = useDashboard()
+	const [osmo, setOsmo] = useState(0)
 
 	useEffect(() => {
 		setCurrentPath(location.pathname)
 	}, [location.pathname, setCurrentPath])
+
+	useEffect(() => {
+		const fetch = async () => {
+			let { balance } = await getWalletInfo({ address })
+			let osmos = 0
+			let walletOsmo = balance.wallet.find((item) => item.symbol === "OSMO")
+			if(walletOsmo){
+				osmos = walletOsmo.amount
+			}
+			setOsmo(formaterNumber(osmos))
+		}
+		if (address && address.length > 0) {
+			fetch()
+		}
+	}, [address])
 
 	return (
 		<div className={classes.appBarDesktopRoot}>
@@ -136,13 +159,16 @@ const AppBarDesktop = ({ type, onChangeType }) => {
 						>
 							IBC Status
 						</Link>
+						<SelectDashboard />
 					</div>
 				</div>
 				<div className={classes.right}>
+					{address && address.length > 0 && <ButtonOsmo address={address} osmo={osmo} />}
 					<Toggle color="primary" value={type} exclusive onChange={onChangeType}>
 						<ToggleItem value="app">App</ToggleItem>
 						<ToggleItem value="frontier">Frontier</ToggleItem>
 					</Toggle>
+					<ButtonConnection />
 					<Search />
 				</div>
 			</div>

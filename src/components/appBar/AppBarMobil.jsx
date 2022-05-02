@@ -6,9 +6,11 @@ import Search from "./Search"
 import MenuIcon from "@material-ui/icons/Menu"
 import CloseIcon from "@material-ui/icons/Close"
 import PaperDialog from "./PaperDialog"
+import ButtonConnection from "./button_connection"
 
 import Toggle from "../toggle/Toggle"
 import ToggleItem from "../toggle/ToggleItem"
+import SelectDashboard from "./selectDashboard/select_dashboard"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -66,7 +68,13 @@ const useStyles = makeStyles((theme) => {
 		iconMenu: {
 			zIndex: theme.zIndex.appBar,
 		},
-		toggle: { display: "flex", alignItems: "center", justifyContent: "center" },
+		center: {
+			margin: theme.spacing(1),
+			padding: theme.spacing(1),
+			display: "flex",
+			justifyContent: "center",
+			alignItems: "center",
+		},
 	}
 })
 
@@ -96,6 +104,11 @@ const AppBarMobile = ({ type, onChangeType }) => {
 		history.push(path)
 		handleClose()
 	}
+
+	const callback = () => {
+		handleClose()
+
+	}
 	return (
 		<div className={classes.appBarMobileRoot}>
 			<div className={classes.appBarMobileContent}>
@@ -109,6 +122,7 @@ const AppBarMobile = ({ type, onChangeType }) => {
 				/>
 				<Dialog
 					fullScreen
+					disableEnforceFocus
 					open={open}
 					onClose={handleClose}
 					className={classes.dialog}
@@ -166,12 +180,21 @@ const AppBarMobile = ({ type, onChangeType }) => {
 								IBC Status
 							</p>
 						</div>
-						<div className={classes.toggle}>
-						<Toggle color="primary" value={type} exclusive onChange={onChangeType}>
-							<ToggleItem value="app">App</ToggleItem>
-							<ToggleItem value="frontier">Frontier</ToggleItem>
-						</Toggle>
+
+						<div className={classes.center}>
+							<SelectDashboard callback={callback}/>
 						</div>
+
+						<div className={classes.center}>
+							<Toggle color="primary" value={type} exclusive onChange={onChangeType}>
+								<ToggleItem value="app">App</ToggleItem>
+								<ToggleItem value="frontier">Frontier</ToggleItem>
+							</Toggle>
+						</div>
+						<div className={classes.center}>
+							<ButtonConnection />
+						</div>
+
 						<div className={`${classes.menuItem} ${classes.menuItemClose}`}>
 							<IconButton aria-label="Close menu" onClick={handleClose}>
 								<CloseIcon />

@@ -26,8 +26,12 @@ const CellSymbol = ({ cellKey, cellConfig, data }) => {
 	let currentData = data[cellConfig.cellKey]
 	if (!currentData && !currentData.value) return <TableCell key={cellKey}>-</TableCell>
 	let splitNumber = formateNumberDecimalsAuto({ price: currentData.value }).toString().split(".")
+
+	const onClick = () => {
+		cellConfig.onClickCell(data)
+	}
 	return (
-		<TableCell key={cellKey} className={classes.rootCellSymbol}>
+		<TableCell key={cellKey} className={classes.rootCellSymbol} onClick={cellConfig.onClickCell?onClick:null}>
 			<div className={classes.rootCellSymbol}>
 				<span className={classes.firstNumber}>{splitNumber[0]}</span>
 				{splitNumber.length > 1 ? <span className={classes.restNumber}>.{splitNumber[1]}</span> : null}

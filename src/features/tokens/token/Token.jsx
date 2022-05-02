@@ -16,13 +16,13 @@ import TokenTitle from "./TokenTitle"
 import ContainerCharts from "./ContainerCharts"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 import { useTokensV2 } from "../../../contexts/TokensV2.provider"
-
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import ExpertChartDialog from "./expertChart/ExpertChartDialog"
 import { useTokenChartV2 } from "../../../contexts/TokenChartV2"
 import TrxTable from "./trxTable/trxTable"
 import { useSettings } from "../../../contexts/SettingsProvider"
+import { useToast } from "../../../contexts/Toast.provider"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -154,9 +154,11 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const Token = ({ showToast }) => {
+const Token = () => {
 	const classes = useStyles()
 	const history = useHistory()
+	const { showToast } = useToast()
+
 	const { symbol } = useParams()
 	const { settings, updateSettings } = useSettings()
 	const {

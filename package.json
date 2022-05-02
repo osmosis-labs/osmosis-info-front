@@ -5,14 +5,18 @@
 	"dependencies": {
 		"@emotion/react": "^11.8.2",
 		"@emotion/styled": "^11.8.1",
+		"@keplr-wallet/stores": "^0.10.2",
 		"@material-ui/core": "^4.11.4",
 		"@material-ui/icons": "^4.11.2",
 		"@mui/icons-material": "^5.5.1",
+		"@mui/lab": "^5.0.0-alpha.79",
 		"@mui/material": "^5.5.3",
 		"@testing-library/jest-dom": "^5.11.4",
 		"@testing-library/react": "^11.1.0",
 		"@testing-library/user-event": "^12.1.10",
+		"@walletconnect/client": "^1.7.7",
 		"axios": "^0.21.1",
+		"cosmodal": "^0.3.1",
 		"dayjs": "^1.11.0",
 		"env-cmd": "^10.1.0",
 		"eslint-config-react-app": "6",
@@ -20,15 +24,18 @@
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",
 		"react-helmet": "^6.1.0",
+		"react-json-view": "^1.21.3",
+		"react-minimal-pie-chart": "^8.3.0",
 		"react-router-dom": "^5.2.0",
-		"react-scripts": "^5.0.0",
+		"react-scripts": "4.0.3",
+		"react-tooltip": "^4.2.21",
 		"react-transition-group": "1.x",
 		"resize-observer": "^1.0.2",
 		"web-vitals": "^1.0.1"
 	},
 	"scripts": {
-		"startssl": "react-scripts --openssl-legacy-provider start",
-		"start": "react-scripts start",
+		"startssl": "env-cmd -f .env react-scripts --openssl-legacy-provider start",
+		"start": "env-cmd -f .env react-scripts start",
 		"build": "env-cmd -f .env react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"
@@ -46,6 +53,7 @@
 		]
 	},
 	"devDependencies": {
+		"@welldone-software/why-did-you-render": "^7.0.1",
 		"prettier": "2.5.1"
 	}
 }

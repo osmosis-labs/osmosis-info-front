@@ -49,11 +49,15 @@ const CellPool = ({ cellKey, cellConfig, data }) => {
 		setEvent(null)
 	}
 
+	const onClick = () => {
+		cellConfig.onClickCell(data)
+	}
+
 	const open = Boolean(event)
 
 	return (
-		<TableCell key={cellKey} onMouseEnter={onOpen} onMouseLeave={onClose} style={{ width: "200px", boxSizing: "border-box" }}>
-			<div className={classes.rootCellPool}>
+		<TableCell key={cellKey} onMouseEnter={onOpen} onMouseLeave={onClose} onClick={cellConfig.onClickCell?onClick:null} style={{ width: "200px", boxSizing: "border-box" }}>
+			<div className={classes.rootCellPool} onClick={cellConfig.onClickCell?onClick:null}>
 				<div className={classes.imagesContainer}>
 					{currentData.images.map((image, index) => {
 						return (
