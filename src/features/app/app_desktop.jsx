@@ -39,7 +39,6 @@ import { DebugProvider } from "../../contexts/debug.provider"
 import DebugModal from "../_debug/debug_modal"
 
 const MODE = process.env.REACT_APP_MODE
-console.log("MODE", MODE)
 const useStyles = makeStyles((theme) => {
 	return {
 		appRoot: {
@@ -98,7 +97,7 @@ const walletInfoList = [
 	},
 ]
 
-const App = () => {
+const AppDesktop = () => {
 	const classes = useStyles()
 
 	return (
@@ -200,7 +199,7 @@ const themeWrapper = () => {
 	const theme = useThemeCustom()
 	return (
 		<ThemeProvider theme={theme}>
-			<App />
+			<AppDesktop />
 		</ThemeProvider>
 	)
 }
