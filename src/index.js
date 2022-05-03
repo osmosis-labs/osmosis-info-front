@@ -7,17 +7,16 @@ import * as serviceWorker from "./serviceWorker"
 import "./styles/index.css"
 import "./styles/loader.css"
 import "./styles/transitions.css"
-const AppDesktop = React.lazy(() => (isMobile ? import("./features/app/app_desktop") : null))
+const AppDesktop = React.lazy(() => (!isMobile ? import("./features/app/app_desktop") : null))
 const AppMobile = React.lazy(() => (isMobile ? import("./features/app/app_mobile") : null))
 import { ThemeCustomProvider } from "./contexts/ThemeProvider"
 import { SettingsProviders } from "./contexts/SettingsProvider"
+import LoaderWait from "./components/appBar/loader_wait"
 
 ReactDOM.render(
 	<SettingsProviders>
 		<ThemeCustomProvider>
-			<Suspense fallback={<div>Loading...</div>}>
-				{isMobile ? <AppMobile /> : <AppDesktop />}
-			</Suspense>
+			<Suspense fallback={<LoaderWait />}>{isMobile ? <AppMobile /> : <AppDesktop />}</Suspense>
 		</ThemeCustomProvider>
 	</SettingsProviders>,
 	document.getElementById("root")
