@@ -138,7 +138,7 @@ const StackingRewards = () => {
 	return (
 		<div className={classes.rootStackingRewards}>
 			<div className={classes.containerTitle}>
-				<p className={classes.title}>Stacking Rewards</p>
+				<p className={classes.title}>Staking Rewards</p>
 				<ButtonCSV onClick={donwloadStacking} disabled={isLoading || data.length === 0}>
 					.CSV
 				</ButtonCSV>

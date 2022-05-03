@@ -172,7 +172,7 @@ const Trades = () => {
 				<div className={classes.content}>
 					<div className={classes.mainContainer}>
 						<div className={classes.titleContainer}>
-							<p className={classes.title}>Transactions</p>
+							<p className={classes.title}>Trading History</p>
 						</div>
 						<div className={classes.containerNotFound}>
 							<AccountBalanceWalletIcon className={classes.iconNotFound} />
@@ -195,7 +195,7 @@ const Trades = () => {
 			<div className={classes.content}>
 				<div className={classes.mainContainer}>
 					<div className={classes.titleContainer}>
-						<p className={classes.title}>History Trading</p>
+						<p className={classes.title}>Trading History</p>
 					</div>
 					<div className={classes.listContainer}>
 						<ListTrades
