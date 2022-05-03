@@ -6,7 +6,6 @@ import Search from "./Search"
 import MenuIcon from "@material-ui/icons/Menu"
 import CloseIcon from "@material-ui/icons/Close"
 import PaperDialog from "./PaperDialog"
-import ButtonConnection from "./button_connection"
 
 import Toggle from "../toggle/Toggle"
 import ToggleItem from "../toggle/ToggleItem"
@@ -181,18 +180,12 @@ const AppBarMobile = ({ type, onChangeType }) => {
 							</p>
 						</div>
 
-						<div className={classes.center}>
-							<SelectDashboard callback={callback}/>
-						</div>
 
 						<div className={classes.center}>
 							<Toggle color="primary" value={type} exclusive onChange={onChangeType}>
 								<ToggleItem value="app">App</ToggleItem>
 								<ToggleItem value="frontier">Frontier</ToggleItem>
 							</Toggle>
-						</div>
-						<div className={classes.center}>
-							<ButtonConnection />
 						</div>
 
 						<div className={`${classes.menuItem} ${classes.menuItemClose}`}>
