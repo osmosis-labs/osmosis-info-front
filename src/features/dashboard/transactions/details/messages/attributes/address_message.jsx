@@ -16,12 +16,15 @@ const useStyles = makeStyles((theme) => {
 		name: {
 			fontSize: "12px",
 			color: theme.palette.primary.contrastText,
+			whiteSpace: "nowrap",
+			paddingRight: "10px",
 		},
 		address: {
 			fontSize: "12px",
 			cursor: "pointer",
 			overflow: "hidden",
 			textOverflow: "ellipsis",
+			whiteSpace: "nowrap",
 			color: `${theme.palette.table.link2} !important`,
 		},
 	}

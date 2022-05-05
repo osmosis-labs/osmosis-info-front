@@ -40,7 +40,6 @@ const ListItem = ({ data, config, keyItem, onClickRow, rowSelected, order, order
 	}, [rowSelected, order, orderBy])
 
 	const onClick = () => {
-		console.log("list_item.jsx -> 44: onClickRow")
 		onClickRow(data)
 	}
 	return (
