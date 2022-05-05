@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			flexDirection: "row",
 			width: "100%",
+			maxWidth: "100%",
 			alignContent: "center",
 			justifyContent: "space-between",
 			margin: "6px 0",
@@ -15,9 +16,15 @@ const useStyles = makeStyles((theme) => {
 		name: {
 			fontSize: "12px",
 			color: theme.palette.primary.contrastText,
+			textOverflow: "ellipsis",
+			whiteSpace: "nowrap",
+			paddingRight: "10px",
 		},
 		data: {
 			fontSize: "12px",
+			textOverflow: "ellipsis",
+			overflow: "hidden",
+			whiteSpace: "nowrap",
 			color: theme.palette.gray.textLight2,
 		},
 	}
