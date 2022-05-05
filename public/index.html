@@ -29,6 +29,15 @@
     -->
 		<title>Osmosis Info</title>
 	</head>
+	<script>
+		// Fix for safari mobile to resolve browser.storage.local (cosmodal)
+		if (!browser.storage) {
+		  browser.storage = localStorage;
+		  browser.storage.local = localStorage;
+		  browser.storage.get = browser.storage.getItem;
+		  browser.storage.get = browser.storage.getItem;
+		}
+	  </script>
 
 	<body>
 		<noscript>You need to enable JavaScript to run this app.</noscript>
