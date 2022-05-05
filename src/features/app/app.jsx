@@ -116,7 +116,7 @@ const walletInfoList = [
 	},
 ]
 
-const AppDesktop = () => {
+const App = () => {
 	const classes = useStyles()
 
 	return (
@@ -218,7 +218,7 @@ const themeWrapper = () => {
 	const theme = useThemeCustom()
 	return (
 		<ThemeProvider theme={theme}>
-			<AppDesktop />
+			<App />
 		</ThemeProvider>
 	)
 }
