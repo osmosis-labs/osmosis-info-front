@@ -33,6 +33,7 @@ export const DashboardProvider = ({ children }) => {
 	}
 
 	const getTrx = async ({ address, limit = 10, offset = 0, type }) => {
+		console.log("dashboard.provider.js -> 36: type", type)
 		let url = `https://api-osmosis-chain.imperator.co/txs/v1/tx/address/${address}?limit=${limit}&offset=${offset}`
 		if (type) url += `&type=${type}`
 		let response = await API.request({
@@ -268,7 +269,7 @@ export const DashboardProvider = ({ children }) => {
 
 		let results = await Promise.all([
 			API.request({
-					url: `https://api-osmosis-chain.imperator.co/account/v1/balance/${address}`,
+				url: `https://api-osmosis-chain.imperator.co/account/v1/balance/${address}`,
 				useCompleteURL: true,
 				type: "get",
 			}),
@@ -280,18 +281,27 @@ export const DashboardProvider = ({ children }) => {
 		])
 		let reponseBalance = results[0].data
 		let responseExposure = results[1].data
-		let balance = { osmoStaked: 0, osmoStakedValue: 0, tokenValueWallet: 0, tokenValuePnl24h:0, tokenValueChange24h:0, tokenReturn24:0, tokenReturnChange24:0, wallet: [] }
-		let exposure = { totalExposure: 0, pools: [], assets:[] }
+		let balance = {
+			osmoStaked: 0,
+			osmoStakedValue: 0,
+			tokenValueWallet: 0,
+			tokenValuePnl24h: 0,
+			tokenValueChange24h: 0,
+			tokenReturn24: 0,
+			tokenReturnChange24: 0,
+			wallet: [],
+		}
+		let exposure = { totalExposure: 0, pools: [], assets: [] }
 		let res = { worth: 0, balance, exposure }
 
-		if (reponseBalance.wallet.length > 0) {
-			balance.osmoStaked = reponseBalance.osmo_staked
-			balance.osmoStakedValue = reponseBalance.osmo_staked_value
-			balance.tokenValueWallet = reponseBalance.token_value_wallet
-			balance.tokenValuePnl24h = reponseBalance.token_value_pnl_24h
-			balance.tokenValueChange24h = reponseBalance.token_value_change_24h
-			balance.tokenReturn24 = reponseBalance.token_return_24h
-			balance.tokenReturnChange24 = reponseBalance.token_return_change_24h
+		if (reponseBalance.wallet && reponseBalance.wallet.length > 0) {
+			balance.osmoStaked = reponseBalance.osmo_staked ? reponseBalance.osmo_staked : 0
+			balance.osmoStakedValue = reponseBalance.osmo_staked_value ? reponseBalance.osmo_staked_value : 0
+			balance.tokenValueWallet = reponseBalance.token_value_wallet ? reponseBalance.token_value_wallet : 0
+			balance.tokenValuePnl24h = reponseBalance.token_value_pnl_24h ? reponseBalance.token_value_pnl_24h : 0
+			balance.tokenValueChange24h = reponseBalance.token_value_change_24h ? reponseBalance.token_value_change_24h : 0
+			balance.tokenReturn24 = reponseBalance.token_return_24h ? reponseBalance.token_return_24h : 0
+			balance.tokenReturnChange24 = reponseBalance.token_return_change_24h ? reponseBalance.token_return_change_24h : 0
 
 			balance.wallet = reponseBalance.wallet.map((item) => {
 				return {
@@ -315,7 +325,7 @@ export const DashboardProvider = ({ children }) => {
 			exposure.pools = responseExposure.pool_exposure.map((pool) => {
 				return { poolId: pool.pool_id, tokens: pool.token, value: pool.pool_value, percent: pool.pool_percent }
 			})
-			exposure.assets = responseExposure.token_exposure.map((token)=>{
+			exposure.assets = responseExposure.token_exposure.map((token) => {
 				return {
 					name: token.name,
 					symbol: token.symbol,
