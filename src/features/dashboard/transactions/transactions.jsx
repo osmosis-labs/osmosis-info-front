@@ -170,7 +170,7 @@ const Transactions = () => {
 			let results = await getTrx({
 				address,
 				offset: offset.current,
-				type: typeTrx === "all" ? null : getTypeDashboard(typeTrx, true),
+				type: typeTrx.current === "all" ? null : getTypeDashboard(typeTrx.current, true),
 			})
 			trxRef.current = [...trxRef.current, ...results]
 			setLoadingTrx(false)
