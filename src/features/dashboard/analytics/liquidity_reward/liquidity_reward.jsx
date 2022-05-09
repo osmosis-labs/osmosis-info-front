@@ -1,11 +1,17 @@
 import { makeStyles } from "@material-ui/core"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
 import { useDashboard } from "../../../../contexts/dashboard.provider"
 import { usePrices } from "../../../../contexts/PricesProvider"
-import { formateNumberDecimalsAuto, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
+import {
+	formatDate,
+	formateNumberDecimalsAuto,
+	formaterNumber,
+	getPercent,
+	twoNumber,
+} from "../../../../helpers/helpers"
 import ButtonChart from "../stacking_reward/button_chart"
 import Chart from "../stacking_reward/chart"
 import SelectToken from "./select_token"
@@ -92,6 +98,7 @@ const LiquidityReward = () => {
 	const [currentBalance, setCurrentBalance] = useState({ value: 0, percent: 0, change: 0 })
 	const [isLoading, setIsLoading] = useState(false)
 	const [walletSaved, setWalletSaved] = useState({})
+	const [currentItem, setCurrentItem] = useState({ time: "-", value: "-", dayValue: "-" })
 
 	useEffect(() => {
 		const fetch = async () => {
@@ -114,7 +121,7 @@ const LiquidityReward = () => {
 				setCurrentToken(firstToken)
 				let data = await getLiquidity({ address, range, token: firstToken })
 				setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
-
+				setCurrentItem(formatItem(data[0]))
 				setData([...data])
 			}
 			setWalletSaved(wallet)
@@ -143,6 +150,7 @@ const LiquidityReward = () => {
 		setRange(rge)
 		let data = await getLiquidity({ address, range: rge, token: currentToken })
 		setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
+		setCurrentItem(formatItem(data[0]))
 		setData([...data])
 		setIsLoading(false)
 	}
@@ -153,6 +161,7 @@ const LiquidityReward = () => {
 		getCurrentWallet(walletSaved, tkn)
 		setCurrentToken(tkn)
 		setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
+		setCurrentItem(formatItem(data[0]))
 		setData([...data])
 		setIsLoading(false)
 	}
@@ -182,7 +191,44 @@ const LiquidityReward = () => {
 		a.click()
 		document.body.removeChild(a)
 	}
-	
+
+	const formatItem = (item) => {
+		let res = { time: "-", value: "-", dayValue: "-" }
+		if (item) {
+			let date = ""
+			if (item.time && typeof item.time === "string") {
+				date = new Date(item.time)
+			} else {
+				date = new Date(item.time.year, item.time.month, item.time.day)
+			}
+			res.time = formatDate(date)
+			res.value = formaterNumber(item.value)
+			res.dayValue = formaterNumber(item.dayValue)
+		}
+		return res
+	}
+
+	const getItemByTime = (time) => {
+		if (time) {
+			let item = data.find(
+				(item) => item.time.year === time.year && item.time.month === time.month && item.time.day === time.day
+			)
+			return item
+		}
+		return null
+	}
+
+	const crossMove = ({ time }) => {
+		let formatedItem = formatItem(getItemByTime(time))
+		if (currentItem.time !== formatedItem.time) {
+			setCurrentItem(formatItem(getItemByTime(time)))
+		}
+	}
+
+	const onMouseLeave = () => {
+		setCurrentItem(formatItem(data[0]))
+	}
+
 	return (
 		<div className={classes.rootLiquidityReward}>
 			<div className={classes.containerTitle}>
@@ -196,7 +242,7 @@ const LiquidityReward = () => {
 				{data.length > 0 ? (
 					<>
 						<div className={classes.chartContainer}>
-							<Chart data={data} />
+							<Chart data={data} crossMove={crossMove} onMouseLeave={onMouseLeave} />
 						</div>
 						<div className={classes.chartInfo}>
 							<ButtonChart range={range} onChangeRange={onChangeRange} />
@@ -210,6 +256,13 @@ const LiquidityReward = () => {
 								<p className={classes.name}>Total reward</p>
 								<p className={classes.value}>
 									{formaterNumber(total)} <span className={classes.token}>{currentToken}</span>
+								</p>
+							</div>
+							<div className={classes.rowInfo}>
+								<p className={classes.name}>Daily reward</p>
+								<p className={classes.name}>{currentItem.time}</p>
+								<p className={classes.value}>
+									{currentItem.dayValue} <span className={classes.token}>{currentToken}</span>
 								</p>
 							</div>
 						</div>

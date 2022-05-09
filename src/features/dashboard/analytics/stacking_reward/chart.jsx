@@ -102,6 +102,7 @@ const Chart = ({ data, crossMove, onMouseLeave }) => {
 				}
 				let chart = createChart(containerRef.current, options)
 				chartRef.current = chart
+
 				let min = data.reduce((pr, cv) => {
 					if (pr < cv.value) {
 						return pr
@@ -156,9 +157,17 @@ const Chart = ({ data, crossMove, onMouseLeave }) => {
 				})
 				serieRef.current.setData([...data])
 				chartRef.current.timeScale().fitContent()
+				const hover = (event) => {
+					let item = { time: event.time }
+					crossMove(item)
+				}
+				chartRef.current.subscribeCrosshairMove(hover)
+				return () => {
+					chartRef.current.unsubscribeCrosshairMove(hover)
+				}
 			}
 		}
-	}, [data])
+	}, [data, crossMove])
 
 	return (
 		<div className={classes.chartContainer}>

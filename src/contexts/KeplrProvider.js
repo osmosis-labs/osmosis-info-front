@@ -36,8 +36,6 @@ export const KeplrProvider = ({ children }) => {
 		localStorage.removeItem("walletconnect")
 	}
 
-
-
 	return (
 		<KeplrContext.Provider
 			value={{

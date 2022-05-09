@@ -1,10 +1,16 @@
 import { makeStyles } from "@material-ui/core"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
 import { useDashboard } from "../../../../contexts/dashboard.provider"
-import { formateNumberDecimalsAuto, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
+import {
+	formatDate,
+	formateNumberDecimalsAuto,
+	formaterNumber,
+	getPercent,
+	twoNumber,
+} from "../../../../helpers/helpers"
 import ButtonChart from "./button_chart"
 import Chart from "./chart"
 const useStyles = makeStyles((theme) => {
@@ -87,6 +93,7 @@ const StackingRewards = () => {
 	const [range, setRange] = useState("3m")
 	const [osmoStaked, setOsmoStacted] = useState(0)
 	const [isLoading, setIsLoading] = useState(false)
+	const [currentItem, setCurrentItem] = useState({ time: "-", value: "-" })
 
 	useEffect(() => {
 		const fetch = async () => {
@@ -97,6 +104,7 @@ const StackingRewards = () => {
 			let { balance } = await results[1]
 			setOsmoStacted(balance.osmoStaked)
 			setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
+			setCurrentItem(formatItem(data[0]))
 			setData(data)
 			setIsLoading(false)
 		}
@@ -115,7 +123,7 @@ const StackingRewards = () => {
 	const donwloadStacking = () => {
 		let dataDownload = [
 			["time", "value", "token"],
-			...data.map((d) => [`${d.time.year}-${twoNumber(d.time.month)}-${twoNumber(d.time.day)}`, d.value,"OSMO"]),
+			...data.map((d) => [`${d.time.year}-${twoNumber(d.time.month)}-${twoNumber(d.time.day)}`, d.value, "OSMO"]),
 		]
 		let csv = dataDownload.map((row) => row.join(",")).join("\n")
 		let a = document.createElement("a")
@@ -135,6 +143,42 @@ const StackingRewards = () => {
 		return <span className={`${classes.percent} ${classes.down}`}>↓ {getPercent(percent)}</span>
 	}
 
+	const formatItem = (item) => {
+		let res = { time: "-", value: "-" }
+		if (item) {
+			let date = ""
+			if (item.time && typeof item.time === "string") {
+				date = new Date(item.time)
+			} else {
+				date = new Date(item.time.year, item.time.month, item.time.day)
+			}
+			res.time = formatDate(date)
+			res.value = formaterNumber(item.value)
+		}
+		return res
+	}
+
+	const getItemByTime = (time) => {
+		if (time) {
+			let item = data.find(
+				(item) => item.time.year === time.year && item.time.month === time.month && item.time.day === time.day
+			)
+			return item
+		}
+		return null
+	}
+
+	const crossMove = ({ time }) => {
+		let formatedItem = formatItem(getItemByTime(time))
+		if (currentItem.time !== formatedItem.time) {
+			setCurrentItem(formatItem(getItemByTime(time)))
+		}
+	}
+
+	const onMouseLeave = () => {
+		setCurrentItem(formatItem(data[0]))
+	}
+
 	return (
 		<div className={classes.rootStackingRewards}>
 			<div className={classes.containerTitle}>
@@ -148,7 +192,7 @@ const StackingRewards = () => {
 				{data.length > 0 ? (
 					<>
 						<div className={classes.chartContainer}>
-							<Chart data={data} />
+							<Chart data={data} crossMove={crossMove} onMouseLeave={onMouseLeave} />
 						</div>
 						<div className={classes.chartInfo}>
 							<ButtonChart range={range} onChangeRange={onChangeRange} />
@@ -164,6 +208,13 @@ const StackingRewards = () => {
 									{formaterNumber(total)} <span className={classes.token}>OSMO</span>
 								</p>
 								<p className={classes.value}>{getPercentDisplay()}</p>
+							</div>
+							<div className={classes.rowInfo}>
+								<p className={classes.name}>Current reward</p>
+								<p className={classes.name}>{currentItem.time}</p>
+								<p className={classes.value}>
+									{currentItem.value} <span className={classes.token}>OSMO</span>
+								</p>
 							</div>
 						</div>
 					</>
