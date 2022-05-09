@@ -33,7 +33,6 @@ export const DashboardProvider = ({ children }) => {
 	}
 
 	const getTrx = async ({ address, limit = 10, offset = 0, type }) => {
-		console.log("dashboard.provider.js -> 36: type", type)
 		let url = `https://api-osmosis-chain.imperator.co/txs/v1/tx/address/${address}?limit=${limit}&offset=${offset}`
 		if (type) url += `&type=${type}`
 		let response = await API.request({
@@ -409,10 +408,14 @@ export const DashboardProvider = ({ children }) => {
 			useCompleteURL: true,
 			type: "get",
 		})
+		let accumulateValue = 0
 		if (response.data.length > 0) {
-			const data = response.data.map((item) => {
-				return { time: item.day, value: item.amount }
+			
+			const dataReversed = response.data.reverse().map((item, i) => {
+				accumulateValue += item.amount
+				return { time: item.day, value: accumulateValue, dayValue: item.amount }
 			})
+			const data = dataReversed.reverse()
 
 			let nbDaysLastThreeMonths = 0
 			let startDate = new Date(data[0].time)

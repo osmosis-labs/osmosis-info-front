@@ -167,7 +167,11 @@ const LiquidityReward = () => {
 	const donwloadStacking = () => {
 		let dataDownload = [
 			["time", "value", "token"],
-			...data.map((d) => [`${d.time.year}-${twoNumber(d.time.month)}-${twoNumber(d.time.day)}`, d.value, currentToken]),
+			...data.map((d) => [
+				`${d.time.year}-${twoNumber(d.time.month)}-${twoNumber(d.time.day)}`,
+				d.dayValue,
+				currentToken,
+			]),
 		]
 		let csv = dataDownload.map((row) => row.join(",")).join("\n")
 		let a = document.createElement("a")
@@ -178,7 +182,7 @@ const LiquidityReward = () => {
 		a.click()
 		document.body.removeChild(a)
 	}
-
+	
 	return (
 		<div className={classes.rootLiquidityReward}>
 			<div className={classes.containerTitle}>
