@@ -91,7 +91,8 @@ const StackingRewards = () => {
 	const [data, setData] = useState([])
 	const [total, setTotal] = useState(0)
 	const [range, setRange] = useState("3m")
-	const [osmoStaked, setOsmoStacted] = useState(0)
+	const [osmoStaked, setOsmoStaked] = useState(0)
+	const [osmoReward, setOsmoReward] = useState(0)
 	const [isLoading, setIsLoading] = useState(false)
 	const [currentItem, setCurrentItem] = useState({ time: "-", value: "-" })
 
@@ -102,7 +103,8 @@ const StackingRewards = () => {
 			let results = await Promise.all(promises)
 			let data = await results[0]
 			let { balance } = await results[1]
-			setOsmoStacted(balance.osmoStaked)
+			setOsmoStaked(balance.osmoStaked)
+			setOsmoReward(balance.osmoReward)
 			setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
 			setCurrentItem(formatItem(data[0]))
 			setData(data)
@@ -169,9 +171,11 @@ const StackingRewards = () => {
 	}
 
 	const crossMove = ({ time }) => {
-		let formatedItem = formatItem(getItemByTime(time))
-		if (currentItem.time !== formatedItem.time) {
-			setCurrentItem(formatItem(getItemByTime(time)))
+		if (time) {
+			let formatedItem = formatItem(getItemByTime(time))
+			if (currentItem.time !== formatedItem.time) {
+				setCurrentItem(formatItem(getItemByTime(time)))
+			}
 		}
 	}
 
@@ -208,6 +212,12 @@ const StackingRewards = () => {
 									{formaterNumber(total)} <span className={classes.token}>OSMO</span>
 								</p>
 								<p className={classes.value}>{getPercentDisplay()}</p>
+							</div>
+							<div className={classes.rowInfo}>
+								<p className={classes.name}>Pending reward</p>
+								<p className={classes.value}>
+									{formaterNumber(osmoReward)} <span className={classes.token}>OSMO</span>
+								</p>
 							</div>
 							<div className={classes.rowInfo}>
 								<p className={classes.name}>Current reward</p>

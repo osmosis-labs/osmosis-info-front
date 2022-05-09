@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core"
+import { useToast } from "../../contexts/Toast.provider"
 import osmoIMG from "./osmo.svg"
 
 const useStyles = makeStyles((theme) => {
@@ -37,12 +38,29 @@ const useStyles = makeStyles((theme) => {
 
 const ButtonOsmo = ({ address, osmo }) => {
 	const classes = useStyles()
+	const { showToast } = useToast()
+
+	const copyAddress = () => {
+		try {
+			navigator.clipboard.writeText(address)
+			showToast({
+				severity: "success",
+				text: "Address copied to clipboard",
+			})
+		} catch (e) {
+			console.log("%cinformations.jsx -> 66 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
+			showToast({
+				severity: "warning",
+				text: "Cannot copy Address to clipboard",
+			})
+		}
+	}
 
 	let addressDisplay = address.substring(0, 7) + "..." + address.substring(address.length - 3)
 
 	return (
 		<div className={classes.rootButtonOsmo}>
-			<div className={classes.container}>
+			<div className={classes.container} onClick={copyAddress}>
 				<img src={osmoIMG} className={classes.img} />
 				<span className={classes.text}>{addressDisplay}</span>
 			</div>

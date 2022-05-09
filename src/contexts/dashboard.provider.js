@@ -296,6 +296,8 @@ export const DashboardProvider = ({ children }) => {
 		let balance = {
 			osmoStaked: 0,
 			osmoStakedValue: 0,
+			osmoReward:0,
+			osmoRewardValue:0,
 			tokenValueWallet: 0,
 			tokenValuePnl24h: 0,
 			tokenValueChange24h: 0,
@@ -314,6 +316,8 @@ export const DashboardProvider = ({ children }) => {
 			balance.tokenValueChange24h = reponseBalance.token_value_change_24h ? reponseBalance.token_value_change_24h : 0
 			balance.tokenReturn24 = reponseBalance.token_return_24h ? reponseBalance.token_return_24h : 0
 			balance.tokenReturnChange24 = reponseBalance.token_return_change_24h ? reponseBalance.token_return_change_24h : 0
+			balance.osmoReward = reponseBalance.osmo_reward ? reponseBalance.osmo_reward : 0
+			balance.osmoRewardValue = reponseBalance.osmo_reward_value ? reponseBalance.osmo_reward_value : 0
 
 			balance.wallet = reponseBalance.wallet.map((item) => {
 				return {

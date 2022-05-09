@@ -219,9 +219,11 @@ const LiquidityReward = () => {
 	}
 
 	const crossMove = ({ time }) => {
-		let formatedItem = formatItem(getItemByTime(time))
-		if (currentItem.time !== formatedItem.time) {
-			setCurrentItem(formatItem(getItemByTime(time)))
+		if (time) {
+			let formatedItem = formatItem(getItemByTime(time))
+			if (currentItem.time !== formatedItem.time) {
+				setCurrentItem(formatItem(getItemByTime(time)))
+			}
 		}
 	}
 

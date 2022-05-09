@@ -99,7 +99,6 @@ const Trades = () => {
 			try {
 				setLoadingTrades(true)
 				let trades = await getTrades({ address })
-				console.log("trades.jsx -> 84: trades", trades)
 				tradesRef.current = trades
 				setLoadingTrades(false)
 			} catch (e) {
