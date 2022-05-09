@@ -3,7 +3,7 @@ import { capitalizeFirstLetter, formateNumberDecimalsAuto } from "../../../../..
 
 const useStyles = makeStyles((theme) => {
 	return {
-		rootPriceMessage: {
+		rootTradePriceMessage: {
 			display: "flex",
 			flexDirection: "row",
 			width: "100%",
@@ -15,6 +15,10 @@ const useStyles = makeStyles((theme) => {
 		name: {
 			fontSize: "12px",
 			color: theme.palette.primary.contrastText,
+			display: "flex",
+			flexDirection: "column",
+			alignItems: "flex-start",
+			justifyContent: "center",
 		},
 		firstNumber: {
 			fontSize: "13px",
@@ -38,27 +42,21 @@ const useStyles = makeStyles((theme) => {
 		},
 	}
 })
-const PriceMessage = ({ denom, amount, name, usd = null }) => {
+const TradePriceMessage = ({ denom, name, amount }) => {
 	const classes = useStyles()
 
-	let nameDisplay = capitalizeFirstLetter(name.replace("_", " "))
-	if (denom === "uosmo") {
-		amount /= 1_000_000
-		denom = "OSMO"
-	}
 	let splitNumber = formateNumberDecimalsAuto({ price: amount }).toString().split(".")
 
 	return (
-		<div className={`${classes.rootPriceMessage}`}>
-			<p className={classes.name}>{nameDisplay}</p>
+		<div className={`${classes.rootTradePriceMessage}`}>
+			<p className={classes.name}>{name}</p>
 			<p className={classes.price}>
-				<span className={classes.firstNumber}>{splitNumber[0]}</span>
+				$<span className={classes.firstNumber}>{splitNumber[0]}</span>
 				{splitNumber.length > 1 ? <span className={classes.restNumber}>.{splitNumber[1]}</span> : null}
-				<span className={classes.symbol}>{denom}</span>
 				{/* {usd ? <span className={classes.symbol}>$(~{usd})</span> : null} */}
 			</p>
 		</div>
 	)
 }
 
-export default PriceMessage
+export default TradePriceMessage

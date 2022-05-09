@@ -4,9 +4,9 @@ import { useDashboard } from "../../../contexts/dashboard.provider"
 import ModalJSON from "../transactions/details/modal_json"
 import DialogDetails from "../transactions/dialog_details"
 import useSize from "../../../hooks/sizeHook"
-import Details from "../transactions/details/details"
 import ListTrades from "./list_trades/list_trades"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
+import DetailsTrade from "./details_trade"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -182,10 +182,12 @@ const Trades = () => {
 				</div>
 				{size !== "xs" ? (
 					<div className={classes.detailsContainer}>
-						<Details data={{}} openJSON={openJSON} />
+						<DetailsTrade data={{}} openJSON={openJSON} />
 					</div>
 				) : (
-					<DialogDetails open={open} onClose={onClose} data={{}} openJSON={openJSON} />
+					<DialogDetails open={open} onClose={onClose}>
+						<DetailsTrade data={{}} openJSON={openJSON} />
+					</DialogDetails>
 				)}
 			</div>
 		)
@@ -210,10 +212,12 @@ const Trades = () => {
 			</div>
 			{size !== "xs" ? (
 				<div className={classes.detailsContainer}>
-					<Details data={currentTrade} openJSON={openJSON} />
+					<DetailsTrade data={currentTrade} openJSON={openJSON} />
 				</div>
 			) : (
-				<DialogDetails open={open} onClose={onClose} data={currentTrade} openJSON={openJSON} />
+				<DialogDetails open={open} onClose={onClose}>
+					<DetailsTrade data={currentTrade} openJSON={openJSON} />
+				</DialogDetails>
 			)}
 			<ModalJSON open={openModalJSON} onClose={closeJSON} data={currentTrade} />
 		</div>

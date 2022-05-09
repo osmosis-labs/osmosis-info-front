@@ -1,8 +1,8 @@
 import { makeStyles } from "@material-ui/core"
-import dayjs from "dayjs"
 import { isOsmoAddress } from "../../../../../helpers/helpers"
 import AddressMessage from "./attributes/address_message"
 import DefaultMessage from "./attributes/default_message"
+import TradePriceMessage from "./attributes/trade_price_message"
 import PriceMessage from "./attributes/price_message"
 import TypeMessage from "./attributes/type_message"
 
@@ -61,6 +61,10 @@ const Message = ({ message, index, data }) => {
 				if (name === "tokenIn") name = "Token in"
 				if (name === "tokenOut") name = "Token out"
 				res = <PriceMessage key={key + i} index={i} amount={data.amount} denom={data.denom} name={name} type={key} />
+			} else if (key === "tradeIn" || key === "tradeOut") {
+				let name = `Trade (${data.symbol})`
+				res = <TradePriceMessage key={key + i} index={i} amount={data.value} denom={"$"} name={name} type={key} />
+
 			} else if (typeof data === "string") {
 				res = <DefaultMessage key={key + i} index={i} data={data} name={key} />
 			} else {

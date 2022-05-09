@@ -134,10 +134,21 @@ export const DashboardProvider = ({ children }) => {
 			let addressDisplay = item.address.substring(0, 5) + "..." + item.address.substring(item.address.length - 5)
 			trx.address = { value: item.address, display: addressDisplay }
 
-			trx.tokenIn = { value: item.amount_in, symbol: item.symbol_in }
-			trx.tokenOut = { value: item.amount_out ? item.amount_out : 0, symbol: item.symbol_out ? item.symbol_out : "" }
-
 			trx.usd = item.value_usd
+
+			trx.tokenIn = { value: item.amount_in, symbol: item.symbol_in, usd: 0 }
+			if (trx.tokenIn.value != 0) {
+				trx.tokenIn.usd = trx.usd / trx.tokenIn.value
+			}
+
+			trx.tokenOut = {
+				value: item.amount_out ? item.amount_out : 0,
+				symbol: item.symbol_out ? item.symbol_out : "",
+				usd: 0,
+			}
+			if (trx.tokenOut.value && trx.tokenOut.value != 0) {
+				trx.tokenOut.usd = trx.usd / trx.tokenOut.value
+			}
 
 			let types = [{ value: "cosmos.bank.v1beta1.MsgSend", display: getTypeDashboard("cosmos.bank.v1beta1.MsgSend") }]
 			trx.types = types
@@ -172,6 +183,8 @@ export const DashboardProvider = ({ children }) => {
 						symbol: item.symbol_out ? item.symbol_out : "",
 						usd: 0,
 					},
+					// tradeIn: { value: trx.tokenIn.usd, symbol: trx.tokenIn.symbol },
+					// tradeOut: { value: trx.tokenOut.usd, symbol: trx.tokenOut.symbol },
 				},
 			]
 			res.push(trx)
@@ -410,7 +423,6 @@ export const DashboardProvider = ({ children }) => {
 		})
 		let accumulateValue = 0
 		if (response.data.length > 0) {
-			
 			const dataReversed = response.data.reverse().map((item, i) => {
 				accumulateValue += item.amount
 				return { time: item.day, value: accumulateValue, dayValue: item.amount }

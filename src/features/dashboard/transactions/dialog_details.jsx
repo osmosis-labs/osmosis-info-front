@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const DialogDetails = ({ data, open, onClose, openJSON }) => {
+const DialogDetails = ({ open, onClose, children }) => {
 	const classes = useStyles()
 
 	return (
@@ -65,14 +65,10 @@ const DialogDetails = ({ data, open, onClose, openJSON }) => {
 					<IconButton edge="start" color="inherit" onClick={onClose} aria-label="close">
 						<CloseIcon />
 					</IconButton>
-					<p className={classes.title}>
-						Transaction details
-					</p>
+					<p className={classes.title}>Transaction details</p>
 				</Toolbar>
 			</AppBar>
-			<div className={classes.detailsContainer}>
-				<Details data={data} openJSON={openJSON}/>
-			</div>
+			<div className={classes.detailsContainer}>{children}</div>
 		</div>
 	)
 }
