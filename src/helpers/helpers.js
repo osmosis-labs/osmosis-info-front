@@ -72,7 +72,7 @@ export const formateNumberPriceDecimals = (price, decimals = 2) => {
 }
 
 export const getPercent = (value, unit = true) => {
-	let res = parseFloat(formateNumberDecimalsAuto({ price: value, minDecimal: 2, minPrice: 1, maxDecimal: 2 })).toFixed(
+	let res = parseFloat(formateNumberDecimalsAuto({ price: value, minDecimal: 2, minPrice: 1, maxDecimal: 2 }).replace(",","")).toFixed(
 		2
 	)
 	if (unit) {
