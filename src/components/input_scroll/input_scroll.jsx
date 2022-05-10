@@ -2,6 +2,7 @@ import { makeStyles } from "@material-ui/core"
 import { memo, useCallback, useEffect, useRef, useState } from "react"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
+import { useTheme } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -45,13 +46,15 @@ const useStyles = makeStyles((theme) => {
 			right: "0px",
 		},
 		iconDisabled: {
-			opacity:0,
+			opacity: 0,
 			cursor: "default",
 		},
 	}
 })
 const InputScroll = ({ children }) => {
 	const classes = useStyles()
+	const theme = useTheme()
+
 	const refDiv = useRef(null)
 
 	const classIconLeftDefault = `${classes.icon} ${classes.iconLeft}`
@@ -64,9 +67,15 @@ const InputScroll = ({ children }) => {
 	const endLeft = useRef(true)
 	const endRight = useRef(false)
 
+	useEffect(() => {
+		setClassIconLeft(classIconLeftDisabled)
+		setClassIconRight(classIconRightDefault)
+		refDiv.current.scroll({ left: 0, behavior: "smooth" })
+	}, [theme,  refDiv.current])
+
 	const updateScroll = (xScroll) => {
 		let leftScroll = refDiv.current.scrollLeft + xScroll
-		let rightScroll = leftScroll + refDiv.current.offsetWidth 
+		let rightScroll = leftScroll + refDiv.current.offsetWidth
 		let endScroll = refDiv.current.scrollWidth
 
 		if (leftScroll <= 0 && !endLeft.current) {
@@ -95,7 +104,7 @@ const InputScroll = ({ children }) => {
 	return (
 		<div className={classes.rootInputScroll}>
 			<ArrowBackIosNewIcon className={classIconLeft} onClick={onClickLeft} />
-			<div className={classes.scroll} ref={refDiv} >
+			<div className={classes.scroll} ref={refDiv}>
 				{children}
 			</div>
 			<ArrowForwardIosIcon className={classIconRight} onClick={onClickRight} />
@@ -103,4 +112,4 @@ const InputScroll = ({ children }) => {
 	)
 }
 
-export default memo(InputScroll)
+export default InputScroll
