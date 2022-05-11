@@ -53,7 +53,8 @@ export const TokenChartV2Provider = ({ children }) => {
 						`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_in.toLowerCase()}.png`,
 						`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_out.toLowerCase()}.png`,
 					],
-					name: `${symbolInDisplay}/${symbolOutDisplay}`,
+					name: `${trx.symbol_in}/${trx.symbol_out}`,
+					nameDisplay: `${symbolInDisplay}/${symbolOutDisplay}`,
 					routes: trx.swap_route.routes.map((route) => {
 						return {...route, poolNameDisplay: formatTokenName(route.poolName), tokenOutSymbolDisplay: formatTokenName(route.tokenOutSymbol)}
 					}),
