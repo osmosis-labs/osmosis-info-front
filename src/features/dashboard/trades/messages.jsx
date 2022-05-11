@@ -1,6 +1,5 @@
 import { makeStyles } from "@material-ui/core"
-import dayjs from "dayjs"
-import Message from "./message"
+import Message from "../transactions/details/messages/message"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -36,6 +35,7 @@ const Messages = ({ data }) => {
 			<p className={classes.title}>{data.messages.length > 1 ? "Messages" : "Message"}</p>
 			{data.messages.length === 0 ? <p className={classes.noMessage}>Any message for this transaction</p> : null}
 			{data.messages.map((message, index) => {
+				delete message.type
 				return <Message message={message} data={data} index={index} key={index} />
 			})}
 		</div>

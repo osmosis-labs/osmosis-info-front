@@ -30,7 +30,7 @@ const PoolPath = ({ pool }) => {
 		history.push(path)
 	}
 
-	const name = pool && pool?.name ? pool.name : ""
+	const name = pool && pool?.nameDisplay ? pool.nameDisplay : ""
 	return (
 		<div className={classes.pathRoot}>
 			<p

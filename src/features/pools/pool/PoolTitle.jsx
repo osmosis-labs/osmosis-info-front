@@ -131,7 +131,7 @@ const PoolTitle = ({ pool, tokens }) => {
 				<p
 					style={matchMD ? { transform: `translateX(0)` } : { transform: `translateX(-${tokens.length * 20}px)` }}
 					className={`${classes.subTitle} ${classes.name}`}
-				>{`#${pool.id} ${pool.name}`}</p>
+				>{`#${pool.id} ${pool.nameDisplay}`}</p>
 				<span className={classes.icons}>
 					<Tooltip
 						style={matchMD ? { transform: `translateX(0)` } : { transform: `translateX(-${tokens.length * 20}px)` }}

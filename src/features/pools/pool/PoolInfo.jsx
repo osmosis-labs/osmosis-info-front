@@ -115,7 +115,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool, pricesDecimals }) => {
 												srcFallback="../assets/default.png"
 												pathAssets=""
 											/>
-											<p>{token.symbol}</p>
+											<p>{token.symbolDisplay}</p>
 										</div>
 										<p className={classes.pooledTokensNumber}>{formaterNumber(token.amount, 0)}</p>
 										<p className={classes.pooledTokensNumber}>

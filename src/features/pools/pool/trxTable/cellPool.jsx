@@ -72,7 +72,7 @@ const CellPool = ({ cellKey, cellConfig, data }) => {
 						)
 					})}
 				</div>
-				<span className={classes.poolName}>{currentData.name}</span>
+				<span className={classes.poolName}>{currentData.nameDisplay}</span>
 				{currentData.routes.length > 1 ? <span className={classes.poolBadge}>+{currentData.routes.length}</span> : null}
 				{currentData.routes.length > 1 ? (
 					<PopoverPool

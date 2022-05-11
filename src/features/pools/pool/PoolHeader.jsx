@@ -45,7 +45,7 @@ const PoolHeader = ({ pool, tokens, selectedTokens, onChangeSeletedTokens, loadi
 					pathAssets=""
 				/>
 				<p>
-					1 {selectedTokens.two.symbol} = {pricesInfo} {selectedTokens.one.symbol}{" "}
+					1 {selectedTokens.two.symbolDisplay} = {pricesInfo} {selectedTokens.one.symbolDisplay}{" "}
 				</p>
 			</Paper>
 			<PoolSelect tokens={tokens} setSelectedTokens={onChangeSeletedTokens} selectedTokens={selectedTokens} />

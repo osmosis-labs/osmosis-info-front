@@ -212,7 +212,9 @@ const Transactions = () => {
 						<Details data={currentTrx} openJSON={openJSON} />
 					</div>
 				) : (
-					<DialogDetails open={open} onClose={onClose} data={currentTrx} openJSON={openJSON} />
+					<DialogDetails open={open} onClose={onClose}>
+						<Details data={currentTrx} openJSON={openJSON} />
+					</DialogDetails>
 				)}
 			</div>
 		)

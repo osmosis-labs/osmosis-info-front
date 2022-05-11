@@ -35,7 +35,6 @@ const AttributPools = ({ data, config, itemConfig, itemKey }) => {
 	const classes = useStyles()
 	const [event, setEvent] = useState(null)
 	let currentData = data[itemConfig.key]
-	console.log("%cattribut_pools.jsx -> 43 BLUE: data", "background: #2196f3; color:#FFFFFF", data)
 
 	const onOpen = (event) => {
 		setEvent(event)
@@ -45,7 +44,6 @@ const AttributPools = ({ data, config, itemConfig, itemKey }) => {
 		setEvent(null)
 	}
 	const open = Boolean(event)
-	console.log("attribut_pools.jsx -> 53: open", open  )
 
 	return (
 		<div

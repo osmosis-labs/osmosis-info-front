@@ -5,7 +5,7 @@ import { useKeplr } from "./KeplrProvider"
 import relativeTime from "dayjs/plugin/relativeTime"
 import utc from "dayjs/plugin/utc"
 import dayjs from "dayjs"
-import { getDaysInMonth, getTypeDashboard, getWeekNumber, timeToDateUTC } from "../helpers/helpers"
+import { formatTokenName, getDaysInMonth, getTypeDashboard, getWeekNumber, timeToDateUTC } from "../helpers/helpers"
 const DashboardContext = createContext()
 dayjs.extend(relativeTime)
 dayjs.extend(utc)
@@ -33,7 +33,6 @@ export const DashboardProvider = ({ children }) => {
 	}
 
 	const getTrx = async ({ address, limit = 10, offset = 0, type }) => {
-		console.log("dashboard.provider.js -> 36: type", type)
 		let url = `https://api-osmosis-chain.imperator.co/txs/v1/tx/address/${address}?limit=${limit}&offset=${offset}`
 		if (type) url += `&type=${type}`
 		let response = await API.request({
@@ -135,10 +134,29 @@ export const DashboardProvider = ({ children }) => {
 			let addressDisplay = item.address.substring(0, 5) + "..." + item.address.substring(item.address.length - 5)
 			trx.address = { value: item.address, display: addressDisplay }
 
-			trx.tokenIn = { value: item.amount_in, symbol: item.symbol_in }
-			trx.tokenOut = { value: item.amount_out ? item.amount_out : 0, symbol: item.symbol_out ? item.symbol_out : "" }
-
 			trx.usd = item.value_usd
+
+			let symbolInDisplay = formatTokenName(trx.symbol_in)
+			let symbolOutDisplay = item.symbol_out ? formatTokenName(item.symbol_out) : ""
+			trx.tokenIn = {
+				value: item.amount_in,
+				symbol: item.symbol_in,
+				symbolDisplay: symbolInDisplay,
+				usd: 0,
+			}
+			if (trx.tokenIn.value != 0) {
+				trx.tokenIn.usd = trx.usd / trx.tokenIn.value
+			}
+
+			trx.tokenOut = {
+				value: item.amount_out ? item.amount_out : 0,
+				symbol: item.symbol_out ? item.symbol_out : "",
+				symbolDisplay: symbolOutDisplay,
+				usd: 0,
+			}
+			if (trx.tokenOut.value && trx.tokenOut.value != 0) {
+				trx.tokenOut.usd = trx.usd / trx.tokenOut.value
+			}
 
 			let types = [{ value: "cosmos.bank.v1beta1.MsgSend", display: getTypeDashboard("cosmos.bank.v1beta1.MsgSend") }]
 			trx.types = types
@@ -153,9 +171,11 @@ export const DashboardProvider = ({ children }) => {
 					`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${item.symbol_out.toLowerCase()}.png`
 				)
 			}
+
 			let pools = {
 				images,
 				name: `${item.symbol_in}/${item.symbol_out}`,
+				nameDisplay: `${symbolInDisplay}/${symbolOutDisplay}`,
 				routes: item.swap_route.routes,
 			}
 			trx.pools = pools
@@ -167,12 +187,20 @@ export const DashboardProvider = ({ children }) => {
 						else return pr + `, ${cr.poolId}`
 					}, ""),
 					sender: trx.address.value,
-					tokenIn: { value: item.amount_in, symbol: item.symbol_in, usd: item.value_usd },
+					tokenIn: {
+						value: item.amount_in,
+						symbol: item.symbol_in,
+						symbolInDisplay: symbolInDisplay,
+						usd: item.value_usd,
+					},
 					tokenOut: {
 						value: item.amount_out ? item.amount_out : 0,
 						symbol: item.symbol_out ? item.symbol_out : "",
+						symbolDisplay: symbolOutDisplay,
 						usd: 0,
 					},
+					// tradeIn: { value: trx.tokenIn.usd, symbol: trx.tokenIn.symbol },
+					// tradeOut: { value: trx.tokenOut.usd, symbol: trx.tokenOut.symbol },
 				},
 			]
 			res.push(trx)
@@ -284,6 +312,8 @@ export const DashboardProvider = ({ children }) => {
 		let balance = {
 			osmoStaked: 0,
 			osmoStakedValue: 0,
+			osmoReward: 0,
+			osmoRewardValue: 0,
 			tokenValueWallet: 0,
 			tokenValuePnl24h: 0,
 			tokenValueChange24h: 0,
@@ -302,12 +332,16 @@ export const DashboardProvider = ({ children }) => {
 			balance.tokenValueChange24h = reponseBalance.token_value_change_24h ? reponseBalance.token_value_change_24h : 0
 			balance.tokenReturn24 = reponseBalance.token_return_24h ? reponseBalance.token_return_24h : 0
 			balance.tokenReturnChange24 = reponseBalance.token_return_change_24h ? reponseBalance.token_return_change_24h : 0
+			balance.osmoReward = reponseBalance.osmo_reward ? reponseBalance.osmo_reward : 0
+			balance.osmoRewardValue = reponseBalance.osmo_reward_value ? reponseBalance.osmo_reward_value : 0
 
 			balance.wallet = reponseBalance.wallet.map((item) => {
 				return {
 					name: item.name,
+					nameDisplay: formatTokenName(item.name),
 					denom: item.denom,
 					symbol: item.symbol,
+					symbolDisplay: formatTokenName(item.symbol),
 					price: item.price,
 					amount: item.amount,
 					value: item.value,
@@ -323,12 +357,22 @@ export const DashboardProvider = ({ children }) => {
 			exposure.valueExposure = responseExposure.value_exposure
 			exposure.totalExposure = responseExposure.value_exposure
 			exposure.pools = responseExposure.pool_exposure.map((pool) => {
-				return { poolId: pool.pool_id, tokens: pool.token, value: pool.pool_value, percent: pool.pool_percent }
+				return {
+					poolId: pool.pool_id,
+					tokens: pool.token.map((token) => ({
+						...token,
+						symbolDisplay: formatTokenName(token.symbol),
+					})),
+					value: pool.pool_value,
+					percent: pool.pool_percent,
+				}
 			})
 			exposure.assets = responseExposure.token_exposure.map((token) => {
 				return {
 					name: token.name,
+					nameDisplay: formatTokenName(token.name),
 					symbol: token.symbol,
+					symbolDisplay: formatTokenName(token.symbol),
 					amount: token.amount,
 					value: token.value,
 					address: token.address,
@@ -392,7 +436,9 @@ export const DashboardProvider = ({ children }) => {
 			useCompleteURL: true,
 			type: "get",
 		})
-		return response.data.map((item) => item.token)
+		return response.data.map((item) => {
+			return { symbol: item.token, symbolDisplay: formatTokenName(item.token) }
+		})
 	}
 
 	const getLiquidity = async ({ address, range, token }) => {
@@ -409,10 +455,13 @@ export const DashboardProvider = ({ children }) => {
 			useCompleteURL: true,
 			type: "get",
 		})
+		let accumulateValue = 0
 		if (response.data.length > 0) {
-			const data = response.data.map((item) => {
-				return { time: item.day, value: item.amount }
+			const dataReversed = response.data.reverse().map((item, i) => {
+				accumulateValue += item.amount
+				return { time: item.day, value: accumulateValue, dayValue: item.amount }
 			})
+			const data = dataReversed.reverse()
 
 			let nbDaysLastThreeMonths = 0
 			let startDate = new Date(data[0].time)
