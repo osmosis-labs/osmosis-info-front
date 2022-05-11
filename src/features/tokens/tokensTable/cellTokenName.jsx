@@ -69,7 +69,7 @@ const CellTokenName = ({ cellKey, cellConfig, data }) => {
 					/>
 				</div>
 				<p className={classes.name}>
-					{currentData} <em className={classes.symbolName}>({data.symbol})</em>
+					{currentData} <em className={classes.symbolName}>({data.symbolDisplay})</em>
 				</p>
 			</div>
 		</TableCell>

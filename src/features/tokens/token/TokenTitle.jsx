@@ -91,7 +91,7 @@ const TokenTitle = ({ token }) => {
 			</div>
 			<div className={classes.titleIcon}>
 				<p className={classes.subTitle}>
-					{`${token.name}`} <em className={classes.symbolName}>({token.symbol})</em>
+					{`${token.name}`} <em className={classes.symbolName}>({token.symbolDisplay})</em>
 				</p>
 
 				<Tooltip title={isInWatchList() ? "Remove from your watchlist" : "Add to your watchlist"}>

@@ -93,7 +93,7 @@ const LiquidityReward = () => {
 	const [data, setData] = useState([])
 	const [total, setTotal] = useState(0)
 	const [range, setRange] = useState("3m")
-	const [currentToken, setCurrentToken] = useState("")
+	const [currentToken, setCurrentToken] = useState({symbol: "", symbolDisplay: ""})
 	const [tokens, setTokens] = useState([])
 	const [currentBalance, setCurrentBalance] = useState({ value: 0, percent: 0, change: 0 })
 	const [isLoading, setIsLoading] = useState(false)
@@ -109,7 +109,7 @@ const LiquidityReward = () => {
 			let {
 				balance: { wallet },
 			} = results[1]
-			let osmoToken = tokens.find((token) => token === "OSMO")
+			let osmoToken = tokens.find((token) => token.symbol === "OSMO")
 
 			let firstToken = tokens[0]
 			if (osmoToken) {
@@ -119,7 +119,7 @@ const LiquidityReward = () => {
 			setTokens(tokens)
 			if (tokens.length > 0) {
 				setCurrentToken(firstToken)
-				let data = await getLiquidity({ address, range, token: firstToken })
+				let data = await getLiquidity({ address, range, token: firstToken.symbol })
 				setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
 				setCurrentItem(formatItem(data[0]))
 				setData([...data])
@@ -133,7 +133,7 @@ const LiquidityReward = () => {
 	}, [address])
 
 	const getCurrentWallet = (wallet, token) => {
-		let currentWallet = wallet.find((item) => item.symbol === token)
+		let currentWallet = wallet.find((item) => item.symbol === token.symbol)
 		if (currentWallet) {
 			let res = { value: 0, percent: 0, change: 0 }
 			res.percent = currentWallet.valueChange
@@ -148,7 +148,7 @@ const LiquidityReward = () => {
 	const onChangeRange = async (rge) => {
 		setIsLoading(true)
 		setRange(rge)
-		let data = await getLiquidity({ address, range: rge, token: currentToken })
+		let data = await getLiquidity({ address, range: rge, token: currentToken.symbol })
 		setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
 		setCurrentItem(formatItem(data[0]))
 		setData([...data])
@@ -157,7 +157,7 @@ const LiquidityReward = () => {
 
 	const onChangeToken = async (tkn) => {
 		setIsLoading(true)
-		let data = await getLiquidity({ address, range, token: tkn })
+		let data = await getLiquidity({ address, range, token: tkn.symbol })
 		getCurrentWallet(walletSaved, tkn)
 		setCurrentToken(tkn)
 		setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
@@ -179,7 +179,7 @@ const LiquidityReward = () => {
 			...data.map((d) => [
 				`${d.time.year}-${twoNumber(d.time.month)}-${twoNumber(d.time.day)}`,
 				d.dayValue,
-				currentToken,
+				currentToken.symbolDisplay,
 			]),
 		]
 		let csv = dataDownload.map((row) => row.join(",")).join("\n")
@@ -250,21 +250,21 @@ const LiquidityReward = () => {
 							<ButtonChart range={range} onChangeRange={onChangeRange} />
 							<SelectToken tokens={tokens} onChangeToken={onChangeToken} currentToken={currentToken} />
 							<div className={classes.rowInfo}>
-								<p className={classes.name}>{currentToken} Balance</p>
+								<p className={classes.name}>{currentToken.symbolDisplay} Balance</p>
 								<p className={classes.value}>${formaterNumber(currentBalance.value)}</p>
 								<p className={classes.value}>{getDiplayBalance(currentBalance)}</p>
 							</div>
 							<div className={classes.rowInfo}>
 								<p className={classes.name}>Total reward</p>
 								<p className={classes.value}>
-									{formaterNumber(total)} <span className={classes.token}>{currentToken}</span>
+									{formaterNumber(total)} <span className={classes.token}>{currentToken.symbolDisplay}</span>
 								</p>
 							</div>
 							<div className={classes.rowInfo}>
 								<p className={classes.name}>Daily reward</p>
 								<p className={classes.name}>{currentItem.time}</p>
 								<p className={classes.value}>
-									{currentItem.dayValue} <span className={classes.token}>{currentToken}</span>
+									{currentItem.dayValue} <span className={classes.token}>{currentToken.symbolDisplay}</span>
 								</p>
 							</div>
 						</div>

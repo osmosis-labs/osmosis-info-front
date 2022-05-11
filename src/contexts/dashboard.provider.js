@@ -5,7 +5,7 @@ import { useKeplr } from "./KeplrProvider"
 import relativeTime from "dayjs/plugin/relativeTime"
 import utc from "dayjs/plugin/utc"
 import dayjs from "dayjs"
-import { getDaysInMonth, getTypeDashboard, getWeekNumber, timeToDateUTC } from "../helpers/helpers"
+import { formatTokenName, getDaysInMonth, getTypeDashboard, getWeekNumber, timeToDateUTC } from "../helpers/helpers"
 const DashboardContext = createContext()
 dayjs.extend(relativeTime)
 dayjs.extend(utc)
@@ -136,7 +136,14 @@ export const DashboardProvider = ({ children }) => {
 
 			trx.usd = item.value_usd
 
-			trx.tokenIn = { value: item.amount_in, symbol: item.symbol_in, usd: 0 }
+			let symbolInDisplay = formatTokenName(trx.symbol_in)
+			let symbolOutDisplay = item.symbol_out ? formatTokenName(item.symbol_out) : ""
+			trx.tokenIn = {
+				value: item.amount_in,
+				symbol: item.symbol_in,
+				symbolDisplay: symbolInDisplay,
+				usd: 0,
+			}
 			if (trx.tokenIn.value != 0) {
 				trx.tokenIn.usd = trx.usd / trx.tokenIn.value
 			}
@@ -144,6 +151,7 @@ export const DashboardProvider = ({ children }) => {
 			trx.tokenOut = {
 				value: item.amount_out ? item.amount_out : 0,
 				symbol: item.symbol_out ? item.symbol_out : "",
+				symbolDisplay: symbolOutDisplay,
 				usd: 0,
 			}
 			if (trx.tokenOut.value && trx.tokenOut.value != 0) {
@@ -163,9 +171,11 @@ export const DashboardProvider = ({ children }) => {
 					`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${item.symbol_out.toLowerCase()}.png`
 				)
 			}
+
 			let pools = {
 				images,
 				name: `${item.symbol_in}/${item.symbol_out}`,
+				nameDisplay: `${symbolInDisplay}/${symbolOutDisplay}`,
 				routes: item.swap_route.routes,
 			}
 			trx.pools = pools
@@ -177,10 +187,16 @@ export const DashboardProvider = ({ children }) => {
 						else return pr + `, ${cr.poolId}`
 					}, ""),
 					sender: trx.address.value,
-					tokenIn: { value: item.amount_in, symbol: item.symbol_in, usd: item.value_usd },
+					tokenIn: {
+						value: item.amount_in,
+						symbol: item.symbol_in,
+						symbolInDisplay: symbolInDisplay,
+						usd: item.value_usd,
+					},
 					tokenOut: {
 						value: item.amount_out ? item.amount_out : 0,
 						symbol: item.symbol_out ? item.symbol_out : "",
+						symbolDisplay: symbolOutDisplay,
 						usd: 0,
 					},
 					// tradeIn: { value: trx.tokenIn.usd, symbol: trx.tokenIn.symbol },
@@ -296,8 +312,8 @@ export const DashboardProvider = ({ children }) => {
 		let balance = {
 			osmoStaked: 0,
 			osmoStakedValue: 0,
-			osmoReward:0,
-			osmoRewardValue:0,
+			osmoReward: 0,
+			osmoRewardValue: 0,
 			tokenValueWallet: 0,
 			tokenValuePnl24h: 0,
 			tokenValueChange24h: 0,
@@ -322,8 +338,10 @@ export const DashboardProvider = ({ children }) => {
 			balance.wallet = reponseBalance.wallet.map((item) => {
 				return {
 					name: item.name,
+					nameDisplay: formatTokenName(item.name),
 					denom: item.denom,
 					symbol: item.symbol,
+					symbolDisplay: formatTokenName(item.symbol),
 					price: item.price,
 					amount: item.amount,
 					value: item.value,
@@ -339,12 +357,22 @@ export const DashboardProvider = ({ children }) => {
 			exposure.valueExposure = responseExposure.value_exposure
 			exposure.totalExposure = responseExposure.value_exposure
 			exposure.pools = responseExposure.pool_exposure.map((pool) => {
-				return { poolId: pool.pool_id, tokens: pool.token, value: pool.pool_value, percent: pool.pool_percent }
+				return {
+					poolId: pool.pool_id,
+					tokens: pool.token.map((token) => ({
+						...token,
+						symbolDisplay: formatTokenName(token.symbol),
+					})),
+					value: pool.pool_value,
+					percent: pool.pool_percent,
+				}
 			})
 			exposure.assets = responseExposure.token_exposure.map((token) => {
 				return {
 					name: token.name,
+					nameDisplay: formatTokenName(token.name),
 					symbol: token.symbol,
+					symbolDisplay: formatTokenName(token.symbol),
 					amount: token.amount,
 					value: token.value,
 					address: token.address,
@@ -408,7 +436,9 @@ export const DashboardProvider = ({ children }) => {
 			useCompleteURL: true,
 			type: "get",
 		})
-		return response.data.map((item) => item.token)
+		return response.data.map((item) => {
+			return { symbol: item.token, symbolDisplay: formatTokenName(item.token) }
+		})
 	}
 
 	const getLiquidity = async ({ address, range, token }) => {

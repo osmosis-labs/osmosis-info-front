@@ -3,6 +3,7 @@ import API from "../helpers/API"
 import relativeTime from "dayjs/plugin/relativeTime"
 import utc from "dayjs/plugin/utc"
 import dayjs from "dayjs"
+import { formatTokenName } from "../helpers/helpers"
 const TokenChartV2Context = createContext()
 
 export const useTokenChartV2 = () => useContext(TokenChartV2Context)
@@ -44,22 +45,26 @@ export const TokenChartV2Provider = ({ children }) => {
 				let addressDisplay = trx.address.substring(0, 5) + "..." + trx.address.substring(trx.address.length - 5)
 				let hashDisplay = trx.tx_hash.substring(0, 5) + "..." + trx.tx_hash.substring(trx.tx_hash.length - 5)
 				
+				let symbolInDisplay = formatTokenName(trx.symbol_in)
+				let symbolOutDisplay = formatTokenName(trx.symbol_out)
 
 				let pools = {
 					images: [
 						`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_in.toLowerCase()}.png`,
 						`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_out.toLowerCase()}.png`,
 					],
-					name: `${trx.symbol_in}/${trx.symbol_out}`,
-					routes: trx.swap_route.routes,
+					name: `${symbolInDisplay}/${symbolOutDisplay}`,
+					routes: trx.swap_route.routes.map((route) => {
+						return {...route, poolNameDisplay: formatTokenName(route.poolName), tokenOutSymbolDisplay: formatTokenName(route.tokenOutSymbol)}
+					}),
 				}
 				return {
 					type: trx.symbol_out === symbol ? "Buy" : "Sell",
 					time: { value: time, display: timeAgo },
 					hash: { value: trx.tx_hash, display: hashDisplay },
 					address: { value: trx.address, display: addressDisplay },
-					tokenIn: { value: trx.amount_in, symbol: trx.symbol_in },
-					tokenOut: { value: trx.amount_out, symbol: trx.symbol_out },
+					tokenIn: { value: trx.amount_in, symbol: trx.symbol_in, symbolDisplay: symbolOutDisplay },
+					tokenOut: { value: trx.amount_out, symbol: trx.symbol_out, symbolDisplay: symbolOutDisplay },
 					value: trx.value_usd,
 					pools,
 				}
@@ -147,6 +152,7 @@ export const TokenChartV2Provider = ({ children }) => {
 						denom: row.denom,
 						price: row.price,
 						symbol: row.symbol,
+						symbolDisplay: formatTokenName(row.symbol),
 						liquidity: row.liquidity,
 						liquidity24hChange: row.liquidity_24h_change,
 						volume24h: row.volume_24h,

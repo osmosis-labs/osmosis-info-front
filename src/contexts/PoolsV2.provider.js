@@ -3,7 +3,7 @@ import API from "../helpers/API"
 import relativeTime from "dayjs/plugin/relativeTime"
 import utc from "dayjs/plugin/utc"
 import dayjs from "dayjs"
-import { getInclude, getItemInclude, getWeekNumber, timeToDateUTC } from "../helpers/helpers"
+import { getInclude, getItemInclude, getWeekNumber, timeToDateUTC, formatTokenName } from "../helpers/helpers"
 import { useTokensV2 } from "./TokensV2.provider"
 import { useSettings } from "./SettingsProvider"
 const PoolsV2Context = createContext()
@@ -82,20 +82,27 @@ export const PoolsV2Provider = ({ children }) => {
 
 				let addressDisplay = trx.address.substring(0, 5) + "..." + trx.address.substring(trx.address.length - 5)
 				let hashDisplay = trx.tx_hash.substring(0, 5) + "..." + trx.tx_hash.substring(trx.tx_hash.length - 5)
+
+				let symbolInDisplay = formatTokenName(trx.symbol_in)
+				let symbolOutDisplay = formatTokenName(trx.symbol_out)
+
 				let pools = {
 					images: [
 						`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_in.toLowerCase()}.png`,
 						`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_out.toLowerCase()}.png`,
 					],
 					name: `${trx.symbol_in}/${trx.symbol_out}`,
-					routes: trx.swap_route.routes,
+					nameDisplay: `${symbolInDisplay}/${symbolOutDisplay}`,
+					routes: trx.swap_route.routes.map((route) => {
+						return {...route, poolNameDisplay: formatTokenName(route.poolName), tokenOutSymbolDisplay: formatTokenName(route.tokenOutSymbol)}
+					}),
 				}
 				return {
 					hash: { value: trx.tx_hash, display: hashDisplay },
 					time: { value: time, display: timeAgo },
 					pools,
-					tokenIn: { value: trx.amount_in, symbol: trx.symbol_in },
-					tokenOut: { value: trx.amount_out, symbol: trx.symbol_out },
+					tokenIn: { value: trx.amount_in, symbol: trx.symbol_in, symbolDisplay: symbolInDisplay },
+					tokenOut: { value: trx.amount_out, symbol: trx.symbol_out, symbolDisplay: symbolOutDisplay },
 					usd: trx.value_usd,
 					address: { value: trx.address, display: addressDisplay },
 				}
@@ -151,7 +158,7 @@ export const PoolsV2Provider = ({ children }) => {
 									apr.internal.apr1d = aprItem.apr_1d
 									apr.internal.apr7d = aprItem.apr_7d
 									apr.internal.apr14d = aprItem.apr_14d
-									apr.internal.token = token
+									apr.internal.token = { ...token, symbolDisplay: token ? formatTokenName(token.symbol) : "" }
 								}
 							} else {
 								let date = new Date(aprItem.start_date)
@@ -163,7 +170,7 @@ export const PoolsV2Provider = ({ children }) => {
 									apr.external.apr1d += aprItem.apr_1d
 									apr.external.apr7d += aprItem.apr_7d
 									apr.external.apr14d += aprItem.apr_14d
-									apr.external.token = token
+									apr.external.token = { ...token, symbolDisplay: token ? formatTokenName(token.symbol) : "" }
 								}
 							}
 						})
@@ -188,6 +195,11 @@ export const PoolsV2Provider = ({ children }) => {
 						id: key,
 						name: row.reduce((acc, currentValue) => {
 							let symbolName = currentValue.symbol.length === 0 ? currentValue.denom : currentValue.symbol
+							return `${acc}${acc.length > 0 ? "/" : ""}${symbolName}`
+						}, ""),
+						nameDisplay: row.reduce((acc, currentValue) => {
+							let symbolName = currentValue.symbol.length === 0 ? currentValue.denom : currentValue.symbol
+							symbolName = formatTokenName(symbolName)
 							return `${acc}${acc.length > 0 ? "/" : ""}${symbolName}`
 						}, ""),
 						liquidity: row[0].liquidity,
@@ -323,7 +335,10 @@ export const PoolsV2Provider = ({ children }) => {
 			type: "get",
 		})
 		setLoadingPool(false)
-		return response.data
+		let res = response.data.map((token) => {
+			return { ...token, symbolDisplay: formatTokenName(token.symbol) }
+		})
+		return res
 	}, [])
 
 	useEffect(() => {

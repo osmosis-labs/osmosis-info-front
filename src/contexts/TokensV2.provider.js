@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
 import API from "../helpers/API"
-import { getWeekNumber, timeToDateUTC } from "../helpers/helpers"
+import { formatTokenName, getWeekNumber, timeToDateUTC } from "../helpers/helpers"
 import { useSettings } from "./SettingsProvider"
 const TokensV2Context = createContext()
 
@@ -156,6 +156,7 @@ export const TokensV2Provider = ({ children }) => {
 			price: row.price,
 			denom: row.denom,
 			symbol: row.symbol,
+			symbolDisplay: formatTokenName(row.symbol),
 			liquidity: row.liquidity,
 			liquidity24hChange: row.liquidity_24h_change,
 			volume24h: row.volume_24h,
@@ -185,6 +186,7 @@ export const TokensV2Provider = ({ children }) => {
 					denom: row.denom,
 					price: row.price,
 					symbol: row.symbol,
+					symbolDisplay: formatTokenName(row.symbol),
 					liquidity: row.liquidity,
 					liquidity24hChange: row.liquidity_24h_change,
 					volume24h: row.volume_24h,

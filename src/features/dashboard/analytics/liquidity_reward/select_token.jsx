@@ -76,16 +76,16 @@ const SelectToken = ({ tokens, currentToken, onChangeToken }) => {
 			>
 				{tokens.map((token) => {
 					return (
-						<MenuItem className={classes.container} key={token} value={token} classes={{ root: classes.paper }}>
+						<MenuItem className={classes.container} key={token.symbol} value={token} classes={{ root: classes.paper }}>
 							<div className={classes.container}>
 								<Image
 									className={`${classes.image}`}
 									assets={true}
-									src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${token.toLowerCase()}.png`}
+									src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${token.symbol.toLowerCase()}.png`}
 									srcFallback="../assets/default.png"
 									pathAssets=""
 								/>
-								{token}
+								{token.symbolDisplay}
 							</div>
 						</MenuItem>
 					)

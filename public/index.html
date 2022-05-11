@@ -34,7 +34,6 @@
 		<script>
 			// Fix for safari mobile to resolve browser.storage.local (cosmodal)
 			const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
-			console.log("Safari ->", isSafari)
 			if (isSafari) {
 				if (browser && !browser.storage) {
 					browser.storage = localStorage
