@@ -41,6 +41,25 @@ import DebugModal from "../_debug/debug_modal"
 const MODE = process.env.REACT_APP_MODE
 const useStyles = makeStyles((theme) => {
 	return {
+		"@global": {
+			"::-webkit-scrollbar": {
+				width: "8px",
+				cursor: "scroll",
+			},
+			/* Track */
+			"::-webkit-scrollbar-track": {
+				background: theme.palette.primary.dark,
+			},
+
+			"::-webkit-scrollbar-thumb ": {
+				background: theme.palette.primary.light2,
+				border: `1px solid ${theme.palette.primary.dark}`,
+				borderRadius: "10px",
+			},
+
+			"::-webkit-scrollbar-thumb:hover": {
+			},
+		},
 		appRoot: {
 			fontFamily: "'Inter', sans-serif",
 			minHeight: "100vh",
@@ -97,7 +116,7 @@ const walletInfoList = [
 	},
 ]
 
-const AppDesktop = () => {
+const App = () => {
 	const classes = useStyles()
 
 	return (
@@ -199,7 +218,7 @@ const themeWrapper = () => {
 	const theme = useThemeCustom()
 	return (
 		<ThemeProvider theme={theme}>
-			<AppDesktop />
+			<App />
 		</ThemeProvider>
 	)
 }

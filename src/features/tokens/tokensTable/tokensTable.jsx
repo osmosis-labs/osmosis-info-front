@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => {
 	return {
 		tokensTableRoot: {},
 		tokensTable: {},
-		headerCell:{
+		headerCell: {
 			[theme.breakpoints.down("xs")]: {
 				fontSize: "12px  !important",
 			},
@@ -20,12 +20,12 @@ const useStyles = makeStyles((theme) => {
 			minWidth: "115px",
 		},
 		onClickCell: { color: `${theme.palette.table.link} !important` },
-		cell:{
+		cell: {
 			fontSize: "16px !important",
 			[theme.breakpoints.down("xs")]: {
 				fontSize: "12px  !important",
 			},
-		}
+		},
 	}
 })
 
@@ -58,6 +58,25 @@ const TokensTable = ({
 
 	const formatTokenPrice = (value) => {
 		return "$" + formateNumberDecimalsAuto({ price: value })
+	}
+
+	const onSortPercent = (a, b, orderBy, order) => {
+		let res = 0
+		if (a.volume24hChange && b.volume24hChange) {
+			if (parseFloat(b.volume24hChange) < parseFloat(a.volume24hChange)) {
+				res = -1
+			}
+			if (parseFloat(b.volume24hChange) > parseFloat(a.volume24hChange)) {
+				res = 1
+			}
+		} else if (a.volume24hChange && !b.volume24hChange) {
+			res = -1
+		} else if (!a.volume24hChange && b.volume24hChange) {
+			res = 1
+		} else {
+			res = 0
+		}
+		return res
 	}
 
 	const cellsConfig = [
@@ -140,7 +159,7 @@ const TokensTable = ({
 			sortable: true,
 			customClassHeader: classes.headerCell,
 			customClassCell: classes.cell,
-			onSort: null,
+			onSort: onSortPercent,
 			align: "right",
 			onClickCell: onClickToken,
 			transform: getPercent,

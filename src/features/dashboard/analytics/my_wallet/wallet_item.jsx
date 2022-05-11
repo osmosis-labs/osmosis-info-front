@@ -66,8 +66,8 @@ const WalletItem = ({ data }) => {
 					pathAssets=""
 				/>
 				<div className={classes.names}>
-					<span>{data.symbol}</span>
-					<span className={classes.name}>{data.name}</span>
+					<span>{data.symbolDisplay}</span>
+					<span className={classes.name}>{data.nameDisplay}</span>
 				</div>
 			</div>
 			<span className={classes.data}>{formateNumberDecimalsAuto({ price: data.amount })} </span>

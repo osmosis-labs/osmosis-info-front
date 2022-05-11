@@ -125,7 +125,7 @@ const PopoverPool = ({ routes, open, event, onClose, id }) => {
 										})}
 									</div>
 									<span className={classes.name} key={id + "route" + index}>
-										{route.poolName}
+										{route.poolNameDisplay}
 									</span>
 								</div>
 							</div>

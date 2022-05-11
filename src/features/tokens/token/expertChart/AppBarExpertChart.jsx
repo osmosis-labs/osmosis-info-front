@@ -24,7 +24,7 @@ const AppBarExpertChart = ({ onClose, token }) => {
 					<CloseIcon />
 				</IconButton>
 				<p className={classes.title}>
-					Expert Chart of {token.name} ({token.symbol})
+					Expert Chart of {token.name} ({token.symbolDisplay})
 				</p>
 			</Toolbar>
 		</AppBar>

@@ -67,10 +67,10 @@ const Exposure = () => {
 					color,
 					name: pool.tokens.reduce((acc, token, index) => {
 						if (index === 0) {
-							acc = token.symbol
+							acc = token.symbolDisplay
 							return acc
 						} else {
-							return acc + ` / ${token.symbol}`
+							return acc + ` / ${token.symbolDisplay}`
 						}
 					}, ""),
 					value: pool.value,
@@ -93,7 +93,7 @@ const Exposure = () => {
 				}
 				return {
 					color,
-					name: token.symbol,
+					name: token.symbolDisplay,
 					value: token.value,
 					percent: token.tokenPercent,
 					inOther,

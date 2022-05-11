@@ -31,6 +31,19 @@
 	</head>
 
 	<body>
+		<script>
+			// Fix for safari mobile to resolve browser.storage.local (cosmodal)
+			const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+			if (isSafari) {
+				if (browser && !browser.storage) {
+					browser.storage = localStorage
+					browser.storage.local = localStorage
+					browser.storage.get = browser.storage.getItem
+					browser.storage.get = browser.storage.getItem
+					console.log("-> Override browser storage")
+				}
+			}
+		</script>
 		<noscript>You need to enable JavaScript to run this app.</noscript>
 		<!-- The root component -->
 		<div id="root"></div>

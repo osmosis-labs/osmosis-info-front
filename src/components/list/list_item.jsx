@@ -1,17 +1,18 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
 import ListItemAttribut from "./list_item_attribut"
+import { useTheme } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => {
 	return {
 		rootListItem: {
 			width: "100%",
 			fontSize: "12px",
-			padding: "4px 12px",
+			padding: "2px 12px",
 			lineHeight: "23px",
 			borderBottom: `1px solid ${theme.palette.table.border}`,
 			transition: "all 0.3s ease-in-out",
-			"&:hover":{
+			"&:hover": {
 				backgroundColor: theme.palette.table.hover,
 			},
 			[theme.breakpoints.down("xs")]: {},
@@ -25,6 +26,8 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 const ListItem = ({ data, config, keyItem, onClickRow, rowSelected, order, orderBy, stylesRow }) => {
+	const theme = useTheme()
+
 	const classes = useStyles()
 	const [className, setClassName] = useState(`${classes.rootListItem}`)
 
@@ -37,10 +40,9 @@ const ListItem = ({ data, config, keyItem, onClickRow, rowSelected, order, order
 			className += ` ${classes.rootListItem}`
 		}
 		setClassName(className)
-	}, [rowSelected, order, orderBy])
+	}, [rowSelected, order, orderBy, theme])
 
 	const onClick = () => {
-		console.log("list_item.jsx -> 44: onClickRow")
 		onClickRow(data)
 	}
 	return (

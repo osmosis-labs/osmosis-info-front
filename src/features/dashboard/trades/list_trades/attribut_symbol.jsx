@@ -27,7 +27,6 @@ const useStyles = makeStyles((theme) => {
 const AttributSymbol = ({ data, config, itemConfig, itemKey }) => {
 	const classes = useStyles()
 	let currentData = data[itemConfig.key]
-	console.log("attribut_symbol.jsx -> 30: currentData", currentData  )
 
 	if (!data && !data.value)
 		return (

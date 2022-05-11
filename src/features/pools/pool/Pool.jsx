@@ -211,7 +211,7 @@ const Pool = () => {
 				tmpPricesDecimals[i] = detectBestDecimalsDisplay(tokens[i].price)
 			}
 			pricesDecimals.current = tmpPricesDecimals
-			setCurrency({ before: false, value: tokens[0].symbol })
+			setCurrency({ before: false, value: tokens[0].symbolDisplay })
 			setSelectedTokens({ one: tokens[0], two: tokens[1] })
 			updatePriceInfo(firstPair)
 
@@ -227,7 +227,7 @@ const Pool = () => {
 
 	const onChangeSeletedTokens = useCallback(
 		(selectedTokens) => {
-			setCurrency({ before: false, value: selectedTokens.one.symbol })
+			setCurrency({ before: false, value: selectedTokens.one.symbolDisplay })
 			setSelectedTokens(selectedTokens)
 			if (typeChart === "price")
 				onChangeRangePrice(rangePrice, selectedTokens.one.denom, selectedTokens.two.denom, updatePriceInfo)

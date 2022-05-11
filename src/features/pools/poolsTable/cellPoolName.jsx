@@ -70,7 +70,7 @@ const CellPoolName = ({ cellKey, cellConfig, data }) => {
 							)
 						})}
 				</div>
-				<p className={classes.name}>{currentData}</p>
+				<p className={classes.name}>{data.nameDisplay}</p>
 			</div>
 		</TableCell>
 	)

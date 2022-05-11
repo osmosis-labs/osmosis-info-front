@@ -1,11 +1,17 @@
 import { makeStyles } from "@material-ui/core"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
 import { useDashboard } from "../../../../contexts/dashboard.provider"
 import { usePrices } from "../../../../contexts/PricesProvider"
-import { formateNumberDecimalsAuto, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
+import {
+	formatDate,
+	formateNumberDecimalsAuto,
+	formaterNumber,
+	getPercent,
+	twoNumber,
+} from "../../../../helpers/helpers"
 import ButtonChart from "../stacking_reward/button_chart"
 import Chart from "../stacking_reward/chart"
 import SelectToken from "./select_token"
@@ -87,11 +93,12 @@ const LiquidityReward = () => {
 	const [data, setData] = useState([])
 	const [total, setTotal] = useState(0)
 	const [range, setRange] = useState("3m")
-	const [currentToken, setCurrentToken] = useState("")
+	const [currentToken, setCurrentToken] = useState({symbol: "", symbolDisplay: ""})
 	const [tokens, setTokens] = useState([])
 	const [currentBalance, setCurrentBalance] = useState({ value: 0, percent: 0, change: 0 })
 	const [isLoading, setIsLoading] = useState(false)
 	const [walletSaved, setWalletSaved] = useState({})
+	const [currentItem, setCurrentItem] = useState({ time: "-", value: "-", dayValue: "-" })
 
 	useEffect(() => {
 		const fetch = async () => {
@@ -102,7 +109,7 @@ const LiquidityReward = () => {
 			let {
 				balance: { wallet },
 			} = results[1]
-			let osmoToken = tokens.find((token) => token === "OSMO")
+			let osmoToken = tokens.find((token) => token.symbol === "OSMO")
 
 			let firstToken = tokens[0]
 			if (osmoToken) {
@@ -112,9 +119,9 @@ const LiquidityReward = () => {
 			setTokens(tokens)
 			if (tokens.length > 0) {
 				setCurrentToken(firstToken)
-				let data = await getLiquidity({ address, range, token: firstToken })
+				let data = await getLiquidity({ address, range, token: firstToken.symbol })
 				setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
-
+				setCurrentItem(formatItem(data[0]))
 				setData([...data])
 			}
 			setWalletSaved(wallet)
@@ -126,7 +133,7 @@ const LiquidityReward = () => {
 	}, [address])
 
 	const getCurrentWallet = (wallet, token) => {
-		let currentWallet = wallet.find((item) => item.symbol === token)
+		let currentWallet = wallet.find((item) => item.symbol === token.symbol)
 		if (currentWallet) {
 			let res = { value: 0, percent: 0, change: 0 }
 			res.percent = currentWallet.valueChange
@@ -141,18 +148,20 @@ const LiquidityReward = () => {
 	const onChangeRange = async (rge) => {
 		setIsLoading(true)
 		setRange(rge)
-		let data = await getLiquidity({ address, range: rge, token: currentToken })
+		let data = await getLiquidity({ address, range: rge, token: currentToken.symbol })
 		setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
+		setCurrentItem(formatItem(data[0]))
 		setData([...data])
 		setIsLoading(false)
 	}
 
 	const onChangeToken = async (tkn) => {
 		setIsLoading(true)
-		let data = await getLiquidity({ address, range, token: tkn })
+		let data = await getLiquidity({ address, range, token: tkn.symbol })
 		getCurrentWallet(walletSaved, tkn)
 		setCurrentToken(tkn)
 		setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
+		setCurrentItem(formatItem(data[0]))
 		setData([...data])
 		setIsLoading(false)
 	}
@@ -167,7 +176,11 @@ const LiquidityReward = () => {
 	const donwloadStacking = () => {
 		let dataDownload = [
 			["time", "value", "token"],
-			...data.map((d) => [`${d.time.year}-${twoNumber(d.time.month)}-${twoNumber(d.time.day)}`, d.value, currentToken]),
+			...data.map((d) => [
+				`${d.time.year}-${twoNumber(d.time.month)}-${twoNumber(d.time.day)}`,
+				d.dayValue,
+				currentToken.symbolDisplay,
+			]),
 		]
 		let csv = dataDownload.map((row) => row.join(",")).join("\n")
 		let a = document.createElement("a")
@@ -177,6 +190,45 @@ const LiquidityReward = () => {
 		document.body.appendChild(a)
 		a.click()
 		document.body.removeChild(a)
+	}
+
+	const formatItem = (item) => {
+		let res = { time: "-", value: "-", dayValue: "-" }
+		if (item) {
+			let date = ""
+			if (item.time && typeof item.time === "string") {
+				date = new Date(item.time)
+			} else {
+				date = new Date(item.time.year, item.time.month, item.time.day)
+			}
+			res.time = formatDate(date)
+			res.value = formaterNumber(item.value)
+			res.dayValue = formaterNumber(item.dayValue)
+		}
+		return res
+	}
+
+	const getItemByTime = (time) => {
+		if (time) {
+			let item = data.find(
+				(item) => item.time.year === time.year && item.time.month === time.month && item.time.day === time.day
+			)
+			return item
+		}
+		return null
+	}
+
+	const crossMove = ({ time }) => {
+		if (time) {
+			let formatedItem = formatItem(getItemByTime(time))
+			if (currentItem.time !== formatedItem.time) {
+				setCurrentItem(formatItem(getItemByTime(time)))
+			}
+		}
+	}
+
+	const onMouseLeave = () => {
+		setCurrentItem(formatItem(data[0]))
 	}
 
 	return (
@@ -192,20 +244,27 @@ const LiquidityReward = () => {
 				{data.length > 0 ? (
 					<>
 						<div className={classes.chartContainer}>
-							<Chart data={data} />
+							<Chart data={data} crossMove={crossMove} onMouseLeave={onMouseLeave} />
 						</div>
 						<div className={classes.chartInfo}>
 							<ButtonChart range={range} onChangeRange={onChangeRange} />
 							<SelectToken tokens={tokens} onChangeToken={onChangeToken} currentToken={currentToken} />
 							<div className={classes.rowInfo}>
-								<p className={classes.name}>{currentToken} Balance</p>
+								<p className={classes.name}>{currentToken.symbolDisplay} Balance</p>
 								<p className={classes.value}>${formaterNumber(currentBalance.value)}</p>
 								<p className={classes.value}>{getDiplayBalance(currentBalance)}</p>
 							</div>
 							<div className={classes.rowInfo}>
 								<p className={classes.name}>Total reward</p>
 								<p className={classes.value}>
-									{formaterNumber(total)} <span className={classes.token}>{currentToken}</span>
+									{formaterNumber(total)} <span className={classes.token}>{currentToken.symbolDisplay}</span>
+								</p>
+							</div>
+							<div className={classes.rowInfo}>
+								<p className={classes.name}>Daily reward</p>
+								<p className={classes.name}>{currentItem.time}</p>
+								<p className={classes.value}>
+									{currentItem.dayValue} <span className={classes.token}>{currentToken.symbolDisplay}</span>
 								</p>
 							</div>
 						</div>

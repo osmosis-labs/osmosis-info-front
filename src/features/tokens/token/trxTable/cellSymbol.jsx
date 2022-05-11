@@ -43,7 +43,7 @@ const CellSymbol = ({ cellKey, cellConfig, data }) => {
 			<div className={classesName}>
 				<span className={classes.firstNumber}>{splitNumber[0]}</span>
 				{splitNumber.length > 1 ? <span className={classes.restNumber}>.{splitNumber[1]}</span> : null}
-				<span className={classes.symbol}>{currentData.symbol}</span>
+				<span className={classes.symbol}>{currentData.symbolDisplay}</span>
 			</div>
 		</TableCell>
 	)
