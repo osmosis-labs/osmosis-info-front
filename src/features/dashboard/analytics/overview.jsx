@@ -4,6 +4,10 @@ import { useDashboard } from "../../../contexts/dashboard.provider"
 import { formateNumberDecimalsAuto, getPercent } from "../../../helpers/helpers"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
+import { useBalance, useExposure } from "../../../hooks/dashboard.hook"
+import useRequest from "../../../hooks/request.hook"
+import { useQuery } from "react-query"
+import { formatWorth } from "../../../formaters/dashboard.formatter"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -41,7 +45,7 @@ const useStyles = makeStyles((theme) => {
 			flexDirection: "column",
 			alignItems: "flex-start",
 			justifyContent: "center",
-			marginRight: "80px"
+			marginRight: "80px",
 		},
 		titleInfo: {
 			margin: "32px 0 16px 0",
@@ -96,46 +100,42 @@ const useStyles = makeStyles((theme) => {
 			color: theme.palette.primary.light2,
 			fontSize: "20px",
 		},
-		percent:{
+		percent: {
 			marginLeft: "6px",
-			fontSize: "20px"
-		}
+			fontSize: "20px",
+		},
 	}
 })
 const Overview = () => {
 	const classes = useStyles()
-	const { address, getWalletInfo } = useDashboard()
-	const [balance, setBalance] = useState(0)
+	const { address } = useDashboard()
+	const request = useRequest()
+	const getBalance = useBalance(request)
+	const getExposure = useExposure(request)
+
 	const [worth, setWorth] = useState(0)
 	const [osmosStaked, setOsmosStaked] = useState(0)
 	const [return24h, setReturn24h] = useState(0)
 	const [returnChange24h, setReturnChange24h] = useState(0)
-	const [isLoading, setIsLoading] = useState(false)
+
+	const { isLoading: isLoadingBalance, data: dataBalance } = useQuery(["balance", { address }], getBalance, {
+		enabled: !!address,
+	})
+	const { isLoading: isLoadingExposure, data: dataExposure } = useQuery(["exposure", { address }], getExposure, {
+		enabled: !!address,
+	})
+
+	const isLoading = isLoadingBalance || isLoadingExposure
 
 	useEffect(() => {
-		const fetch = async () => {
-			setIsLoading(true)
-			let { worth, balance } = await getWalletInfo({ address })
+		if (dataBalance && dataExposure) {
+			const worth = formatWorth(dataBalance, dataExposure)
 			setWorth(worth)
-			setBalance(balance)
-			setReturn24h(balance.tokenReturn24)
-			setReturnChange24h(balance.tokenReturnChange24)
-			setOsmosStaked(balance.tokenValueWallet)
-			setIsLoading(false)
+			setReturn24h(dataBalance.tokenReturn24)
+			setReturnChange24h(dataBalance.tokenReturnChange24)
+			setOsmosStaked(dataBalance.tokenValueWallet)
 		}
-
-		if (address && address.length > 0) {
-			fetch()
-		}
-	}, [address])
-
-	const getArrow = (value) => {
-		if (value > 0) {
-			return <span className={`${classes.arrow} ${classes.up}`}>↑</span>
-		} else if (value < 0) {
-			return <span className={`${classes.arrow} ${classes.down}`}>↓</span>
-		} else return null
-	}
+	}, [dataExposure, dataBalance])
 
 	const getPercentDisplay = (value) => {
 		if (value > 0) {
@@ -144,8 +144,6 @@ const Overview = () => {
 			return <span className={`${classes.percent} ${classes.down}`}>↓{getPercent(Math.abs(value))}</span>
 		} else return <span className={`${classes.percent}`}>{getPercent(value)}</span>
 	}
-
-	const getProfit = () => {}
 
 	if (!address || address.length === 0)
 		return (
@@ -171,29 +169,16 @@ const Overview = () => {
 						<p className={classes.titleInfo}>Total worth</p>
 						<p className={classes.dataInfo}>${formateNumberDecimalsAuto({ price: worth })}</p>
 					</div>
-					{/* <div className={classes.info}>
-						<p className={classes.titleInfo}>Profit / Loss (24h)</p>
-						<p className={classes.dataInfo}>
-							{getProfit()}
-							{balance.tokenValuePnl24h == 0 ? "" : balance.tokenValuePnl24h > 0 ? "+" : "-"} $
-							{formateNumberDecimalsAuto({ price: Math.abs(balance.tokenValuePnl24h) })}
-							{getPercentDisplay(balance.tokenValueChange24h)}
-						</p>
-					</div> */}
+
 					<div className={classes.info}>
 						<p className={classes.titleInfo}>Available liquidity</p>
-						<p className={classes.dataInfoReturn}>
-							${formateNumberDecimalsAuto({ price: osmosStaked })}
-							{/* <span className={classes.token}>OSMOS</span> */}
-						</p>
+						<p className={classes.dataInfoReturn}>${formateNumberDecimalsAuto({ price: osmosStaked })}</p>
 					</div>
 					<div className={classes.info}>
 						<p className={classes.titleInfo}>Return 24h</p>
 						<p className={classes.dataInfoReturn}>
-							{return24h>0?"+":""}
-							${formateNumberDecimalsAuto({ price: return24h })}
+							{return24h > 0 ? "+" : ""}${formateNumberDecimalsAuto({ price: return24h })}
 							{getPercentDisplay(returnChange24h)}
-							{/* <span className={classes.token}>OSMOS</span> */}
 						</p>
 					</div>
 				</div>

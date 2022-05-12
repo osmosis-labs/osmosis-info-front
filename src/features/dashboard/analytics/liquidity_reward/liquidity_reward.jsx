@@ -1,5 +1,6 @@
 import { makeStyles } from "@material-ui/core"
 import { useCallback, useEffect, useState } from "react"
+import { useQuery } from "react-query"
 import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
@@ -12,6 +13,8 @@ import {
 	getPercent,
 	twoNumber,
 } from "../../../../helpers/helpers"
+import { useBalance, useLiquidity, useLiquidityToken } from "../../../../hooks/dashboard.hook"
+import useRequest from "../../../../hooks/request.hook"
 import ButtonChart from "../stacking_reward/button_chart"
 import Chart from "../stacking_reward/chart"
 import SelectToken from "./select_token"
@@ -89,48 +92,64 @@ const useStyles = makeStyles((theme) => {
 })
 const LiquidityReward = () => {
 	const classes = useStyles()
-	const { address, getLiquidity, getLiquidityToken, getWalletInfo } = useDashboard()
+	const [currentToken, setCurrentToken] = useState({ symbol: "", symbolDisplay: "" })
+
+	const { address } = useDashboard()
+	const request = useRequest()
+	const getBalance = useBalance(request)
+	const getLiquidity = useLiquidity(request)
+	const getLiquidityToken = useLiquidityToken(request)
+	const { isLoading: isLoadingBalance, data: balance } = useQuery(["balance", { address }], getBalance, {
+		enabled: !!address,
+	})
+	const { isLoading: isLoadingLiquidityToken, data: liquidityToken } = useQuery(
+		["LiquidityToken", { address }],
+		getLiquidityToken,
+		{
+			enabled: !!address,
+		}
+	)
+	const {
+		isLoading: isLoadingLiquidity,
+		data: liquidity,
+		isFetching: isFetchingLiquidity,
+	} = useQuery(["Liquidity", { address, symbol: currentToken.symbol }], getLiquidity, {
+		enabled: !!address && !!currentToken.symbol,
+	})
+
+	const isLoading = isLoadingBalance || isLoadingLiquidityToken || isLoadingLiquidity || isFetchingLiquidity
+
 	const [data, setData] = useState([])
 	const [total, setTotal] = useState(0)
 	const [range, setRange] = useState("3m")
-	const [currentToken, setCurrentToken] = useState({symbol: "", symbolDisplay: ""})
 	const [tokens, setTokens] = useState([])
 	const [currentBalance, setCurrentBalance] = useState({ value: 0, percent: 0, change: 0 })
-	const [isLoading, setIsLoading] = useState(false)
 	const [walletSaved, setWalletSaved] = useState({})
 	const [currentItem, setCurrentItem] = useState({ time: "-", value: "-", dayValue: "-" })
 
 	useEffect(() => {
-		const fetch = async () => {
-			setIsLoading(true)
-			let promises = [getLiquidityToken({ address }), getWalletInfo({ address })]
-			let results = await Promise.all(promises)
-			let tokens = results[0]
-			let {
-				balance: { wallet },
-			} = results[1]
-			let osmoToken = tokens.find((token) => token.symbol === "OSMO")
-
-			let firstToken = tokens[0]
+		if (balance && liquidityToken) {
+			const { wallet } = balance
+			let osmoToken = liquidityToken.find((token) => token.symbol === "OSMO")
+			let firstToken = liquidityToken[0]
 			if (osmoToken) {
 				firstToken = osmoToken
 			}
 			getCurrentWallet(wallet, firstToken)
-			setTokens(tokens)
-			if (tokens.length > 0) {
-				setCurrentToken(firstToken)
-				let data = await getLiquidity({ address, range, token: firstToken.symbol })
-				setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
-				setCurrentItem(formatItem(data[0]))
-				setData([...data])
-			}
 			setWalletSaved(wallet)
-			setIsLoading(false)
+			setTokens(liquidityToken)
+			setCurrentToken(firstToken)
 		}
-		if (address && address.length > 0) {
-			fetch()
+	}, [liquidityToken, balance])
+
+	useEffect(() => {
+		if (currentToken && liquidity) {
+			let data = liquidity[range]
+			setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
+			setCurrentItem(formatItem(data[0]))
+			setData((d) => data)
 		}
-	}, [address])
+	}, [currentToken, liquidity, range])
 
 	const getCurrentWallet = (wallet, token) => {
 		let currentWallet = wallet.find((item) => item.symbol === token.symbol)
@@ -146,24 +165,12 @@ const LiquidityReward = () => {
 	}
 
 	const onChangeRange = async (rge) => {
-		setIsLoading(true)
 		setRange(rge)
-		let data = await getLiquidity({ address, range: rge, token: currentToken.symbol })
-		setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
-		setCurrentItem(formatItem(data[0]))
-		setData([...data])
-		setIsLoading(false)
 	}
 
 	const onChangeToken = async (tkn) => {
-		setIsLoading(true)
-		let data = await getLiquidity({ address, range, token: tkn.symbol })
 		getCurrentWallet(walletSaved, tkn)
 		setCurrentToken(tkn)
-		setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
-		setCurrentItem(formatItem(data[0]))
-		setData([...data])
-		setIsLoading(false)
 	}
 
 	const getDiplayBalance = (balance) => {
