@@ -53,7 +53,8 @@ export const TokenChartV2Provider = ({ children }) => {
 						`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_in.toLowerCase()}.png`,
 						`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_out.toLowerCase()}.png`,
 					],
-					name: `${symbolInDisplay}/${symbolOutDisplay}`,
+					name: `${trx.symbol_in}/${trx.symbol_out}`,
+					nameDisplay: `${symbolInDisplay}/${symbolOutDisplay}`,
 					routes: trx.swap_route.routes.map((route) => {
 						return {...route, poolNameDisplay: formatTokenName(route.poolName), tokenOutSymbolDisplay: formatTokenName(route.tokenOutSymbol)}
 					}),
@@ -63,7 +64,7 @@ export const TokenChartV2Provider = ({ children }) => {
 					time: { value: time, display: timeAgo },
 					hash: { value: trx.tx_hash, display: hashDisplay },
 					address: { value: trx.address, display: addressDisplay },
-					tokenIn: { value: trx.amount_in, symbol: trx.symbol_in, symbolDisplay: symbolOutDisplay },
+					tokenIn: { value: trx.amount_in, symbol: trx.symbol_in, symbolDisplay: symbolInDisplay },
 					tokenOut: { value: trx.amount_out, symbol: trx.symbol_out, symbolDisplay: symbolOutDisplay },
 					value: trx.value_usd,
 					pools,

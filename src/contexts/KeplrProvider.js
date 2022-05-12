@@ -8,7 +8,7 @@ export const KeplrProvider = ({ children }) => {
 	const [keplrStatus, setKeplrStatus] = useState("uninstalled")
 	const { getWallet, clearLastUsedWallet, setDefaultConnectionType, connectionType } = useWalletManager()
 	const [name, setName] = useState("")
-	const [address, setAddress] = useState("osmo12zkpu48ssu0h32uaccz29f5z6atyle7j6tpyeg")
+	const [address, setAddress] = useState("")
 
 	useEffect(() => {
 		document.addEventListener("readystatechange", documentStateChange)
@@ -25,15 +25,15 @@ export const KeplrProvider = ({ children }) => {
 		const wallet = await getWallet()
 		await wallet.enable([CHAIN_ID])
 		const key = await wallet.getKey(CHAIN_ID)
-		// setAddress(key.bech32Address)
-		setName(key.name)
+		setAddress(key.bech32Address)
+		// setName(key.name)
 	}
 	const disconnect = () => {
 		setAddress("")
 		clearLastUsedWallet()
 		setDefaultConnectionType(undefined)
-		// localStorage.removeItem(AUTO_CONNECT_WALLET_KEY)
-		localStorage.removeItem("walletconnect")
+		localStorage.removeItem(AUTO_CONNECT_WALLET_KEY)
+		// localStorage.removeItem("walletconnect")
 	}
 
 	return (
