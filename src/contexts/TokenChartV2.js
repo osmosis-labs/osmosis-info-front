@@ -64,7 +64,7 @@ export const TokenChartV2Provider = ({ children }) => {
 					time: { value: time, display: timeAgo },
 					hash: { value: trx.tx_hash, display: hashDisplay },
 					address: { value: trx.address, display: addressDisplay },
-					tokenIn: { value: trx.amount_in, symbol: trx.symbol_in, symbolDisplay: symbolOutDisplay },
+					tokenIn: { value: trx.amount_in, symbol: trx.symbol_in, symbolDisplay: symbolInDisplay },
 					tokenOut: { value: trx.amount_out, symbol: trx.symbol_out, symbolDisplay: symbolOutDisplay },
 					value: trx.value_usd,
 					pools,
