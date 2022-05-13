@@ -114,14 +114,14 @@ export const formatLiqudityToken = (data) => {
 	})
 }
 
-export const formatLiqudity = (dataLiquidity) => {
+export const formatLiqudity = (dataLiquidity, isAccumulated = true) => {
 	let res = { "7d": [], "3m": [], all: [] }
 
 	let accumulateValue = 0
 	if (dataLiquidity.length > 0) {
 		const dataReversed = dataLiquidity.reverse().map((item, i) => {
 			accumulateValue += item.amount
-			return { time: item.day, value: accumulateValue, dayValue: item.amount }
+			return { time: item.day, value: isAccumulated ? accumulateValue : item.amount, dayValue: item.amount }
 		})
 		const data = dataReversed.reverse()
 

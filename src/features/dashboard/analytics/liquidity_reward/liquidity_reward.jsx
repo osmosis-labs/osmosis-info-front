@@ -5,6 +5,7 @@ import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
 import { useDashboard } from "../../../../contexts/dashboard.provider"
+import { useDebug } from "../../../../contexts/debug.provider"
 import { usePrices } from "../../../../contexts/PricesProvider"
 import {
 	formatDate,
@@ -93,6 +94,7 @@ const useStyles = makeStyles((theme) => {
 const LiquidityReward = () => {
 	const classes = useStyles()
 	const [currentToken, setCurrentToken] = useState({ symbol: "", symbolDisplay: "" })
+	const {  isAccumulated } = useDebug()
 
 	const { address } = useDashboard()
 	const request = useRequest()
@@ -113,7 +115,7 @@ const LiquidityReward = () => {
 		isLoading: isLoadingLiquidity,
 		data: liquidity,
 		isFetching: isFetchingLiquidity,
-	} = useQuery(["Liquidity", { address, symbol: currentToken.symbol }], getLiquidity, {
+	} = useQuery(["Liquidity", { address, symbol: currentToken.symbol, isAccumulated }], getLiquidity, {
 		enabled: !!address && !!currentToken.symbol,
 	})
 

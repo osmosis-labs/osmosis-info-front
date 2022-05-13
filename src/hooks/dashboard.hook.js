@@ -37,12 +37,12 @@ export const useChartStaking =
 export const useLiquidity =
 	(request) =>
 	async ({ queryKey }) => {
-		const [_, { address, symbol }] = queryKey
+		const [_, { address, symbol, isAccumulated }] = queryKey
 		const response = await request({
 			url: `https://api-osmosis-chain.imperator.co/lp/v1/rewards/historical/${address}/${symbol}`,
 			method: "GET",
 		})
-		return formatLiqudity(response.data)
+		return formatLiqudity(response.data, isAccumulated)
 	}
 
 export const useLiquidityToken =
