@@ -10,7 +10,7 @@ import SelectDashboard from "./selectDashboard/select_dashboard"
 import { useDashboard } from "../../contexts/dashboard.provider"
 import ButtonOsmo from "../../features/dashboard/button_osmo"
 import { formaterNumber } from "../../helpers/helpers"
-
+import WarningIcon from "@mui/icons-material/Warning"
 const useStyles = makeStyles((theme) => {
 	return {
 		appBarDesktopRoot: {
@@ -92,10 +92,21 @@ const useStyles = makeStyles((theme) => {
 			borderRadius: theme.spacing(1),
 		},
 		toggle: { marginLeft: "12px" },
+		message: {
+			display: "flex",
+			alignItems: "center",
+			backgroundColor: theme.palette.primary.dark,
+			padding: "16px 24px 0 26px",
+			color: theme.palette.error.main,
+		},
+		messageIcon: {
+			marginRight: "8px",
+		},
+		messageText: {},
 	}
 })
 
-const AppBarDesktop = ({ type, onChangeType }) => {
+const AppBarDesktop = ({ type, onChangeType, message, diplayMessage }) => {
 	const classes = useStyles()
 	const history = useHistory()
 	let location = useLocation()
@@ -112,7 +123,7 @@ const AppBarDesktop = ({ type, onChangeType }) => {
 			let { balance } = await getWalletInfo({ address })
 			let osmos = 0
 			let walletOsmo = balance.wallet.find((item) => item.symbol === "OSMO")
-			if(walletOsmo){
+			if (walletOsmo) {
 				osmos = walletOsmo.amount
 			}
 			setOsmo(formaterNumber(osmos))
@@ -124,6 +135,12 @@ const AppBarDesktop = ({ type, onChangeType }) => {
 
 	return (
 		<div className={classes.appBarDesktopRoot}>
+			{diplayMessage && (
+				<div className={classes.message}>
+					<WarningIcon className={classes.messageIcon} />
+					<p className={classes.messageText}>{message}</p>
+				</div>
+			)}
 			<div className={classes.appBarDesktopContent}>
 				<div className={classes.left}>
 					<img

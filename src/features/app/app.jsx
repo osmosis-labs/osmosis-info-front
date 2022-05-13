@@ -69,14 +69,14 @@ const useStyles = makeStyles((theme) => {
 			fontSize: theme.fontSize.medium,
 		},
 		container: {
-			paddingTop: "124px",
+			paddingTop: `${theme.menuHeight.desktop}px`,
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "center",
 			height: "100vh",
 			overflow: "hidden",
 			[theme.breakpoints.down("sm")]: {
-				paddingTop: "108px",
+				paddingTop: `${theme.menuHeight.mobile}px`,
 			},
 		},
 		contentContainer: {

@@ -12,13 +12,26 @@ const AppBar = () => {
 			updateSettings({ type: value })
 		}
 	}
+	const diplayMessage = true
+	const message =
+		"The Terra blockchain has resumed with on-chain swaps disabled and IBC channels closed. LUNA and UST pools rewards will drain shortly."
 
 	return (
 		<Suspense fallback={""}>
 			{isMobile ? (
-				<AppBarMobile type={settings.type} onChangeType={onChangeType} />
+				<AppBarMobile
+					diplayMessage={diplayMessage}
+					message={message}
+					type={settings.type}
+					onChangeType={onChangeType}
+				/>
 			) : (
-				<AppBarDesktop type={settings.type} onChangeType={onChangeType} />
+				<AppBarDesktop
+					diplayMessage={diplayMessage}
+					message={message}
+					type={settings.type}
+					onChangeType={onChangeType}
+				/>
 			)}
 		</Suspense>
 	)
