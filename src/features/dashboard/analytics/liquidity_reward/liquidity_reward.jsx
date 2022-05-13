@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme) => {
 const LiquidityReward = () => {
 	const classes = useStyles()
 	const [currentToken, setCurrentToken] = useState({ symbol: "", symbolDisplay: "" })
-	const {  isAccumulated } = useDebug()
+	const { isAccumulated } = useDebug()
 
 	const { address } = useDashboard()
 	const request = useRequest()
@@ -130,16 +130,19 @@ const LiquidityReward = () => {
 	const [currentItem, setCurrentItem] = useState({ time: "-", value: "-", dayValue: "-" })
 
 	useEffect(() => {
-		if (balance && liquidityToken) {
+		if (balance && liquidityToken.length > 0) {
 			const { wallet } = balance
 			let osmoToken = liquidityToken.find((token) => token.symbol === "OSMO")
 			let firstToken = liquidityToken[0]
+			console.log('liquidity_reward.jsx (l:137): fisrt:', firstToken )
 			if (osmoToken) {
+				console.log('liquidity_reward.jsx (l:138): osmoToken:', osmoToken )
 				firstToken = osmoToken
 			}
 			getCurrentWallet(wallet, firstToken)
 			setWalletSaved(wallet)
 			setTokens(liquidityToken)
+			console.log('liquidity_reward.jsx (l:143): fisrt:', firstToken )
 			setCurrentToken(firstToken)
 		}
 	}, [liquidityToken, balance])
