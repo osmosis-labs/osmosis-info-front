@@ -12,14 +12,14 @@ const useStyles = makeStyles((theme) => {
 			left: "0",
 			bottom: "0",
 			right: "0",
-			height: "calc(100% - 124px)",
+			height: `calc(100% - ${theme.menuHeight.desktop}px)`,
 			display: "flex",
 			flexDirection: "column",
 			zIndex: "200",
 			transition: "all 0.3s ease-in-out",
 			[theme.breakpoints.down("xs")]: {
-				height: "calc(100% - 108px)",
-				maxHeight: "calc(100% - 108px)",
+				height:`calc(100% - ${theme.menuHeight.mobile}px)`,
+				maxHeight:`calc(100% - ${theme.menuHeight.mobile}px)`,
 			},
 		},
 		detailsDialogOpened: {

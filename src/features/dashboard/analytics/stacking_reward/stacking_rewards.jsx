@@ -1,16 +1,13 @@
 import { makeStyles } from "@material-ui/core"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
+import { useQuery } from "react-query"
 import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
 import { useDashboard } from "../../../../contexts/dashboard.provider"
-import {
-	formatDate,
-	formateNumberDecimalsAuto,
-	formaterNumber,
-	getPercent,
-	twoNumber,
-} from "../../../../helpers/helpers"
+import { formatDate, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
+import { useBalance, useChartStaking } from "../../../../hooks/dashboard.hook"
+import useRequest from "../../../../hooks/request.hook"
 import ButtonChart from "./button_chart"
 import Chart from "./chart"
 const useStyles = makeStyles((theme) => {
@@ -87,39 +84,51 @@ const useStyles = makeStyles((theme) => {
 })
 const StackingRewards = () => {
 	const classes = useStyles()
-	const { address, getChartStacking, getWalletInfo } = useDashboard()
+	const { address } = useDashboard()
+	const request = useRequest()
+	const getBalance = useBalance(request)
+	const getChartStaking = useChartStaking(request)
+	const { isLoading: isLoadingBalance, data: balance } = useQuery(["balance", { address }], getBalance, {
+		enabled: !!address,
+	})
+	const { isLoading: isLoadingChartStaking, data: chartStaking } = useQuery(
+		["chartStaking", { address }],
+		getChartStaking,
+		{
+			enabled: !!address,
+		}
+	)
+
+	const isLoading = isLoadingBalance || isLoadingChartStaking
+
 	const [data, setData] = useState([])
 	const [total, setTotal] = useState(0)
 	const [range, setRange] = useState("3m")
 	const [osmoStaked, setOsmoStaked] = useState(0)
 	const [osmoReward, setOsmoReward] = useState(0)
-	const [isLoading, setIsLoading] = useState(false)
 	const [currentItem, setCurrentItem] = useState({ time: "-", value: "-" })
 
 	useEffect(() => {
-		const fetch = async () => {
-			setIsLoading(true)
-			let promises = [getChartStacking({ address: address, range }), getWalletInfo({ address })]
-			let results = await Promise.all(promises)
-			let data = await results[0]
-			let { balance } = await results[1]
+		if (chartStaking) {
+			let currentData = chartStaking[range]
+			setTotal(currentData.reduce((pr, cv) => pr + cv.value, 0))
+			setCurrentItem(formatItem(currentData[0]))
+			setData(currentData)
+		}
+	}, [chartStaking])
+
+	useEffect(() => {
+		if (balance) {
 			setOsmoStaked(balance.osmoStaked)
 			setOsmoReward(balance.osmoReward)
-			setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
-			setCurrentItem(formatItem(data[0]))
-			setData(data)
-			setIsLoading(false)
 		}
-		if (address && address.length > 0) {
-			fetch()
-		}
-	}, [address])
+	}, [balance])
 
 	const onChangeRange = async (rge) => {
 		setRange(rge)
-		let data = await getChartStacking({ address: address, range: rge })
-		setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
-		setData(data)
+		let currentData = chartStaking[rge]
+		setTotal(currentData.reduce((pr, cv) => pr + cv.value, 0))
+		setData(currentData)
 	}
 
 	const donwloadStacking = () => {

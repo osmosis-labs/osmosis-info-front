@@ -88,7 +88,7 @@ const MoverItem = ({ item, index }) => {
 				alt={`${item.symbol}`}
 			/>
 			<div className={classes.infos}>
-				<span className={classes.name}>{item.symbol}</span>
+				<span className={classes.name}>{item.symbolDisplay}</span>
 				<div className={classes.priceContainer}>
 					<span className={classes.price}>${formateNumberDecimalsAutoV2({price: item.price})}</span>
 					<span className={getClasses(item.price_24h_change)}>

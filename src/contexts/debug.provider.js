@@ -8,6 +8,11 @@ export const useDebug = () => useContext(DebugContext)
 export const DebugProvider = ({ children }) => {
 	const [open, setOpen] = useState(false)
 	const onClose = () => setOpen(false)
+	const [isAccumulated, setIsAccumulated] = useState(true)
 
-	return <DebugContext.Provider value={{ open, onClose, MODE, setOpen }}>{children}</DebugContext.Provider>
+	return (
+		<DebugContext.Provider value={{ open, onClose, MODE, setOpen, isAccumulated, setIsAccumulated }}>
+			{children}
+		</DebugContext.Provider>
+	)
 }

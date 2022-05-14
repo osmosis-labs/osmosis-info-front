@@ -136,7 +136,7 @@ export const DashboardProvider = ({ children }) => {
 
 			trx.usd = item.value_usd
 
-			let symbolInDisplay = formatTokenName(trx.symbol_in)
+			let symbolInDisplay = formatTokenName(item.symbol_in)
 			let symbolOutDisplay = item.symbol_out ? formatTokenName(item.symbol_out) : ""
 			trx.tokenIn = {
 				value: item.amount_in,

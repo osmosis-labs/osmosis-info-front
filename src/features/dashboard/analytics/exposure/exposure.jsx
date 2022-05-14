@@ -1,8 +1,11 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
+import { useQuery } from "react-query"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
 import { useDashboard } from "../../../../contexts/dashboard.provider"
+import { useBalance, useExposure } from "../../../../hooks/dashboard.hook"
+import useRequest from "../../../../hooks/request.hook"
 import ChartContainer from "./chart/chart_container"
 import Info from "./info"
 
@@ -38,17 +41,19 @@ const min = 2
 
 const Exposure = () => {
 	const classes = useStyles()
-	const { address, getWalletInfo } = useDashboard()
+	const { address } = useDashboard()
+	const request = useRequest()
+	const getExposure = useExposure(request)
 	const [currentExposure, setCurrentExposure] = useState("pool")
 	const [listExposureAsset, setListExposureAsset] = useState([])
 	const [listExposurePool, setListExposurePool] = useState([])
 	const [totalExposure, setTotalExposure] = useState(0)
-	const [isLoading, setIsLoading] = useState(false)
+	const { isLoading, data: exposure } = useQuery(["exposure", { address }], getExposure, {
+		enabled: !!address,
+	})
 
 	useEffect(() => {
-		const fetch = async () => {
-			setIsLoading(true)
-			let { balance, exposure } = await getWalletInfo({ address })
+		if (exposure) {
 			let indexColor = 0
 			setTotalExposure(exposure.totalExposure)
 			let sortedExposurePool = exposure.pools.sort((a, b) => {
@@ -102,12 +107,8 @@ const Exposure = () => {
 
 			setListExposureAsset(listExposureAsset)
 			setListExposurePool(listExposurePool)
-			setIsLoading(false)
 		}
-		if (address && address.length > 0) {
-			fetch()
-		}
-	}, [address])
+	}, [exposure])
 
 	const onChangeExposure = (exposure) => {
 		setCurrentExposure(exposure)

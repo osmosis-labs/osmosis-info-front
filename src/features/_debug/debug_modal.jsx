@@ -8,6 +8,7 @@ import { useKeplr } from "../../contexts/KeplrProvider"
 import { Button } from "@mui/material"
 import { isOsmoAddress } from "../../helpers/helpers"
 import { useEffect, useState } from "react"
+import Switch from "@mui/material/Switch"
 const useStyles = makeStyles((theme) => {
 	return {
 		debugDialog: {
@@ -16,14 +17,14 @@ const useStyles = makeStyles((theme) => {
 			left: "0",
 			bottom: "0",
 			right: "0",
-			height: "calc(100% - 124px)",
+			height: `calc(100% - ${theme.menuHeight.desktop}px)`,
 			display: "flex",
 			flexDirection: "column",
 			zIndex: "200",
 			transition: "all 0.3s ease-in-out",
 			[theme.breakpoints.down("xs")]: {
-				height: "calc(100% - 108px)",
-				maxHeight: "calc(100% - 108px)",
+				height: `calc(100% - ${theme.menuHeight.mobile}px)`,
+				maxHeight: `calc(100% - ${theme.menuHeight.mobile}px)`,
 			},
 		},
 		debugDialogOpened: {
@@ -59,6 +60,8 @@ const useStyles = makeStyles((theme) => {
 			justifyContent: "space-between",
 			alignItems: "center",
 			margin: "8px",
+			padding: "8px",
+			color: theme.palette.text.primary,
 		},
 	}
 })
@@ -66,7 +69,7 @@ const useStyles = makeStyles((theme) => {
 const DebugModal = ({}) => {
 	const classes = useStyles()
 
-	const { open, onClose } = useDebug()
+	const { open, onClose, isAccumulated, setIsAccumulated } = useDebug()
 	const { address, setAddress } = useKeplr()
 	const [addressInput, setAddressInput] = useState(address)
 
@@ -84,6 +87,10 @@ const DebugModal = ({}) => {
 	useEffect(() => {
 		setAddressInput(address)
 	}, [address])
+
+	const onChangeAccumulated = (e) => {
+		setIsAccumulated(event.target.checked)
+	}
 
 	return (
 		<div
@@ -107,6 +114,16 @@ const DebugModal = ({}) => {
 					<Button onClick={valideAddress} fullWidth variant="outlined">
 						Update address
 					</Button>
+				</div>
+				<div className={classes.row}>
+					<div>
+						<span>Accumulation for liquidity reward: </span>
+						<Switch
+							label={"Accumulation for liquidity reward"}
+							checked={isAccumulated}
+							onChange={onChangeAccumulated}
+						/>
+					</div>
 				</div>
 			</div>
 		</div>

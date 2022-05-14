@@ -10,6 +10,7 @@ import PaperDialog from "./PaperDialog"
 import Toggle from "../toggle/Toggle"
 import ToggleItem from "../toggle/ToggleItem"
 import SelectDashboard from "./selectDashboard/select_dashboard"
+import WarningIcon from "@mui/icons-material/Warning"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -74,6 +75,19 @@ const useStyles = makeStyles((theme) => {
 			justifyContent: "center",
 			alignItems: "center",
 		},
+		message: {
+			display: "flex",
+			alignItems: "center",
+			backgroundColor: theme.palette.primary.dark,
+			padding: "16px 24px 0 26px",
+			color: theme.palette.error.main,
+		},
+		messageIcon: {
+			marginRight: "8px",
+		},
+		messageText: {
+			fontSize: "12px",
+		},
 	}
 })
 
@@ -81,7 +95,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />
 })
 
-const AppBarMobile = ({ type, onChangeType }) => {
+const AppBarMobile = ({ type, onChangeType, diplayMessage, message }) => {
 	const classes = useStyles()
 	const history = useHistory()
 	let location = useLocation()
@@ -106,10 +120,15 @@ const AppBarMobile = ({ type, onChangeType }) => {
 
 	const callback = () => {
 		handleClose()
-
 	}
 	return (
 		<div className={classes.appBarMobileRoot}>
+			{diplayMessage && (
+				<div className={classes.message}>
+					<WarningIcon className={classes.messageIcon} />
+					<p className={classes.messageText}>{message}</p>
+				</div>
+			)}
 			<div className={classes.appBarMobileContent}>
 				<img
 					className={classes.logo}
@@ -179,7 +198,6 @@ const AppBarMobile = ({ type, onChangeType }) => {
 								IBC Status
 							</p>
 						</div>
-
 
 						<div className={classes.center}>
 							<Toggle color="primary" value={type} exclusive onChange={onChangeType}>
