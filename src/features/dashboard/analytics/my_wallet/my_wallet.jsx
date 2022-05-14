@@ -1,8 +1,11 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
+import { useQuery } from "react-query"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
 import { useDashboard } from "../../../../contexts/dashboard.provider"
+import { useBalance } from "../../../../hooks/dashboard.hook"
+import useRequest from "../../../../hooks/request.hook"
 import WalletHeader from "./wallet_header"
 import WalletItem from "./wallet_item"
 const useStyles = makeStyles((theme) => {
@@ -37,9 +40,13 @@ const useStyles = makeStyles((theme) => {
 })
 const MyWallet = () => {
 	const classes = useStyles()
-	const { address, getWalletInfo } = useDashboard()
+	const { address } = useDashboard()
+	const request = useRequest()
+	const getBalance = useBalance(request)
+	const { isLoading: isLoading, data: balance } = useQuery(["balance", { address }], getBalance, {
+		enabled: !!address,
+	})
 	const [data, setData] = useState([])
-	const [isLoading, setIsLoading] = useState(false)
 	const [order, setOrder] = useState("asc")
 	const [orderBy, setOrderBy] = useState("value")
 
@@ -50,19 +57,12 @@ const MyWallet = () => {
 	}
 
 	useEffect(() => {
-		const fetch = async () => {
-			setIsLoading(true)
-			let { balance } = await getWalletInfo({ address })
+		if (balance) {
 			let data = []
 			if (balance.wallet) data = balance.wallet
-
 			setData(data)
-			setIsLoading(false)
 		}
-		if (address && address.length > 0) {
-			fetch()
-		}
-	}, [address])
+	}, [balance])
 
 	const displayData = (data) => {
 		return [...data].sort((a, b) => {

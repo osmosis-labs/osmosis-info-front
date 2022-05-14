@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => {
 const ButtonConnection = () => {
 	const classes = useStyles()
 	const { showToast } = useToast()
-	const { keplrStatus, connect, disconnect, address } = useKeplr()
+	const { keplrStatus, connect, disconnect, address, name } = useKeplr()
 
 	const onClick = async () => {
 		if (keplrStatus === "uninstalled") {
@@ -50,7 +50,7 @@ const ButtonConnection = () => {
 				className={classes.rootButtonDisconnect}
 				startIcon={<LogoutIcon />}
 			>
-				Log out
+				{name} - Log out
 			</Button>
 		)
 	} else {

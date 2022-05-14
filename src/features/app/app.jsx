@@ -57,8 +57,7 @@ const useStyles = makeStyles((theme) => {
 				borderRadius: "10px",
 			},
 
-			"::-webkit-scrollbar-thumb:hover": {
-			},
+			"::-webkit-scrollbar-thumb:hover": {},
 		},
 		appRoot: {
 			fontFamily: "'Inter', sans-serif",
@@ -70,14 +69,14 @@ const useStyles = makeStyles((theme) => {
 			fontSize: theme.fontSize.medium,
 		},
 		container: {
-			paddingTop: "124px",
+			paddingTop: `${theme.menuHeight.desktop}px`,
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "center",
 			height: "100vh",
 			overflow: "hidden",
 			[theme.breakpoints.down("sm")]: {
-				paddingTop: "108px",
+				paddingTop: `${theme.menuHeight.mobile}px`,
 			},
 		},
 		contentContainer: {
@@ -121,21 +120,21 @@ const App = () => {
 
 	return (
 		<BrowserRouter basename=".">
-			<WalletManagerProvider walletInfoList={walletInfoList}>
-				<TokensV2Provider>
-					<PoolsV2Provider>
-						<ChartsProvider>
-							<WatchlistPoolsProvider>
-								<WatchlistTokensProvider>
-									<WatchlistIBCProvider>
-										<PricesProvider>
-											<TokenChartV2Provider>
-												<MetricsProvider>
-													<KeplrProvider>
-														<LoaderProvider>
-															<ToastProvider>
-																<DashboardProvider>
-																	<DebugProvider>
+			<DebugProvider>
+				<WalletManagerProvider walletInfoList={walletInfoList}>
+					<TokensV2Provider>
+						<PoolsV2Provider>
+							<ChartsProvider>
+								<WatchlistPoolsProvider>
+									<WatchlistTokensProvider>
+										<WatchlistIBCProvider>
+											<PricesProvider>
+												<TokenChartV2Provider>
+													<MetricsProvider>
+														<KeplrProvider>
+															<LoaderProvider>
+																<ToastProvider>
+																	<DashboardProvider>
 																		{MODE === "dev" ? <DebugModal /> : null}
 																		<LoaderOsmosis />
 																		<Helmet>
@@ -195,21 +194,21 @@ const App = () => {
 																				</div>
 																			</div>
 																		</div>
-																	</DebugProvider>
-																</DashboardProvider>
-															</ToastProvider>
-														</LoaderProvider>
-													</KeplrProvider>
-												</MetricsProvider>
-											</TokenChartV2Provider>
-										</PricesProvider>
-									</WatchlistIBCProvider>
-								</WatchlistTokensProvider>
-							</WatchlistPoolsProvider>
-						</ChartsProvider>
-					</PoolsV2Provider>
-				</TokensV2Provider>
-			</WalletManagerProvider>
+																	</DashboardProvider>
+																</ToastProvider>
+															</LoaderProvider>
+														</KeplrProvider>
+													</MetricsProvider>
+												</TokenChartV2Provider>
+											</PricesProvider>
+										</WatchlistIBCProvider>
+									</WatchlistTokensProvider>
+								</WatchlistPoolsProvider>
+							</ChartsProvider>
+						</PoolsV2Provider>
+					</TokensV2Provider>
+				</WalletManagerProvider>
+			</DebugProvider>
 		</BrowserRouter>
 	)
 }

@@ -9,13 +9,22 @@ import "./styles/transitions.css"
 import App from "./features/app/app"
 import { ThemeCustomProvider } from "./contexts/ThemeProvider"
 import { SettingsProviders } from "./contexts/SettingsProvider"
+import { QueryClient, QueryClientProvider } from "react-query"
+
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: { refetchOnWindowFocus: false, staleTime: 5 * 60 * 1_000 },
+	},
+})
 
 ReactDOM.render(
-	<SettingsProviders>
-		<ThemeCustomProvider>
-			<App />
-		</ThemeCustomProvider>
-	</SettingsProviders>,
+	<QueryClientProvider client={queryClient}>
+		<SettingsProviders>
+			<ThemeCustomProvider>
+				<App />
+			</ThemeCustomProvider>
+		</SettingsProviders>
+	</QueryClientProvider>,
 	document.getElementById("root")
 )
 
