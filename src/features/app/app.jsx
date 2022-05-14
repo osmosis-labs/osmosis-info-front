@@ -40,6 +40,7 @@ import DebugModal from "../_debug/debug_modal"
 
 const MODE = process.env.REACT_APP_MODE
 const useStyles = makeStyles((theme) => {
+	console.log('app.jsx (l:43): theme.menuHeight.desktop:', theme.menuHeight.desktop )
 	return {
 		"@global": {
 			"::-webkit-scrollbar": {

@@ -96,6 +96,39 @@ export const ThemeCustomProvider = ({ children }) => {
 		veryBig: "32px",
 	}
 
+	let baseTheme = {
+		fontSize,
+		breakpoints: {
+			values: {
+				xs: 0,
+				sm: 600,
+				md: 760,
+				lg: 960,
+				xl: 1280,
+			},
+		},
+		menuHeight: {
+			mobile: "169",
+			desktop: "164",
+		},
+		// menuHeight: {
+		// 	mobile: "108",
+		// 	desktop: "124",
+		// },
+		zIndex: {
+			loader: 100,
+			dialog: 200,
+			appBar: 300,
+		},
+		overrides: {
+			MuiTooltip: {
+				tooltip: {
+					fontSize: fontSize.medium,
+				},
+			},
+		},
+	}
+
 	let colorsApp = {
 		primary: {
 			light: "rgb(45, 39, 85)",
@@ -139,65 +172,9 @@ export const ThemeCustomProvider = ({ children }) => {
 			hover: "rgba(255, 255, 255, 0.08)",
 		},
 	}
-	const themeCustomApp = createTheme({
-		palette: { ...colors, ...colorsApp },
-		fontSize,
-		breakpoints: {
-			values: {
-				xs: 0,
-				sm: 600,
-				md: 760,
-				lg: 960,
-				xl: 1280,
-			},
-		},
-		menuHeight: {
-			mobile: "169",
-			desktop: "164",
-		},
-		// menuHeight: {
-		// 	mobile: "108",
-		// 	desktop: "124",
-		// },
-		zIndex: {
-			loader: 100,
-			dialog: 200,
-			appBar: 300,
-		},
-		overrides: {
-			MuiTooltip: {
-				tooltip: {
-					fontSize: fontSize.medium,
-				},
-			},
-		},
-	})
+	const themeCustomApp = createTheme({ ...baseTheme, palette: { ...colors, ...colorsApp } })
 
-	const themeCustomFrontier = createTheme({
-		palette: { ...colors, ...colorsFronier },
-		fontSize,
-		breakpoints: {
-			values: {
-				xs: 0,
-				sm: 600,
-				md: 760,
-				lg: 960,
-				xl: 1280,
-			},
-		},
-		zIndex: {
-			loader: 100,
-			dialog: 200,
-			appBar: 300,
-		},
-		overrides: {
-			MuiTooltip: {
-				tooltip: {
-					fontSize: fontSize.medium,
-				},
-			},
-		},
-	})
+	const themeCustomFrontier = createTheme({ ...baseTheme, palette: { ...colors, ...colorsFronier } })
 
 	return (
 		<ThemeCustomContext.Provider value={settings.type === "app" ? themeCustomApp : themeCustomFrontier}>
