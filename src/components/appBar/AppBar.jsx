@@ -14,7 +14,7 @@ const AppBar = () => {
 	}
 	const diplayMessage = true
 	const message =
-		"The Terra blockchain has resumed with on-chain swaps disabled and IBC channels closed. LUNA and UST pools rewards will drain shortly."
+		"Terra blockchain has resumed with on-chain swaps and IBC channels disabled. LUNA and UST pools rewards will drain and UST LP depool shortly"
 
 	return (
 		<Suspense fallback={""}>
