@@ -81,12 +81,15 @@ export const formatWorth = (balance, exposure) => {
 	return worth
 }
 
-export const formatChartStaking = (chartData) => {
+export const formatChartStaking = (chartData, isAccumulated = true) => {
 	let res = { "7d": [], "3m": [], all: [] }
 	if (chartData.length > 0) {
-		const data = chartData.map((item) => {
-			return { time: item.day, value: item.amount }
+		let accumulateValue = 0
+		const dataReversed = chartData.reverse().map((item) => {
+			accumulateValue += item.amount
+			return { time: item.day, value: isAccumulated ? accumulateValue : item.amount, dayValue: item.amount }
 		})
+		const data = dataReversed.reverse()
 
 		let nbDaysLastThreeMonths = 0
 		let startDate = new Date(data[0].time)
