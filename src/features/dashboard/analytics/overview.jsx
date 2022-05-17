@@ -4,7 +4,7 @@ import { useDashboard } from "../../../contexts/dashboard.provider"
 import { formateNumberDecimalsAuto, getPercent } from "../../../helpers/helpers"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
-import { useBalance, useExposure } from "../../../hooks/dashboard.hook"
+import { useBalance, useExposure } from "../../../hooks/data/dashboard.hook"
 import useRequest from "../../../hooks/request.hook"
 import { useQuery } from "react-query"
 import { formatWorth } from "../../../formaters/dashboard.formatter"
@@ -109,33 +109,37 @@ const useStyles = makeStyles((theme) => {
 const Overview = () => {
 	const classes = useStyles()
 	const { address } = useDashboard()
-	const request = useRequest()
-	const getBalance = useBalance(request)
-	const getExposure = useExposure(request)
+
+	//Balance
+	const { getter: getterBalance, defaultValue: defaultBalance } = useBalance()
+	const { data: dataBalance, isLoading: isLoadingBalance } = useQuery(["balance", { address }], getterBalance, {
+		enabled: !!address,
+	})
+	const balance = dataBalance ? dataBalance : defaultBalance
+
+	//Exposure
+	const { getter: getterExposure, defaultValue: defaultExposure } = useExposure()
+	const { data: dataExposure, isLoading: isLoadingExposure } = useQuery(["exposure", { address }], getterExposure, {
+		enabled: !!address,
+	})
+	const exposure = dataExposure ? dataExposure : defaultExposure
 
 	const [worth, setWorth] = useState(0)
 	const [osmosStaked, setOsmosStaked] = useState(0)
 	const [return24h, setReturn24h] = useState(0)
 	const [returnChange24h, setReturnChange24h] = useState(0)
 
-	const { isLoading: isLoadingBalance, data: dataBalance } = useQuery(["balance", { address }], getBalance, {
-		enabled: !!address,
-	})
-	const { isLoading: isLoadingExposure, data: dataExposure } = useQuery(["exposure", { address }], getExposure, {
-		enabled: !!address,
-	})
-
 	const isLoading = isLoadingBalance || isLoadingExposure
 
 	useEffect(() => {
 		if (dataBalance && dataExposure) {
-			const worth = formatWorth(dataBalance, dataExposure)
+			const worth = formatWorth(balance, exposure)
 			setWorth(worth)
 			setReturn24h(dataBalance.tokenReturn24)
 			setReturnChange24h(dataBalance.tokenReturnChange24)
 			setOsmosStaked(dataBalance.tokenValueWallet)
 		}
-	}, [dataExposure, dataBalance])
+	}, [exposure, balance])
 
 	const getPercentDisplay = (value) => {
 		if (value > 0) {

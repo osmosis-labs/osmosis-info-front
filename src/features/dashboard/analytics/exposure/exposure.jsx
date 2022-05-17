@@ -4,7 +4,7 @@ import { useQuery } from "react-query"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
 import { useDashboard } from "../../../../contexts/dashboard.provider"
-import { useBalance, useExposure } from "../../../../hooks/dashboard.hook"
+import { useExposure } from "../../../../hooks/data/dashboard.hook"
 import useRequest from "../../../../hooks/request.hook"
 import ChartContainer from "./chart/chart_container"
 import Info from "./info"
@@ -42,15 +42,21 @@ const min = 2
 const Exposure = () => {
 	const classes = useStyles()
 	const { address } = useDashboard()
-	const request = useRequest()
-	const getExposure = useExposure(request)
+	const { getter, defaultValue } = useExposure()
+	const {
+		data,
+		isLoading: isLoadingExposure,
+		isFetching,
+	} = useQuery(["exposure", { address }], getter, {
+		enabled: !!address,
+	})
+	const exposure = data ? data : defaultValue
+	const isLoading = isLoadingExposure || isFetching
+
 	const [currentExposure, setCurrentExposure] = useState("pool")
 	const [listExposureAsset, setListExposureAsset] = useState([])
 	const [listExposurePool, setListExposurePool] = useState([])
 	const [totalExposure, setTotalExposure] = useState(0)
-	const { isLoading, data: exposure } = useQuery(["exposure", { address }], getExposure, {
-		enabled: !!address,
-	})
 
 	useEffect(() => {
 		if (exposure) {

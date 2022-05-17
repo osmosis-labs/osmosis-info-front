@@ -1,7 +1,9 @@
 import { makeStyles } from "@material-ui/core"
+import { useQuery } from "react-query"
 import { useMetrics } from "../../../contexts/MetricsProvider"
-import { usePrices } from "../../../contexts/PricesProvider"
 import { formateNumberDecimals, formaterNumber, getPercent } from "../../../helpers/helpers"
+import { usePrices } from "../../../hooks/data/prices.hook"
+import useRequest from "../../../hooks/request.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -58,8 +60,9 @@ const Bar = ({ className }) => {
 		liquidityOsmo24h,
 		loadingMetrics,
 	} = useMetrics()
-	const { priceOsmoBrut } = usePrices()
-
+	const { getter, defaultValue: defaultPrice } = usePrices()
+	const { data: prices } = useQuery(["prices", {}], getter)
+	const { priceOsmoBrut } = prices ? prices : defaultPrice
 	const getClasses = (value, type) => {
 		let res = ""
 		if (!type) res = classes.change

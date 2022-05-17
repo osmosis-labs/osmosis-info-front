@@ -13,7 +13,7 @@ import { QueryClient, QueryClientProvider } from "react-query"
 
 const queryClient = new QueryClient({
 	defaultOptions: {
-		queries: { refetchOnWindowFocus: false, staleTime: 5 * 60 * 1_000 },
+		queries: { refetchOnWindowFocus: false, staleTime: 10 * 60 * 1_000 },
 	},
 })
 

@@ -5,9 +5,11 @@ import FileCopyIcon from "@mui/icons-material/FileCopy"
 
 import CheckIcon from "@mui/icons-material/Check"
 import CloseIcon from "@mui/icons-material/Close"
-import { usePrices } from "../../../contexts/PricesProvider"
 import { useToast } from "../../../contexts/Toast.provider"
 import { formateNumberDecimalsAuto } from "../../../helpers/helpers"
+import useRequest from "../../../hooks/request.hook"
+import { usePrices } from "../../../hooks/data/prices.hook"
+import { useQuery } from "react-query"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootInformations: {
@@ -99,7 +101,9 @@ const useStyles = makeStyles((theme) => {
 })
 const Informations = ({ data }) => {
 	const classes = useStyles()
-	const { priceOsmoBrut } = usePrices()
+	const { getter, defaultValue: defaultPrice } = usePrices()
+	const { data: prices } = useQuery(["prices", {}], getter)
+	const { priceOsmoBrut } = prices ? prices : defaultPrice
 	const { showToast } = useToast()
 	const onClickHash = () => {
 		window.open(`https://www.mintscan.io/osmosis/txs/${data.hash.value}`, "_blank")
@@ -154,9 +158,7 @@ const Informations = ({ data }) => {
 			</div>
 			<div className={`${classes.row}`}>
 				<p className={classes.subTitle}>Value</p>
-				<p className={`${classes.info} ${classes.rowMiddle}`}>
-					${formateNumberDecimalsAuto({ price: data.usd })}{" "}
-				</p>
+				<p className={`${classes.info} ${classes.rowMiddle}`}>${formateNumberDecimalsAuto({ price: data.usd })} </p>
 			</div>
 			<div className={`${classes.row}`}>
 				<p className={classes.subTitle}>Trade price ({data.tokenIn.symbol})</p>

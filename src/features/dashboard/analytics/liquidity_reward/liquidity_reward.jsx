@@ -6,15 +6,8 @@ import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
 import { useDashboard } from "../../../../contexts/dashboard.provider"
 import { useDebug } from "../../../../contexts/debug.provider"
-import { usePrices } from "../../../../contexts/PricesProvider"
-import {
-	formatDate,
-	formateNumberDecimalsAuto,
-	formaterNumber,
-	getPercent,
-	twoNumber,
-} from "../../../../helpers/helpers"
-import { useBalance, useLiquidity, useLiquidityToken } from "../../../../hooks/dashboard.hook"
+import { formatDate, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
+import { useBalance, useLiquidity, useLiquidityToken } from "../../../../hooks/data/dashboard.hook"
 import useRequest from "../../../../hooks/request.hook"
 import ButtonChart from "../stacking_reward/button_chart"
 import Chart from "../stacking_reward/chart"
@@ -97,28 +90,37 @@ const LiquidityReward = () => {
 	const { isAccumulated } = useDebug()
 
 	const { address } = useDashboard()
-	const request = useRequest()
-	const getBalance = useBalance(request)
-	const getLiquidity = useLiquidity(request)
-	const getLiquidityToken = useLiquidityToken(request)
-	const { isLoading: isLoadingBalance, data: balance } = useQuery(["balance", { address }], getBalance, {
+
+	//Balance
+	const { getter: getterBalance, defaultValue: defaultBalance } = useBalance()
+	const { data: dataBalance, isLoading: isLoadingBalance } = useQuery(["balance", { address }], getterBalance, {
 		enabled: !!address,
 	})
-	const { isLoading: isLoadingLiquidityToken, data: liquidityToken } = useQuery(
+	const balance = dataBalance ? dataBalance : defaultBalance
+
+	//Token Liquidity
+	const { getter: getterLiquidityToken, defaultValue: defaultLiquidityToken } = useLiquidityToken()
+	const { data: dataLiquidityToken, isLoading: isLoadingLiquidityToken } = useQuery(
 		["LiquidityToken", { address }],
-		getLiquidityToken,
+		getterLiquidityToken,
 		{
 			enabled: !!address,
 		}
 	)
+	const liquidityToken = dataLiquidityToken ? dataLiquidityToken : defaultLiquidityToken
+
+	//Liquidity
+	const { getter: getterLiquidityStakink, defaultValue: defaulLiquidityStaking } = useLiquidity()
 	const {
+		data: dataLiquidityStaking,
 		isLoading: isLoadingLiquidity,
-		data: liquidity,
 		isFetching: isFetchingLiquidity,
-	} = useQuery(["Liquidity", { address, symbol: currentToken.symbol, isAccumulated }], getLiquidity, {
+	} = useQuery(["Liquidity", { address, isAccumulated, symbol: currentToken.symbol }], getterLiquidityStakink, {
 		enabled: !!address && !!currentToken.symbol,
 	})
+	const liquidity = dataLiquidityStaking ? dataLiquidityStaking : defaulLiquidityStaking
 
+	//Merge loading
 	const isLoading = isLoadingBalance || isLoadingLiquidityToken || isLoadingLiquidity || isFetchingLiquidity
 
 	const [data, setData] = useState([])

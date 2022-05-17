@@ -4,7 +4,7 @@ import { useQuery } from "react-query"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
 import { useDashboard } from "../../../../contexts/dashboard.provider"
-import { useBalance } from "../../../../hooks/dashboard.hook"
+import { useBalance } from "../../../../hooks/data/dashboard.hook"
 import useRequest from "../../../../hooks/request.hook"
 import WalletHeader from "./wallet_header"
 import WalletItem from "./wallet_item"
@@ -41,11 +41,14 @@ const useStyles = makeStyles((theme) => {
 const MyWallet = () => {
 	const classes = useStyles()
 	const { address } = useDashboard()
-	const request = useRequest()
-	const getBalance = useBalance(request)
-	const { isLoading: isLoading, data: balance } = useQuery(["balance", { address }], getBalance, {
+
+	//Balance
+	const { getter: getterBalance, defaultValue: defaultBalance } = useBalance()
+	const { data: dataBalance, isLoading } = useQuery(["balance", { address }], getterBalance, {
 		enabled: !!address,
 	})
+	const balance = dataBalance ? dataBalance : defaultBalance
+
 	const [data, setData] = useState([])
 	const [order, setOrder] = useState("asc")
 	const [orderBy, setOrderBy] = useState("value")

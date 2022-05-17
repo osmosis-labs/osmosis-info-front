@@ -1,18 +1,19 @@
 import { formatTokenName, getDaysInMonth } from "../helpers/helpers"
 
+export const defaultBalance = {
+	osmoStaked: 0,
+	osmoStakedValue: 0,
+	osmoReward: 0,
+	osmoRewardValue: 0,
+	tokenValueWallet: 0,
+	tokenValuePnl24h: 0,
+	tokenValueChange24h: 0,
+	tokenReturn24: 0,
+	tokenReturnChange24: 0,
+	wallet: [],
+}
 export const formatBalance = (data) => {
-	let balance = {
-		osmoStaked: 0,
-		osmoStakedValue: 0,
-		osmoReward: 0,
-		osmoRewardValue: 0,
-		tokenValueWallet: 0,
-		tokenValuePnl24h: 0,
-		tokenValueChange24h: 0,
-		tokenReturn24: 0,
-		tokenReturnChange24: 0,
-		wallet: [],
-	}
+	let balance = { ...defaultBalance }
 	if (data.wallet && data.wallet.length > 0) {
 		balance.osmoStaked = data.osmo_staked ? data.osmo_staked : 0
 		balance.osmoStakedValue = data.osmo_staked_value ? data.osmo_staked_value : 0
@@ -42,8 +43,9 @@ export const formatBalance = (data) => {
 	return balance
 }
 
-export const formatExosure = (data) => {
-	let exposure = { totalExposure: 0, pools: [], assets: [] }
+export const defaultExposure = { totalExposure: 0, valueExposure: 0, pools: [], assets: [] }
+export const formatExposure = (data) => {
+	let exposure = { ...defaultExposure }
 	if (data.value_exposure > 0) {
 		exposure.valueExposure = data.value_exposure
 		exposure.totalExposure = data.value_exposure
@@ -74,15 +76,18 @@ export const formatExosure = (data) => {
 	return exposure
 }
 
+export const defaultWorth = 0
 export const formatWorth = (balance, exposure) => {
+	console.log("dashboard.formatter.js -> 81: alance, exposure", balance, exposure)
 	let worth = 0
 	worth += balance.osmoStakedValue + balance.tokenValueWallet
 	worth += exposure.valueExposure
 	return worth
 }
 
+export const defaultChartStaking = { "7d": [], "3m": [], all: [] }
 export const formatChartStaking = (chartData, isAccumulated = true) => {
-	let res = { "7d": [], "3m": [], all: [] }
+	let res = { ...defaultChartStaking }
 	if (chartData.length > 0) {
 		let accumulateValue = 0
 		const dataReversed = chartData.reverse().map((item) => {
@@ -110,15 +115,16 @@ export const formatChartStaking = (chartData, isAccumulated = true) => {
 	}
 	return res
 }
-
+export const defaultLiquidityToken = []
 export const formatLiqudityToken = (data) => {
 	return data.map((item) => {
 		return { symbol: item.token, symbolDisplay: formatTokenName(item.token) }
 	})
 }
 
+export const defaultLiquidity = { "7d": [], "3m": [], all: [] }
 export const formatLiqudity = (dataLiquidity, isAccumulated = true) => {
-	let res = { "7d": [], "3m": [], all: [] }
+	let res = { ...defaultLiquidity }
 
 	let accumulateValue = 0
 	if (dataLiquidity.length > 0) {

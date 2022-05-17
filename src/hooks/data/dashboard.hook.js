@@ -1,15 +1,21 @@
-import { useCallback } from "react"
 import {
+	defaultBalance,
+	defaultChartStaking,
+	defaultExposure,
+	defaultLiquidity,
+	defaultLiquidityToken,
 	formatBalance,
 	formatChartStaking,
-	formatExosure,
+	formatExposure,
 	formatLiqudity,
 	formatLiqudityToken,
-} from "../formaters/dashboard.formatter"
+} from "../../formaters/dashboard.formatter"
+import useRequest from "../request.hook"
 
-export const useBalance =
-	(request) =>
-	async ({ queryKey }) => {
+export const useBalance = () => {
+	const request = useRequest()
+
+	const getter = async ({ queryKey }) => {
 		const [_, { address }] = queryKey
 		const response = await request({
 			url: `https://api-osmosis-chain.imperator.co/account/v1/balance/${address}`,
@@ -18,20 +24,29 @@ export const useBalance =
 		return formatBalance(response.data)
 	}
 
-export const useExposure =
-	(request) =>
-	async ({ queryKey }) => {
+	return { getter, defaultValue: defaultBalance }
+}
+
+export const useExposure = () => {
+	const request = useRequest()
+
+	const getter = async ({ queryKey }) => {
 		const [_, { address }] = queryKey
+		console.log("%cdashboard.hook.js -> 35 BLUE: exposure called",'background: #2196f3; color:#FFFFFF',  )
 		const response = await request({
 			url: `https://api-osmosis-chain.imperator.co/account/v1/exposure/${address}`,
 			method: "GET",
 		})
-		return formatExosure(response.data)
+		return formatExposure(response.data)
 	}
 
-export const useChartStaking =
-	(request) =>
-	async ({ queryKey }) => {
+	return { getter, defaultValue: defaultExposure }
+}
+
+export const useChartStaking = () => {
+	const request = useRequest()
+
+	const getter = async ({ queryKey }) => {
 		const [_, { address, isStakingAccumulated }] = queryKey
 		const response = await request({
 			url: `https://api-osmosis-chain.imperator.co/staking/v1/rewards/historical/${address}`,
@@ -40,9 +55,13 @@ export const useChartStaking =
 		return formatChartStaking(response.data, isStakingAccumulated)
 	}
 
-export const useLiquidity =
-	(request) =>
-	async ({ queryKey }) => {
+	return { getter, defaultValue: defaultChartStaking }
+}
+
+export const useLiquidity = () => {
+	const request = useRequest()
+
+	const getter = async ({ queryKey }) => {
 		const [_, { address, symbol, isAccumulated }] = queryKey
 		const response = await request({
 			url: `https://api-osmosis-chain.imperator.co/lp/v1/rewards/historical/${address}/${symbol}`,
@@ -51,9 +70,13 @@ export const useLiquidity =
 		return formatLiqudity(response.data, isAccumulated)
 	}
 
-export const useLiquidityToken =
-	(request) =>
-	async ({ queryKey }) => {
+	return { getter, defaultValue: defaultLiquidity }
+}
+
+export const useLiquidityToken = () => {
+	const request = useRequest()
+
+	const getter = async ({ queryKey }) => {
 		const [_, { address }] = queryKey
 		const response = await request({
 			url: `https://api-osmosis-chain.imperator.co/lp/v1/rewards/token/${address}`,
@@ -61,3 +84,6 @@ export const useLiquidityToken =
 		})
 		return formatLiqudityToken(response.data)
 	}
+
+	return { getter, defaultValue: defaultLiquidityToken }
+}
