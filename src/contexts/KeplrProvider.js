@@ -12,7 +12,7 @@ export const KeplrProvider = ({ children }) => {
 	const wm = useWalletManager()
 	const { getWallet, clearLastUsedWallet, setDefaultConnectionType, connectionType } = wm
 	let defaultAddress = ""
-	if (MODE === "dev") defaultAddress = "" //"osmo12zkpu48ssu0h32uaccz29f5z6atyle7j6tpyeg"
+	if (MODE === "dev") defaultAddress = "osmo12zkpu48ssu0h32uaccz29f5z6atyle7j6tpyeg" //"osmo12zkpu48ssu0h32uaccz29f5z6atyle7j6tpyeg"
 	const [address, setAddress] = useState(defaultAddress)
 	const [name, setName] = useState("")
 

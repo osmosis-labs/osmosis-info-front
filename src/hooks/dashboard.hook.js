@@ -1,5 +1,11 @@
 import { useCallback } from "react"
-import { formatBalance, formatChartStaking, formatExosure, formatLiqudity, formatLiqudityToken } from "../formaters/dashboard.formatter"
+import {
+	formatBalance,
+	formatChartStaking,
+	formatExosure,
+	formatLiqudity,
+	formatLiqudityToken,
+} from "../formaters/dashboard.formatter"
 
 export const useBalance =
 	(request) =>
@@ -26,12 +32,12 @@ export const useExposure =
 export const useChartStaking =
 	(request) =>
 	async ({ queryKey }) => {
-		const [_, { address }] = queryKey
+		const [_, { address, isStakingAccumulated }] = queryKey
 		const response = await request({
 			url: `https://api-osmosis-chain.imperator.co/staking/v1/rewards/historical/${address}`,
 			method: "GET",
 		})
-		return formatChartStaking(response.data)
+		return formatChartStaking(response.data, isStakingAccumulated)
 	}
 
 export const useLiquidity =

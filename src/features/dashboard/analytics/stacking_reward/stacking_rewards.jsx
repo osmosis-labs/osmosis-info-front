@@ -5,6 +5,7 @@ import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
 import { useDashboard } from "../../../../contexts/dashboard.provider"
+import { useDebug } from "../../../../contexts/debug.provider"
 import { formatDate, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
 import { useBalance, useChartStaking } from "../../../../hooks/dashboard.hook"
 import useRequest from "../../../../hooks/request.hook"
@@ -86,13 +87,15 @@ const StackingRewards = () => {
 	const classes = useStyles()
 	const { address } = useDashboard()
 	const request = useRequest()
+	const { isStakingAccumulated } = useDebug()
+
 	const getBalance = useBalance(request)
 	const getChartStaking = useChartStaking(request)
 	const { isLoading: isLoadingBalance, data: balance } = useQuery(["balance", { address }], getBalance, {
 		enabled: !!address,
 	})
 	const { isLoading: isLoadingChartStaking, data: chartStaking } = useQuery(
-		["chartStaking", { address }],
+		["chartStaking", { address, isStakingAccumulated}],
 		getChartStaking,
 		{
 			enabled: !!address,
@@ -134,7 +137,7 @@ const StackingRewards = () => {
 	const donwloadStacking = () => {
 		let dataDownload = [
 			["time", "value", "token"],
-			...data.map((d) => [`${d.time.year}-${twoNumber(d.time.month)}-${twoNumber(d.time.day)}`, d.value, "OSMO"]),
+			...data.map((d) => [`${d.time.year}-${twoNumber(d.time.month)}-${twoNumber(d.time.day)}`, d.dayValue, "OSMO"]),
 		]
 		let csv = dataDownload.map((row) => row.join(",")).join("\n")
 		let a = document.createElement("a")

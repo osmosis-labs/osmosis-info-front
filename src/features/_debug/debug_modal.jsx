@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => {
 const DebugModal = ({}) => {
 	const classes = useStyles()
 
-	const { open, onClose, isAccumulated, setIsAccumulated } = useDebug()
+	const { open, onClose, isAccumulated, setIsAccumulated, isStakingAccumulated, setIsStakingAccumulated } = useDebug()
 	const { address, setAddress } = useKeplr()
 	const [addressInput, setAddressInput] = useState(address)
 
@@ -89,7 +89,11 @@ const DebugModal = ({}) => {
 	}, [address])
 
 	const onChangeAccumulated = (e) => {
-		setIsAccumulated(event.target.checked)
+		setIsAccumulated(e.target.checked)
+	}
+
+	const onChangeStakingAccumulated = (e) => {
+		setIsStakingAccumulated(e.target.checked)
 	}
 
 	return (
@@ -122,6 +126,16 @@ const DebugModal = ({}) => {
 							label={"Accumulation for liquidity reward"}
 							checked={isAccumulated}
 							onChange={onChangeAccumulated}
+						/>
+					</div>
+				</div>
+				<div className={classes.row}>
+					<div>
+						<span>Accumulation for staking reward: </span>
+						<Switch
+							label={"Accumulation for staking reward"}
+							checked={isStakingAccumulated}
+							onChange={onChangeStakingAccumulated}
 						/>
 					</div>
 				</div>
