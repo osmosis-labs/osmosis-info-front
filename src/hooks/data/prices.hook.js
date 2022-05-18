@@ -1,3 +1,4 @@
+import { useQuery } from "react-query"
 import { defaultValuePrice, formatPrice } from "../../formaters/prices.formatter"
 import useRequest from "../request.hook"
 
@@ -14,5 +15,8 @@ export const usePrices = () => {
 		return formatPrice({ dataOsmo: results[0].data, dataIon: results[1].data })
 	}
 
-	return { getter, defaultValue: defaultValuePrice }
+	const { data: prices, isLoading, isFetching } = useQuery(["prices", {}], getter)
+	const data = prices ? prices : defaultValuePrice
+
+	return { data, isLoading, isFetching }
 }

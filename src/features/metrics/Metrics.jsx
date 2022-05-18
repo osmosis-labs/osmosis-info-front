@@ -11,9 +11,7 @@ import ButtonGroup from "../../../components/buttonGroup/ButtonGroup"
 import { useState } from "react"
 import { formateNumberDecimals, getPercent } from "../../../helpers/helpers"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
-import useRequest from "../../hooks/request.hook"
 import { usePrices } from "../../hooks/data/prices.hook"
-import { useQuery } from "react-query"
 const useStyles = makeStyles((theme) => {
 	return {
 		metricsRoot: {},
@@ -80,7 +78,6 @@ const useStyles = makeStyles((theme) => {
 const Metrics = () => {
 	const classes = useStyles()
 	const {
-		osmosPrice,
 		osmosChange24h,
 		nbToken,
 		volume24h,
@@ -93,9 +90,10 @@ const Metrics = () => {
 		liquidityOsmo24h,
 		loadingMetrics,
 	} = useMetrics()
-	const { getter, defaultValue: defaultPrice } = usePrices()
-	const { data: prices } = useQuery(["prices", {}], getter)
-	const { priceOsmoBrut } = prices ? prices : defaultPrice
+
+	const {
+		data: { priceOsmoBrut },
+	} = usePrices()
 
 	const [typeLiquidity, setTypeLiquidity] = useState("USD")
 

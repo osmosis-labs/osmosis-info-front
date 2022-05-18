@@ -2,10 +2,7 @@ import { makeStyles } from "@material-ui/core"
 import { useState, useEffect } from "react"
 import SwapVertIcon from "@mui/icons-material/SwapVert"
 import { formateNumberDecimalsAuto } from "../../../../helpers/helpers"
-import useRequest from "../../../../hooks/request.hook"
 import { usePrices } from "../../../../hooks/data/prices.hook"
-import { useQuery } from "react-query"
-
 const useStyles = makeStyles((theme) => {
 	return {
 		rootInputAPR: {
@@ -67,10 +64,9 @@ const useStyles = makeStyles((theme) => {
 })
 const InputAPR = ({ onChange, value, swapIsOsmos }) => {
 	const classes = useStyles()
-	const { getter, defaultValue: defaultPrice } = usePrices()
-	const { data: prices } = useQuery(["prices", {}], getter)
-	const { priceOsmoBrut } = prices ? prices : defaultPrice
-	
+	const {
+		data: { priceOsmoBrut },
+	} = usePrices()
 	const [valueUSD, setValueUSD] = useState(0)
 	const [valueOSMO, setValueOSMO] = useState(0)
 	let currentValue = swapIsOsmos ? valueOSMO : valueUSD

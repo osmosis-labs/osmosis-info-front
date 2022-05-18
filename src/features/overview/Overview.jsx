@@ -16,6 +16,7 @@ import PoolsTable from "../pools/poolsTable/poolsTable"
 import TokensTable from "../tokens/tokensTable/tokensTable"
 import { useSettings } from "../../contexts/SettingsProvider"
 import OverviewBar from "./overviewBar/overviewBar"
+import { useLiquidityChart, useVolumeChart } from "../../hooks/data/charts.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -44,7 +45,6 @@ const useStyles = makeStyles((theme) => {
 		},
 		subTitle: {
 			color: theme.palette.gray.main,
-			
 		},
 		container: {
 			display: "grid",
@@ -89,8 +89,9 @@ const useStyles = makeStyles((theme) => {
 
 const Overview = () => {
 	const classes = useStyles()
-	const { dataLiquidityD, dataLiquidityW, dataLiquidityM, dataVolumeD, dataVolumeW, dataVolumeM, loadingData } =
-		useCharts()
+	const { data: dataLiquidity, isLoading: isLoadingLiquidity } = useLiquidityChart()
+	const { data: dataVolume, isLoading: isLoadingVolume } = useVolumeChart()
+
 	const { watchlistTokens } = useWatchlistTokens()
 	const { watchlistPools } = useWatchlistPools()
 	const [tokensOnWatchlist, setTokensOnWatchlist] = useState([])
@@ -176,23 +177,23 @@ const Overview = () => {
 				<p className={classes.title}>Osmosis - Overview</p>
 				<div className={classes.charts}>
 					<Paper className={classes.chart}>
-						<BlocLoaderOsmosis open={loadingData} borderRadius={true} />
+						<BlocLoaderOsmosis open={isLoadingLiquidity} borderRadius={true} />
 						<div className={classes.containerChart}>
 							<ContainerChartLiquidity
-								dataDay={dataLiquidityD}
-								dataWeek={dataLiquidityW}
-								dataMonth={dataLiquidityM}
+								dataDay={dataLiquidity.d}
+								dataWeek={dataLiquidity.w}
+								dataMonth={dataLiquidity.m}
 								title="Liquidity"
 							/>
 						</div>
 					</Paper>
 					<Paper className={classes.chart}>
-						<BlocLoaderOsmosis open={loadingData} borderRadius={true} />
+						<BlocLoaderOsmosis open={isLoadingVolume} borderRadius={true} />
 						<div className={classes.containerChart}>
 							<ContainerChartVolume
-								dataDay={dataVolumeD}
-								dataWeek={dataVolumeW}
-								dataMonth={dataVolumeM}
+								dataDay={dataVolume.d}
+								dataWeek={dataVolume.w}
+								dataMonth={dataVolume.m}
 								title="Volume"
 							/>
 						</div>

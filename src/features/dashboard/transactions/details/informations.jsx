@@ -6,10 +6,8 @@ import FileCopyIcon from "@mui/icons-material/FileCopy"
 
 import CheckIcon from "@mui/icons-material/Check"
 import CloseIcon from "@mui/icons-material/Close"
-import {  formateNumberDecimalsAuto } from "../../../../helpers/helpers"
-import useRequest from "../../../../hooks/request.hook"
+import { formateNumberDecimalsAuto } from "../../../../helpers/helpers"
 import { usePrices } from "../../../../hooks/data/prices.hook"
-import { useQuery } from "react-query"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootInformations: {
@@ -102,9 +100,9 @@ const useStyles = makeStyles((theme) => {
 })
 const Informations = ({ data }) => {
 	const classes = useStyles()
-	const { getter, defaultValue: defaultPrice } = usePrices()
-	const { data: prices } = useQuery(["prices", {}], getter)
-	const { priceOsmoBrut } = prices ? prices : defaultPrice
+	const {
+		data: { priceOsmoBrut },
+	} = usePrices()
 	const { showToast } = useToast()
 
 	const onClickHash = () => {
