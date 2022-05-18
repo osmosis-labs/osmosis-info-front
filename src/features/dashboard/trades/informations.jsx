@@ -7,7 +7,6 @@ import CheckIcon from "@mui/icons-material/Check"
 import CloseIcon from "@mui/icons-material/Close"
 import { useToast } from "../../../contexts/Toast.provider"
 import { formateNumberDecimalsAuto } from "../../../helpers/helpers"
-import { usePrices } from "../../../hooks/data/prices.hook"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootInformations: {
@@ -99,14 +98,8 @@ const useStyles = makeStyles((theme) => {
 })
 const Informations = ({ data }) => {
 	const classes = useStyles()
-	const {
-		data: { priceOsmoBrut },
-	} = usePrices()
-	const { showToast } = useToast()
-	const onClickHash = () => {
-		window.open(`https://www.mintscan.io/osmosis/txs/${data.hash.value}`, "_blank")
-	}
 
+	const { showToast } = useToast()
 	const copyHash = () => {
 		try {
 			navigator.clipboard.writeText(data.hash.value)
@@ -124,7 +117,6 @@ const Informations = ({ data }) => {
 	}
 	let dateToShow = dayjs(data.time.value.toString()).format("YYYY-MM-DD HH:mm:ss")
 	let hashDisplay = data.hash.value.substring(0, 10) + "..." + data.hash.value.substring(data.hash.value.length - 10)
-	let usdFees = formateNumberDecimalsAuto({ price: data.fees * priceOsmoBrut })
 	return (
 		<div className={classes.rootInformations}>
 			<p className={classes.title}>Informations</p>

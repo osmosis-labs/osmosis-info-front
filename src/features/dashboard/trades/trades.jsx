@@ -7,6 +7,7 @@ import useSize from "../../../hooks/sizeHook"
 import ListTrades from "./list_trades/list_trades"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import DetailsTrade from "./details_trade"
+import { useInfoTrx, useTrades } from "../../../hooks/data/dashboard.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -86,35 +87,14 @@ const Trades = () => {
 	const classes = useStyles()
 	const size = useSize()
 	const [open, setOpen] = useState(false)
-	const { getTrades, getInfoTrx, ...other } = useDashboard()
-	const [currentTrade, setCurrentTrade] = useState({})
-	const tradesRef = useRef([])
-	const [address, setAddress] = useState("")
 	const [openModalJSON, setOpenModalJSON] = useState(false)
-	const offset = useRef(0)
-	const [loadingTrades, setLoadingTrades] = useState(false)
+	const [currentTrade, setCurrentTrade] = useState({})
+	const { address, chainId } = useDashboard()
 
-	useEffect(() => {
-		const fetch = async () => {
-			try {
-				setLoadingTrades(true)
-				let trades = await getTrades({ address })
-				tradesRef.current = trades
-				setLoadingTrades(false)
-			} catch (e) {
-				console.log("%cTrades.jsx -> 53 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
-				setLoadingTrades(false)
-			}
-		}
+	const { data: trades, isLoading: isLoadingTrx, isFetching, fetchNextPage } = useTrades({ address })
+	const { data: trade } = useInfoTrx({ hash: currentTrade?.hash?.value }, { currentTrade, address, chainId })
 
-		if (address && address.length > 0) {
-			fetch()
-		}
-	}, [address])
-
-	useEffect(() => {
-		setAddress(other.address)
-	}, [other.address])
+	const isLoading = isLoadingTrx || isFetching
 
 	const onOpen = () => {
 		setOpen(true)
@@ -142,27 +122,14 @@ const Trades = () => {
 	}
 
 	const onClickRow = async (data) => {
-		let detailsTrx = await getInfoTrx({ hashTRX: data.hash.value })
-		setCurrentTrade({ ...detailsTrx, ...data })
+		setCurrentTrade(data)
 		if (size === "xs") {
 			onOpen()
 		}
 	}
 
 	const cbEndPage = async () => {
-		try {
-			setLoadingTrades(true)
-			offset.current += 10
-			let results = await getTrades({
-				address,
-				offset: offset.current,
-			})
-			tradesRef.current = [...tradesRef.current, ...results]
-			setLoadingTrades(false)
-		} catch (e) {
-			setLoadingTrades(false)
-			console.log("%ctransactions.jsx -> 53 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
-		}
+		fetchNextPage()
 	}
 
 	if (!address || address.length === 0) {
@@ -200,25 +167,25 @@ const Trades = () => {
 					</div>
 					<div className={classes.listContainer}>
 						<ListTrades
-							data={tradesRef.current}
+							data={trades}
 							className={classes.list}
 							onClickRow={onClickRow}
 							loadMore={cbEndPage}
-							isLoading={loadingTrades}
+							isLoading={isLoading}
 						/>
 					</div>
 				</div>
 			</div>
 			{size !== "xs" ? (
 				<div className={classes.detailsContainer}>
-					<DetailsTrade data={currentTrade} openJSON={openJSON} />
+					<DetailsTrade data={trade} openJSON={openJSON} />
 				</div>
 			) : (
 				<DialogDetails open={open} onClose={onClose}>
-					<DetailsTrade data={currentTrade} openJSON={openJSON} />
+					<DetailsTrade data={trade} openJSON={openJSON} />
 				</DialogDetails>
 			)}
-			<ModalJSON open={openModalJSON} onClose={closeJSON} data={currentTrade} />
+			<ModalJSON open={openModalJSON} onClose={closeJSON} data={trade} />
 		</div>
 	)
 }

@@ -6,6 +6,7 @@ import {
 	defaultLiquidity,
 	defaultLiquidityToken,
 	defaultTrades,
+	defaultTrx,
 	defaultTrxs,
 	defaultTypeTrx,
 	formatBalance,
@@ -14,6 +15,7 @@ import {
 	formatLiqudity,
 	formatLiqudityToken,
 	formatTrades,
+	formatTrx,
 	formatTrxs,
 	formatTypeTrx,
 } from "../../formaters/dashboard.formatter"
@@ -176,12 +178,12 @@ export const useTrxs = ({ address, limit = 10, offset = 0, type = "all" }, opts 
 	return { data: trxs, isLoading, isFetching, fetchNextPage }
 }
 
-export const useTrades = ({ address, limit = 10, offset = 0 }) => {
+export const useTrades = ({ address, limit = 10 }) => {
 	const request = useRequest()
 
-	const getter = async ({ queryKey }) => {
-		const [_, { address, limit, offset }] = queryKey
-		let url = `https://api-osmosis-chain.imperator.co/swap/v1/address/${address}?limit=${limit}&offset=${offset}`
+	const getter = async ({ queryKey, pageParam = 0 }) => {
+		const [_, { address, limit }] = queryKey
+		let url = `https://api-osmosis-chain.imperator.co/swap/v1/address/${address}?limit=${limit}&offset=${pageParam}`
 
 		const response = await request({
 			url,
@@ -190,11 +192,37 @@ export const useTrades = ({ address, limit = 10, offset = 0 }) => {
 		return formatTrades(response.data)
 	}
 
-	const { data, isLoading, isFetching } = useQuery(["trades", { address, limit, offset }], getter, {
+	const { data, isLoading, isFetching, fetchNextPage } = useInfiniteQuery(["trades", { address, limit }], getter, {
 		enabled: !!address,
+		getNextPageParam: (_, allPages) => {
+			let nextPage = allPages.length * 10
+			return nextPage
+		},
 	})
 
-	const trades = data ? data : defaultTrades
+	const trades = data && data.pages ? data.pages.flat() : defaultTrades
 
-	return { data: trades, isLoading, isFetching }
+	return { data: trades, isLoading, isFetching, fetchNextPage }
+}
+
+export const useInfoTrx = ({ hash }, opts = { chainId: "", address: "", currentTrade: {} }) => {
+	const request = useRequest()
+	const { currentTrade } = opts
+
+	const getter = async ({ queryKey }) => {
+		const [_, { hash }] = queryKey
+		const response = await request({
+			url: `https://api-osmosis-chain.imperator.co/txs/v1/tx/hash/${hash}`,
+			method: "GET",
+		})
+		return formatTrx(response.data, opts)
+	}
+
+	const { data, isLoading, isFetching } = useQuery(["infoTrx", { hash }], getter, {
+		enabled: !!hash,
+	})
+
+	const trx = data ? { ...currentTrade, ...data } : { ...currentTrade, ...defaultTrx }
+
+	return { data: trx, isLoading, isFetching }
 }
