@@ -5,7 +5,6 @@ import { formateNumberDecimalsAuto, getPercent } from "../../../helpers/helpers"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 import { useBalance, useExposure } from "../../../hooks/data/dashboard.hook"
-import useRequest from "../../../hooks/request.hook"
 import { useQuery } from "react-query"
 import { formatWorth } from "../../../formaters/dashboard.formatter"
 
@@ -111,18 +110,10 @@ const Overview = () => {
 	const { address } = useDashboard()
 
 	//Balance
-	const { getter: getterBalance, defaultValue: defaultBalance } = useBalance()
-	const { data: dataBalance, isLoading: isLoadingBalance } = useQuery(["balance", { address }], getterBalance, {
-		enabled: !!address,
-	})
-	const balance = dataBalance ? dataBalance : defaultBalance
+	const { data: balance, isLoading: isLoadingBalance } = useBalance({ address })
 
 	//Exposure
-	const { getter: getterExposure, defaultValue: defaultExposure } = useExposure()
-	const { data: dataExposure, isLoading: isLoadingExposure } = useQuery(["exposure", { address }], getterExposure, {
-		enabled: !!address,
-	})
-	const exposure = dataExposure ? dataExposure : defaultExposure
+	const { exposure, isLoading: isLoadingExposure } = useExposure({ address })
 
 	const [worth, setWorth] = useState(0)
 	const [osmosStaked, setOsmosStaked] = useState(0)
@@ -132,12 +123,12 @@ const Overview = () => {
 	const isLoading = isLoadingBalance || isLoadingExposure
 
 	useEffect(() => {
-		if (dataBalance && dataExposure) {
+		if (balance && exposure) {
 			const worth = formatWorth(balance, exposure)
 			setWorth(worth)
-			setReturn24h(dataBalance.tokenReturn24)
-			setReturnChange24h(dataBalance.tokenReturnChange24)
-			setOsmosStaked(dataBalance.tokenValueWallet)
+			setReturn24h(balance.tokenReturn24)
+			setReturnChange24h(balance.tokenReturnChange24)
+			setOsmosStaked(balance.tokenValueWallet)
 		}
 	}, [exposure, balance])
 

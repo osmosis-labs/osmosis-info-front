@@ -8,7 +8,6 @@ import { useDashboard } from "../../../../contexts/dashboard.provider"
 import { useDebug } from "../../../../contexts/debug.provider"
 import { formatDate, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
 import { useBalance, useChartStaking } from "../../../../hooks/data/dashboard.hook"
-import useRequest from "../../../../hooks/request.hook"
 import ButtonChart from "./button_chart"
 import Chart from "./chart"
 const useStyles = makeStyles((theme) => {
@@ -88,21 +87,12 @@ const StackingRewards = () => {
 	const { address } = useDashboard()
 	const { isStakingAccumulated } = useDebug()
 
-	const { getter: getterBalance, defaultValue: defaultBalance } = useBalance()
-	const { data: dataBalance, isLoading: isLoadingBalance } = useQuery(["balance", { address }], getterBalance, {
-		enabled: !!address,
-	})
-	const balance = dataBalance ? dataBalance : defaultBalance
+	const { data: balance, isLoading: isLoadingBalance } = useBalance({ address })
 
-	const { getter: getterStakink, defaultValue: defaulStaking } = useChartStaking()
-	const { data: dataStaking, isLoading: isLoadingStaking } = useQuery(
-		["chartStaking", { address, isAccumulated: isStakingAccumulated }],
-		getterStakink,
-		{
-			enabled: !!address,
-		}
-	)
-	const chartStaking = dataStaking ? dataStaking : defaulStaking
+	const { data: chartStaking, isLoading: isLoadingStaking } = useChartStaking({
+		address,
+		isAccumulated: isStakingAccumulated,
+	})
 
 	const isLoading = isLoadingBalance || isLoadingStaking
 

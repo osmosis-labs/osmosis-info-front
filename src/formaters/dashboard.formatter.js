@@ -78,7 +78,6 @@ export const formatExposure = (data) => {
 
 export const defaultWorth = 0
 export const formatWorth = (balance, exposure) => {
-	console.log("dashboard.formatter.js -> 81: alance, exposure", balance, exposure)
 	let worth = 0
 	worth += balance.osmoStakedValue + balance.tokenValueWallet
 	worth += exposure.valueExposure

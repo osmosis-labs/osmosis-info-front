@@ -8,7 +8,6 @@ import { useDashboard } from "../../../../contexts/dashboard.provider"
 import { useDebug } from "../../../../contexts/debug.provider"
 import { formatDate, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
 import { useBalance, useLiquidity, useLiquidityToken } from "../../../../hooks/data/dashboard.hook"
-import useRequest from "../../../../hooks/request.hook"
 import ButtonChart from "../stacking_reward/button_chart"
 import Chart from "../stacking_reward/chart"
 import SelectToken from "./select_token"
@@ -92,33 +91,17 @@ const LiquidityReward = () => {
 	const { address } = useDashboard()
 
 	//Balance
-	const { getter: getterBalance, defaultValue: defaultBalance } = useBalance()
-	const { data: dataBalance, isLoading: isLoadingBalance } = useQuery(["balance", { address }], getterBalance, {
-		enabled: !!address,
-	})
-	const balance = dataBalance ? dataBalance : defaultBalance
+	const { data: balance, isLoading: isLoadingBalance } = useBalance({ address })
 
 	//Token Liquidity
-	const { getter: getterLiquidityToken, defaultValue: defaultLiquidityToken } = useLiquidityToken()
-	const { data: dataLiquidityToken, isLoading: isLoadingLiquidityToken } = useQuery(
-		["LiquidityToken", { address }],
-		getterLiquidityToken,
-		{
-			enabled: !!address,
-		}
-	)
-	const liquidityToken = dataLiquidityToken ? dataLiquidityToken : defaultLiquidityToken
+	const { data: liquidityToken, isLoading: isLoadingLiquidityToken } = useLiquidityToken({ address })
 
 	//Liquidity
-	const { getter: getterLiquidityStakink, defaultValue: defaulLiquidityStaking } = useLiquidity()
 	const {
-		data: dataLiquidityStaking,
+		data: liquidity,
 		isLoading: isLoadingLiquidity,
 		isFetching: isFetchingLiquidity,
-	} = useQuery(["Liquidity", { address, isAccumulated, symbol: currentToken.symbol }], getterLiquidityStakink, {
-		enabled: !!address && !!currentToken.symbol,
-	})
-	const liquidity = dataLiquidityStaking ? dataLiquidityStaking : defaulLiquidityStaking
+	} = useLiquidity({ address, symbol: currentToken.symbol, isAccumulated })
 
 	//Merge loading
 	const isLoading = isLoadingBalance || isLoadingLiquidityToken || isLoadingLiquidity || isFetchingLiquidity

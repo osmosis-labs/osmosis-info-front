@@ -43,11 +43,7 @@ const MyWallet = () => {
 	const { address } = useDashboard()
 
 	//Balance
-	const { getter: getterBalance, defaultValue: defaultBalance } = useBalance()
-	const { data: dataBalance, isLoading } = useQuery(["balance", { address }], getterBalance, {
-		enabled: !!address,
-	})
-	const balance = dataBalance ? dataBalance : defaultBalance
+	const { data: balance, isLoading } = useBalance( { address })
 
 	const [data, setData] = useState([])
 	const [order, setOrder] = useState("asc")

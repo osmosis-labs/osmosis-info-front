@@ -42,15 +42,10 @@ const min = 2
 const Exposure = () => {
 	const classes = useStyles()
 	const { address } = useDashboard()
-	const { getter, defaultValue } = useExposure()
-	const {
-		data,
-		isLoading: isLoadingExposure,
-		isFetching,
-	} = useQuery(["exposure", { address }], getter, {
-		enabled: !!address,
-	})
-	const exposure = data ? data : defaultValue
+
+	//Exposure
+	const { exposure, isLoading: isLoadingExposure, isFetching } = useExposure({ address })
+
 	const isLoading = isLoadingExposure || isFetching
 
 	const [currentExposure, setCurrentExposure] = useState("pool")
@@ -120,21 +115,29 @@ const Exposure = () => {
 		setCurrentExposure(exposure)
 	}
 
+	const currentData = currentExposure === "asset" ? listExposureAsset : listExposurePool
+
 	return (
 		<div className={classes.rootExposure}>
 			<p className={classes.title}>My Exposure</p>
 			<Paper className={classes.paper}>
 				<BlocLoaderOsmosis open={isLoading} classNameLoading={classes.loading} />
-				<ChartContainer
-					data={currentExposure === "asset" ? listExposureAsset : listExposurePool}
-					colorOther={colorOther}
-					totalExposure={totalExposure}
-				/>
-				<Info
-					onChangeExposure={onChangeExposure}
-					currentExposure={currentExposure}
-					currentList={currentExposure === "asset" ? listExposureAsset : listExposurePool}
-				/>
+				{currentData.length > 0 ? (
+					<>
+						<ChartContainer
+							data={currentData}
+							colorOther={colorOther}
+							totalExposure={totalExposure}
+						/>
+						<Info
+							onChangeExposure={onChangeExposure}
+							currentExposure={currentExposure}
+							currentList={currentData}
+						/>
+					</>
+				) : (
+					<p className={classes.textNotFound}>No data found.</p>
+				)}
 			</Paper>
 		</div>
 	)
