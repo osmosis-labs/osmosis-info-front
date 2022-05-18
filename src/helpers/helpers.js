@@ -1,6 +1,6 @@
 import typesDashboard from "./typesDashboard.json"
 
-export const formatTokenName = (tokenName) =>{
+export const formatTokenName = (tokenName) => {
 	let res = tokenName.replace("axl", "")
 	return res
 }
@@ -8,9 +8,11 @@ export const formatTokenName = (tokenName) =>{
 export const getTypeDashboard = (type, reverse = false) => {
 	let res = type
 	if (reverse) {
-		res = Object.keys(typesDashboard).find((key) => typesDashboard[key] === type)
+		let finded = Object.keys(typesDashboard).find((key) => typesDashboard[key] === type)
+		res = finded ? finded : type
 	} else {
-		res = typesDashboard[type]
+		let finded = typesDashboard[type]
+		res = finded ? finded : type
 	}
 	if(!res) res = type
 	return res
@@ -78,9 +80,9 @@ export const formateNumberPriceDecimals = (price, decimals = 2) => {
 }
 
 export const getPercent = (value, unit = true) => {
-	let res = parseFloat(formateNumberDecimalsAuto({ price: value, minDecimal: 2, minPrice: 1, maxDecimal: 2 }).replace(",","")).toFixed(
-		2
-	)
+	let res = parseFloat(
+		formateNumberDecimalsAuto({ price: value, minDecimal: 2, minPrice: 1, maxDecimal: 2 }).replace(",", "")
+	).toFixed(2)
 	if (unit) {
 		return res + "%"
 	}

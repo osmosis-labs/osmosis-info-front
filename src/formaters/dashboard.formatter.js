@@ -1,4 +1,9 @@
-import { formatTokenName, getDaysInMonth } from "../helpers/helpers"
+import { formatTokenName, getDaysInMonth, getTypeDashboard } from "../helpers/helpers"
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+import relativeTime from "dayjs/plugin/relativeTime"
+dayjs.extend(relativeTime)
+dayjs.extend(utc)
 
 export const defaultBalance = {
 	osmoStaked: 0,
@@ -114,6 +119,7 @@ export const formatChartStaking = (chartData, isAccumulated = true) => {
 	}
 	return res
 }
+
 export const defaultLiquidityToken = []
 export const formatLiqudityToken = (data) => {
 	return data.map((item) => {
@@ -150,5 +156,186 @@ export const formatLiqudity = (dataLiquidity, isAccumulated = true) => {
 		res["3m"] = dataM
 		res["all"] = data
 	}
+	return res
+}
+
+export const defaultTypeTrx = []
+export const formatTypeTrx = (data, exclude) => {
+	let res = []
+	data.forEach((type) => {
+		if (exclude.length === 0 || !exclude.includes(type.type)) {
+			res.push({
+				type: getTypeDashboard(type.type),
+				count: type.count,
+			})
+		}
+	})
+	res.sort((a, b) => {
+		return b.count - a.count
+	})
+	return res
+}
+
+export const defaultTrxs = []
+export const formatTrxs = (data, { chainId, address }) => {
+	let res = []
+	data.forEach((item) => {
+		let trx = {
+			status: "",
+			time: { display: "", value: null },
+			hash: { display: "", value: null },
+			types: [],
+			fees: 0,
+			height: 0,
+			messages: [],
+			chainId: "",
+		}
+
+		trx.status = item.tx_response.code === 0 ? "success" : "failed"
+
+		let time = new Date(item.time_tx)
+		const tzOffset = new Date(item.time_tx).getTimezoneOffset()
+		let sourceDate = dayjs(item.time_tx).add(-tzOffset, "minute")
+		let timeAgo = dayjs(sourceDate).utc().fromNow(false)
+		trx.time.display = timeAgo
+		trx.time.value = time
+
+		let hash = item.tx_response.txhash
+		let hashDisplay = hash.substring(0, 5) + "..." + hash.substring(hash.length - 5)
+		trx.hash.display = hashDisplay
+		trx.hash.value = hash
+
+		let fees = item.tx_response.tx.auth_info.fee
+		trx.fees = fees.amount.reduce((pr, cr) => pr + cr.amount, 0) / 1_000_000
+
+		trx.height = item.height
+		let types = []
+		trx.messages = item.tx_response.tx.body.messages.map((message) => {
+			let msg = { ...message }
+			let type = msg["@type"]
+			type = type.replace("/", "")
+			msg.type = { value: type, display: getTypeDashboard(type) }
+			if (!msg.type.display) msg.type.display = type
+			if (msg.type.value === "cosmos.bank.v1beta1.MsgSend") {
+				if (msg.to_address === address) {
+					msg.type.display = "Receive"
+				} else {
+					msg.type.display = "Send"
+				}
+			}
+			types.push(msg.type)
+			return msg
+		})
+		trx.types = types
+
+		trx.chainId = chainId
+
+		res.push(trx)
+	})
+
+	return res
+}
+
+export const defaultTrades = []
+export const formatTrades = (data) => {
+	let res = []
+	data.forEach((item) => {
+		let trx = {
+			status: "",
+			time: { display: "", value: null },
+			hash: { display: "", value: null },
+			pool: {},
+			tokenIn: {},
+			tokenOut: {},
+			address: {},
+		}
+
+		trx.status = item.code === 0 ? "success" : "failed"
+
+		let time = new Date(item.time_tx)
+		const tzOffset = new Date(item.time_tx).getTimezoneOffset()
+		let sourceDate = dayjs(item.time_tx).add(-tzOffset, "minute")
+		let timeAgo = dayjs(sourceDate).utc().fromNow(false)
+		trx.time.display = timeAgo
+		trx.time.value = time
+
+		let hash = item.tx_hash
+		let hashDisplay = hash.substring(0, 5) + "..." + hash.substring(hash.length - 5)
+		trx.hash.display = hashDisplay
+		trx.hash.value = hash
+
+		let addressDisplay = item.address.substring(0, 5) + "..." + item.address.substring(item.address.length - 5)
+		trx.address = { value: item.address, display: addressDisplay }
+
+		trx.usd = item.value_usd
+
+		let symbolInDisplay = formatTokenName(item.symbol_in)
+		let symbolOutDisplay = item.symbol_out ? formatTokenName(item.symbol_out) : ""
+		trx.tokenIn = {
+			value: item.amount_in,
+			symbol: item.symbol_in,
+			symbolDisplay: symbolInDisplay,
+			usd: 0,
+		}
+		if (trx.tokenIn.value != 0) {
+			trx.tokenIn.usd = trx.usd / trx.tokenIn.value
+		}
+
+		trx.tokenOut = {
+			value: item.amount_out ? item.amount_out : 0,
+			symbol: item.symbol_out ? item.symbol_out : "",
+			symbolDisplay: symbolOutDisplay,
+			usd: 0,
+		}
+		if (trx.tokenOut.value && trx.tokenOut.value != 0) {
+			trx.tokenOut.usd = trx.usd / trx.tokenOut.value
+		}
+
+		let types = [{ value: "cosmos.bank.v1beta1.MsgSend", display: getTypeDashboard("cosmos.bank.v1beta1.MsgSend") }]
+		trx.types = types
+		let images = []
+		if (item.symbol_in) {
+			images.push(
+				`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${item.symbol_in.toLowerCase()}.png`
+			)
+		}
+		if (item.symbol_out) {
+			images.push(
+				`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${item.symbol_out.toLowerCase()}.png`
+			)
+		}
+
+		let pools = {
+			images,
+			name: `${item.symbol_in}/${item.symbol_out}`,
+			nameDisplay: `${symbolInDisplay}/${symbolOutDisplay}`,
+			routes: item.swap_route.routes,
+		}
+		trx.pools = pools
+		trx.messages = [
+			{
+				type: types[0],
+				pools: trx.pools.routes.reduce((pr, cr, ci) => {
+					if (ci === 0) return cr.poolId
+					else return pr + `, ${cr.poolId}`
+				}, ""),
+				sender: trx.address.value,
+				tokenIn: {
+					value: item.amount_in,
+					symbol: item.symbol_in,
+					symbolInDisplay: symbolInDisplay,
+					usd: item.value_usd,
+				},
+				tokenOut: {
+					value: item.amount_out ? item.amount_out : 0,
+					symbol: item.symbol_out ? item.symbol_out : "",
+					symbolDisplay: symbolOutDisplay,
+					usd: 0,
+				},
+			},
+		]
+		res.push(trx)
+	})
+
 	return res
 }

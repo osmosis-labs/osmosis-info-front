@@ -1,14 +1,15 @@
 import { makeStyles } from "@material-ui/core"
-import { memo, useEffect, useRef, useState } from "react"
+import { memo, useState } from "react"
 import { useDashboard } from "../../../contexts/dashboard.provider"
 import useSize from "../../../hooks/sizeHook"
 import Details from "./details/details"
 import DialogDetails from "./dialog_details"
 import ModalJSON from "./details/modal_json"
 import Types from "./types"
-import { getTypeDashboard } from "../../../helpers/helpers"
 import ListTrx from "./list_trx/list_trx"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
+import { useTrxs, useTypeTrx } from "../../../hooks/data/dashboard.hook"
+import { getTypeDashboard } from "../../../helpers/helpers"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootTransactions: {
@@ -91,45 +92,25 @@ const Transactions = () => {
 	const classes = useStyles()
 	const size = useSize()
 	const [open, setOpen] = useState(false)
-	const { getTypeTrx, getTrx, getAdresses, ...other } = useDashboard()
-	const [currentTrx, setCurrentTrx] = useState({})
-	const [address, setAddress] = useState("")
 	const [openModalJSON, setOpenModalJSON] = useState(false)
-	const offset = useRef(0)
 
-	const [loadingTrx, setLoadingTrx] = useState(false)
+	const [type, setType] = useState("all")
+	const [currentTrx, setCurrentTrx] = useState({})
 
-	const trxRef = useRef([])
-	const [types, setTypes] = useState([])
-	const typeTrx = useRef("all")
+	const { address, chainId } = useDashboard()
 
-	useEffect(() => {
-		const fetch = async () => {
-			try {
-				setLoadingTrx(true)
-				let promises = [getTypeTrx({ address }), getTrx({ address })]
-				let results = await Promise.all(promises)
-				let types = results[0]
-				const type = getTypeDashboard("osmosis.gamm.v1beta1.MsgSwapExactAmountIn")
-				types = types.filter((t) => t.type !== type)
-				let trx = results[1]
-				setTypes(types)
-				trxRef.current = trx
-				setLoadingTrx(false)
-			} catch (e) {
-				console.log("%ctransactions.jsx -> 53 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
-				setLoadingTrx(false)
-			}
-		}
+	const { data: types, isLoading: isLoadingType } = useTypeTrx(
+		{ address },
+		{ exclude: ["osmosis.gamm.v1beta1.MsgSwapExactAmountIn"] }
+	)
+	const {
+		data: trx,
+		isLoading: isLoadingTrx,
+		isFetching,
+		fetchNextPage,
+	} = useTrxs({ address, type }, { chainId, address })
 
-		if (address && address.length > 0) {
-			fetch()
-		}
-	}, [address])
-
-	useEffect(() => {
-		setAddress(other.address)
-	}, [other.address])
+	const isLoading = isLoadingType || isLoadingTrx || isFetching
 
 	const onOpen = () => {
 		setOpen(true)
@@ -164,33 +145,11 @@ const Transactions = () => {
 	}
 
 	const cbEndPage = async () => {
-		try {
-			setLoadingTrx(true)
-			offset.current += 10
-			let results = await getTrx({
-				address,
-				offset: offset.current,
-				type: typeTrx.current === "all" ? null : getTypeDashboard(typeTrx.current, true),
-			})
-			trxRef.current = [...trxRef.current, ...results]
-			setLoadingTrx(false)
-		} catch (e) {
-			setLoadingTrx(false)
-			console.log("%ctransactions.jsx -> 53 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
-		}
+		fetchNextPage()
 	}
 
 	const onChangeTypeTrx = async (type) => {
-		try {
-			setLoadingTrx(true)
-			typeTrx.current = type
-			let results = await getTrx({ address, offset: 0, type: type === "all" ? null : getTypeDashboard(type, true) })
-			trxRef.current = results
-			setLoadingTrx(false)
-		} catch (e) {
-			console.log("%ctransactions.jsx -> 165 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
-			setLoadingTrx(false)
-		}
+		setType((t) => (type === "all" ? "all" : getTypeDashboard(type, true)))
 	}
 
 	if (!address || address.length === 0) {
@@ -228,18 +187,13 @@ const Transactions = () => {
 						<p className={classes.title}>Transactions</p>
 					</div>
 					<Types onChangeType={onChangeTypeTrx} types={types} />
-					{/* <div className={classes.tableContainer}>
-						<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} />
-						<TableTrx data={trx} className={classes.table} onClickRow={onClickRow} cbEndPage={cbEndPage} /> 
-					</div> */}
-
 					<div className={classes.listContainer}>
 						<ListTrx
-							data={trxRef.current}
+							data={trx}
 							className={classes.list}
 							onClickRow={onClickRow}
 							loadMore={cbEndPage}
-							isLoading={loadingTrx}
+							isLoading={isLoading}
 						/>
 					</div>
 				</div>

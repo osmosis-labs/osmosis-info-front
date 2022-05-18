@@ -486,22 +486,19 @@ export const DashboardProvider = ({ children }) => {
 		} else return []
 	}
 
-	return (
-		<DashboardContext.Provider
-			value={{
-				address,
-				getTypeTrx,
-				getTrx,
-				getAdresses,
-				getTrades,
-				getInfoTrx,
-				getWalletInfo,
-				getChartStacking,
-				getLiquidity,
-				getLiquidityToken,
-			}}
-		>
-			{children}
-		</DashboardContext.Provider>
-	)
+	const value = {
+		address,
+		getTypeTrx,
+		getTrx,
+		getAdresses,
+		getTrades,
+		getInfoTrx,
+		getWalletInfo,
+		getChartStacking,
+		getLiquidity,
+		getLiquidityToken,
+		chainId: CHAIN_ID,
+	}
+
+	return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>
 }

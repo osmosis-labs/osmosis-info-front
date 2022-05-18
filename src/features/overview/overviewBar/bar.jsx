@@ -58,6 +58,7 @@ const Bar = ({ className }) => {
 	const {
 		data: { priceOsmoBrut },
 	} = usePrices()
+
 	const getClasses = (value, type) => {
 		let res = ""
 		if (!type) res = classes.change
