@@ -14,7 +14,6 @@ import Token from "../tokens/token/Token"
 import LoaderOsmosis from "../../components/loader/LoaderOsmosis"
 import { LoaderProvider } from "../../contexts/LoaderProvider"
 import IBC from "../ibc/IBC"
-import { IBCProvider } from "../../contexts/IBCProvier"
 import { WatchlistIBCProvider } from "../../contexts/WatchlistIBCProvider"
 import { TokensV2Provider } from "../../contexts/TokensV2.provider"
 import { PoolsV2Provider } from "../../contexts/PoolsV2.provider"
@@ -163,9 +162,7 @@ const App = () => {
 																			<Token />
 																		</Route>
 																		<Route path="/ibc">
-																			<IBCProvider>
-																				<IBC />
-																			</IBCProvider>
+																			<IBC />
 																		</Route>
 																		<Route exact={true} path="/dashboard/">
 																			<Analytics />

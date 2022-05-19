@@ -3,7 +3,7 @@ import StarIcon from "@mui/icons-material/Star"
 import StarBorderIcon from "@mui/icons-material/StarBorder"
 import { Tooltip, IconButton } from "@mui/material"
 import Image from "../../../components/image/Image"
-import { MIN_BLOCKED, MIN_CONGESTED } from "../../../contexts/IBCProvier"
+import { MIN_BLOCKED, MIN_CONGESTED } from "../../../formaters/ibc.formatter"
 
 const useStyles = makeStyles((theme) => {
 	return {

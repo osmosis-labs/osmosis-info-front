@@ -7,7 +7,7 @@ import redArrow from "./redDownArrow.svg"
 import Network from "./Network"
 import StarIcon from "@material-ui/icons/Star"
 import StarBorderIcon from "@material-ui/icons/StarBorder"
-import { MIN_BLOCKED, MIN_CONGESTED } from "../../contexts/IBCProvier"
+import { MIN_BLOCKED, MIN_CONGESTED } from "../../formaters/ibc.formatter"
 const useStyles = makeStyles((theme) => {
 	return {
 		IBCItem: {
