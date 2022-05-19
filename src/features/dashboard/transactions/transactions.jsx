@@ -1,6 +1,5 @@
 import { makeStyles } from "@material-ui/core"
 import { memo, useState } from "react"
-import { useDashboard } from "../../../contexts/dashboard.provider"
 import useSize from "../../../hooks/sizeHook"
 import Details from "./details/details"
 import DialogDetails from "./dialog_details"
@@ -10,6 +9,8 @@ import ListTrx from "./list_trx/list_trx"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import { useTrxs, useTypeTrx } from "../../../hooks/data/dashboard.hook"
 import { getTypeDashboard } from "../../../helpers/helpers"
+import { useKeplr } from "../../../contexts/KeplrProvider"
+
 const useStyles = makeStyles((theme) => {
 	return {
 		rootTransactions: {
@@ -97,7 +98,7 @@ const Transactions = () => {
 	const [type, setType] = useState("all")
 	const [currentTrx, setCurrentTrx] = useState({})
 
-	const { address, chainId } = useDashboard()
+	const { address, CHAIN_ID: chainId } = useKeplr()
 
 	const { data: types, isLoading: isLoadingType } = useTypeTrx(
 		{ address },

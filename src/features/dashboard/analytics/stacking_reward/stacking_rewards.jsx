@@ -1,11 +1,10 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
-import { useQuery } from "react-query"
 import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
-import { useDashboard } from "../../../../contexts/dashboard.provider"
 import { useDebug } from "../../../../contexts/debug.provider"
+import { useKeplr } from "../../../../contexts/KeplrProvider"
 import { formatDate, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
 import { useBalance, useChartStaking } from "../../../../hooks/data/dashboard.hook"
 import ButtonChart from "./button_chart"
@@ -84,7 +83,8 @@ const useStyles = makeStyles((theme) => {
 })
 const StackingRewards = () => {
 	const classes = useStyles()
-	const { address } = useDashboard()
+	const { address } = useKeplr()
+
 	const { isStakingAccumulated } = useDebug()
 
 	const { data: balance, isLoading: isLoadingBalance } = useBalance({ address })

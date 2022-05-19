@@ -1,11 +1,9 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
-import { useQuery } from "react-query"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
-import { useDashboard } from "../../../../contexts/dashboard.provider"
+import { useKeplr } from "../../../../contexts/KeplrProvider"
 import { useExposure } from "../../../../hooks/data/dashboard.hook"
-import useRequest from "../../../../hooks/request.hook"
 import ChartContainer from "./chart/chart_container"
 import Info from "./info"
 
@@ -41,8 +39,8 @@ const min = 2
 
 const Exposure = () => {
 	const classes = useStyles()
-	const { address } = useDashboard()
-
+	const { address } = useKeplr()
+	
 	//Exposure
 	const { exposure, isLoading: isLoadingExposure, isFetching } = useExposure({ address })
 

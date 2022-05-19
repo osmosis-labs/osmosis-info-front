@@ -7,10 +7,12 @@ import Search from "./Search"
 import Toggle from "../toggle/Toggle"
 import ToggleItem from "../toggle/ToggleItem"
 import SelectDashboard from "./selectDashboard/select_dashboard"
-import { useDashboard } from "../../contexts/dashboard.provider"
 import ButtonOsmo from "../../features/dashboard/button_osmo"
 import { formaterNumber } from "../../helpers/helpers"
 import WarningIcon from "@mui/icons-material/Warning"
+import { useBalance } from "../../hooks/data/dashboard.hook"
+import { useKeplr } from "../../contexts/KeplrProvider"
+
 const useStyles = makeStyles((theme) => {
 	return {
 		appBarDesktopRoot: {
@@ -111,7 +113,9 @@ const AppBarDesktop = ({ type, onChangeType, message, diplayMessage }) => {
 	const history = useHistory()
 	let location = useLocation()
 	const [currentPath, setCurrentPath] = useState("/")
-	const { address, getWalletInfo } = useDashboard()
+	const { address } = useKeplr()
+	const { data } = useBalance({ address })
+
 	const [osmo, setOsmo] = useState(0)
 
 	useEffect(() => {
@@ -119,19 +123,15 @@ const AppBarDesktop = ({ type, onChangeType, message, diplayMessage }) => {
 	}, [location.pathname, setCurrentPath])
 
 	useEffect(() => {
-		const fetch = async () => {
-			let { balance } = await getWalletInfo({ address })
+		if (data.wallet.length > 0) {
 			let osmos = 0
-			let walletOsmo = balance.wallet.find((item) => item.symbol === "OSMO")
+			let walletOsmo = data.wallet.find((item) => item.symbol === "OSMO")
 			if (walletOsmo) {
 				osmos = walletOsmo.amount
 			}
 			setOsmo(formaterNumber(osmos))
 		}
-		if (address && address.length > 0) {
-			fetch()
-		}
-	}, [address])
+	}, [data])
 
 	return (
 		<div className={classes.appBarDesktopRoot}>

@@ -33,7 +33,6 @@ import Transactions from "../dashboard/transactions/transactions"
 import Trades from "../dashboard/trades/trades"
 import { DebugProvider } from "../../contexts/debug.provider"
 import DebugModal from "../_debug/debug_modal"
-import { DashboardProvider } from "../../contexts/dashboard.provider"
 
 const MODE = process.env.REACT_APP_MODE
 const useStyles = makeStyles((theme) => {
@@ -128,69 +127,67 @@ const App = () => {
 											<MetricsProvider>
 												<KeplrProvider>
 													<LoaderProvider>
-														<DashboardProvider>
-															<ToastProvider>
-																{MODE === "dev" ? <DebugModal /> : null}
-																<LoaderOsmosis />
-																<Helmet>
-																	<script src="/charting_library/charting_library.js" type="text/javascript" />
-																</Helmet>
-																<div className={classes.appRoot}>
-																	<Toast />
+														<ToastProvider>
+															{MODE === "dev" ? <DebugModal /> : null}
+															<LoaderOsmosis />
+															<Helmet>
+																<script src="/charting_library/charting_library.js" type="text/javascript" />
+															</Helmet>
+															<div className={classes.appRoot}>
+																<Toast />
 
-																	<InfoBar />
-																	<AppBar />
-																	<div className={classes.container}>
-																		<div className={classes.contentContainer}>
-																			<Switch>
-																				<Route path="/" exact={true}>
-																					<div className={classes.content}>
-																						<Overview />
-																					</div>
-																				</Route>
-																				<Route path="/pools">
-																					<div className={classes.content}>
-																						<Pools />
-																					</div>
-																				</Route>
-																				<Route path="/pool/:id">
-																					<div className={classes.content}>
-																						<Pool />
-																					</div>
-																				</Route>
-																				<Route path="/tokens">
-																					<div className={classes.content}>
-																						<Tokens />
-																					</div>
-																				</Route>
-																				<Route path="/token/:symbol">
-																					<Token />
-																				</Route>
-																				<Route path="/ibc">
-																					<IBCProvider>
-																						<IBC />
-																					</IBCProvider>
-																				</Route>
-																				<Route exact={true} path="/dashboard/">
-																					<Analytics />
-																				</Route>
-																				<Route path="/dashboard/transactions">
-																					<Transactions />
-																				</Route>
-																				<Route path="/dashboard/trades">
-																					<Trades />
-																				</Route>
-																				<Route>
-																					<div className={classes.content}>
-																						<NotFound />
-																					</div>
-																				</Route>
-																			</Switch>
-																		</div>
+																<InfoBar />
+																<AppBar />
+																<div className={classes.container}>
+																	<div className={classes.contentContainer}>
+																		<Switch>
+																			<Route path="/" exact={true}>
+																				<div className={classes.content}>
+																					<Overview />
+																				</div>
+																			</Route>
+																			<Route path="/pools">
+																				<div className={classes.content}>
+																					<Pools />
+																				</div>
+																			</Route>
+																			<Route path="/pool/:id">
+																				<div className={classes.content}>
+																					<Pool />
+																				</div>
+																			</Route>
+																			<Route path="/tokens">
+																				<div className={classes.content}>
+																					<Tokens />
+																				</div>
+																			</Route>
+																			<Route path="/token/:symbol">
+																				<Token />
+																			</Route>
+																			<Route path="/ibc">
+																				<IBCProvider>
+																					<IBC />
+																				</IBCProvider>
+																			</Route>
+																			<Route exact={true} path="/dashboard/">
+																				<Analytics />
+																			</Route>
+																			<Route path="/dashboard/transactions">
+																				<Transactions />
+																			</Route>
+																			<Route path="/dashboard/trades">
+																				<Trades />
+																			</Route>
+																			<Route>
+																				<div className={classes.content}>
+																					<NotFound />
+																				</div>
+																			</Route>
+																		</Switch>
 																	</div>
 																</div>
-															</ToastProvider>
-														</DashboardProvider>
+															</div>
+														</ToastProvider>
 													</LoaderProvider>
 												</KeplrProvider>
 											</MetricsProvider>

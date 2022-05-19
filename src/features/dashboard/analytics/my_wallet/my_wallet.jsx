@@ -1,11 +1,9 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
-import { useQuery } from "react-query"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
-import { useDashboard } from "../../../../contexts/dashboard.provider"
+import { useKeplr } from "../../../../contexts/KeplrProvider"
 import { useBalance } from "../../../../hooks/data/dashboard.hook"
-import useRequest from "../../../../hooks/request.hook"
 import WalletHeader from "./wallet_header"
 import WalletItem from "./wallet_item"
 const useStyles = makeStyles((theme) => {
@@ -40,7 +38,7 @@ const useStyles = makeStyles((theme) => {
 })
 const MyWallet = () => {
 	const classes = useStyles()
-	const { address } = useDashboard()
+	const { address } = useKeplr()
 
 	//Balance
 	const { data: balance, isLoading } = useBalance( { address })

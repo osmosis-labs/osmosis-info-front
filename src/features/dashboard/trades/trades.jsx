@@ -1,6 +1,5 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useRef, useState } from "react"
-import { useDashboard } from "../../../contexts/dashboard.provider"
 import ModalJSON from "../transactions/details/modal_json"
 import DialogDetails from "../transactions/dialog_details"
 import useSize from "../../../hooks/sizeHook"
@@ -8,6 +7,7 @@ import ListTrades from "./list_trades/list_trades"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import DetailsTrade from "./details_trade"
 import { useInfoTrx, useTrades } from "../../../hooks/data/dashboard.hook"
+import { useKeplr } from "../../../contexts/KeplrProvider"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -89,7 +89,7 @@ const Trades = () => {
 	const [open, setOpen] = useState(false)
 	const [openModalJSON, setOpenModalJSON] = useState(false)
 	const [currentTrade, setCurrentTrade] = useState({})
-	const { address, chainId } = useDashboard()
+	const { address, CHAIN_ID: chainId } = useKeplr()
 
 	const { data: trades, isLoading: isLoadingTrx, isFetching, fetchNextPage } = useTrades({ address })
 	const { data: trade } = useInfoTrx({ hash: currentTrade?.hash?.value }, { currentTrade, address, chainId })

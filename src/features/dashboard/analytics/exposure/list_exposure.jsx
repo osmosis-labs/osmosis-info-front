@@ -1,9 +1,5 @@
 import { makeStyles } from "@material-ui/core"
-import { useEffect } from "react"
-import Paper from "../../../../components/paper/Paper"
-import { useDashboard } from "../../../../contexts/dashboard.provider"
 import { formaterNumber, getPercent } from "../../../../helpers/helpers"
-import ButtonChart from "./button_chart"
 
 const useStyles = makeStyles((theme) => {
 	return {

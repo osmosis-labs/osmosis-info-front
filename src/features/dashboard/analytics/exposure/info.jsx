@@ -1,7 +1,4 @@
 import { makeStyles } from "@material-ui/core"
-import { useEffect } from "react"
-import Paper from "../../../../components/paper/Paper"
-import { useDashboard } from "../../../../contexts/dashboard.provider"
 import ButtonChart from "./button_chart"
 import ListExposure from "./list_exposure"
 

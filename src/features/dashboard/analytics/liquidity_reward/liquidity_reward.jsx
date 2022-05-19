@@ -1,16 +1,16 @@
 import { makeStyles } from "@material-ui/core"
-import { useCallback, useEffect, useState } from "react"
-import { useQuery } from "react-query"
+import {  useEffect, useState } from "react"
 import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
-import { useDashboard } from "../../../../contexts/dashboard.provider"
 import { useDebug } from "../../../../contexts/debug.provider"
+import { useKeplr } from "../../../../contexts/KeplrProvider"
 import { formatDate, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
 import { useBalance, useLiquidity, useLiquidityToken } from "../../../../hooks/data/dashboard.hook"
 import ButtonChart from "../stacking_reward/button_chart"
 import Chart from "../stacking_reward/chart"
 import SelectToken from "./select_token"
+
 const useStyles = makeStyles((theme) => {
 	return {
 		rootLiquidityReward: {
@@ -88,7 +88,7 @@ const LiquidityReward = () => {
 	const [currentToken, setCurrentToken] = useState({ symbol: "", symbolDisplay: "" })
 	const { isAccumulated } = useDebug()
 
-	const { address } = useDashboard()
+	const { address } = useKeplr()
 
 	//Balance
 	const { data: balance, isLoading: isLoadingBalance } = useBalance({ address })
