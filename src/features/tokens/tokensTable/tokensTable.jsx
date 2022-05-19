@@ -1,11 +1,12 @@
 import { makeStyles } from "@material-ui/core"
 
-import React, { memo } from "react"
+import React, { memo, useEffect } from "react"
 import TableCustom from "../../../components/table/tableCustom"
 import TableSettings from "../../../components/tableSettings/TableSettings"
 import { formateNumberDecimalsAuto, formaterNumber, getInclude, getPercent } from "../../../helpers/helpers"
 import CellTokenName from "./cellTokenName"
 import CellTokenChange from "./cellTokenChange"
+import { useSettings } from "../../../contexts/SettingsProvider"
 
 const useStyles = makeStyles((theme) => {
 	return {
