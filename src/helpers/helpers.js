@@ -12,6 +12,7 @@ export const getTypeDashboard = (type, reverse = false) => {
 	} else {
 		res = typesDashboard[type]
 	}
+	if(!res) res = type
 	return res
 }
 

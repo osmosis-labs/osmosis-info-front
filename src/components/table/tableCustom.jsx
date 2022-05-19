@@ -3,6 +3,7 @@ import { makeStyles, Table, TableBody, TableCell, TableRow } from "@material-ui/
 import HeaderTableCustom from "./header/headerTableCustom"
 import RowTableCustom from "./body/rowTableCustom"
 import FooterTableCustom from "./footer/footerTableCustom"
+import { useSettings } from "../../contexts/SettingsProvider"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -25,6 +26,13 @@ const TableCustom = ({ config, data, customClass, customClassTable }) => {
 	const [orderBy, setOrderBy] = useState(config.defaultOrderBy)
 	const [page, setPage] = useState(0)
 	const [rowsPerPage, setRowsPerPage] = useState(config.rowsPerPage)
+	const { settings } = useSettings()
+
+	useEffect(() => {
+		setOrder(config.defaultOrder)
+		setOrderBy(config.defaultOrderBy)
+		setPage(0)
+	}, [settings.type])
 
 	const onChangeRowsPerPage = (event) => {
 		setRowsPerPage(event.target.value)
