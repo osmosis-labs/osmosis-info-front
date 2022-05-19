@@ -4,8 +4,8 @@ import relativeTime from "dayjs/plugin/relativeTime"
 import utc from "dayjs/plugin/utc"
 import dayjs from "dayjs"
 import { getInclude, getItemInclude, getWeekNumber, timeToDateUTC, formatTokenName } from "../helpers/helpers"
-import { useTokensV2 } from "./TokensV2.provider"
 import { useSettings } from "./SettingsProvider"
+import { useTokens } from "../hooks/data/tokens.hook"
 const PoolsV2Context = createContext()
 
 export const usePoolsV2 = () => useContext(PoolsV2Context)
@@ -13,7 +13,9 @@ export const usePoolsV2 = () => useContext(PoolsV2Context)
 export const PoolsV2Provider = ({ children }) => {
 	const [pools, setPools] = useState([])
 	const [allPools, setAllPools] = useState([])
-	const { allTokens } = useTokensV2()
+	const {
+		data: { all: allTokens },
+	} = useTokens()
 	const { settings } = useSettings()
 
 	const [poolsAPR, setPoolsAPR] = useState([])
@@ -94,7 +96,11 @@ export const PoolsV2Provider = ({ children }) => {
 					name: `${trx.symbol_in}/${trx.symbol_out}`,
 					nameDisplay: `${symbolInDisplay}/${symbolOutDisplay}`,
 					routes: trx.swap_route.routes.map((route) => {
-						return {...route, poolNameDisplay: formatTokenName(route.poolName), tokenOutSymbolDisplay: formatTokenName(route.tokenOutSymbol)}
+						return {
+							...route,
+							poolNameDisplay: formatTokenName(route.poolName),
+							tokenOutSymbolDisplay: formatTokenName(route.tokenOutSymbol),
+						}
 					}),
 				}
 				return {

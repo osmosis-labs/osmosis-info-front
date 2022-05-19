@@ -17,6 +17,7 @@ import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 import TrxTable from "./trxTable/trxTable"
 import { useSettings } from "../../../contexts/SettingsProvider"
 import { useToast } from "../../../contexts/Toast.provider"
+import { useChartPool } from "../../../hooks/data/pools.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -138,6 +139,9 @@ const Pool = () => {
 	const [currentDataVolume, setCurrentDataVolume] = useState([])
 	const [currentDataLiquidity, setCurrentDataLiquidity] = useState([])
 	const [currency, setCurrency] = useState({ before: true, value: "$" })
+
+	const { data: chartPool, isLoading: loadingChartPool, isFetching: isFetchingChartPool } = useChartPool({})
+	const isLoadingChart = loadingPoolChart || loadingChartPool
 
 	useEffect(() => {
 		// get pool from history state
@@ -261,6 +265,7 @@ const Pool = () => {
 			}
 		}
 	}
+
 	const onClick = (e) => {
 		let index = getInclude(currentDataVolume, (item) => {
 			return item.time.year === e.time.year && item.time.month === e.time.month && item.time.day === e.time.day
@@ -363,11 +368,7 @@ const Pool = () => {
 					pricesDecimals={pricesDecimals}
 				/>
 				<Paper className={classes.right}>
-					<ContainerLoader
-						className={classes.chartContainer}
-						classChildren={classes.right}
-						isLoading={loadingDataChart}
-					>
+					<ContainerLoader className={classes.chartContainer} classChildren={classes.right} isLoading={isLoadingChart}>
 						<div className={classes.header}>
 							<InfoCharts
 								data={currentItem}
