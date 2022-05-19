@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
-import { useMetrics } from "../../../contexts/MetricsProvider"
+import { useGainers, useLosers } from "../../../hooks/data/metrics.hook"
 import MoverItem from "./moverItem"
 
 const useStyles = makeStyles((theme) => {
@@ -14,7 +14,8 @@ const useStyles = makeStyles((theme) => {
 
 const Bar = ({ className }) => {
 	const classes = useStyles()
-	const { losers, gainers, loadingTop } = useMetrics()
+	const {data: losers} = useLosers()
+	const {data: gainers} = useGainers()
 	const [items, setItems] = useState([])
 	useEffect(() => {
 		let items = []

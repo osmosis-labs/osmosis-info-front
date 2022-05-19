@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core"
 import Paper from "../../../components/paper/Paper"
-import { useMetrics } from "../../../contexts/MetricsProvider"
 import { formaterNumber, getPercent } from "../../../helpers/helpers"
+import { useMetrics } from "../../../hooks/data/metrics.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -51,7 +51,9 @@ const useStyles = makeStyles((theme) => {
 
 const OverviewBar = () => {
 	const classes = useStyles()
-	const { volume24h, volume24hChange, liquidityUSD, liquidityUSD24h } = useMetrics()
+	const {
+		data: { volume24h, volume24hChange, liquidityUSD, liquidityUSD24h },
+	} = useMetrics()
 
 	const getClasses = (value, type) => {
 		let res = ""
