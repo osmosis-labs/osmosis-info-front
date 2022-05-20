@@ -12,7 +12,7 @@ const AppBar = () => {
 			updateSettings({ type: value })
 		}
 	}
-	const diplayMessage = true
+	const diplayMessage = false
 	const message =
 		"Terra blockchain has resumed with on-chain swaps and IBC channels disabled. LUNA and UST pools rewards will drain and UST LP depool shortly"
 
