@@ -9,13 +9,13 @@ import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
 import { getInclude } from "../../helpers/helpers"
 import ContainerChartLiquidity from "./ContainerChartLiquidity"
 import ContainerChartVolume from "./ContainerChartVolume"
-import { usePoolsV2 } from "../../contexts/PoolsV2.provider"
 import PoolsTable from "../pools/poolsTable/poolsTable"
 import TokensTable from "../tokens/tokensTable/tokensTable"
 import { useSettings } from "../../contexts/SettingsProvider"
 import OverviewBar from "./overviewBar/overviewBar"
 import { useLiquidityChart, useVolumeChart } from "../../hooks/data/charts.hook"
 import { useTokens } from "../../hooks/data/tokens.hook"
+import { usePools } from "../../hooks/data/pools.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -96,7 +96,7 @@ const Overview = () => {
 	const [tokensOnWatchlist, setTokensOnWatchlist] = useState([])
 	const [poolsOnWatchlist, setPoolsOnWatchlist] = useState([])
 
-	const { pools, loadingPools } = usePoolsV2()
+	const { data: pools, isLoading: loadingPools } = usePools()
 	const {
 		data: { current: tokens },
 		isLoading: loadingTokens,

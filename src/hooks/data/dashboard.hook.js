@@ -145,7 +145,7 @@ export const useTypeTrx = ({ address }, opts = { exclude: [] }) => {
 	return { data: typeTrx, isLoading, isFetching }
 }
 
-export const useTrxs = ({ address, limit = 10, offset = 0, type = "all" }, opts = { chainId: "", address: "" }) => {
+export const useTrxs = ({ address, limit = 10, type = "all" }, opts = { chainId: "", address: "" }) => {
 	const request = useRequest()
 
 	const getter = async ({ queryKey, pageParam = 0 }) => {
@@ -161,17 +161,13 @@ export const useTrxs = ({ address, limit = 10, offset = 0, type = "all" }, opts 
 		return formatTrxs(response.data, opts)
 	}
 
-	const { data, isLoading, isFetching, fetchNextPage } = useInfiniteQuery(
-		["trxs", { address, limit, offset, type }],
-		getter,
-		{
-			enabled: !!address,
-			getNextPageParam: (_, allPages) => {
-				let nextPage = allPages.length * 10
-				return nextPage
-			},
-		}
-	)
+	const { data, isLoading, isFetching, fetchNextPage } = useInfiniteQuery(["trxs", { address, limit, type }], getter, {
+		enabled: !!address,
+		getNextPageParam: (_, allPages) => {
+			let nextPage = allPages.length * 10
+			return nextPage
+		},
+	})
 
 	const trxs = data && data.pages ? data.pages.flat() : defaultTrxs
 

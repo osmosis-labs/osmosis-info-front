@@ -15,9 +15,7 @@ import LoaderOsmosis from "../../components/loader/LoaderOsmosis"
 import { LoaderProvider } from "../../contexts/LoaderProvider"
 import IBC from "../ibc/IBC"
 import { WatchlistIBCProvider } from "../../contexts/WatchlistIBCProvider"
-import { TokensV2Provider } from "../../contexts/TokensV2.provider"
 import { PoolsV2Provider } from "../../contexts/PoolsV2.provider"
-import { TokenChartV2Provider } from "../../contexts/TokenChartV2"
 import NotFound from "../404/notFound"
 import { useThemeCustom } from "../../contexts/ThemeProvider"
 import { KeplrProvider } from "../../contexts/KeplrProvider"
@@ -116,81 +114,77 @@ const App = () => {
 		<BrowserRouter basename=".">
 			<DebugProvider>
 				<WalletManagerProvider walletInfoList={walletInfoList}>
-					<TokensV2Provider>
-						<PoolsV2Provider>
-							<WatchlistPoolsProvider>
-								<WatchlistTokensProvider>
-									<WatchlistIBCProvider>
-										<TokenChartV2Provider>
-											<KeplrProvider>
-												<LoaderProvider>
-													<ToastProvider>
-														{MODE === "dev" ? <DebugModal /> : null}
-														<LoaderOsmosis />
-														<Helmet>
-															<script src="/charting_library/charting_library.js" type="text/javascript" />
-														</Helmet>
-														<div className={classes.appRoot}>
-															<Toast />
+					<PoolsV2Provider>
+						<WatchlistPoolsProvider>
+							<WatchlistTokensProvider>
+								<WatchlistIBCProvider>
+									<KeplrProvider>
+										<LoaderProvider>
+											<ToastProvider>
+												{MODE === "dev" ? <DebugModal /> : null}
+												<LoaderOsmosis />
+												<Helmet>
+													<script src="/charting_library/charting_library.js" type="text/javascript" />
+												</Helmet>
+												<div className={classes.appRoot}>
+													<Toast />
 
-															<InfoBar />
-															<AppBar />
-															<div className={classes.container}>
-																<div className={classes.contentContainer}>
-																	<Switch>
-																		<Route path="/" exact={true}>
-																			<div className={classes.content}>
-																				<Overview />
-																			</div>
-																		</Route>
-																		<Route path="/pools">
-																			<div className={classes.content}>
-																				<Pools />
-																			</div>
-																		</Route>
-																		<Route path="/pool/:id">
-																			<div className={classes.content}>
-																				<Pool />
-																			</div>
-																		</Route>
-																		<Route path="/tokens">
-																			<div className={classes.content}>
-																				<Tokens />
-																			</div>
-																		</Route>
-																		<Route path="/token/:symbol">
-																			<Token />
-																		</Route>
-																		<Route path="/ibc">
-																			<IBC />
-																		</Route>
-																		<Route exact={true} path="/dashboard/">
-																			<Analytics />
-																		</Route>
-																		<Route path="/dashboard/transactions">
-																			<Transactions />
-																		</Route>
-																		<Route path="/dashboard/trades">
-																			<Trades />
-																		</Route>
-																		<Route>
-																			<div className={classes.content}>
-																				<NotFound />
-																			</div>
-																		</Route>
-																	</Switch>
-																</div>
-															</div>
+													<InfoBar />
+													<AppBar />
+													<div className={classes.container}>
+														<div className={classes.contentContainer}>
+															<Switch>
+																<Route path="/" exact={true}>
+																	<div className={classes.content}>
+																		<Overview />
+																	</div>
+																</Route>
+																<Route path="/pools">
+																	<div className={classes.content}>
+																		<Pools />
+																	</div>
+																</Route>
+																<Route path="/pool/:id">
+																	<div className={classes.content}>
+																		<Pool />
+																	</div>
+																</Route>
+																<Route path="/tokens">
+																	<div className={classes.content}>
+																		<Tokens />
+																	</div>
+																</Route>
+																<Route path="/token/:symbol">
+																	<Token />
+																</Route>
+																<Route path="/ibc">
+																	<IBC />
+																</Route>
+																<Route exact={true} path="/dashboard/">
+																	<Analytics />
+																</Route>
+																<Route path="/dashboard/transactions">
+																	<Transactions />
+																</Route>
+																<Route path="/dashboard/trades">
+																	<Trades />
+																</Route>
+																<Route>
+																	<div className={classes.content}>
+																		<NotFound />
+																	</div>
+																</Route>
+															</Switch>
 														</div>
-													</ToastProvider>
-												</LoaderProvider>
-											</KeplrProvider>
-										</TokenChartV2Provider>
-									</WatchlistIBCProvider>
-								</WatchlistTokensProvider>
-							</WatchlistPoolsProvider>
-						</PoolsV2Provider>
-					</TokensV2Provider>
+													</div>
+												</div>
+											</ToastProvider>
+										</LoaderProvider>
+									</KeplrProvider>
+								</WatchlistIBCProvider>
+							</WatchlistTokensProvider>
+						</WatchlistPoolsProvider>
+					</PoolsV2Provider>
 				</WalletManagerProvider>
 			</DebugProvider>
 		</BrowserRouter>

@@ -12,12 +12,18 @@ import InfoCharts from "../../../components/chart/charts/InfoCharts"
 import PoolHeader from "./PoolHeader"
 import PoolInfo from "./PoolInfo"
 import { useCallback } from "react"
-import { usePoolsV2 } from "../../../contexts/PoolsV2.provider"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 import TrxTable from "./trxTable/trxTable"
 import { useSettings } from "../../../contexts/SettingsProvider"
 import { useToast } from "../../../contexts/Toast.provider"
-import { useChartPool } from "../../../hooks/data/pools.hook"
+import {
+	useHistoricalPool,
+	useLiquidityPool,
+	usePool,
+	usePoolTrx,
+	useTokensPool,
+	useVolumePool,
+} from "../../../hooks/data/pools.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -99,34 +105,15 @@ const Pool = () => {
 	const history = useHistory()
 	const { showToast } = useToast()
 	const { id } = useParams()
-	const {
-		pools,
-		getPoolData,
-		loadingPoolChart,
-		getChartPool,
-		getVolumeChartPool,
-		getLiquidityChartPool,
-		getTrxPool,
-		loadingTrx,
-		allPools,
-	} = usePoolsV2()
 
-	//save data here to avoid to re fetching data if is already fetched
 	const { settings, updateSettings } = useSettings()
-	const [pool, setPool] = useState({})
-	const [tokens, setTokens] = useState([])
 	const [selectedTokens, setSelectedTokens] = useState({ one: {}, two: {} })
 	const [pricesInfo, setPriceInfo] = useState(0)
 	const [fees, setFees] = useState("0.0%")
 
-	const [loadingDataChart, setLoadingDataChart] = useState(true)
-	const [loadingPoolDetails, setLoadingPoolDetails] = useState(true)
-	const [loadingPoolInfo, setLoadingPoolInfo] = useState(true)
-
 	const pairDecimals = useRef(3)
 	const pricesDecimals = useRef([2, 2])
 
-	/* CHARTS */
 	const [currentItem, setCurrentItem] = useState({ value: 0, date: "-" })
 	const dataClick = useRef({ time: { day: 1, month: 1, year: 1 }, value: 0, clickedTwice: true })
 	const [typeChart, setTypeChart] = useState("price") // price, volume, liquidity
@@ -135,99 +122,131 @@ const Pool = () => {
 	const [rangeVolume, setRangeVolume] = useState("d") // d, w, m
 	const [rangeLiquidity, setRangeLiquidity] = useState("d") // d, w, m
 
-	const [currentDataPrice, setCurrentDataPrice] = useState([])
-	const [currentDataVolume, setCurrentDataVolume] = useState([])
-	const [currentDataLiquidity, setCurrentDataLiquidity] = useState([])
 	const [currency, setCurrency] = useState({ before: true, value: "$" })
 
-	const { data: chartPool, isLoading: loadingChartPool, isFetching: isFetchingChartPool } = useChartPool({})
-	const isLoadingChart = loadingPoolChart || loadingChartPool
+	//Get data of current pool
+	const { data: tokensPool, isLoading: isLoadingTokensPool } = useTokensPool({ poolId: id })
+
+	const { data: pool, isLoading: isLoadingDataPool, isFetching: isFetchingDataPool } = usePool({ poolId: id })
+
+	const isLoadingPool = isLoadingTokensPool || isLoadingDataPool
+
+	//Trx
+	const { data: trx, isLoading: isLoadingTrx } = usePoolTrx({ poolId: id, limit: 100 })
+
+	//price
+	const {
+		data: historical,
+		isLoading: isLdgHistorical,
+		isFetching: isFetchingHistorical,
+	} = useHistoricalPool({
+		poolId: id,
+		denomIn: selectedTokens.one?.denom,
+		denomOut: selectedTokens.two?.denom,
+		range: rangePrice,
+	})
+	const isLoadingHistorical = isLdgHistorical || isFetchingHistorical
+
+	// volume
+	const {
+		data: volume,
+		isLoading: isLdgVolume,
+		isFetching: isFetchingVolume,
+	} = useVolumePool({
+		poolId: id,
+	})
+	const isLoadingVolume = isLdgVolume || isFetchingVolume
+
+	// liquidity
+	const {
+		data: liquidity,
+		isLoading: isLdgLiquidity,
+		isFetching: isFetchingLiquidity,
+	} = useLiquidityPool({
+		poolId: id,
+	})
+	const isLoadingLiquidity = isLdgLiquidity || isFetchingLiquidity
+
+	const isLoadingCharts = isLoadingHistorical || isLoadingVolume || isLoadingLiquidity
+
+	const currentVolume = volume[rangeVolume]
+	const currentLiquidity = liquidity[rangeLiquidity]
 
 	useEffect(() => {
-		// get pool from history state
+		// Check if we have a id
 		if (!id) {
 			showToast({
 				severity: "warning",
 				text: "Pool not found, you are redirected to pools page.",
 			})
-			history.push("/pools")
-		} else {
-			if (pools.length > 0) {
-				let indexPool = getInclude(allPools, (pool) => pool.id === id)
-				if (indexPool >= 0) {
-					let currentPool = allPools[indexPool]
-					if (currentPool.main && settings.type === "frontier") {
-						updateSettings({ type: "app" })
-						showToast({
-							severity: "info",
-							text: "You are redirected to main because the pool does not exist on frontier.",
-						})
-					} else if (!currentPool.main && settings.type === "app") {
-						updateSettings({ type: "frontier" })
-						showToast({
-							severity: "info",
-							text: "You are redirected to frontier because the pool does not exist on main.",
-						})
-					}
-					setPool(currentPool)
-				} else {
+			history.push("/tokens")
+		}
+	}, [id, showToast, history])
+
+	useEffect(() => {
+		//check if pool exist
+		if (id && !isLoadingDataPool && !isFetchingDataPool) {
+			if (pool.id) {
+				//update fees
+				setFees((f) => pool.fees)
+
+				if (pool.main && settings.type === "frontier") {
+					updateSettings({ type: "app" })
 					showToast({
-						severity: "warning",
-						text: "Pool not found, you are redirected to pools page.",
+						severity: "info",
+						text: "You are redirected to main because the pool does not exist on frontier.",
 					})
-					history.push("/pools")
+				} else if (!pool.main && settings.type === "app") {
+					updateSettings({ type: "frontier" })
+					showToast({
+						severity: "info",
+						text: "You are redirected to frontier because the pool does not exist on main.",
+					})
 				}
+			} else {
+				showToast({
+					severity: "warning",
+					text: "Pool not found, you are redirected to pools page.",
+				})
+				history.push("/pools")
 			}
 		}
-	}, [id, showToast, history, pools])
+	}, [pool, isLoadingDataPool, isFetchingDataPool, id])
 
 	useEffect(() => {
-		// fetch pool details from server
-		const fetch = async () => {
-			let tokensPool = await getPoolData(pool.id)
-			setFees(tokensPool[0].fees)
-			setTokens([...tokensPool])
-		}
-		if (pool.id) {
-			fetch()
-		}
-	}, [pool, getPoolData])
-
-	useEffect(() => {
-		const fetch = async () => {
-			setLoadingPoolDetails(true)
-			setLoadingPoolInfo(true)
-			setLoadingDataChart(true)
-			let firstPair = await getChartPool({
-				poolId: pool.id,
-				denomIn: tokens[0].denom,
-				denomOut: tokens[1].denom,
-				range: "7d",
-			})
-			if (typeof firstPair === "string") {
-				throw new Error(firstPair)
+		// Set tokens
+		if (id && !isLoadingPool) {
+			if (tokensPool.length > 0) {
+				setSelectedTokens((ps) => ({
+					one: { ...tokensPool[0] },
+					two: { ...tokensPool[1] },
+				}))
 			}
-			// Update pair token decimal
-			pairDecimals.current = firstPair.length > 0 ? detectBestDecimalsDisplay(firstPair[firstPair.length - 1].open) : 3
-			// Update both token price decimals
+		}
+	}, [tokensPool, isLoadingTokensPool, id])
+
+	useEffect(() => {
+		// needed to update price of pool and fee
+		if (tokensPool.length > 0) {
+			setSelectedTokens((ps) => ({ one: tokensPool[0], two: tokensPool[1] }))
 			let tmpPricesDecimals = [2, 2]
-			for (let i = 0; i < tokens.length; i++) {
-				tmpPricesDecimals[i] = detectBestDecimalsDisplay(tokens[i].price)
+			for (let i = 0; i < tokensPool.length; i++) {
+				tmpPricesDecimals[i] = detectBestDecimalsDisplay(tokensPool[i].price)
 			}
 			pricesDecimals.current = tmpPricesDecimals
-			setCurrency({ before: false, value: tokens[0].symbolDisplay })
-			setSelectedTokens({ one: tokens[0], two: tokens[1] })
-			updatePriceInfo(firstPair)
+			setCurrency((ps) => ({ before: false, value: tokensPool[0].symbolDisplay }))
+		}
+	}, [tokensPool])
 
-			onChangeRangePrice(rangePrice, tokens[0].denom, tokens[1].denom)
-			setLoadingPoolDetails(false)
-			setLoadingPoolInfo(false)
-			setLoadingDataChart(false)
+	useEffect(() => {
+		if (historical.length > 0) {
+			pairDecimals.current = detectBestDecimalsDisplay(historical[historical.length - 1].close)
+			updatePriceInfo(historical)
+			console.log("Pool.jsx (l:245): historical[historical.length - 1]:", historical[historical.length - 1].close)
+			const lastItem = historical[historical.length - 1]
+			setCurrentItem({ time: lastItem.time, value: lastItem })
 		}
-		if (pool.id && tokens.length > 0) {
-			fetch()
-		}
-	}, [pool, tokens, getChartPool])
+	}, [historical])
 
 	const onChangeSeletedTokens = useCallback(
 		(selectedTokens) => {
@@ -247,27 +266,27 @@ const Pool = () => {
 
 	const onMouseLeave = (e) => {
 		if (typeChart === "volume") {
-			if (currentDataVolume.length > 0)
+			if (currentVolume.length > 0)
 				if (dataClick.current.clickedTwice) {
-					let lastElt = currentDataVolume[currentDataVolume.length - 1]
+					let lastElt = currentVolume[currentVolume.length - 1]
 					setCurrentItem({ time: lastElt.time, value: lastElt.value })
 				} else {
 					setCurrentItem({ time: dataClick.current.time, value: dataClick.current.value })
 				}
 		} else if (typeChart === "liquidity") {
-			if (currentDataLiquidity.length > 0) {
-				setCurrentItem(currentDataLiquidity[currentDataLiquidity.length - 1])
+			if (currentLiquidity.length > 0) {
+				setCurrentItem(currentLiquidity[currentLiquidity.length - 1])
 			}
 		} else if (typeChart === "price") {
-			if (currentDataPrice.length > 0) {
-				let lastItem = currentDataPrice[currentDataPrice.length - 1]
+			if (historical.length > 0) {
+				let lastItem = historical[historical.length - 1]
 				setCurrentItem({ time: lastItem.time, value: lastItem })
 			}
 		}
 	}
 
 	const onClick = (e) => {
-		let index = getInclude(currentDataVolume, (item) => {
+		let index = getInclude(currentVolume, (item) => {
 			return item.time.year === e.time.year && item.time.month === e.time.month && item.time.day === e.time.day
 		})
 		if (index > -1) {
@@ -277,8 +296,8 @@ const Pool = () => {
 				e.time.day === dataClick.current.time.day
 
 			dataClick.current = {
-				time: currentDataVolume[index].time,
-				value: currentDataVolume[index].value,
+				time: currentVolume[index].time,
+				value: currentVolume[index].value,
 				clickedTwice: same ? !dataClick.current.clickedTwice : false,
 			}
 		}
@@ -289,61 +308,33 @@ const Pool = () => {
 	}, [])
 
 	const onChangeRangeVolume = async (value) => {
-		try {
-			setLoadingDataChart(true)
-			let data = await getVolumeChartPool({ poolId: pool.id, range: value })
-			setCurrentDataVolume(data)
-			setCurrentItem(data[data.length - 1])
-			setRangeVolume(value)
-			setLoadingDataChart(false)
-		} catch (e) {
-			console.log("%cContainerCharts.jsx -> 124 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
-			setLoadingDataChart(false)
-		}
+		setRangeVolume(value)
 	}
 
 	const onChangeRangeLiquidity = async (value) => {
-		try {
-			setLoadingDataChart(true)
-			let data = await getLiquidityChartPool({ poolId: pool.id, range: value })
-			setCurrentDataLiquidity(data)
-			setCurrentItem(data[data.length - 1])
-			setRangeLiquidity(value)
-			setLoadingDataChart(false)
-		} catch (e) {
-			console.log("%cContainerCharts.jsx -> 124 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
-			setLoadingDataChart(false)
-		}
+		setRangeLiquidity(value)
 	}
 
-	const onChangeRangePrice = async (value, denomIn, denomOut, cb) => {
-		try {
-			setLoadingDataChart(true)
-			let data = await getChartPool({
-				poolId: pool.id,
-				denomIn: denomIn ? denomIn : selectedTokens.one.denom,
-				denomOut: denomOut ? denomOut : selectedTokens.two.denom,
-				range: value,
-			})
-			if (cb) cb(data)
-			setCurrentDataPrice(data)
-			let lastItem = data[data.length - 1]
-			setCurrentItem({ time: lastItem.time, value: lastItem })
+	const onChangeRangePrice = async (value) => {
+		if (value === "all") {
+			setRangePrice("50y")
+		} else {
 			setRangePrice(value)
-			setLoadingDataChart(false)
-		} catch (e) {
-			console.log("%cContainerCharts.jsx -> 124 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
-			setLoadingDataChart(false)
 		}
 	}
 
 	const onChangeTypeChart = (value) => {
 		if (value === "price") {
 			onChangeRangePrice(rangePrice)
+			updatePriceInfo(historical)
+			const lastItem = historical[historical.length - 1]
+			setCurrentItem({ time: lastItem.time, value: lastItem })
 		} else if (value === "volume") {
 			onChangeRangeVolume(rangeVolume)
+			setCurrentItem(volume[rangeVolume][volume[rangeVolume].length - 1])
 		} else if (value === "liquidity") {
 			onChangeRangeLiquidity(rangeLiquidity)
+			setCurrentItem(liquidity[rangeLiquidity][liquidity[rangeLiquidity].length - 1])
 		}
 		setTypeChart(value)
 	}
@@ -352,23 +343,23 @@ const Pool = () => {
 		<div className={classes.poolRoot}>
 			<PoolHeader
 				pool={pool}
-				tokens={tokens}
+				tokens={tokensPool}
 				selectedTokens={selectedTokens}
 				onChangeSeletedTokens={onChangeSeletedTokens}
-				loadingPoolDetails={loadingPoolDetails}
+				loadingPoolDetails={isLoadingPool}
 				pricesInfo={pricesInfo}
 				key="la"
 			/>
 			<div className={classes.charts}>
 				<PoolInfo
-					loadingPoolInfo={loadingPoolInfo}
-					tokens={tokens}
+					loadingPoolInfo={isLoadingPool}
 					pool={pool}
+					tokens={tokensPool}
 					fees={fees}
 					pricesDecimals={pricesDecimals}
 				/>
 				<Paper className={classes.right}>
-					<ContainerLoader className={classes.chartContainer} classChildren={classes.right} isLoading={isLoadingChart}>
+					<ContainerLoader className={classes.chartContainer} classChildren={classes.right} isLoading={isLoadingCharts}>
 						<div className={classes.header}>
 							<InfoCharts
 								data={currentItem}
@@ -394,9 +385,9 @@ const Pool = () => {
 						</div>
 						<div className={classes.chartsContainer}>
 							<Charts
-								dataPrice={currentDataPrice}
-								dataVolume={currentDataVolume}
-								dataLiquidity={currentDataLiquidity}
+								dataPrice={historical}
+								dataVolume={currentVolume}
+								dataLiquidity={currentLiquidity}
 								crossMove={crossMove}
 								onMouseLeave={onMouseLeave}
 								onClick={onClick}
@@ -404,15 +395,15 @@ const Pool = () => {
 								rangeLiquidity={rangeLiquidity}
 								rangeVolume={rangeVolume}
 								rangePrice={rangePrice}
-								isLoading={loadingDataChart}
+								isLoading={isLoadingCharts}
 							/>
 						</div>
 					</ContainerLoader>
 				</Paper>
 			</div>
 			<Paper className={classes.trxContainer}>
-				<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} borderRadius={true} />
-				<TrxTable getTrxPool={getTrxPool} loadingTrx={loadingTrx} pool={pool} />
+				<BlocLoaderOsmosis open={isLoadingTrx} classNameLoading={classes.loading} borderRadius={true} />
+				<TrxTable data={trx} />
 			</Paper>
 		</div>
 	)

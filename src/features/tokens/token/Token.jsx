@@ -5,24 +5,25 @@ import ContainerLoader from "../../../components/loader/ContainerLoader"
 import Paper from "../../../components/paper/Paper"
 import {
 	detectBestDecimalsDisplay,
-	formateNumberDecimalsAuto,
 	formateNumberPrice,
 	formateNumberPriceDecimals,
-	getInclude,
 	getPercent,
 } from "../../../helpers/helpers"
 import TokenPath from "./TokenPath"
 import TokenTitle from "./TokenTitle"
 import ContainerCharts from "./ContainerCharts"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
-import { useTokensV2 } from "../../../contexts/TokensV2.provider"
-import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import ExpertChartDialog from "./expertChart/ExpertChartDialog"
-import { useTokenChartV2 } from "../../../contexts/TokenChartV2"
 import TrxTable from "./trxTable/trxTable"
 import { useSettings } from "../../../contexts/SettingsProvider"
 import { useToast } from "../../../contexts/Toast.provider"
+import {
+	useHistoricalToken,
+	useLiquidityToken,
+	useToken,
+	useTrxToken,
+	useVolumeToken,
+} from "../../../hooks/data/tokens.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -161,80 +162,97 @@ const Token = () => {
 
 	const { symbol } = useParams()
 	const { settings, updateSettings } = useSettings()
-	const {
-		getTokenData,
-		tokens,
-		allTokens,
-		loadingToken,
-		loadingCharts,
-		getHistoricalChartToken,
-		getVolumeChartToken,
-		getLiquidityChartToken,
-	} = useTokensV2()
-	const { getTrxToken, loadingTrx } = useTokenChartV2()
-	const [token, setToken] = useState({})
-	const priceDecimals = useRef(2)
 
-	const [dataIsLoaded, setDataIsLoaded] = useState(false) // data is loaded
+	const priceDecimals = useRef(2)
 
 	const [openExpertChart, setOpenExpertChart] = useState(false)
 
+	const [rangePrice, setRangePrice] = useState(60)
+	const [rangeLiquidity, setRangeLiquidity] = useState("d")
+	const [rangeVolume, setRangeVolume] = useState("d")
+
+	//token
+	const { data: tkn, isLoading: isLoadingTkn, isFetching: isFetchingTkn } = useToken({ symbol })
+	const isLoadingToken = isLoadingTkn || isFetchingTkn
+	const [token, setToken] = useState({ ...tkn })
+
+	//Transactions
+	const {
+		data: trxs,
+		isLoading: isLdgTrx,
+		isFetching: isFetchingTrx,
+	} = useTrxToken({ symbol: token.symbol, limit: 100 })
+	const isLoadingTrx = isLdgTrx || isFetchingTrx
+
+	//Historical
+	const {
+		data: historical,
+		isLoading: isLdgHistorical,
+		isFetching: isFetchingHistorical,
+	} = useHistoricalToken({ symbol: tkn.symbol, tf: rangePrice })
+	const isLoadingHistorical = isLdgHistorical || isFetchingHistorical
+
+	//Volume
+	const { data: volume, isLoading: isLdgVolume, isFetching: isFetchingVolume } = useVolumeToken({ symbol: tkn.symbol })
+	const isLoadingVolume = isLdgVolume || isFetchingVolume
+
+	//Liquidity
+	const {
+		data: liquidity,
+		isLoading: isLdgLiquidity,
+		isFetching: isFetchingLiquidity,
+	} = useLiquidityToken({ symbol: tkn.symbol })
+	const isLoadingLiquidity = isLdgLiquidity || isFetchingLiquidity
+	const isLoadingChart = isLoadingHistorical || isLoadingVolume || isLoadingLiquidity || isLoadingToken
+
 	useEffect(() => {
-		// get token from history state
+		// Check if we have a symbol
 		if (!symbol) {
 			showToast({
 				severity: "warning",
 				text: "Token not found, you are redirected to tokens page.",
 			})
 			history.push("/tokens")
-		} else {
-			if (tokens.length > 0) {
-				let indexToken = getInclude(allTokens, (token) => token.symbol === symbol)
-				if (indexToken >= 0) {
-					let currentToken = allTokens[indexToken]
-					if (currentToken.main && settings.type === "frontier") {
-						updateSettings({ type: "app" })
-						showToast({
-							severity: "info",
-							text: "You are redirected to main because the token does not exist on frontier.",
-						})
-					} else if (!currentToken.main && settings.type === "app") {
-						updateSettings({ type: "frontier" })
-						showToast({
-							severity: "info",
-							text: "You are redirected to frontier because the token does not exist on main.",
-						})
-					}
-					setToken(currentToken)
-				} else {
-					showToast({
-						severity: "warning",
-						text: "Token not found, you are redirected to tokens page.",
-					})
-					history.push("/tokens")
-				}
-			}
 		}
-	}, [symbol, showToast, history, tokens])
+	}, [symbol, showToast, history])
 
 	useEffect(() => {
-		let fetch = async () => {
-			try {
-				setDataIsLoaded(false)
-				let tokenData = await getTokenData(token.symbol)
-				let dataPrice = await getDataPrice(60)
-				priceDecimals.current = dataPrice.length > 0 ? detectBestDecimalsDisplay(dataPrice[0].close) : 2
-				setToken({ ...tokenData, price: dataPrice[dataPrice.length - 1].close })
-				setDataIsLoaded(true)
-			} catch (e) {
-				console.log("%cToken.jsx -> 171 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
-				setDataIsLoaded(true)
+		// check if we have a token with the symbol
+
+		console.log("%cToken.jsx -> 222 ERROR: TO DO", "background: #FF0000; color:#FFFFFF")
+		if (symbol && !isLoadingToken) {
+			if (tkn.symbol) {
+				console.log("Token.jsx (l:207): tkn:", tkn)
+				if (tkn.main && settings.type === "frontier") {
+					updateSettings({ type: "app" })
+					showToast({
+						severity: "info",
+						text: "You are redirected to main because the token does not exist on frontier.",
+					})
+				} else if (!tkn.main && settings.type === "app") {
+					updateSettings({ type: "frontier" })
+					showToast({
+						severity: "info",
+						text: "You are redirected to frontier because the token does not exist on main.",
+					})
+				}
+			} else {
+				showToast({
+					severity: "warning",
+					text: "Token not found, you are redirected to tokens page.",
+				})
+				history.push("/tokens")
 			}
 		}
-		if (token.id) {
-			fetch()
+	}, [symbol, tkn, isLoadingToken])
+
+	useEffect(() => {
+		// needed to update price of token
+		if (tkn.symbol && historical.length > 0) {
+			priceDecimals.current = detectBestDecimalsDisplay(historical[0].close)
+			setToken((t) => ({ ...tkn, price: historical[historical.length - 1].close }))
 		}
-	}, [token, getTokenData])
+	}, [tkn, historical])
 
 	const onOpenExpertChart = () => {
 		setOpenExpertChart(true)
@@ -244,33 +262,29 @@ const Token = () => {
 		setOpenExpertChart(false)
 	}
 
-	const getDataPrice = async (tf) => {
-		let data = await getHistoricalChartToken({ symbol: token.symbol, tf })
-		return data
+	const changeRange = ({ range, typeChart }) => {
+		if (typeChart === "price") {
+			setRangePrice(range)
+		} else if (typeChart === "liquidity") {
+			setRangeLiquidity(range)
+		} else if (typeChart === "volume") {
+			setRangeVolume(range)
+		}
 	}
 
-	const getDataLiquidity = async (range) => {
-		let data = await getLiquidityChartToken({ symbol: token.symbol, range })
-		return data
-	}
-
-	const getDataVolume = async (range) => {
-		let data = await getVolumeChartToken({ symbol: token.symbol, range })
-		return data
-	}
 	return (
 		<div className={classes.tokenRoot}>
 			<ExpertChartDialog open={openExpertChart} onClose={onCloseExpertChart} token={token} />
 
 			<div className={classes.tokenContainer}>
-				<ContainerLoader className={classes.containerInfo} isLoading={!dataIsLoaded}>
+				<ContainerLoader className={classes.containerInfo} isLoading={isLoadingToken}>
 					<TokenPath token={token} />
 					<TokenTitle token={token} />
 					<p className={classes.tokenPrice}>{formateNumberPriceDecimals(token.price, priceDecimals.current)}</p>
 				</ContainerLoader>
 				<div className={classes.charts}>
 					<Paper className={classes.loaderDetails}>
-						<BlocLoaderOsmosis open={!dataIsLoaded} classNameLoading={classes.loading} />
+						<BlocLoaderOsmosis open={isLoadingToken} classNameLoading={classes.loading} />
 						<div className={classes.details}>
 							<div className={classes.detail}>
 								<p className={classes.titleDetail}>Liquidity</p>
@@ -330,22 +344,26 @@ const Token = () => {
 						</div>
 					</Paper>
 					<Paper className={classes.right}>
-						<BlocLoaderOsmosis open={!dataIsLoaded || loadingCharts} classNameLoading={classes.loading} />
+						<BlocLoaderOsmosis open={isLoadingChart} classNameLoading={classes.loading} />
 						<div className={classes.containerHideShow}>
 							<ContainerCharts
 								token={token}
 								onOpenExpertChart={onOpenExpertChart}
-								getDataPrice={getDataPrice}
-								getDataVolume={getDataVolume}
-								getDataLiquidity={getDataLiquidity}
-								dataIsLoaded={dataIsLoaded || loadingCharts}
+								changeRange={changeRange}
+								isLoading={isLoadingChart}
+								rangePrice={rangePrice}
+								rangeLiquidity={rangeLiquidity}
+								rangeVolume={rangeVolume}
+								dataPrice={historical}
+								dataVolume={volume[rangeVolume]}
+								dataLiquidity={liquidity[rangeLiquidity]}
 							/>
 						</div>
 					</Paper>
 				</div>
 				<Paper className={classes.trxContainer}>
-					<BlocLoaderOsmosis open={loadingTrx} classNameLoading={classes.loading} borderRadius={true} />
-					<TrxTable getTrxToken={getTrxToken} loadingTrx={loadingTrx} token={token} />
+					<BlocLoaderOsmosis open={isLoadingTrx} classNameLoading={classes.loading} borderRadius={true} />
+					<TrxTable data={trxs} />
 				</Paper>
 			</div>
 		</div>

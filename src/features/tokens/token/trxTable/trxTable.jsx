@@ -35,19 +35,9 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const TrxTable = ({ getTrxToken, loadingTrx, token, className }) => {
+const TrxTable = ({ data, className }) => {
 	const classes = useStyles()
-	const [limit, setLimit] = useState(100)
-	const [trx, setTrx] = useState([])
-	useEffect(() => {
-		const fetch = async () => {
-			let data = await getTrxToken({ symbol: token.symbol, limit: limit, offset: 0 })
-			setTrx(data)
-		}
-		if (token.id) {
-			fetch()
-		}
-	}, [token])
+
 	const onClickAddress = (row) => {
 		window.open(`https://www.mintscan.io/osmosis/account/${row.address.value}`, "_blank")
 	}
@@ -178,7 +168,7 @@ const TrxTable = ({ getTrxToken, loadingTrx, token, className }) => {
 
 	return (
 		<div className={`${classes.trxTableRoot} ${className}`}>
-			<TableCustom config={trxTableConfig} data={trx} customClass={classes.trxTable} />
+			<TableCustom config={trxTableConfig} data={data} customClass={classes.trxTable} />
 		</div>
 	)
 }
