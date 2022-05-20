@@ -134,15 +134,12 @@ const LiquidityReward = () => {
 			const { wallet } = balance
 			let osmoToken = liquidityToken.find((token) => token.symbol === "OSMO")
 			let firstToken = liquidityToken[0]
-			console.log('liquidity_reward.jsx (l:137): fisrt:', firstToken )
 			if (osmoToken) {
-				console.log('liquidity_reward.jsx (l:138): osmoToken:', osmoToken )
 				firstToken = osmoToken
 			}
 			getCurrentWallet(wallet, firstToken)
 			setWalletSaved(wallet)
 			setTokens(liquidityToken)
-			console.log('liquidity_reward.jsx (l:143): fisrt:', firstToken )
 			setCurrentToken(firstToken)
 		}
 	}, [liquidityToken, balance])

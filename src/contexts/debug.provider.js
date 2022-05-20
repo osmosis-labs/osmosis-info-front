@@ -9,9 +9,10 @@ export const DebugProvider = ({ children }) => {
 	const [open, setOpen] = useState(false)
 	const onClose = () => setOpen(false)
 	const [isAccumulated, setIsAccumulated] = useState(true)
+	const [isStakingAccumulated, setIsStakingAccumulated] = useState(true)
 
 	return (
-		<DebugContext.Provider value={{ open, onClose, MODE, setOpen, isAccumulated, setIsAccumulated }}>
+		<DebugContext.Provider value={{ open, onClose, MODE, setOpen, isAccumulated, setIsAccumulated, isStakingAccumulated, setIsStakingAccumulated }}>
 			{children}
 		</DebugContext.Provider>
 	)
