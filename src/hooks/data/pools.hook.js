@@ -1,4 +1,5 @@
 import { useInfiniteQuery, useQuery } from "react-query"
+import { useSettings } from "../../contexts/SettingsProvider"
 import {
 	defaultHistoricalPool,
 	defaultLiquidityPool,
@@ -70,6 +71,7 @@ export const usePoolApr = () => {
 
 export const usePools = ({ lowLiquidity = false }) => {
 	const { data: poolApr } = usePoolApr()
+	const { settings } = useSettings()
 	const {
 		data: { all: allTokens },
 	} = useTokens()
@@ -87,11 +89,14 @@ export const usePools = ({ lowLiquidity = false }) => {
 	const { data, isLoading, isFetching } = useQuery(["pool", { lowLiquidity }], getter, {
 		enabled: poolApr.length > 0 && allTokens.length > 0,
 	})
-
+	if (data) {
+		if (settings.type === "app") {
+			data.current = data.main
+		} else {
+			data.current = data.frontier
+		}
+	}
 	const pools = data ? data : defaultPools
-	//TODO: Check main
-	console.log("%cpools.hook.js -> 81 ERROR: TO DO check main", "background: #FF0000; color:#FFFFFF")
-
 	return { data: pools, isLoading, isFetching }
 }
 

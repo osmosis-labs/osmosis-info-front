@@ -26,9 +26,11 @@ export const formatTokensPool = (data) => {
 	return res
 }
 
-export const defaultPools = []
+export const defaultPools = { all: [], main: [], frontier: [], current: [] }
+
 export const formatPools = (dataPools, dataAPR, allTokens) => {
-	let res = Object.keys(dataPools).map((key) => {
+	let res = { ...defaultPools }
+	Object.keys(dataPools).forEach((key) => {
 		let row = dataPools[key]
 		let apr = null
 		let indexAPR = getInclude(dataAPR, (apr) => {
@@ -101,7 +103,11 @@ export const formatPools = (dataPools, dataAPR, allTokens) => {
 			apr,
 			main,
 		}
-		return pool
+		if (pool.main) {
+			res.main.push(pool)
+		}
+		res.frontier.push(pool)
+		res.all.push(pool)
 	})
 	return res
 }

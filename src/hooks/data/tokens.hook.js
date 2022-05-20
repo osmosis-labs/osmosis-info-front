@@ -110,6 +110,7 @@ export const useVolumeToken = ({ symbol }) => {
 
 	return { data: tokens, isLoading, isFetching }
 }
+
 export const useLiquidityToken = ({ symbol }) => {
 	const request = useRequest()
 
@@ -130,6 +131,7 @@ export const useLiquidityToken = ({ symbol }) => {
 
 	return { data: tokens, isLoading, isFetching }
 }
+
 export const useHistoricalToken = ({ symbol, tf }) => {
 	const request = useRequest()
 

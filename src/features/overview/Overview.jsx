@@ -96,7 +96,10 @@ const Overview = () => {
 	const [tokensOnWatchlist, setTokensOnWatchlist] = useState([])
 	const [poolsOnWatchlist, setPoolsOnWatchlist] = useState([])
 
-	const { data: pools, isLoading: loadingPools } = usePools()
+	const {
+		data: { current: pools },
+		isLoading: loadingPools,
+	} = usePools({})
 	const {
 		data: { current: tokens },
 		isLoading: loadingTokens,

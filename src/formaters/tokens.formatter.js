@@ -32,9 +32,8 @@ export const formatTokens = (data) => {
 		}
 		if (token.main) {
 			res.main.push(token)
-		} else {
-			res.frontier.push(token)
 		}
+		res.frontier.push(token)
 		res.all.push(token)
 	})
 

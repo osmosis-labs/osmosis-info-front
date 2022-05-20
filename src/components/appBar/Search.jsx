@@ -97,7 +97,9 @@ const Search = () => {
 	const [active, setActive] = useState("all")
 	const [inputSearch, setInputSearch] = useState("")
 
-	const { data: pools } = usePools({})
+	const {
+		data: { current: pools },
+	} = usePools({})
 
 	const { watchlistPools } = useWatchlistPools()
 	const { watchlistTokens } = useWatchlistTokens()

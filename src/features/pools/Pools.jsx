@@ -32,7 +32,10 @@ const useStyles = makeStyles((theme) => {
 
 const Pools = () => {
 	const classes = useStyles()
-	const { data: pools, isLoading: isLoadingPools } = usePools({})
+	const {
+		data: { current: pools },
+		isLoading: isLoadingPools,
+	} = usePools({})
 	const { settings, updateSettings } = useSettings()
 
 	const setSettingsPools = (settings) => {
