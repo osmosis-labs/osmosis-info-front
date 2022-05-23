@@ -40,14 +40,14 @@ export const useTokensPool = ({ poolId }) => {
 }
 
 export const usePool = ({ poolId }) => {
+	//Merge useTokensPools, historicalPool (for the price) is one hook
 	const { data: pools, isLoading, isFetching } = usePools({})
 	let pool = defaultPool
-	if (pools && pools.length > 0) {
-		let finded = pools.find((p) => p.id === poolId)
+	if (pools && pools.all.length > 0) {
+		let finded = pools.all.find((p) => p.id === poolId)
 		if (finded) pool = finded
 	}
-
-	return { data: pool, isLoading: pools.length === 0 ? true : isLoading, isFetching }
+	return { data: pool, isLoading: pools.all.length === 0 ? true : isLoading, isFetching }
 }
 
 export const usePoolApr = () => {

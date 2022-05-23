@@ -137,8 +137,8 @@ export const formatPoolTrx = (data) => {
 			routes: trx.swap_route.routes.map((route) => {
 				return {
 					...route,
-					poolNameDisplay: formatTokenName(route.poolName),
-					tokenOutSymbolDisplay: formatTokenName(route.tokenOutSymbol),
+					poolNameDisplay: formatTokenName(route.poolName ? route.poolName : ""),
+					tokenOutSymbolDisplay: formatTokenName(route.tokenOutSymbol ? route.tokenOutSymbol : ""),
 				}
 			}),
 		}

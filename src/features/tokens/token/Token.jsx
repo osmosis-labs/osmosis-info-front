@@ -218,23 +218,19 @@ const Token = () => {
 
 	useEffect(() => {
 		// check if we have a token with the symbol
-
-		console.log("%cToken.jsx -> 222 ERROR: TO DO", "background: #FF0000; color:#FFFFFF")
 		if (symbol && !isLoadingToken) {
 			if (tkn.symbol) {
-				console.log("Token.jsx (l:207): tkn:", tkn)
-				if (tkn.main && settings.type === "frontier") {
-					updateSettings({ type: "app" })
-					showToast({
-						severity: "info",
-						text: "You are redirected to main because the token does not exist on frontier.",
-					})
-				} else if (!tkn.main && settings.type === "app") {
-					updateSettings({ type: "frontier" })
-					showToast({
-						severity: "info",
-						text: "You are redirected to frontier because the token does not exist on main.",
-					})
+				//Frontier --> all data
+				if (settings.type === "app" && !tkn.main) {
+					// Only on frontier -> need to change
+					// needed because conflict with theme button
+					window.setTimeout(() => {
+						updateSettings({ type: "frontier" })
+						showToast({
+							severity: "info",
+							text: "You are redirected to frontier because the token does not exist on main.",
+						})
+					}, 500)
 				}
 			} else {
 				showToast({
@@ -244,7 +240,7 @@ const Token = () => {
 				history.push("/tokens")
 			}
 		}
-	}, [symbol, tkn, isLoadingToken])
+	}, [symbol, tkn, isLoadingToken, settings.type])
 
 	useEffect(() => {
 		// needed to update price of token

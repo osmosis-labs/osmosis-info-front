@@ -58,9 +58,9 @@ export const useToken = ({ symbol }) => {
 		enabled: !!symbol,
 	})
 
-	const tokens = data ? data : defaultToken
+	let token = data ? data : defaultToken
 
-	return { data: tokens, isLoading, isFetching }
+	return { data: token, isLoading, isFetching }
 }
 
 export const useTrxToken = ({ symbol, limit = 10 }) => {

@@ -23,7 +23,6 @@ export const formatTokens = (data) => {
 			symbol: row.symbol,
 			symbolDisplay: formatTokenName(row.symbol),
 			liquidity: row.liquidity,
-			liquidity24hChange: row.liquidity_24h_change,
 			volume24h: row.volume_24h,
 			volume24hChange: row.volume_24h_change,
 			name: row.name,
@@ -41,6 +40,7 @@ export const formatTokens = (data) => {
 }
 
 export const defaultToken = {
+	main: false,
 	price: 0,
 	denom: "",
 	symbol: "",
