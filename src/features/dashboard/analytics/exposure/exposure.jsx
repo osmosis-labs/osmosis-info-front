@@ -42,7 +42,8 @@ const Exposure = () => {
 	const { address } = useKeplr()
 	
 	//Exposure
-	const { exposure, isLoading: isLoadingExposure, isFetching } = useExposure({ address })
+	const { data:exposure, isLoading: isLoadingExposure, isFetching } = useExposure({ address })
+
 
 	const isLoading = isLoadingExposure || isFetching
 

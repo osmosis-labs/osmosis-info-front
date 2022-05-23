@@ -106,7 +106,9 @@ const StackingRewards = () => {
 	useEffect(() => {
 		if (chartStaking) {
 			let currentData = chartStaking[range]
-			setTotal(currentData.reduce((pr, cv) => pr + cv.value, 0))
+			setTotal(currentData.reduce((pr, cv) => {
+				return pr + cv.dayValue
+			}, 0))
 			setCurrentItem(formatItem(currentData[0]))
 			setData(currentData)
 		}
@@ -122,7 +124,7 @@ const StackingRewards = () => {
 	const onChangeRange = async (rge) => {
 		setRange(rge)
 		let currentData = chartStaking[rge]
-		setTotal(currentData.reduce((pr, cv) => pr + cv.value, 0))
+		setTotal(currentData.reduce((pr, cv) => pr + cv.dayValue, 0))
 		setData(currentData)
 	}
 

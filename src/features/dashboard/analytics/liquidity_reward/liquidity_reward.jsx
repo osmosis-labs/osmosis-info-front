@@ -132,7 +132,7 @@ const LiquidityReward = () => {
 	useEffect(() => {
 		if (currentToken && liquidity) {
 			let data = liquidity[range]
-			setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
+			setTotal(data.reduce((pr, cv) => pr + cv.dayValue, 0))
 			setCurrentItem(formatItem(data[0]))
 			setData((d) => data)
 		}
