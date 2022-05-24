@@ -1,13 +1,11 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
-import { useDashboard } from "../../../contexts/dashboard.provider"
 import { formateNumberDecimalsAuto, getPercent } from "../../../helpers/helpers"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
-import { useBalance, useExposure } from "../../../hooks/dashboard.hook"
-import useRequest from "../../../hooks/request.hook"
-import { useQuery } from "react-query"
+import { useBalance, useExposure } from "../../../hooks/data/dashboard.hook"
 import { formatWorth } from "../../../formaters/dashboard.formatter"
+import { useKeplr } from "../../../contexts/KeplrProvider"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -108,34 +106,30 @@ const useStyles = makeStyles((theme) => {
 })
 const Overview = () => {
 	const classes = useStyles()
-	const { address } = useDashboard()
-	const request = useRequest()
-	const getBalance = useBalance(request)
-	const getExposure = useExposure(request)
+	const { address } = useKeplr()
 
+	//Balance
+	const { data: balance, isLoading: isLoadingBalance } = useBalance({ address })
+
+	//Exposure
+	const { data:exposure, isLoading: isLoadingExposure } = useExposure({ address })
+	
 	const [worth, setWorth] = useState(0)
 	const [osmosStaked, setOsmosStaked] = useState(0)
 	const [return24h, setReturn24h] = useState(0)
 	const [returnChange24h, setReturnChange24h] = useState(0)
 
-	const { isLoading: isLoadingBalance, data: dataBalance } = useQuery(["balance", { address }], getBalance, {
-		enabled: !!address,
-	})
-	const { isLoading: isLoadingExposure, data: dataExposure } = useQuery(["exposure", { address }], getExposure, {
-		enabled: !!address,
-	})
-
 	const isLoading = isLoadingBalance || isLoadingExposure
 
 	useEffect(() => {
-		if (dataBalance && dataExposure) {
-			const worth = formatWorth(dataBalance, dataExposure)
+		if (balance && exposure) {
+			const worth = formatWorth(balance, exposure)
 			setWorth(worth)
-			setReturn24h(dataBalance.tokenReturn24)
-			setReturnChange24h(dataBalance.tokenReturnChange24)
-			setOsmosStaked(dataBalance.tokenValueWallet)
+			setReturn24h(balance.tokenReturn24)
+			setReturnChange24h(balance.tokenReturnChange24)
+			setOsmosStaked(balance.tokenValueWallet)
 		}
-	}, [dataExposure, dataBalance])
+	}, [exposure, balance])
 
 	const getPercentDisplay = (value) => {
 		if (value > 0) {

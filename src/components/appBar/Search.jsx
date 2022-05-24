@@ -8,11 +8,11 @@ import { useCallback } from "react"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
 import { useHistory } from "react-router-dom"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
-import { usePoolsV2 } from "../../contexts/PoolsV2.provider"
-import { useTokensV2 } from "../../contexts/TokensV2.provider"
 import PoolsTable from "../../features/pools/poolsTable/poolsTable"
 import TokensTable from "../../features/tokens/tokensTable/tokensTable"
 import { useSettings } from "../../contexts/SettingsProvider"
+import { useTokens } from "../../hooks/data/tokens.hook"
+import { usePools } from "../../hooks/data/pools.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -96,13 +96,19 @@ const Search = () => {
 	const [sizeToken, setSizeToken] = useState(3)
 	const [active, setActive] = useState("all")
 	const [inputSearch, setInputSearch] = useState("")
-	const { pools } = usePoolsV2()
-	const { tokens } = useTokensV2()
+
+	const {
+		data: { current: pools },
+	} = usePools({})
+
 	const { watchlistPools } = useWatchlistPools()
 	const { watchlistTokens } = useWatchlistTokens()
 	const [dataShowPools, setDataShowPools] = useState([])
 	const [dataShowTokens, setDataShowTokens] = useState([])
 	const history = useHistory()
+	const {
+		data: { current: tokens },
+	} = useTokens()
 
 	const handleOpen = () => {
 		setOpen(true)

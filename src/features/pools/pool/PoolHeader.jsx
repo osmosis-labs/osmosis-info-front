@@ -53,4 +53,4 @@ const PoolHeader = ({ pool, tokens, selectedTokens, onChangeSeletedTokens, loadi
 	)
 }
 
-export default React.memo(PoolHeader)
+export default PoolHeader

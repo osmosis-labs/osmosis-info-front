@@ -2,6 +2,8 @@ import { makeStyles } from "@material-ui/core"
 
 import React, { useEffect, useRef, useState } from "react"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
+import { formatHistoricalToken } from "../../../../formaters/tokens.formatter"
+import useRequest from "../../../../hooks/request.hook"
 import getDataFeed from "./getDataFeed"
 
 const useStyles = makeStyles((theme) => {
@@ -18,14 +20,27 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const ExpertChart = ({token, getHistoricalChartToken, className}) => {
+const ExpertChart = ({ token, className }) => {
 	const classes = useStyles()
+	const request = useRequest()
 	const [chartIsReady, setChartIsReady] = useState(false)
 
 	const chartRef = useRef(null)
 
 	const chartReady = () => {
 		setChartIsReady(true)
+	}
+
+	const getHistoricalChartToken = async ({ symbol, tf }) => {
+		try {
+			let response = await request({
+				url: `https://api-osmosis.imperator.co/tokens/v2/historical/${symbol}/chart?tf=${tf}`,
+				method: "GET",
+			})
+			return formatHistoricalToken(response.data)
+		} catch (e) {
+			console.log("%cExpertChart.jsx -> 41 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
+		}
 	}
 
 	useEffect(() => {
@@ -36,7 +51,7 @@ const ExpertChart = ({token, getHistoricalChartToken, className}) => {
 				interval: 15, // default interval
 				datafeed: getDataFeed({
 					token,
-					getHistoricalChartToken ,
+					getHistoricalChartToken,
 					chartReady,
 				}),
 				container: "chartExpert",

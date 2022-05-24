@@ -1,24 +1,16 @@
 import { makeStyles } from "@material-ui/core"
-import { useCallback, useEffect, useState } from "react"
-import { useQuery } from "react-query"
+import {  useEffect, useState } from "react"
 import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
-import { useDashboard } from "../../../../contexts/dashboard.provider"
 import { useDebug } from "../../../../contexts/debug.provider"
-import { usePrices } from "../../../../contexts/PricesProvider"
-import {
-	formatDate,
-	formateNumberDecimalsAuto,
-	formaterNumber,
-	getPercent,
-	twoNumber,
-} from "../../../../helpers/helpers"
-import { useBalance, useLiquidity, useLiquidityToken } from "../../../../hooks/dashboard.hook"
-import useRequest from "../../../../hooks/request.hook"
+import { useKeplr } from "../../../../contexts/KeplrProvider"
+import { formatDate, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
+import { useBalance, useLiquidity, useLiquidityToken } from "../../../../hooks/data/dashboard.hook"
 import ButtonChart from "../stacking_reward/button_chart"
 import Chart from "../stacking_reward/chart"
 import SelectToken from "./select_token"
+
 const useStyles = makeStyles((theme) => {
 	return {
 		rootLiquidityReward: {
@@ -96,29 +88,22 @@ const LiquidityReward = () => {
 	const [currentToken, setCurrentToken] = useState({ symbol: "", symbolDisplay: "" })
 	const { isAccumulated } = useDebug()
 
-	const { address } = useDashboard()
-	const request = useRequest()
-	const getBalance = useBalance(request)
-	const getLiquidity = useLiquidity(request)
-	const getLiquidityToken = useLiquidityToken(request)
-	const { isLoading: isLoadingBalance, data: balance } = useQuery(["balance", { address }], getBalance, {
-		enabled: !!address,
-	})
-	const { isLoading: isLoadingLiquidityToken, data: liquidityToken } = useQuery(
-		["LiquidityToken", { address }],
-		getLiquidityToken,
-		{
-			enabled: !!address,
-		}
-	)
-	const {
-		isLoading: isLoadingLiquidity,
-		data: liquidity,
-		isFetching: isFetchingLiquidity,
-	} = useQuery(["Liquidity", { address, symbol: currentToken.symbol, isAccumulated }], getLiquidity, {
-		enabled: !!address && !!currentToken.symbol,
-	})
+	const { address } = useKeplr()
 
+	//Balance
+	const { data: balance, isLoading: isLoadingBalance } = useBalance({ address })
+
+	//Token Liquidity
+	const { data: liquidityToken, isLoading: isLoadingLiquidityToken } = useLiquidityToken({ address })
+
+	//Liquidity
+	const {
+		data: liquidity,
+		isLoading: isLoadingLiquidity,
+		isFetching: isFetchingLiquidity,
+	} = useLiquidity({ address, symbol: currentToken.symbol, isAccumulated })
+
+	//Merge loading
 	const isLoading = isLoadingBalance || isLoadingLiquidityToken || isLoadingLiquidity || isFetchingLiquidity
 
 	const [data, setData] = useState([])
@@ -147,7 +132,7 @@ const LiquidityReward = () => {
 	useEffect(() => {
 		if (currentToken && liquidity) {
 			let data = liquidity[range]
-			setTotal(data.reduce((pr, cv) => pr + cv.value, 0))
+			setTotal(data.reduce((pr, cv) => pr + cv.dayValue, 0))
 			setCurrentItem(formatItem(data[0]))
 			setData((d) => data)
 		}

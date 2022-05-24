@@ -42,8 +42,7 @@ const useStyles = makeStyles((theme) => {
 			height: "100%",
 			width: "100%",
 			display: "flex",
-			[theme.breakpoints.down("xs")]: {
-			},
+			[theme.breakpoints.down("xs")]: {},
 		},
 		headerInfo: {
 			padding: "0 0 0 2px",
@@ -77,62 +76,73 @@ const useStyles = makeStyles((theme) => {
 			height: "100%",
 			width: "100%",
 		},
-		expertButton:{
+		expertButton: {
 			marginBottom: theme.spacing(1),
-
-		}
+		},
 	}
 })
 
-const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIsLoaded, token, onOpenExpertChart }) => {
+const ContainerCharts = ({
+	rangePrice,
+	rangeLiquidity,
+	rangeVolume,
+	dataLiquidity,
+	dataPrice,
+	dataVolume,
+	isLoading,
+	onOpenExpertChart,
+	changeRange,
+}) => {
 	const classes = useStyles()
 	const [typeChart, setTypeChart] = useState("price") // price, volume, liquidity
-
-	const [rangePrice, setRangePrice] = useState(60)
-	const [rangeVolume, setRangeVolume] = useState("d")
-	const [rangeLiquidity, setRangeLiquidity] = useState("d")
-
-	const [currentDataPrice, setCurrentDataPrice] = useState([])
-	const [currentDataVolume, setCurrentDataVolume] = useState([])
-	const [currentDataLiquidity, setCurrentDataLiquidity] = useState([])
-
-	const [isLoading, setIsLoading] = useState(false)
 
 	const [currentItem, setCurrentItem] = useState({ value: 0, date: "-" })
 
 	const dataClick = useRef({ time: { day: 1, month: 1, year: 1 }, value: 0, clickedTwice: true })
-
 	useEffect(() => {
-		if (dataIsLoaded) {
-			onChangeRangePrice(60)
+		if (!isLoading) {
+			if (typeChart === "price") {
+				if (dataPrice.length > 0) {
+					let lastItem = dataPrice[dataPrice.length - 1]
+					setCurrentItem({ time: lastItem.time, value: lastItem })
+				}
+			} else if (typeChart === "volume") {
+				if (dataVolume.length > 0) {
+					setCurrentItem({ ...dataVolume[dataVolume.length - 1] })
+				}
+			} else if (typeChart === "liquidity") {
+				if (dataLiquidity.length > 0) {
+					setCurrentItem({ ...dataLiquidity[dataLiquidity.length - 1] })
+				}
+			}
 		}
-	}, [dataIsLoaded])
+	}, [dataLiquidity, dataPrice, dataVolume, isLoading, typeChart])
 
 	const crossMove = (item) => {
 		setCurrentItem(item)
 	}
 	const onMouseLeave = (e) => {
 		if (typeChart === "volume") {
-			if (currentDataVolume.length > 0)
+			if (dataVolume.length > 0)
 				if (dataClick.current.clickedTwice) {
-					let lastElt = currentDataVolume[currentDataVolume.length - 1]
+					let lastElt = dataVolume[dataVolume.length - 1]
 					setCurrentItem({ time: lastElt.time, value: lastElt.value }, rangeVolume)
 				} else {
 					setCurrentItem({ time: dataClick.current.time, value: dataClick.current.value }, rangeVolume)
 				}
 		} else if (typeChart === "liquidity") {
-			if (currentDataLiquidity.length > 0) {
-				setCurrentItem(currentDataLiquidity[currentDataLiquidity.length - 1])
+			if (dataLiquidity.length > 0) {
+				setCurrentItem(dataLiquidity[dataLiquidity.length - 1])
 			}
 		} else if (typeChart === "price") {
-			if (currentDataPrice.length > 0) {
-				let lastItem = currentDataPrice[currentDataPrice.length - 1]
+			if (dataPrice.length > 0) {
+				let lastItem = dataPrice[dataPrice.length - 1]
 				setCurrentItem({ time: lastItem.time, value: lastItem })
 			}
 		}
 	}
 	const onClick = (e) => {
-		let index = getInclude(currentDataVolume, (item) => {
+		let index = getInclude(dataVolume, (item) => {
 			return item.time.year === e.time.year && item.time.month === e.time.month && item.time.day === e.time.day
 		})
 		if (index > -1) {
@@ -142,73 +152,31 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 				e.time.day === dataClick.current.time.day
 
 			dataClick.current = {
-				time: currentDataVolume[index].time,
-				value: currentDataVolume[index].value,
+				time: dataVolume[index].time,
+				value: dataVolume[index].value,
 				clickedTwice: same ? !dataClick.current.clickedTwice : false,
 			}
 		}
 	}
 
 	const onChangeRangeVolume = async (value) => {
-		try {
-			setIsLoading(true)
-			let data = await getDataVolume(value)
-			setCurrentDataVolume(data)
-			setCurrentItem({ ...data[data.length - 1] })
-			setRangeVolume(value)
-			setIsLoading(false)
-		} catch (e) {
-			console.log("%cContainerCharts.jsx -> 157 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
-			setIsLoading(false)
-		}
+		changeRange({ range: value, typeChart: "volume" })
 	}
 
 	const onChangeRangeLiquidity = async (value) => {
-		try {
-			setIsLoading(true)
-			let data = await getDataLiquidity(value)
-			setCurrentDataLiquidity(data)
-			setCurrentItem({ ...data[data.length - 1] })
-			setRangeLiquidity(value)
-			setIsLoading(false)
-		} catch (e) {
-			console.log("%cContainerCharts.jsx -> 171 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
-			setIsLoading(false)
-		}
+		changeRange({ range: value, typeChart: "liquidity" })
 	}
 
 	const onChangeRangePrice = async (value) => {
-		try {
-			setIsLoading(true)
-			let data = await getDataPrice(value)
-			setCurrentDataPrice(data)
-			if (data.length > 0) {
-				let lastItem = data[data.length - 1]
-				setCurrentItem({ time: lastItem.time, value: lastItem })
-				setRangePrice(value)
-			}
-			setIsLoading(false)
-		} catch (e) {
-			console.log("%cContainerCharts.jsx -> 186 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
-			setIsLoading(false)
-		}
+		changeRange({ range: value, typeChart: "price" })
 	}
 
 	const onChangeTypeChart = (value) => {
-		if (value === "price") {
-			onChangeRangePrice(rangePrice)
-		} else if (value === "volume") {
-			onChangeRangeVolume(rangeVolume)
-		} else if (value === "liquidity") {
-			onChangeRangeLiquidity(rangeLiquidity)
-		}
 		setTypeChart(value)
 	}
 
 	return (
-		<div
-			className={classes.chartContainer}
-		>
+		<div className={classes.chartContainer}>
 			<div className={classes.header}>
 				<InfoCharts
 					data={currentItem}
@@ -218,7 +186,9 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 					rangePrice={rangePrice}
 				/>
 				<div className={classes.headerActions}>
-					<Button className={classes.expertButton} onclick={onOpenExpertChart}>Open expert chart</Button>
+					<Button className={classes.expertButton} onclick={onOpenExpertChart}>
+						Open expert chart
+					</Button>
 					<ButtonsTypeChart type={typeChart} onChangeType={onChangeTypeChart} />
 					<ButtonsCharts
 						typeChart={typeChart}
@@ -233,9 +203,9 @@ const ContainerCharts = ({ getDataVolume, getDataLiquidity, getDataPrice, dataIs
 			</div>
 			<div className={classes.charts}>
 				<Charts
-					dataPrice={currentDataPrice}
-					dataVolume={currentDataVolume}
-					dataLiquidity={currentDataLiquidity}
+					dataPrice={dataPrice}
+					dataVolume={dataVolume}
+					dataLiquidity={dataLiquidity}
 					crossMove={crossMove}
 					onMouseLeave={onMouseLeave}
 					onClick={onClick}

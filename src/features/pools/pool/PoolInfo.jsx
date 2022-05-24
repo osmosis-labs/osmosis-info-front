@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const PoolInfo = ({ loadingPoolInfo, tokens, pool, pricesDecimals }) => {
+const PoolInfo = ({ loadingPoolInfo, tokens, pool }) => {
 	const classes = useStyles()
 	const formatPercent = (value) => {
 		return formateNumberDecimalsAuto({ price: value, minDecimal: 0, minPrice: 1, maxDecimal: 2, unit: "%" })
@@ -118,9 +118,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool, pricesDecimals }) => {
 											<p>{token.symbolDisplay}</p>
 										</div>
 										<p className={classes.pooledTokensNumber}>{formaterNumber(token.amount, 0)}</p>
-										<p className={classes.pooledTokensNumber}>
-											{formateNumberPriceDecimals(token.price, pricesDecimals.current[i])}
-										</p>
+										<p className={classes.pooledTokensNumber}>{formateNumberDecimalsAuto({ price: token.price })}</p>
 									</div>
 								)
 							})}
@@ -139,13 +137,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool, pricesDecimals }) => {
 										: `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
 								}
 							>
-								{pool.liquidity24hChange > 0 ? (
-									"↑"
-								) : pool.liquidity24hChange < 0 ? (
-									"↓"
-								) : (
-									<span />
-								)}
+								{pool.liquidity24hChange > 0 ? "↑" : pool.liquidity24hChange < 0 ? "↓" : <span />}
 								{formatPercent(Math.abs(pool.liquidity24hChange))}
 							</p>
 						</div>
@@ -163,13 +155,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool, pricesDecimals }) => {
 										: `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
 								}
 							>
-								{pool.volume24hChange > 0 ? (
-									"↑"
-								) : pool.volume24hChange < 0 ? (
-									"↓"
-								) : (
-									<span />
-								)}
+								{pool.volume24hChange > 0 ? "↑" : pool.volume24hChange < 0 ? "↓" : <span />}
 								{formatPercent(Math.abs(pool.volume24hChange))}
 							</p>
 						</div>

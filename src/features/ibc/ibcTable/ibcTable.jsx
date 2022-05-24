@@ -3,12 +3,10 @@ import { makeStyles } from "@material-ui/core"
 import React, { memo } from "react"
 import Paper from "../../../components/paper/Paper"
 import TableCustom from "../../../components/table/tableCustom"
-import { MIN_BLOCKED, MIN_CONGESTED } from "../../../contexts/IBCProvier"
+import { MIN_BLOCKED, MIN_CONGESTED } from "../../../formaters/ibc.formatter"
 import CellChain from "./cellChain"
 import CellChannel from "./cellChannel"
-import CellSource from "./cellSource"
 import CellStatus from "./cellStatus"
-import DefaultCell from "./defaultCell"
 import PendingTrx from "./pendingTrx"
 
 const useStyles = makeStyles((theme) => {

@@ -1,11 +1,9 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
-import { useQuery } from "react-query"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
-import { useDashboard } from "../../../../contexts/dashboard.provider"
-import { useBalance } from "../../../../hooks/dashboard.hook"
-import useRequest from "../../../../hooks/request.hook"
+import { useKeplr } from "../../../../contexts/KeplrProvider"
+import { useBalance } from "../../../../hooks/data/dashboard.hook"
 import WalletHeader from "./wallet_header"
 import WalletItem from "./wallet_item"
 const useStyles = makeStyles((theme) => {
@@ -40,12 +38,11 @@ const useStyles = makeStyles((theme) => {
 })
 const MyWallet = () => {
 	const classes = useStyles()
-	const { address } = useDashboard()
-	const request = useRequest()
-	const getBalance = useBalance(request)
-	const { isLoading: isLoading, data: balance } = useQuery(["balance", { address }], getBalance, {
-		enabled: !!address,
-	})
+	const { address } = useKeplr()
+
+	//Balance
+	const { data: balance, isLoading } = useBalance( { address })
+
 	const [data, setData] = useState([])
 	const [order, setOrder] = useState("asc")
 	const [orderBy, setOrderBy] = useState("value")

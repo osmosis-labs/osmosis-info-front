@@ -1,5 +1,5 @@
 import { makeStyles, TableCell } from "@material-ui/core"
-import { MIN_BLOCKED, MIN_CONGESTED } from "../../../contexts/IBCProvier"
+import { MIN_BLOCKED, MIN_CONGESTED } from "../../../formaters/ibc.formatter"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootPendingTrx: {

@@ -5,9 +5,9 @@ import { useHistory } from "react-router-dom"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
 import { useSettings } from "../../contexts/SettingsProvider"
-import { useTokensV2 } from "../../contexts/TokensV2.provider"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import { getInclude } from "../../helpers/helpers"
+import { useTokens } from "../../hooks/data/tokens.hook"
 import TokenOverview from "./tokenOverview/tokenOverview"
 import TokensTable from "./tokensTable/tokensTable"
 
@@ -33,7 +33,10 @@ const useStyles = makeStyles((theme) => {
 
 const Tokens = () => {
 	const classes = useStyles()
-	const { tokens, loadingTokens } = useTokensV2()
+	const {
+		data: { current: tokens },
+		isLoading: loadingTokens,
+	} = useTokens()
 	const { settings, updateSettings } = useSettings()
 
 	const setSettingsTokens = (settings) => {

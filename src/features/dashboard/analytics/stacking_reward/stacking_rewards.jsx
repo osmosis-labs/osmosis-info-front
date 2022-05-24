@@ -1,14 +1,12 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
-import { useQuery } from "react-query"
 import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
-import { useDashboard } from "../../../../contexts/dashboard.provider"
 import { useDebug } from "../../../../contexts/debug.provider"
+import { useKeplr } from "../../../../contexts/KeplrProvider"
 import { formatDate, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
-import { useBalance, useChartStaking } from "../../../../hooks/dashboard.hook"
-import useRequest from "../../../../hooks/request.hook"
+import { useBalance, useChartStaking } from "../../../../hooks/data/dashboard.hook"
 import ButtonChart from "./button_chart"
 import Chart from "./chart"
 const useStyles = makeStyles((theme) => {
@@ -85,24 +83,18 @@ const useStyles = makeStyles((theme) => {
 })
 const StackingRewards = () => {
 	const classes = useStyles()
-	const { address } = useDashboard()
-	const request = useRequest()
+	const { address } = useKeplr()
+
 	const { isStakingAccumulated } = useDebug()
 
-	const getBalance = useBalance(request)
-	const getChartStaking = useChartStaking(request)
-	const { isLoading: isLoadingBalance, data: balance } = useQuery(["balance", { address }], getBalance, {
-		enabled: !!address,
-	})
-	const { isLoading: isLoadingChartStaking, data: chartStaking } = useQuery(
-		["chartStaking", { address, isStakingAccumulated}],
-		getChartStaking,
-		{
-			enabled: !!address,
-		}
-	)
+	const { data: balance, isLoading: isLoadingBalance } = useBalance({ address })
 
-	const isLoading = isLoadingBalance || isLoadingChartStaking
+	const { data: chartStaking, isLoading: isLoadingStaking } = useChartStaking({
+		address,
+		isAccumulated: isStakingAccumulated,
+	})
+
+	const isLoading = isLoadingBalance || isLoadingStaking
 
 	const [data, setData] = useState([])
 	const [total, setTotal] = useState(0)
@@ -114,7 +106,9 @@ const StackingRewards = () => {
 	useEffect(() => {
 		if (chartStaking) {
 			let currentData = chartStaking[range]
-			setTotal(currentData.reduce((pr, cv) => pr + cv.value, 0))
+			setTotal(currentData.reduce((pr, cv) => {
+				return pr + cv.dayValue
+			}, 0))
 			setCurrentItem(formatItem(currentData[0]))
 			setData(currentData)
 		}
@@ -130,7 +124,7 @@ const StackingRewards = () => {
 	const onChangeRange = async (rge) => {
 		setRange(rge)
 		let currentData = chartStaking[rge]
-		setTotal(currentData.reduce((pr, cv) => pr + cv.value, 0))
+		setTotal(currentData.reduce((pr, cv) => pr + cv.dayValue, 0))
 		setData(currentData)
 	}
 

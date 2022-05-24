@@ -3,7 +3,7 @@ import Image from "../../../components/image/Image"
 import redArrow from "./arrowRed.svg"
 import orangeArrow from "./arrowOrange.svg"
 import greenArrow from "./arrowGreen.svg"
-import { MIN_BLOCKED, MIN_CONGESTED } from "../../../contexts/IBCProvier"
+import { MIN_BLOCKED, MIN_CONGESTED } from "../../../formaters/ibc.formatter"
 
 const useStyles = makeStyles((theme) => {
 	return {

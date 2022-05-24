@@ -2,7 +2,7 @@ import React from "react"
 import { makeStyles } from "@material-ui/core"
 import Paper from "../../components/paper/Paper"
 import Image from "../../components/image/Image"
-import { MIN_BLOCKED, MIN_CONGESTED } from "../../contexts/IBCProvier"
+import { MIN_BLOCKED, MIN_CONGESTED } from "../../formaters/ibc.formatter"
 const useStyles = makeStyles((theme) => {
 	return {
 		network: {

@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme) => {
 })
 const DetailsTrade = ({ data, openJSON }) => {
 	const classes = useStyles()
-	if (!data.time) {
+	if (!data.hash.value) {
 		return (
 			<div className={classes.rootDetailsTradeNoData}>
 				<div className={classes.containerImgNoData}>

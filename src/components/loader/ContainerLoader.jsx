@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const ContainerLoader = ({ isLoading, className, children, classChildren, borderRadius=true }) => {
+const ContainerLoader = ({ isLoading, className, children, classChildren, borderRadius = true }) => {
 	const classes = useStyles()
 
 	return (

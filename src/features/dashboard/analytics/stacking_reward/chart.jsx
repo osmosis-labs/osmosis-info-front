@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import { useRef } from "react"
 import { createChart } from "lightweight-charts"
 import { ResizeObserver } from "resize-observer"
-import { formateNumberDecimalsAutoV2, formaterNumber } from "../../../../helpers/helpers"
+import { formaterNumber } from "../../../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {

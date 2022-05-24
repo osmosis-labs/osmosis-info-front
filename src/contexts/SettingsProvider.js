@@ -53,9 +53,8 @@ export const useSettings = () => useContext(SettingsContext)
 export const SettingsProviders = ({ children }) => {
 	const [settings, setSettings] = useLocalStorage("Settings", defaultSettings, version)
 	const updateSettings = (newSettings) => {
-		setSettings({
-			...settings,
-			...newSettings,
+		setSettings((ps) => {
+			return { ...ps, ...newSettings }
 		})
 	}
 
