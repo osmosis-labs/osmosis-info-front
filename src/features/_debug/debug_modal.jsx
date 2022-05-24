@@ -5,7 +5,7 @@ import ReactJson from "react-json-view"
 import CloseIcon from "@mui/icons-material/Close"
 import { useDebug } from "../../contexts/debug.provider"
 import { useKeplr } from "../../contexts/KeplrProvider"
-import { Button } from "@mui/material"
+import { Button, MenuItem, Select } from "@mui/material"
 import { isOsmoAddress } from "../../helpers/helpers"
 import { useEffect, useState } from "react"
 import Switch from "@mui/material/Switch"
@@ -63,15 +63,42 @@ const useStyles = makeStyles((theme) => {
 			padding: "8px",
 			color: theme.palette.text.primary,
 		},
+		space: {
+			color: `${theme.palette.text.primary} !important`,
+			margin: "8px",
+		},
+		select: {
+			margin: "8px 0",
+			"& .MuiInputBase-input": {
+				color: `${theme.palette.text.primary} !important`,
+				border: `1px solid ${theme.palette.text.primary} !important`,
+			},
+			"& .MuiSelect-icon": {
+				color: `${theme.palette.text.primary} !important`,
+			},
+		},
 	}
 })
 
 const DebugModal = ({}) => {
 	const classes = useStyles()
 
-	const { open, onClose, isAccumulated, setIsAccumulated, isStakingAccumulated, setIsStakingAccumulated } = useDebug()
+	const {
+		open,
+		onClose,
+		isAccumulated,
+		setIsAccumulated,
+		isStakingAccumulated,
+		setIsStakingAccumulated,
+		message,
+		setMessage,
+		messageLevel,
+		setMessageLevel,
+	} = useDebug()
 	const { address, setAddress } = useKeplr()
 	const [addressInput, setAddressInput] = useState(address)
+	const [messageInput, setMessageInput] = useState(message)
+	const [messageLevelInput, setMessageLevelInput] = useState(messageLevel)
 
 	const onChangeAddress = (e) => {
 		setAddressInput(e.target.value)
@@ -96,6 +123,20 @@ const DebugModal = ({}) => {
 		setIsStakingAccumulated(e.target.checked)
 	}
 
+	const onChangeMessageLevel = (e) => {
+		setMessageLevelInput(e.target.value)
+	}
+
+	const onChangeMessage = (e) => {
+		setMessageInput(e.target.value)
+	}
+
+	const saveMessage = () => {
+		setMessage(messageInput)
+		setMessageLevel(messageLevelInput)
+		onClose()
+	}
+
 	return (
 		<div
 			className={
@@ -115,9 +156,11 @@ const DebugModal = ({}) => {
 			<div className={classes.debugContainer}>
 				<div className={classes.row}>
 					<TextField label="Wallet address" fullWidth onChange={onChangeAddress} value={addressInput} />
-					<Button onClick={valideAddress} fullWidth variant="outlined">
-						Update address
-					</Button>
+					<div className={classes.space}>
+						<Button onClick={valideAddress} fullWidth variant="outlined">
+							Update address
+						</Button>
+					</div>
 				</div>
 				<div className={classes.row}>
 					<div>
@@ -137,6 +180,24 @@ const DebugModal = ({}) => {
 							checked={isStakingAccumulated}
 							onChange={onChangeStakingAccumulated}
 						/>
+					</div>
+				</div>
+				<div>
+					<div className={classes.space}>
+						<TextField label="Message" fullWidth onChange={onChangeMessage} value={messageInput} />
+					</div>
+					<div className={classes.space}>
+						<p>Level: </p>
+						<Select onChange={onChangeMessageLevel} value={messageLevelInput} className={classes.select}>
+							<MenuItem value="info">Info</MenuItem>
+							<MenuItem value="warning">Warning</MenuItem>
+							<MenuItem value="error">Error</MenuItem>
+						</Select>
+					</div>
+					<div className={classes.space}>
+						<Button onClick={saveMessage} fullWidth variant="outlined">
+							Update message
+						</Button>
 					</div>
 				</div>
 			</div>
