@@ -28,6 +28,7 @@ import Transactions from "../dashboard/transactions/transactions"
 import Trades from "../dashboard/trades/trades"
 import { DebugProvider } from "../../contexts/debug.provider"
 import DebugModal from "../_debug/debug_modal"
+import ModalMessage from "../modal_message/modal_message"
 
 const MODE = process.env.REACT_APP_MODE
 const useStyles = makeStyles((theme) => {
@@ -120,6 +121,7 @@ const App = () => {
 									<LoaderProvider>
 										<ToastProvider>
 											{MODE === "dev" ? <DebugModal /> : null}
+											<ModalMessage />
 											<LoaderOsmosis />
 											<Helmet>
 												<script src="/charting_library/charting_library.js" type="text/javascript" />
