@@ -40,10 +40,9 @@ const min = 2
 const Exposure = () => {
 	const classes = useStyles()
 	const { address } = useKeplr()
-	
-	//Exposure
-	const { data:exposure, isLoading: isLoadingExposure, isFetching } = useExposure({ address })
 
+	//Exposure
+	const { data: exposure, isLoading: isLoadingExposure, isFetching } = useExposure({ address })
 
 	const isLoading = isLoadingExposure || isFetching
 
@@ -123,16 +122,8 @@ const Exposure = () => {
 				<BlocLoaderOsmosis open={isLoading} classNameLoading={classes.loading} />
 				{currentData.length > 0 ? (
 					<>
-						<ChartContainer
-							data={currentData}
-							colorOther={colorOther}
-							totalExposure={totalExposure}
-						/>
-						<Info
-							onChangeExposure={onChangeExposure}
-							currentExposure={currentExposure}
-							currentList={currentData}
-						/>
+						<ChartContainer data={currentData} colorOther={colorOther} totalExposure={totalExposure} />
+						<Info onChangeExposure={onChangeExposure} currentExposure={currentExposure} currentList={currentData} />
 					</>
 				) : (
 					<p className={classes.textNotFound}>No data found.</p>
