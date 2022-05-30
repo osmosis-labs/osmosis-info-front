@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core"
 import Image from "../../../components/image/Image"
 import Paper from "../../../components/paper/Paper"
-import { formateNumberDecimals, formateNumberDecimalsAutoV2, getPercent } from "../../../helpers/helpers"
+import { formateNumberDecimals, formateNumberDecimalsAuto, getPercent } from "../../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -90,7 +90,7 @@ const MoverItem = ({ item, index }) => {
 			<div className={classes.infos}>
 				<span className={classes.name}>{item.symbolDisplay}</span>
 				<div className={classes.priceContainer}>
-					<span className={classes.price}>${formateNumberDecimalsAutoV2({price: item.price})}</span>
+					<span className={classes.price}>${formateNumberDecimalsAuto({price: item.price})}</span>
 					<span className={getClasses(item.price_24h_change)}>
 						{getArrow(item.price_24h_change)}
 						{getPercent(Math.abs(item.price_24h_change))}

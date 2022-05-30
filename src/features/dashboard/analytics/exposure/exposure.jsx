@@ -1,11 +1,9 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
-import { useQuery } from "react-query"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
-import { useDashboard } from "../../../../contexts/dashboard.provider"
-import { useBalance, useExposure } from "../../../../hooks/dashboard.hook"
-import useRequest from "../../../../hooks/request.hook"
+import { useKeplr } from "../../../../contexts/KeplrProvider"
+import { useExposure } from "../../../../hooks/data/dashboard.hook"
 import ChartContainer from "./chart/chart_container"
 import Info from "./info"
 
@@ -41,16 +39,17 @@ const min = 2
 
 const Exposure = () => {
 	const classes = useStyles()
-	const { address } = useDashboard()
-	const request = useRequest()
-	const getExposure = useExposure(request)
+	const { address } = useKeplr()
+
+	//Exposure
+	const { data: exposure, isLoading: isLoadingExposure, isFetching } = useExposure({ address })
+
+	const isLoading = isLoadingExposure || isFetching
+
 	const [currentExposure, setCurrentExposure] = useState("pool")
 	const [listExposureAsset, setListExposureAsset] = useState([])
 	const [listExposurePool, setListExposurePool] = useState([])
 	const [totalExposure, setTotalExposure] = useState(0)
-	const { isLoading, data: exposure } = useQuery(["exposure", { address }], getExposure, {
-		enabled: !!address,
-	})
 
 	useEffect(() => {
 		if (exposure) {
@@ -114,21 +113,21 @@ const Exposure = () => {
 		setCurrentExposure(exposure)
 	}
 
+	const currentData = currentExposure === "asset" ? listExposureAsset : listExposurePool
+
 	return (
 		<div className={classes.rootExposure}>
 			<p className={classes.title}>My Exposure</p>
 			<Paper className={classes.paper}>
 				<BlocLoaderOsmosis open={isLoading} classNameLoading={classes.loading} />
-				<ChartContainer
-					data={currentExposure === "asset" ? listExposureAsset : listExposurePool}
-					colorOther={colorOther}
-					totalExposure={totalExposure}
-				/>
-				<Info
-					onChangeExposure={onChangeExposure}
-					currentExposure={currentExposure}
-					currentList={currentExposure === "asset" ? listExposureAsset : listExposurePool}
-				/>
+				{currentData.length > 0 ? (
+					<>
+						<ChartContainer data={currentData} colorOther={colorOther} totalExposure={totalExposure} />
+						<Info onChangeExposure={onChangeExposure} currentExposure={currentExposure} currentList={currentData} />
+					</>
+				) : (
+					<p className={classes.textNotFound}>No data found.</p>
+				)}
 			</Paper>
 		</div>
 	)

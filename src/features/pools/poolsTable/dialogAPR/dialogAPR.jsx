@@ -10,7 +10,7 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward"
 import TotalAPR from "./totalAPR"
 import InputAPR from "./inputAPR"
 import ButtonAPR from "./boutonAPR"
-import { usePrices } from "../../../../contexts/PricesProvider"
+import { usePrices } from "../../../../hooks/data/prices.hook"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootDialogAPR: {
@@ -112,7 +112,9 @@ const Transition = forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />
 })
 const DialogAPR = ({ data, open, onClose }) => {
-	const { priceOsmoBrut } = usePrices()
+	const {
+		data: { priceOsmoBrut },
+	} = usePrices()
 	const classes = useStyles()
 	const [aprPeriode, setAprPeriode] = useState(14)
 	const [staked, setStaked] = useState(0)

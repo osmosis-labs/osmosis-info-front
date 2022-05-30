@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core"
-import { useDashboard } from "../../../contexts/dashboard.provider"
+import { useKeplr } from "../../../contexts/KeplrProvider"
 import Exposure from "./exposure/exposure"
 import LiquidityReward from "./liquidity_reward/liquidity_reward"
 import MyWallet from "./my_wallet/my_wallet"
@@ -46,7 +46,8 @@ const useStyles = makeStyles((theme) => {
 })
 const Analytics = () => {
 	const classes = useStyles()
-	const { address } = useDashboard()
+	const { address } = useKeplr()
+
 
 	if (!address)
 		return (

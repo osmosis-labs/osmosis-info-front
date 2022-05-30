@@ -4,10 +4,10 @@ import { useState } from "react"
 import { useHistory } from "react-router-dom"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
-import { usePoolsV2 } from "../../contexts/PoolsV2.provider"
 import { useSettings } from "../../contexts/SettingsProvider"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
 import { getInclude } from "../../helpers/helpers"
+import { usePools } from "../../hooks/data/pools.hook"
 import PoolsTable from "./poolsTable/poolsTable"
 
 const useStyles = makeStyles((theme) => {
@@ -32,7 +32,10 @@ const useStyles = makeStyles((theme) => {
 
 const Pools = () => {
 	const classes = useStyles()
-	const { pools, loadingPools } = usePoolsV2()
+	const {
+		data: { current: pools },
+		isLoading: isLoadingPools,
+	} = usePools({})
 	const { settings, updateSettings } = useSettings()
 
 	const setSettingsPools = (settings) => {
@@ -75,7 +78,7 @@ const Pools = () => {
 			</Paper>
 			<p className={classes.subTitle}>All pools</p>
 			<Paper className={classes.containerLoader}>
-				<BlocLoaderOsmosis open={loadingPools} borderRadius={true} />
+				<BlocLoaderOsmosis open={isLoadingPools} borderRadius={true} />
 				<PoolsTable
 					data={pools}
 					onClickPool={onClickPool}

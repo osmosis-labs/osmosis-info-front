@@ -1,9 +1,7 @@
 import { makeStyles } from "@material-ui/core"
 import Paper from "../../../components/paper/Paper"
-import { useMetrics } from "../../../contexts/MetricsProvider"
-import { usePrices } from "../../../contexts/PricesProvider"
-import { formateNumberDecimals, formaterNumber, getPercent } from "../../../helpers/helpers"
-import Bar from "./bar"
+import { formaterNumber, getPercent } from "../../../helpers/helpers"
+import { useMetrics } from "../../../hooks/data/metrics.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -54,20 +52,8 @@ const useStyles = makeStyles((theme) => {
 const OverviewBar = () => {
 	const classes = useStyles()
 	const {
-		osmosPrice,
-		osmosChange24h,
-		nbToken,
-		volume24h,
-		volume24hChange,
-		liquidityUSD,
-		liquidityUSD24h,
-		liquidityAtom,
-		liquidityAtom24h,
-		liquidityOsmo,
-		liquidityOsmo24h,
-		loadingMetrics,
+		data: { volume24h, volume24hChange, liquidityUSD, liquidityUSD24h },
 	} = useMetrics()
-	const { priceOsmoBrut } = usePrices()
 
 	const getClasses = (value, type) => {
 		let res = ""
@@ -112,26 +98,6 @@ const OverviewBar = () => {
 					{getPercent(Math.abs(liquidityUSD24h))})
 				</span>
 			</div>
-			{/* <div className={classes.item}>
-				<span className={classes.itemLabel}>ATOM Liquidity (-24h):</span>
-				<span className={getClasses(liquidityAtom24h)}>{formaterNumber(liquidityAtom)} ATOM</span>
-
-				<span className={`${getClasses(liquidityAtom24h, "percent")}`}>
-					({getArrow(liquidityAtom24h)}
-					{liquidityAtom24h > 0 ? "+" : ""}
-					{getPercent(liquidityAtom24h)})
-				</span>
-			</div>
-			<div className={classes.item}>
-				<span className={classes.itemLabel}>OSMO Liquidity (-24h):</span>
-				<span className={getClasses(liquidityOsmo24h)}>{formaterNumber(liquidityOsmo)} OSMO</span>
-
-				<span className={`${getClasses(liquidityOsmo24h, "percent")}`}>
-					({getArrow(liquidityOsmo24h)}
-					{liquidityOsmo24h > 0 ? "+" : ""}
-					{getPercent(liquidityOsmo24h)})
-				</span>
-			</div> */}
 		</Paper>
 	)
 }

@@ -10,10 +10,11 @@ import App from "./features/app/app"
 import { ThemeCustomProvider } from "./contexts/ThemeProvider"
 import { SettingsProviders } from "./contexts/SettingsProvider"
 import { QueryClient, QueryClientProvider } from "react-query"
+import { ReactQueryDevtools } from "react-query/devtools"
 
 const queryClient = new QueryClient({
 	defaultOptions: {
-		queries: { refetchOnWindowFocus: false, staleTime: 5 * 60 * 1_000 },
+		queries: { refetchOnWindowFocus: false, staleTime: 10 * 60 * 1_000 },
 	},
 })
 
@@ -24,6 +25,7 @@ ReactDOM.render(
 				<App />
 			</ThemeCustomProvider>
 		</SettingsProviders>
+		{/* <ReactQueryDevtools initialIsOpen={false} /> */}
 	</QueryClientProvider>,
 	document.getElementById("root")
 )

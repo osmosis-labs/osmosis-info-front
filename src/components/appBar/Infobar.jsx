@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core"
 import { Button } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useDebug } from "../../contexts/debug.provider"
-import { usePrices } from "../../contexts/PricesProvider"
+import { usePrices } from "../../hooks/data/prices.hook"
 const useStyles = makeStyles((theme) => {
 	return {
 		infoBarRoot: {
@@ -79,7 +79,9 @@ const useStyles = makeStyles((theme) => {
 
 const InfoBar = () => {
 	const classes = useStyles()
-	const { priceOsmo, priceIon } = usePrices()
+	const {
+		data: { priceOsmo, priceIon },
+	} = usePrices()
 	const [time, setTime] = useState(0)
 	const { MODE, setOpen } = useDebug()
 

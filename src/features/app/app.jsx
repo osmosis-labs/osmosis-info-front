@@ -1,5 +1,4 @@
 import { makeStyles, ThemeProvider } from "@material-ui/core"
-import { useCallback, useState } from "react"
 import { BrowserRouter, Switch, Route } from "react-router-dom"
 import { Helmet } from "react-helmet"
 import Toast from "../../components/toast/Toast"
@@ -7,40 +6,32 @@ import Overview from "../overview/Overview"
 import Pools from "../pools/Pools"
 import Tokens from "../tokens/Tokens"
 import AppBar from "../../components/appBar/AppBar"
-import { ChartsProvider } from "../../contexts/ChartsProvider"
 import Pool from "../pools/pool/Pool"
 import { WatchlistPoolsProvider } from "../../contexts/WatchlistPoolsProvider"
 import InfoBar from "../../components/appBar/Infobar"
-import { PricesProvider } from "../../contexts/PricesProvider"
 import { WatchlistTokensProvider } from "../../contexts/WatchlistTokensProvider"
 import Token from "../tokens/token/Token"
 import LoaderOsmosis from "../../components/loader/LoaderOsmosis"
 import { LoaderProvider } from "../../contexts/LoaderProvider"
-import { MetricsProvider } from "../../contexts/MetricsProvider"
 import IBC from "../ibc/IBC"
-import { IBCProvider } from "../../contexts/IBCProvier"
 import { WatchlistIBCProvider } from "../../contexts/WatchlistIBCProvider"
-import { TokensV2Provider } from "../../contexts/TokensV2.provider"
-import { PoolsV2Provider } from "../../contexts/PoolsV2.provider"
-import { TokenChartV2Provider } from "../../contexts/TokenChartV2"
 import NotFound from "../404/notFound"
 import { useThemeCustom } from "../../contexts/ThemeProvider"
 import { KeplrProvider } from "../../contexts/KeplrProvider"
 import { ToastProvider } from "../../contexts/Toast.provider"
 import { getKeplrFromWindow } from "@keplr-wallet/stores"
-import { KeplrWalletConnectV1, WalletInfo, WalletManagerProvider } from "cosmodal"
+import { KeplrWalletConnectV1, WalletManagerProvider } from "cosmodal"
 import keplrLogo from "./keplr.png"
 import walletConnectLogo from "./wallet-connect.png"
-import { DashboardProvider } from "../../contexts/dashboard.provider"
 import Analytics from "../dashboard/analytics/analytics"
 import Transactions from "../dashboard/transactions/transactions"
 import Trades from "../dashboard/trades/trades"
 import { DebugProvider } from "../../contexts/debug.provider"
 import DebugModal from "../_debug/debug_modal"
+import ModalMessage from "../modal_message/modal_message"
 
 const MODE = process.env.REACT_APP_MODE
 const useStyles = makeStyles((theme) => {
-	console.log('app.jsx (l:43): theme.menuHeight.desktop:', theme.menuHeight.desktop )
 	return {
 		"@global": {
 			"::-webkit-scrollbar": {
@@ -123,91 +114,76 @@ const App = () => {
 		<BrowserRouter basename=".">
 			<DebugProvider>
 				<WalletManagerProvider walletInfoList={walletInfoList}>
-					<TokensV2Provider>
-						<PoolsV2Provider>
-							<ChartsProvider>
-								<WatchlistPoolsProvider>
-									<WatchlistTokensProvider>
-										<WatchlistIBCProvider>
-											<PricesProvider>
-												<TokenChartV2Provider>
-													<MetricsProvider>
-														<KeplrProvider>
-															<LoaderProvider>
-																<ToastProvider>
-																	<DashboardProvider>
-																		{MODE === "dev" ? <DebugModal /> : null}
-																		<LoaderOsmosis />
-																		<Helmet>
-																			<script src="/charting_library/charting_library.js" type="text/javascript" />
-																		</Helmet>
-																		<div className={classes.appRoot}>
-																			<Toast />
+					<WatchlistPoolsProvider>
+						<WatchlistTokensProvider>
+							<WatchlistIBCProvider>
+								<KeplrProvider>
+									<LoaderProvider>
+										<ToastProvider>
+											{MODE === "dev" ? <DebugModal /> : null}
+											<ModalMessage />
+											<LoaderOsmosis />
+											<Helmet>
+												<script src="/charting_library/charting_library.js" type="text/javascript" />
+											</Helmet>
+											<div className={classes.appRoot}>
+												<Toast />
 
-																			<InfoBar />
-																			<AppBar />
-																			<div className={classes.container}>
-																				<div className={classes.contentContainer}>
-																					<Switch>
-																						<Route path="/" exact={true}>
-																							<div className={classes.content}>
-																								<Overview />
-																							</div>
-																						</Route>
-																						<Route path="/pools">
-																							<div className={classes.content}>
-																								<Pools />
-																							</div>
-																						</Route>
-																						<Route path="/pool/:id">
-																							<div className={classes.content}>
-																								<Pool />
-																							</div>
-																						</Route>
-																						<Route path="/tokens">
-																							<div className={classes.content}>
-																								<Tokens />
-																							</div>
-																						</Route>
-																						<Route path="/token/:symbol">
-																							<Token />
-																						</Route>
-																						<Route path="/ibc">
-																							<IBCProvider>
-																								<IBC />
-																							</IBCProvider>
-																						</Route>
-																						<Route exact={true} path="/dashboard/">
-																							<Analytics />
-																						</Route>
-																						<Route path="/dashboard/transactions">
-																							<Transactions />
-																						</Route>
-																						<Route path="/dashboard/trades">
-																							<Trades />
-																						</Route>
-																						<Route>
-																							<div className={classes.content}>
-																								<NotFound />
-																							</div>
-																						</Route>
-																					</Switch>
-																				</div>
-																			</div>
-																		</div>
-																	</DashboardProvider>
-																</ToastProvider>
-															</LoaderProvider>
-														</KeplrProvider>
-													</MetricsProvider>
-												</TokenChartV2Provider>
-											</PricesProvider>
-										</WatchlistIBCProvider>
-									</WatchlistTokensProvider>
-								</WatchlistPoolsProvider>
-							</ChartsProvider>
-						</PoolsV2Provider>
-					</TokensV2Provider>
+												<InfoBar />
+												<AppBar />
+												<div className={classes.container}>
+													<div className={classes.contentContainer}>
+														<Switch>
+															<Route path="/" exact={true}>
+																<div className={classes.content}>
+																	<Overview />
+																</div>
+															</Route>
+															<Route path="/pools">
+																<div className={classes.content}>
+																	<Pools />
+																</div>
+															</Route>
+															<Route path="/pool/:id">
+																<div className={classes.content}>
+																	<Pool />
+																</div>
+															</Route>
+															<Route path="/tokens">
+																<div className={classes.content}>
+																	<Tokens />
+																</div>
+															</Route>
+															<Route path="/token/:symbol">
+																<Token />
+															</Route>
+															<Route path="/ibc">
+																<IBC />
+															</Route>
+															<Route exact={true} path="/dashboard/">
+																<Analytics />
+															</Route>
+															<Route path="/dashboard/transactions">
+																<Transactions />
+															</Route>
+															<Route path="/dashboard/trades">
+																<Trades />
+															</Route>
+															<Route>
+																<div className={classes.content}>
+																	<NotFound />
+																</div>
+															</Route>
+														</Switch>
+													</div>
+												</div>
+											</div>
+										</ToastProvider>
+									</LoaderProvider>
+								</KeplrProvider>
+							</WatchlistIBCProvider>
+						</WatchlistTokensProvider>
+					</WatchlistPoolsProvider>
 				</WalletManagerProvider>
 			</DebugProvider>
 		</BrowserRouter>

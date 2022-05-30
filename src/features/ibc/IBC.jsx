@@ -1,12 +1,11 @@
 import { makeStyles } from "@material-ui/core"
 import { useEffect, useState } from "react"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
-import Paper from "../../components/paper/Paper"
-import { MIN_BLOCKED, MIN_CONGESTED, useIBC } from "../../contexts/IBCProvier"
 import { useWatchlistIBC } from "../../contexts/WatchlistIBCProvider"
+import { MIN_BLOCKED, MIN_CONGESTED } from "../../formaters/ibc.formatter"
 import { getInclude } from "../../helpers/helpers"
+import { useIbc } from "../../hooks/data/ibc.hook"
 import IBCInfo from "./IBCInfo"
-import IBCList from "./IBCList"
 import IBCSearch from "./IBCSearch"
 import IbcTable from "./ibcTable/ibcTable"
 import IBCwatchlist from "./IBCwatchlist"
@@ -55,8 +54,13 @@ const useStyles = makeStyles((theme) => {
 
 const IBC = () => {
 	const classes = useStyles()
-	const { ibcCouple, statusNormal, statusCongested, statusBlocked, getData, loaderIBC } = useIBC()
+	const {
+		data: { ibcCouple, statusNormal, statusCongested, statusBlocked },
+		isLoading: isLoadingIbc,
+		isFetching,
+	} = useIbc()
 
+	const isLoading = isLoadingIbc || isFetching
 	const [timeLastUpdate, setTimeLastUpdate] = useState(0)
 	const { updateWatchlistIBC, isInWatchlist } = useWatchlistIBC()
 	const [ibcSearch, setIbcSearch] = useState("")
@@ -115,7 +119,6 @@ const IBC = () => {
 			let newTime = timeLastUpdate + 1
 			if (newTime > 60) {
 				setTimeLastUpdate(0)
-				getData()
 			} else {
 				setTimeLastUpdate(newTime)
 			}
@@ -124,7 +127,7 @@ const IBC = () => {
 	})
 	return (
 		<div className={classes.IBCRoot}>
-			<BlocLoaderOsmosis open={loaderIBC} classNameLoading={classes.loading} />
+			<BlocLoaderOsmosis open={isLoading} classNameLoading={classes.loading} />
 			<IBCInfo
 				timeLastUpdate={timeLastUpdate}
 				statusNormal={statusNormal}

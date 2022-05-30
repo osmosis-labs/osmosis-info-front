@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import { formaterNumber, getPercent } from "../../../../helpers/helpers"
 import useSize from "../../../../hooks/sizeHook"
-import { usePrices } from "../../../../contexts/PricesProvider"
+import { usePrices } from "../../../../hooks/data/prices.hook"
 const useStyles = makeStyles((theme) => {
 	return {
 		resultContainer: {
@@ -125,7 +125,9 @@ const useStyles = makeStyles((theme) => {
 })
 const TotalAPR = ({ apr, periode, staked }) => {
 	const classes = useStyles()
-	const { priceOsmoBrut } = usePrices()
+	const {
+		data: { priceOsmoBrut },
+	} = usePrices()
 	const [open, setOpen] = useState(true)
 	const size = useSize()
 	const [total, setTotal] = useState({ osmo: 0, usd: 0, percent: 0 })

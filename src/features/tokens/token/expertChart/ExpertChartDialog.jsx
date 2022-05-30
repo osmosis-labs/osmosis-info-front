@@ -1,6 +1,5 @@
 import { makeStyles } from "@material-ui/core"
 import React, { memo } from "react"
-import { useTokenChartV2 } from "../../../../contexts/TokenChartV2"
 import AppBarExpertChart from "./AppBarExpertChart"
 import ExpertChart from "./ExpertChart"
 const useStyles = makeStyles((theme) => {
@@ -38,17 +37,13 @@ const useStyles = makeStyles((theme) => {
 			flexDirection: "column",
 			backgroundColor: theme.palette.primary.light,
 			height: "100%",
-			
 		},
 		expertChart: { minHeight: "100%" },
-		
 	}
 })
 
 const ExpertChartDialog = ({ open, onClose, token }) => {
 	const classes = useStyles()
-	const { getHistoricalChartToken } = useTokenChartV2()
-
 	const handleClose = () => {
 		onClose()
 	}
@@ -63,7 +58,7 @@ const ExpertChartDialog = ({ open, onClose, token }) => {
 		>
 			<AppBarExpertChart onClose={handleClose} token={token} />
 			<div className={classes.expertContainer}>
-				<ExpertChart getHistoricalChartToken={getHistoricalChartToken} token={token} className={classes.expertChart} />
+				<ExpertChart token={token} className={classes.expertChart} />
 			</div>
 		</div>
 	)

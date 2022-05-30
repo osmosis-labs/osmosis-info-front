@@ -5,7 +5,6 @@ import FileCopyIcon from "@mui/icons-material/FileCopy"
 
 import CheckIcon from "@mui/icons-material/Check"
 import CloseIcon from "@mui/icons-material/Close"
-import { usePrices } from "../../../contexts/PricesProvider"
 import { useToast } from "../../../contexts/Toast.provider"
 import { formateNumberDecimalsAuto } from "../../../helpers/helpers"
 const useStyles = makeStyles((theme) => {
@@ -99,12 +98,8 @@ const useStyles = makeStyles((theme) => {
 })
 const Informations = ({ data }) => {
 	const classes = useStyles()
-	const { priceOsmoBrut } = usePrices()
-	const { showToast } = useToast()
-	const onClickHash = () => {
-		window.open(`https://www.mintscan.io/osmosis/txs/${data.hash.value}`, "_blank")
-	}
 
+	const { showToast } = useToast()
 	const copyHash = () => {
 		try {
 			navigator.clipboard.writeText(data.hash.value)
@@ -122,7 +117,6 @@ const Informations = ({ data }) => {
 	}
 	let dateToShow = dayjs(data.time.value.toString()).format("YYYY-MM-DD HH:mm:ss")
 	let hashDisplay = data.hash.value.substring(0, 10) + "..." + data.hash.value.substring(data.hash.value.length - 10)
-	let usdFees = formateNumberDecimalsAuto({ price: data.fees * priceOsmoBrut })
 	return (
 		<div className={classes.rootInformations}>
 			<p className={classes.title}>Informations</p>
@@ -154,9 +148,7 @@ const Informations = ({ data }) => {
 			</div>
 			<div className={`${classes.row}`}>
 				<p className={classes.subTitle}>Value</p>
-				<p className={`${classes.info} ${classes.rowMiddle}`}>
-					${formateNumberDecimalsAuto({ price: data.usd })}{" "}
-				</p>
+				<p className={`${classes.info} ${classes.rowMiddle}`}>${formateNumberDecimalsAuto({ price: data.usd })} </p>
 			</div>
 			<div className={`${classes.row}`}>
 				<p className={classes.subTitle}>Trade price ({data.tokenIn.symbol})</p>
