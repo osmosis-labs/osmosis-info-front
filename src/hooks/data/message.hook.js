@@ -10,7 +10,7 @@ export const useMessage = () => {
 	const getter = async ({ queryKey }) => {
 		const [_, {}] = queryKey
 		const response = await request({
-			url: `https://api-osmosis.imperator.co/apr/v2/all`,
+			url: `https://api-osmosis.imperator.co/overview/v1/message`,
 			method: "GET",
 		})
 		return formatMessage(response.data)
@@ -19,13 +19,6 @@ export const useMessage = () => {
 	const { data, isLoading, isFetching } = useQuery(["message", {}], getter, {})
 
 	let message = data ? data : defaultMessage
-	message.value =
-		"The Terra blockchain has resumed with on-chain swaps disabled and IBC channels closed. LUNA and UST pools rewards will drain shortly"
-	message.level = "info"
 
-	if (MODE === "dev") {
-		message.value = messageValue
-		message.level = messageLevel
-	}
 	return { data: message, isLoading, isFetching }
 }

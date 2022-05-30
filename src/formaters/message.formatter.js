@@ -3,7 +3,7 @@ export const formatMessage = (data) => {
 	let res = { ...defaultMessage }
     if (data) {
         res.value = data.message
-        res.level = data.level
+        res.level = data.status
     }
 	return res
 }

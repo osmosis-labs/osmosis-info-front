@@ -97,8 +97,6 @@ const DebugModal = ({}) => {
 	} = useDebug()
 	const { address, setAddress } = useKeplr()
 	const [addressInput, setAddressInput] = useState(address)
-	const [messageInput, setMessageInput] = useState(message)
-	const [messageLevelInput, setMessageLevelInput] = useState(messageLevel)
 
 	const onChangeAddress = (e) => {
 		setAddressInput(e.target.value)
@@ -123,19 +121,7 @@ const DebugModal = ({}) => {
 		setIsStakingAccumulated(e.target.checked)
 	}
 
-	const onChangeMessageLevel = (e) => {
-		setMessageLevelInput(e.target.value)
-	}
 
-	const onChangeMessage = (e) => {
-		setMessageInput(e.target.value)
-	}
-
-	const saveMessage = () => {
-		setMessage(messageInput)
-		setMessageLevel(messageLevelInput)
-		onClose()
-	}
 
 	return (
 		<div
@@ -180,24 +166,6 @@ const DebugModal = ({}) => {
 							checked={isStakingAccumulated}
 							onChange={onChangeStakingAccumulated}
 						/>
-					</div>
-				</div>
-				<div>
-					<div className={classes.space}>
-						<TextField label="Message" fullWidth onChange={onChangeMessage} value={messageInput} />
-					</div>
-					<div className={classes.space}>
-						<p>Level: </p>
-						<Select onChange={onChangeMessageLevel} value={messageLevelInput} className={classes.select}>
-							<MenuItem value="info">Info</MenuItem>
-							<MenuItem value="warning">Warning</MenuItem>
-							<MenuItem value="error">Error</MenuItem>
-						</Select>
-					</div>
-					<div className={classes.space}>
-						<Button onClick={saveMessage} fullWidth variant="outlined">
-							Update message
-						</Button>
 					</div>
 				</div>
 			</div>

@@ -7,7 +7,6 @@ import { useMessage } from "../../hooks/data/message.hook"
 import InfoIcon from "@mui/icons-material/Info"
 import WarningIcon from "@mui/icons-material/Warning"
 import ErrorIcon from "@mui/icons-material/Error"
-import { useDebug } from "../../contexts/debug.provider"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootModalMessage: {},
@@ -75,13 +74,6 @@ const ModalMessage = ({}) => {
 	const { data: message, isLoading, isFetching } = useMessage()
 	const [isOpen, setIsOpen] = useState(false)
 	const [showAgain, setShowAgain] = useState(!settings.showAgain)
-	const { message: messageValue, messageLevel, MODE } = useDebug()
-
-	useEffect(() => {
-		if (MODE === "dev") {
-			setIsOpen(true)
-		}
-	}, [messageValue, messageLevel])
 
 	useEffect(() => {
 		if (!isLoading && !isFetching) {
