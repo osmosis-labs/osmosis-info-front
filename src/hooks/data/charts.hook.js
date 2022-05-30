@@ -34,7 +34,7 @@ export const useVolumeChart = () => {
 		return formatVolumeChart(response.data)
 	}
 
-	const { data, isLoading, isFetching } = useQuery(["liquidityChart", {}], getter, {})
+	const { data, isLoading, isFetching } = useQuery(["volumeChart", {}], getter, {})
 	const volumeChartData = data ? data : defaultVolumeChart
 	return { data: volumeChartData, isLoading, isFetching }
 }
