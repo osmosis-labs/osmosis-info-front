@@ -3,12 +3,12 @@ import { useEffect, useState } from "react"
 import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
-import { useDebug } from "../../../../contexts/debug.provider"
 import { useKeplr } from "../../../../contexts/KeplrProvider"
 import { formatDate, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
 import { useBalance, useChartStaking } from "../../../../hooks/data/dashboard.hook"
 import ButtonChart from "./button_chart"
 import Chart from "./chart"
+import SwitchStyled from "../../../../components/switch/SwitchStyled"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootStackingRewards: {
@@ -79,19 +79,24 @@ const useStyles = makeStyles((theme) => {
 			alignSelf: "flex-end",
 			marginLeft: "2px",
 		},
+		toggle: {
+			marginTop: "4px",
+			display: "flex",
+			alignItems: "center",
+		},
 	}
 })
 const StackingRewards = () => {
 	const classes = useStyles()
 	const { address } = useKeplr()
 
-	const { isStakingAccumulated } = useDebug()
+	const [isAccumulated, setIsAccumulated] = useState(true)
 
 	const { data: balance, isLoading: isLoadingBalance } = useBalance({ address })
 
 	const { data: chartStaking, isLoading: isLoadingStaking } = useChartStaking({
 		address,
-		isAccumulated: isStakingAccumulated,
+		isAccumulated,
 	})
 
 	const isLoading = isLoadingBalance || isLoadingStaking
@@ -106,9 +111,11 @@ const StackingRewards = () => {
 	useEffect(() => {
 		if (chartStaking) {
 			let currentData = chartStaking[range]
-			setTotal(currentData.reduce((pr, cv) => {
-				return pr + cv.dayValue
-			}, 0))
+			setTotal(
+				currentData.reduce((pr, cv) => {
+					return pr + cv.dayValue
+				}, 0)
+			)
 			setCurrentItem(formatItem(currentData[0]))
 			setData(currentData)
 		}
@@ -158,7 +165,11 @@ const StackingRewards = () => {
 			if (item.time && typeof item.time === "string") {
 				date = new Date(item.time)
 			} else {
-				date = new Date(item.time.year, item.time.month, item.time.day)
+				if (item.time.month === 1) {
+					date = new Date(item.time.year - 1, 11, item.time.day)
+				} else {
+					date = new Date(item.time.year, item.time.month - 1, item.time.day)
+				}
 			}
 			res.time = formatDate(date)
 			res.value = formaterNumber(item.dayValue)
@@ -189,6 +200,9 @@ const StackingRewards = () => {
 		setCurrentItem(formatItem(data[0]))
 	}
 
+	const toggleAccumulated = () => {
+		setIsAccumulated(!isAccumulated)
+	}
 	return (
 		<div className={classes.rootStackingRewards}>
 			<div className={classes.containerTitle}>
@@ -231,6 +245,10 @@ const StackingRewards = () => {
 								<p className={classes.value}>
 									{currentItem.value} <span className={classes.token}>OSMO</span>
 								</p>
+							</div>
+							<div className={classes.toggle}>
+								<SwitchStyled size="small" checked={isAccumulated} onChange={toggleAccumulated} />
+								<p className={classes.name}>Accumulated values</p>
 							</div>
 						</div>
 					</>

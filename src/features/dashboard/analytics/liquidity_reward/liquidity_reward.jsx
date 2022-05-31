@@ -1,8 +1,9 @@
 import { makeStyles } from "@material-ui/core"
-import {  useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
+import SwitchStyled from "../../../../components/switch/SwitchStyled"
 import { useDebug } from "../../../../contexts/debug.provider"
 import { useKeplr } from "../../../../contexts/KeplrProvider"
 import { formatDate, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
@@ -81,12 +82,17 @@ const useStyles = makeStyles((theme) => {
 			alignSelf: "flex-end",
 			marginLeft: "2px",
 		},
+		toggle: {
+			marginTop: "4px",
+			display: "flex",
+			alignItems: "center",
+		},
 	}
 })
 const LiquidityReward = () => {
 	const classes = useStyles()
 	const [currentToken, setCurrentToken] = useState({ symbol: "", symbolDisplay: "" })
-	const { isAccumulated } = useDebug()
+	const [isAccumulated, setIsAccumulated] = useState(true)
 
 	const { address } = useKeplr()
 
@@ -193,7 +199,11 @@ const LiquidityReward = () => {
 			if (item.time && typeof item.time === "string") {
 				date = new Date(item.time)
 			} else {
-				date = new Date(item.time.year, item.time.month, item.time.day)
+				if (item.time.month === 1) {
+					date = new Date(item.time.year - 1, 11, item.time.day)
+				} else {
+					date = new Date(item.time.year, item.time.month - 1, item.time.day)
+				}
 			}
 			res.time = formatDate(date)
 			res.value = formaterNumber(item.value)
@@ -223,6 +233,10 @@ const LiquidityReward = () => {
 
 	const onMouseLeave = () => {
 		setCurrentItem(formatItem(data[0]))
+	}
+
+	const toggleAccumulated = () => {
+		setIsAccumulated(!isAccumulated)
 	}
 
 	return (
@@ -260,6 +274,10 @@ const LiquidityReward = () => {
 								<p className={classes.value}>
 									{currentItem.dayValue} <span className={classes.token}>{currentToken.symbolDisplay}</span>
 								</p>
+							</div>
+							<div className={classes.toggle}>
+								<SwitchStyled size="small" checked={isAccumulated} onChange={toggleAccumulated} />
+								<p className={classes.name}>Accumulated values</p>
 							</div>
 						</div>
 					</>
