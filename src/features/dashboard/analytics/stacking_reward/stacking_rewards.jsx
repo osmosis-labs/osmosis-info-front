@@ -161,7 +161,7 @@ const StackingRewards = () => {
 				date = new Date(item.time.year, item.time.month, item.time.day)
 			}
 			res.time = formatDate(date)
-			res.value = formaterNumber(item.value)
+			res.value = formaterNumber(item.dayValue)
 		}
 		return res
 	}
