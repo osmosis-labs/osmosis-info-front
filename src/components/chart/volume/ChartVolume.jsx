@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const ChartVolume = ({ data, crossMove, onMouseLeave, onClick }) => {
+const ChartVolume = ({ data, crossMove, onMouseLeave, onClick, range }) => {
 	const classes = useStyles()
 	const chartRef = useRef(null)
 	const containerRef = useRef(null)
@@ -103,7 +103,7 @@ const ChartVolume = ({ data, crossMove, onMouseLeave, onClick }) => {
 			chartRef.current = chart
 		}
 		const hover = (event) => {
-			let item = {time: event.time, value: event.seriesPrices.get(serieRef.current)}
+			let item = { time: event.time, value: event.seriesPrices.get(serieRef.current) }
 			crossMove(item)
 		}
 		chartRef.current.subscribeCrosshairMove(hover)
@@ -116,9 +116,46 @@ const ChartVolume = ({ data, crossMove, onMouseLeave, onClick }) => {
 
 	useEffect(() => {
 		// When data is updated
-		serieRef.current.setData(data)
-		chartRef.current.timeScale().fitContent()
-	}, [data])
+		if (data.length > 0) {
+			let maxLimit = 250_000_000 // range -> d
+			if(range === "w"){
+				maxLimit = 1_000_000_000 // range -> w
+			}else if(range === "m"){
+				maxLimit = 3_500_000_000 // range -> m
+			}
+			let min = data.reduce((pr, cv) => {
+				if (pr < cv.value) {
+					return pr
+				} else {
+					return cv.value
+				}
+			}, data[0].value)
+
+			let max = data.reduce((pr, cv) => {
+				if (pr > cv.value) {
+					return pr
+				} else {
+					if (cv.value > maxLimit) {
+						return maxLimit
+					} else {
+						return cv.value
+					}
+				}
+			}, data[0].value)
+
+			serieRef.current.applyOptions({
+				autoscaleInfoProvider: () => ({
+					priceRange: {
+						minValue: min,
+						maxValue: max,
+					},
+				}),
+			})
+
+			serieRef.current.setData(data)
+			chartRef.current.timeScale().fitContent()
+		}
+	}, [data, range])
 
 	return (
 		<div className={classes.chartContainer}>
