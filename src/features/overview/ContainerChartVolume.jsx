@@ -134,7 +134,7 @@ const ContainerChartVolume = ({ dataDay, dataWeek, dataMonth, title }) => {
 					<ButtonsVolume onChangeRange={changeRange} range={range} data={currentData} />
 				</div>
 			</div>
-			<ChartVolume data={currentData} crossMove={onMove} onMouseLeave={onLeave} onClick={onClick} />
+			<ChartVolume data={currentData} range={range} crossMove={onMove} onMouseLeave={onLeave} onClick={onClick} />
 		</div>
 	)
 }
