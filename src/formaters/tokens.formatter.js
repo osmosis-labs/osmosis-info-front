@@ -64,6 +64,7 @@ export const formatToken = (data) => {
 	token.volume24hChange = data.volume_24h_change
 	token.name = data.name
 	token.price24hChange = data.price_24h_change
+	token.main = data.main
 	return token
 }
 
