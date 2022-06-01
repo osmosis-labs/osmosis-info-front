@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useGainers, useLosers } from "../../../hooks/data/metrics.hook"
 import MoverItem from "./moverItem"
 
@@ -12,10 +12,10 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const Bar = ({ className }) => {
+const Bar = ({ className }, ref) => {
 	const classes = useStyles()
-	const {data: losers} = useLosers()
-	const {data: gainers} = useGainers()
+	const { data: losers } = useLosers()
+	const { data: gainers } = useGainers()
 	const [items, setItems] = useState([])
 	useEffect(() => {
 		let items = []
@@ -25,11 +25,13 @@ const Bar = ({ className }) => {
 		if (losers && losers.length > 0) {
 			items = [...items, ...losers]
 		}
-		items.sort((a,b)=>{return b.price_24h_change - a.price_24h_change})
+		items.sort((a, b) => {
+			return b.price_24h_change - a.price_24h_change
+		})
 		setItems(items)
 	}, [gainers, losers])
 	return (
-		<div className={`${classes.rootBar} ${className}`}>
+		<div ref={ref} className={`${classes.rootBar} ${className}`}>
 			{items.map((item, index) => {
 				return <MoverItem key={index} item={item} index={index} />
 			})}
@@ -37,4 +39,4 @@ const Bar = ({ className }) => {
 	)
 }
 
-export default Bar
+export default React.forwardRef(Bar)

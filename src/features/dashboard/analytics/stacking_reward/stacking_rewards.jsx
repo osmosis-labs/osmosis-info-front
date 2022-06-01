@@ -1,14 +1,15 @@
 import { makeStyles } from "@material-ui/core"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
-import { useDebug } from "../../../../contexts/debug.provider"
 import { useKeplr } from "../../../../contexts/KeplrProvider"
 import { formatDate, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
 import { useBalance, useChartStaking } from "../../../../hooks/data/dashboard.hook"
 import ButtonChart from "./button_chart"
 import Chart from "./chart"
+import SwitchStyled from "../../../../components/switch/SwitchStyled"
+import DailyReward from "./daily_reward"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootStackingRewards: {
@@ -79,19 +80,24 @@ const useStyles = makeStyles((theme) => {
 			alignSelf: "flex-end",
 			marginLeft: "2px",
 		},
+		toggle: {
+			marginTop: "4px",
+			display: "flex",
+			alignItems: "center",
+		},
 	}
 })
 const StackingRewards = () => {
 	const classes = useStyles()
 	const { address } = useKeplr()
 
-	const { isStakingAccumulated } = useDebug()
+	const [isAccumulated, setIsAccumulated] = useState(true)
 
 	const { data: balance, isLoading: isLoadingBalance } = useBalance({ address })
 
 	const { data: chartStaking, isLoading: isLoadingStaking } = useChartStaking({
 		address,
-		isAccumulated: isStakingAccumulated,
+		isAccumulated,
 	})
 
 	const isLoading = isLoadingBalance || isLoadingStaking
@@ -102,13 +108,16 @@ const StackingRewards = () => {
 	const [osmoStaked, setOsmoStaked] = useState(0)
 	const [osmoReward, setOsmoReward] = useState(0)
 	const [currentItem, setCurrentItem] = useState({ time: "-", value: "-" })
+	const refDailyReward = useRef(null)
 
 	useEffect(() => {
 		if (chartStaking) {
 			let currentData = chartStaking[range]
-			setTotal(currentData.reduce((pr, cv) => {
-				return pr + cv.dayValue
-			}, 0))
+			setTotal(
+				currentData.reduce((pr, cv) => {
+					return pr + cv.dayValue
+				}, 0)
+			)
 			setCurrentItem(formatItem(currentData[0]))
 			setData(currentData)
 		}
@@ -151,44 +160,60 @@ const StackingRewards = () => {
 		return <span className={`${classes.percent} ${classes.down}`}>↓ {getPercent(percent)}</span>
 	}
 
-	const formatItem = (item) => {
-		let res = { time: "-", value: "-" }
+	const formatItem = useCallback((item) => {
+		let res = { time: "-", value: "-", dayValue: "-" }
 		if (item) {
 			let date = ""
 			if (item.time && typeof item.time === "string") {
 				date = new Date(item.time)
 			} else {
-				date = new Date(item.time.year, item.time.month, item.time.day)
+				if (item.time.month === 1) {
+					date = new Date(item.time.year - 1, 11, item.time.day)
+				} else {
+					date = new Date(item.time.year, item.time.month - 1, item.time.day)
+				}
 			}
 			res.time = formatDate(date)
-			res.value = formaterNumber(item.dayValue)
+			res.value = formaterNumber(item.value)
+			res.dayValue = formaterNumber(item.dayValue)
 		}
 		return res
-	}
+	}, [])
 
-	const getItemByTime = (time) => {
-		if (time) {
-			let item = data.find(
-				(item) => item.time.year === time.year && item.time.month === time.month && item.time.day === time.day
-			)
-			return item
-		}
-		return null
-	}
-
-	const crossMove = ({ time }) => {
-		if (time) {
-			let formatedItem = formatItem(getItemByTime(time))
-			if (currentItem.time !== formatedItem.time) {
-				setCurrentItem(formatItem(getItemByTime(time)))
+	const getItemByTime = useCallback(
+		(time) => {
+			if (time) {
+				let item = data.find(
+					(item) => item.time.year === time.year && item.time.month === time.month && item.time.day === time.day
+				)
+				return item
 			}
-		}
-	}
+			return null
+		},
+		[data]
+	)
+
+	const crossMove = useCallback(
+		({ time }) => {
+			if (refDailyReward.current && refDailyReward.current.updateItem) {
+				if (time) {
+					let formatedItem = formatItem(getItemByTime(time))
+					if (currentItem.time !== formatedItem.time) {
+						refDailyReward.current.updateItem(formatedItem)
+					}
+				}
+			}
+		},
+		[currentItem, getItemByTime, refDailyReward]
+	)
 
 	const onMouseLeave = () => {
 		setCurrentItem(formatItem(data[0]))
 	}
 
+	const toggleAccumulated = () => {
+		setIsAccumulated(!isAccumulated)
+	}
 	return (
 		<div className={classes.rootStackingRewards}>
 			<div className={classes.containerTitle}>
@@ -231,6 +256,12 @@ const StackingRewards = () => {
 								<p className={classes.value}>
 									{currentItem.value} <span className={classes.token}>OSMO</span>
 								</p>
+							</div>
+							<DailyReward ref={refDailyReward} />
+
+							<div className={classes.toggle}>
+								<SwitchStyled size="small" checked={isAccumulated} onChange={toggleAccumulated} />
+								<p className={classes.name}>Accumulated values</p>
 							</div>
 						</div>
 					</>
