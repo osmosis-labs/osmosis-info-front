@@ -1,15 +1,15 @@
 import { makeStyles } from "@material-ui/core"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
 import SwitchStyled from "../../../../components/switch/SwitchStyled"
-import { useDebug } from "../../../../contexts/debug.provider"
 import { useKeplr } from "../../../../contexts/KeplrProvider"
 import { formatDate, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
 import { useBalance, useLiquidity, useLiquidityToken } from "../../../../hooks/data/dashboard.hook"
 import ButtonChart from "../stacking_reward/button_chart"
 import Chart from "../stacking_reward/chart"
+import DailyReward from "./daily_reward"
 import SelectToken from "./select_token"
 
 const useStyles = makeStyles((theme) => {
@@ -119,6 +119,7 @@ const LiquidityReward = () => {
 	const [currentBalance, setCurrentBalance] = useState({ value: 0, percent: 0, change: 0 })
 	const [walletSaved, setWalletSaved] = useState({})
 	const [currentItem, setCurrentItem] = useState({ time: "-", value: "-", dayValue: "-" })
+	const refDailyReward = useRef(null)
 
 	useEffect(() => {
 		if (balance && liquidityToken.length > 0) {
@@ -192,7 +193,7 @@ const LiquidityReward = () => {
 		document.body.removeChild(a)
 	}
 
-	const formatItem = (item) => {
+	const formatItem = useCallback((item) => {
 		let res = { time: "-", value: "-", dayValue: "-" }
 		if (item) {
 			let date = ""
@@ -210,26 +211,34 @@ const LiquidityReward = () => {
 			res.dayValue = formaterNumber(item.dayValue)
 		}
 		return res
-	}
+	}, [])
 
-	const getItemByTime = (time) => {
-		if (time) {
-			let item = data.find(
-				(item) => item.time.year === time.year && item.time.month === time.month && item.time.day === time.day
-			)
-			return item
-		}
-		return null
-	}
-
-	const crossMove = ({ time }) => {
-		if (time) {
-			let formatedItem = formatItem(getItemByTime(time))
-			if (currentItem.time !== formatedItem.time) {
-				setCurrentItem(formatItem(getItemByTime(time)))
+	const getItemByTime = useCallback(
+		(time) => {
+			if (time) {
+				let item = data.find(
+					(item) => item.time.year === time.year && item.time.month === time.month && item.time.day === time.day
+				)
+				return item
 			}
-		}
-	}
+			return null
+		},
+		[data]
+	)
+
+	const crossMove = useCallback(
+		({ time }) => {
+			if (refDailyReward.current && refDailyReward.current.updateItem) {
+				if (time) {
+					let formatedItem = formatItem(getItemByTime(time))
+					if (currentItem.time !== formatedItem.time) {
+						refDailyReward.current.updateItem(formatedItem)
+					}
+				}
+			}
+		},
+		[currentItem, getItemByTime, refDailyReward]
+	)
 
 	const onMouseLeave = () => {
 		setCurrentItem(formatItem(data[0]))
@@ -268,13 +277,7 @@ const LiquidityReward = () => {
 									{formaterNumber(total)} <span className={classes.token}>{currentToken.symbolDisplay}</span>
 								</p>
 							</div>
-							<div className={classes.rowInfo}>
-								<p className={classes.name}>Daily reward</p>
-								<p className={classes.name}>{currentItem.time}</p>
-								<p className={classes.value}>
-									{currentItem.dayValue} <span className={classes.token}>{currentToken.symbolDisplay}</span>
-								</p>
-							</div>
+							<DailyReward currentToken={currentToken} ref={refDailyReward} />
 							<div className={classes.toggle}>
 								<SwitchStyled size="small" checked={isAccumulated} onChange={toggleAccumulated} />
 								<p className={classes.name}>Accumulated values</p>
