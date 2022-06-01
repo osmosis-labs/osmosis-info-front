@@ -31,8 +31,8 @@ const useStyles = makeStyles((theme) => {
 const TokenOverview = () => {
 	const classes = useStyles()
 	const [stop, setStop] = useState(false)
-	const { data: losers, isLoading: isLoadingLosers } = useLosers()
-	const { data: gainers, isLoading: isLoadingGainers } = useGainers()
+	const { isLoading: isLoadingLosers } = useLosers()
+	const { isLoading: isLoadingGainers } = useGainers()
 	const refBar = useRef(null)
 	const refBar2 = useRef(null)
 
@@ -65,7 +65,6 @@ const TokenOverview = () => {
 		}
 	}, [stop, refBar, refBar2])
 
-	console.log("tokenOverview.jsx (l:58): here:", stop)
 	return (
 		<div className={classes.rootTokenOverview} onMouseLeave={onLeave} onMouseEnter={onEnter}>
 			<Paper className={classes.rootTokenOverview}>
