@@ -68,7 +68,7 @@ const Pool = () => {
 		poolId: id,
 		denomIn: selectedTokens.one?.denom,
 		denomOut: selectedTokens.two?.denom,
-		range: 60,
+		range: "7d",
 	})
 
 	useEffect(() => {

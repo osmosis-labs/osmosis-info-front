@@ -157,12 +157,14 @@ export const formatPoolTrx = (data) => {
 
 export const defaultHistoricalPool = []
 export const formatHistoricalPool = (data) => {
+	if (!data || typeof data !== "object") return defaultHistoricalPool
 	let res = data
 	return res
 }
 
 export const defaultLiquidityPool = { d: [], w: [], m: [] }
 export const formatLiquidityPool = (data) => {
+	if (!data || typeof data !== "object") return defaultLiquidityPool
 	let res = { ...defaultLiquidityPool }
 	let dataW = []
 	let currentWeek = { time: data[0].time, value: 0 }
