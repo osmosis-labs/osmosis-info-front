@@ -9,7 +9,7 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 
 const useStyles = makeStyles((theme) => {
 	return {
-		containerNotFound:{
+		containerNotFound: {
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "center",
@@ -27,6 +27,12 @@ const useStyles = makeStyles((theme) => {
 			marginTop: "16px",
 			color: theme.palette.primary.light2,
 			fontSize: "20px",
+		},
+		onClickCell: {
+			overflow: "hidden",
+			cursor: "pointer",
+			textOverflow: "ellipsis",
+			color: `${theme.palette.table.link} !important`,
 		},
 	}
 })
@@ -47,6 +53,11 @@ const ListTrx = ({ data: currentData, onClickRow, isLoading, loadMore }) => {
 
 	const transformDisplay = (data) => {
 		return data.display
+	}
+
+	const onClickHash = (data) => {
+		onClickRow(data)
+		window.open(`https://www.mintscan.io/osmosis/txs/${data.hash.value}`, "_blank")
 	}
 
 	const onSortTime = (a, b, orderBy) => {
@@ -136,9 +147,9 @@ const ListTrx = ({ data: currentData, onClickRow, isLoading, loadMore }) => {
 				onSort: null,
 				sortable: false,
 				headerClass: null,
-				bodyClass: null,
+				bodyClass: classes.onClickCell,
 				align: "left",
-				onClickAttribut: null,
+				onClickAttribut: onClickHash,
 				transform: transformDisplay,
 				body: null,
 				space: "150px",

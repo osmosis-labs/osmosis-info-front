@@ -1,10 +1,9 @@
 import { Button, makeStyles } from "@material-ui/core"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import LogoutIcon from "@mui/icons-material/Logout"
-import { useEffect } from "react"
 import { useKeplr } from "../../contexts/KeplrProvider"
 import { useToast } from "../../contexts/Toast.provider"
-import { KeplrWalletConnectV1, useWalletManager } from "cosmodal"
+import useSize from "../../hooks/sizeHook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -25,10 +24,11 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const ButtonConnection = () => {
+const ButtonConnection = ({ tooBig }) => {
 	const classes = useStyles()
 	const { showToast } = useToast()
 	const { keplrStatus, connect, disconnect, address, name } = useKeplr()
+	const size = useSize()
 
 	const onClick = async () => {
 		if (keplrStatus === "uninstalled") {
@@ -50,7 +50,8 @@ const ButtonConnection = () => {
 				className={classes.rootButtonDisconnect}
 				startIcon={<LogoutIcon />}
 			>
-				{name} - Log out
+				{!tooBig ? `${name} - ` : null}
+				Log out
 			</Button>
 		)
 	} else {

@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Link, useHistory, useLocation } from "react-router-dom"
 import ButtonConnection from "./button_connection"
 import logo from "./logo.png"
@@ -12,6 +12,7 @@ import { formaterNumber } from "../../helpers/helpers"
 import WarningIcon from "@mui/icons-material/Warning"
 import { useBalance } from "../../hooks/data/dashboard.hook"
 import { useKeplr } from "../../contexts/KeplrProvider"
+import SelectMenu from "./selectDashboard/select_menu"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -109,6 +110,7 @@ const useStyles = makeStyles((theme) => {
 })
 
 const AppBarDesktop = ({ type, onChangeType, message, diplayMessage }) => {
+	let resizing // used to wait the end of resizing
 	const classes = useStyles()
 	const history = useHistory()
 	let location = useLocation()
@@ -117,6 +119,35 @@ const AppBarDesktop = ({ type, onChangeType, message, diplayMessage }) => {
 	const { data } = useBalance({ address })
 
 	const [osmo, setOsmo] = useState(0)
+	const barRef = useRef(null)
+	const [tooBig, setTooBig] = useState(false)
+
+	const resized = () => {
+		let { height, width } = barRef.current.getBoundingClientRect()
+		setTooBig((tb) => height >= 100)
+	}
+
+	useEffect(() => {
+		// run resied() when the barRef is mounted
+		if (barRef.current) {
+			resized()
+		}
+	}, [barRef])
+
+	useEffect(() => {
+		const resize = () => {
+			clearTimeout(resizing)
+			resizing = setTimeout(function () {
+				setTooBig((tb) => false)
+				resized()
+			}, 100)
+		}
+		window.addEventListener("resize", resize)
+
+		return () => {
+			window.removeEventListener("resize", resize)
+		}
+	}, [])
 
 	useEffect(() => {
 		setCurrentPath(location.pathname)
@@ -141,7 +172,7 @@ const AppBarDesktop = ({ type, onChangeType, message, diplayMessage }) => {
 					<p className={classes.messageText}>{message}</p>
 				</div>
 			)}
-			<div className={classes.appBarDesktopContent}>
+			<div className={classes.appBarDesktopContent} ref={barRef}>
 				<div className={classes.left}>
 					<img
 						className={classes.logo}
@@ -151,41 +182,51 @@ const AppBarDesktop = ({ type, onChangeType, message, diplayMessage }) => {
 							history.push("/")
 						}}
 					/>
+
 					<div className={classes.menu}>
-						<Link
-							to="/"
-							className={currentPath === "/" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
-						>
-							Overview
-						</Link>
-						<Link
-							to="/pools"
-							className={currentPath === "/pools" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
-						>
-							Pools
-						</Link>
-						<Link
-							to="/tokens"
-							className={currentPath === "/tokens" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
-						>
-							Tokens
-						</Link>
-						<Link
-							to="/ibc"
-							className={currentPath === "/ibc" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
-						>
-							IBC Status
-						</Link>
+						{tooBig ? (
+							<SelectMenu />
+						) : (
+							<>
+								<Link
+									to="/"
+									className={currentPath === "/" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem}
+								>
+									Overview
+								</Link>
+								<Link
+									to="/pools"
+									className={
+										currentPath === "/pools" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem
+									}
+								>
+									Pools
+								</Link>
+								<Link
+									to="/tokens"
+									className={
+										currentPath === "/tokens" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem
+									}
+								>
+									Tokens
+								</Link>
+								<Link
+									to="/ibc"
+									className={
+										currentPath === "/ibc" ? `${classes.menuItem} ${classes.menuItemActive}` : classes.menuItem
+									}
+								>
+									IBC Status
+								</Link>
+							</>
+						)}
+
 						<SelectDashboard />
 					</div>
 				</div>
 				<div className={classes.right}>
 					{address && address.length > 0 && <ButtonOsmo address={address} osmo={osmo} />}
-					<Toggle color="primary" value={type} exclusive onChange={onChangeType}>
-						<ToggleItem value="app">App</ToggleItem>
-						<ToggleItem value="frontier">Frontier</ToggleItem>
-					</Toggle>
-					<ButtonConnection />
+					<ButtonConnection tooBig={tooBig} />
 					<Search />
 				</div>
 			</div>

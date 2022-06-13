@@ -60,6 +60,7 @@ const Pools = () => {
 		})
 		setPoolsOnWatchlist(poolsWL)
 	}, [watchlistPools, pools])
+	console.log("%cPools.jsx -> 63 ORANGE: pools", "background: #ff5722; color:#FFFFFF", pools)
 
 	return (
 		<div className={classes.poolsRoot}>
