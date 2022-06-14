@@ -8,14 +8,17 @@ export const formatIbc = (data) => {
 	let statusNormal = 0
 	let statusCongested = 0
 	let statusBlocked = 0
-	let currentCouple = []
 
-	data.forEach((ibc) => {
-		currentCouple.push(ibc)
+	let sourceMap = {}
 
-		if (currentCouple.length === 2) {
-			ibcCouple.push(currentCouple)
-			currentCouple = []
+	data.forEach((ibc, index) => {
+		let id = ibc.source
+		if (ibc.source === "osmosis-1") id = ibc.destination
+
+		if (sourceMap[id]) {
+			sourceMap[id].push(ibc)
+		} else {
+			sourceMap[id] = [ibc]
 		}
 
 		if (ibc.duration_minutes < MIN_CONGESTED) {
@@ -26,6 +29,12 @@ export const formatIbc = (data) => {
 			statusBlocked++
 		}
 	})
+	Object.keys(sourceMap).forEach((SourceKey) => {
+		if (sourceMap[SourceKey].length > 1) {
+			ibcCouple.push([...sourceMap[SourceKey]])
+		}
+	})
+
 	res.statusNormal = statusNormal
 	res.statusCongested = statusCongested
 	res.statusBlocked = statusBlocked
