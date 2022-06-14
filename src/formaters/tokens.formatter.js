@@ -99,7 +99,7 @@ export const formatTrxToken = (data, symbol) => {
 		}
 		return {
 			type: trx.symbol_out === symbol ? "Buy" : "Sell",
-			time: { value: time, display: timeAgo },
+			time: { value: time, display: sourceDate.format("DD/MM/YY HH:mm:ss") },
 			hash: { value: trx.tx_hash, display: hashDisplay },
 			address: { value: trx.address, display: addressDisplay },
 			tokenIn: { value: trx.amount_in, symbol: trx.symbol_in, symbolDisplay: symbolInDisplay },
