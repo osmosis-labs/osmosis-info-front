@@ -79,6 +79,7 @@ export const formatTrxToken = (data, symbol) => {
 		let addressDisplay = trx.address.substring(0, 5) + "..." + trx.address.substring(trx.address.length - 5)
 		let hashDisplay = trx.tx_hash.substring(0, 5) + "..." + trx.tx_hash.substring(trx.tx_hash.length - 5)
 
+		console.log("pools.formatter.js -> 127: trx", trx)
 		let symbolInDisplay = formatTokenName(trx.symbol_in)
 		let symbolOutDisplay = formatTokenName(trx.symbol_out)
 
@@ -99,7 +100,7 @@ export const formatTrxToken = (data, symbol) => {
 		}
 		return {
 			type: trx.symbol_out === symbol ? "Buy" : "Sell",
-			time: { value: time, display: timeAgo },
+			time: { value: time, display: sourceDate.format("DD/MM/YY HH:mm:ss") },
 			hash: { value: trx.tx_hash, display: hashDisplay },
 			address: { value: trx.address, display: addressDisplay },
 			tokenIn: { value: trx.amount_in, symbol: trx.symbol_in, symbolDisplay: symbolInDisplay },

@@ -64,7 +64,12 @@ const Message = ({ message, index, data }) => {
 			} else if (key === "tradeIn" || key === "tradeOut") {
 				let name = `Trade (${data.symbol})`
 				res = <TradePriceMessage key={key + i} index={i} amount={data.value} denom={"$"} name={name} type={key} />
-
+			} else if (key === "amount") {
+				console.log("message.jsx (l:68): data:", data)
+				name = "Amount"
+				res = (
+					<PriceMessage key={key + i} index={i} amount={data[0].amount} denom={data[0].denom} name={name} type={key} />
+				)
 			} else if (typeof data === "string") {
 				res = <DefaultMessage key={key + i} index={i} data={data} name={key} />
 			} else {

@@ -195,6 +195,7 @@ const Transactions = () => {
 							onClickRow={onClickRow}
 							loadMore={cbEndPage}
 							isLoading={isLoading}
+							type={type}
 						/>
 					</div>
 				</div>

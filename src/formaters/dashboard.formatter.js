@@ -197,7 +197,7 @@ export const formatTrxs = (data, { chainId, address }) => {
 		const tzOffset = new Date(item.time_tx).getTimezoneOffset()
 		let sourceDate = dayjs(item.time_tx).add(-tzOffset, "minute")
 		let timeAgo = dayjs(sourceDate).utc().fromNow(false)
-		trx.time.display = timeAgo
+		trx.time.display = sourceDate.format("DD/MM/YY HH:mm:ss")
 		trx.time.value = time
 
 		let hash = item.tx_response.txhash
@@ -256,7 +256,7 @@ export const formatTrades = (data) => {
 		const tzOffset = new Date(item.time_tx).getTimezoneOffset()
 		let sourceDate = dayjs(item.time_tx).add(-tzOffset, "minute")
 		let timeAgo = dayjs(sourceDate).utc().fromNow(false)
-		trx.time.display = timeAgo
+		trx.time.display = sourceDate.format("DD/MM/YY HH:mm:ss")
 		trx.time.value = time
 
 		let hash = item.tx_hash
@@ -359,7 +359,7 @@ export const formatTrx = (data, { chainId, address }) => {
 	const tzOffset = new Date(item.time_tx).getTimezoneOffset()
 	let sourceDate = dayjs(item.time_tx).add(-tzOffset, "minute")
 	let timeAgo = dayjs(sourceDate).utc().fromNow(false)
-	trx.time.display = timeAgo
+	trx.time.display = sourceDate.format("DD/MM/YY HH:mm:ss")
 	trx.time.value = time
 
 	let hash = item.tx_response.txhash

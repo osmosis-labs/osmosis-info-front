@@ -6,10 +6,12 @@ import AttributFees from "./attribut_fees"
 import AttributStatus from "./attribut_status"
 import AttributType from "./attribut_type"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
+import AttributAmount from "./attribut_amount"
+import AttributAddress from "./attribut_address"
 
 const useStyles = makeStyles((theme) => {
 	return {
-		containerNotFound:{
+		containerNotFound: {
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "center",
@@ -28,10 +30,16 @@ const useStyles = makeStyles((theme) => {
 			color: theme.palette.primary.light2,
 			fontSize: "20px",
 		},
+		onClickCell: {
+			overflow: "hidden",
+			cursor: "pointer",
+			textOverflow: "ellipsis",
+			color: `${theme.palette.table.link} !important`,
+		},
 	}
 })
 
-const ListTrx = ({ data: currentData, onClickRow, isLoading, loadMore }) => {
+const ListTrx = ({ data: currentData, onClickRow, isLoading, loadMore, type }) => {
 	const classes = useStyles()
 	const [data, setData] = useState([])
 
@@ -47,6 +55,11 @@ const ListTrx = ({ data: currentData, onClickRow, isLoading, loadMore }) => {
 
 	const transformDisplay = (data) => {
 		return data.display
+	}
+
+	const onClickHash = (data) => {
+		onClickRow(data)
+		window.open(`https://www.mintscan.io/osmosis/txs/${data.hash.value}`, "_blank")
 	}
 
 	const onSortTime = (a, b, orderBy) => {
@@ -79,18 +92,90 @@ const ListTrx = ({ data: currentData, onClickRow, isLoading, loadMore }) => {
 		return res
 	}
 
-	const config = {
-		defaultSort: "name",
-		defaultOrder: "asc",
-		scrollOnIt: true,
-		onLoadMore: onLoadMore,
-		onClickRow: onClickRow,
-		selectedItemClass: null,
-		selectableRow: true,
-		rowId: "hash",
-		fixedHeader: true,
-		showFooter: true,
-		items: [
+	const itemDefault = [
+		{
+			label: "Status",
+			key: "status",
+			sortable: false,
+			onSort: null,
+			headerClass: null,
+			bodyClass: null,
+			align: "center",
+			onClickAttribut: null,
+			transform: null,
+			body: AttributStatus,
+			space: "75px",
+		},
+		{
+			label: "Time",
+			key: "time",
+			onSort: onSortTime,
+			sortable: true,
+			headerClass: null,
+			bodyClass: classes.cellTime,
+			align: "center",
+			onClickAttribut: null,
+			transform: transformDisplay,
+			body: null,
+			space: "minmax(100px, 150px)",
+		},
+		{
+			label: "Type",
+			key: "type",
+			sortable: false,
+			onSort: null,
+			headerClass: null,
+			bodyClass: null,
+			align: "left",
+			onClickAttribut: null,
+			transform: null,
+			body: AttributType,
+			space: "minmax(200px, 1fr)",
+		},
+		{
+			label: "Hash",
+			key: "hash",
+			onSort: null,
+			sortable: false,
+			headerClass: null,
+			bodyClass: classes.onClickCell,
+			align: "left",
+			onClickAttribut: onClickHash,
+			transform: transformDisplay,
+			body: null,
+			space: "150px",
+		},
+
+		{
+			label: "Fees",
+			key: "fees",
+			sortable: false,
+			onSort: null,
+			headerClass: null,
+			bodyClass: null,
+			align: "right",
+			onClickAttribut: null,
+			transform: null,
+			body: AttributFees,
+			space: "minmax(100px, 150px)",
+		},
+		{
+			label: "Height",
+			key: "height",
+			onSort: null,
+			sortable: true,
+			headerClass: null,
+			bodyClass: null,
+			align: "right",
+			onClickAttribut: null,
+			transform: null,
+			body: null,
+			space: "minmax(100px, 150px)",
+		},
+	]
+	let itemSendReceive = []
+	if (type === "cosmos.bank.v1beta1.MsgSend") {
+		itemSendReceive = [
 			{
 				label: "Status",
 				key: "status",
@@ -128,7 +213,7 @@ const ListTrx = ({ data: currentData, onClickRow, isLoading, loadMore }) => {
 				onClickAttribut: null,
 				transform: null,
 				body: AttributType,
-				space: "minmax(200px, 1fr)",
+				space: "minmax(150px, 1fr)",
 			},
 			{
 				label: "Hash",
@@ -136,16 +221,29 @@ const ListTrx = ({ data: currentData, onClickRow, isLoading, loadMore }) => {
 				onSort: null,
 				sortable: false,
 				headerClass: null,
-				bodyClass: null,
+				bodyClass: classes.onClickCell,
 				align: "left",
-				onClickAttribut: null,
+				onClickAttribut: onClickHash,
 				transform: transformDisplay,
 				body: null,
 				space: "150px",
 			},
 			{
+				label: "Amount",
+				key: "amount",
+				sortable: false,
+				onSort: null,
+				headerClass: null,
+				bodyClass: null,
+				align: "right",
+				onClickAttribut: null,
+				transform: null,
+				body: AttributAmount,
+				space: "minmax(100px, 150px)",
+			},
+			{
 				label: "Fees",
-				key: "fess",
+				key: "fees",
 				sortable: false,
 				onSort: null,
 				headerClass: null,
@@ -169,8 +267,23 @@ const ListTrx = ({ data: currentData, onClickRow, isLoading, loadMore }) => {
 				body: null,
 				space: "minmax(100px, 150px)",
 			},
-		],
+		]
 	}
+
+	let config = {
+		defaultSort: "name",
+		defaultOrder: "asc",
+		scrollOnIt: true,
+		onLoadMore: onLoadMore,
+		onClickRow: onClickRow,
+		selectedItemClass: null,
+		selectableRow: true,
+		rowId: "hash",
+		fixedHeader: true,
+		showFooter: true,
+		items: type === "cosmos.bank.v1beta1.MsgSend" ? itemSendReceive : itemDefault,
+	}
+
 	if (!isLoading && data.length === 0) {
 		return (
 			<div className={classes.containerNotFound}>

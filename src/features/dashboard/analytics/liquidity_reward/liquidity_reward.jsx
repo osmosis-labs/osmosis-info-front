@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core"
+import { DataArray } from "@mui/icons-material"
 import { useCallback, useEffect, useRef, useState } from "react"
 import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => {
 			position: "relative",
 			display: "grid",
 			gridTemplateColumns: "3fr 1fr",
-			height: "350px",
+			height: "380px",
 			overflow: "hidden",
 		},
 		chartContainer: {
@@ -145,6 +146,14 @@ const LiquidityReward = () => {
 		}
 	}, [currentToken, liquidity, range])
 
+	useEffect(() => {
+		if (refDailyReward.current && refDailyReward.current.updateItem) {
+			if (currentToken && data) {
+				refDailyReward.current.updateItem(formatItem(data[0]))
+			}
+		}
+	}, [currentToken.symbol, data, range, refDailyReward.current, range, isAccumulated])
+
 	const getCurrentWallet = (wallet, token) => {
 		let currentWallet = wallet.find((item) => item.symbol === token.symbol)
 		if (currentWallet) {
@@ -164,7 +173,7 @@ const LiquidityReward = () => {
 
 	const onChangeToken = async (tkn) => {
 		getCurrentWallet(walletSaved, tkn)
-		setCurrentToken(tkn)
+		setCurrentToken((t) => tkn)
 	}
 
 	const getDiplayBalance = (balance) => {

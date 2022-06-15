@@ -1,7 +1,8 @@
 import typesDashboard from "./typesDashboard.json"
 
 export const formatTokenName = (tokenName) => {
-	let res = tokenName.replace("axl", "")
+	let res = ""
+	if (tokenName) res = tokenName.replace("axl", "")
 	return res
 }
 
@@ -14,7 +15,7 @@ export const getTypeDashboard = (type, reverse = false) => {
 		let finded = typesDashboard[type]
 		res = finded ? finded : type
 	}
-	if(!res) res = type
+	if (!res) res = type
 	return res
 }
 

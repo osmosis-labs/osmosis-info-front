@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => {
 			position: "relative",
 			display: "grid",
 			gridTemplateColumns: "3fr 1fr",
-			height: "350px",
+			height: "380px",
 			overflow: "hidden",
 		},
 		chartContainer: {
@@ -118,10 +118,18 @@ const StackingRewards = () => {
 					return pr + cv.dayValue
 				}, 0)
 			)
-			setCurrentItem(formatItem(currentData[0]))
-			setData(currentData)
+			setCurrentItem((i) => formatItem(currentData[0]))
+			setData((c) => currentData)
 		}
 	}, [chartStaking])
+
+	useEffect(() => {
+		if (refDailyReward.current && refDailyReward.current.updateItem) {
+			if (data) {
+				refDailyReward.current.updateItem(formatItem(data[0]))
+			}
+		}
+	}, [data, refDailyReward.current, isAccumulated])
 
 	useEffect(() => {
 		if (balance) {

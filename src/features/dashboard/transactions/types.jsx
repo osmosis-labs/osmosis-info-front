@@ -19,6 +19,8 @@ import StartIcon from "@mui/icons-material/Start"
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange"
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz"
 import InputScroll from "../../../components/input_scroll/input_scroll"
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import DownloadIcon from '@mui/icons-material/Download';
 
 const useStyles = makeStyles((theme) => {
 	return {
