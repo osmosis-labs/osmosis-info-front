@@ -29,6 +29,8 @@ import Trades from "../dashboard/trades/trades"
 import { DebugProvider } from "../../contexts/debug.provider"
 import DebugModal from "../_debug/debug_modal"
 import ModalMessage from "../modal_message/modal_message"
+import { useEffect } from "react"
+import OneYear2022 from "../one-year-2022/OneYear2022"
 
 const MODE = process.env.REACT_APP_MODE
 const useStyles = makeStyles((theme) => {
@@ -126,6 +128,7 @@ const App = () => {
 											<Helmet>
 												<script src="/charting_library/charting_library.js" type="text/javascript" />
 											</Helmet>
+											<OneYear2022 />
 											<div className={classes.appRoot}>
 												<Toast />
 
