@@ -30,7 +30,16 @@ export const formatMetrics = (data) => {
 }
 
 export const defaultTop = []
-export const formatTop = (data) => {
-	let res = data.map((token) => ({ ...token, symbolDisplay: formatTokenName(token.symbol) }))
+export const formatTop = (data, main) => {
+	let res = []
+	data.forEach((token) => {
+		if (main) {
+			if (token.main) {
+				res.push({ ...token, symbolDisplay: formatTokenName(token.symbol) })
+			}
+		} else {
+			res.push({ ...token, symbolDisplay: formatTokenName(token.symbol) })
+		}
+	})
 	return res
 }

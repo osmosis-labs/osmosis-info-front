@@ -103,14 +103,10 @@ export const ThemeCustomProvider = ({ children }) => {
 				xs: 0,
 				sm: 600,
 				md: 760,
-				lg: 960,
-				xl: 1280,
+				lg: 1280,
+				xl: 1420,
 			},
 		},
-		// menuHeight: {
-		// 	mobile: "169",
-		// 	desktop: "164",
-		// },
 		menuHeight: {
 			mobile: "108",
 			desktop: "124",

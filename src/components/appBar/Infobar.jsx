@@ -2,7 +2,10 @@ import { makeStyles } from "@material-ui/core"
 import { Button } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useDebug } from "../../contexts/debug.provider"
+import { useSettings } from "../../contexts/SettingsProvider"
 import { usePrices } from "../../hooks/data/prices.hook"
+import Toggle from "../toggle/Toggle"
+import ToggleItem from "../toggle/ToggleItem"
 const useStyles = makeStyles((theme) => {
 	return {
 		infoBarRoot: {
@@ -74,6 +77,11 @@ const useStyles = makeStyles((theme) => {
 			padding: `0 ${theme.spacing(2)}px`,
 			fontSize: theme.fontSize.verySmall,
 		},
+		debug: {
+			padding: `0 ${theme.spacing(2)}px`,
+			fontSize: theme.fontSize.verySmall,
+			marginRight: "16px !important",
+		},
 	}
 })
 
@@ -84,6 +92,13 @@ const InfoBar = () => {
 	} = usePrices()
 	const [time, setTime] = useState(0)
 	const { MODE, setOpen } = useDebug()
+	const { settings, updateSettings } = useSettings()
+
+	const onChangeType = (event, value) => {
+		if (value) {
+			updateSettings({ type: value })
+		}
+	}
 
 	useEffect(() => {
 		const timer = setInterval(() => {
@@ -115,10 +130,14 @@ const InfoBar = () => {
 				</div>
 				<div className={classes.right}>
 					{MODE === "dev" && (
-						<Button variant="outlined" color="primary" className={classes.link} onClick={onOpenDebug}>
+						<Button variant="outlined" color="primary" className={classes.debug} onClick={onOpenDebug}>
 							Debug
 						</Button>
 					)}
+					<Toggle color="primary" value={settings.type} exclusive onChange={onChangeType}>
+						<ToggleItem value="app">App</ToggleItem>
+						<ToggleItem value="frontier">Frontier</ToggleItem>
+					</Toggle>
 					<a className={classes.link} href="https://github.com/osmosis-labs" target="_blank">
 						Github
 					</a>

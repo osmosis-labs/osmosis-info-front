@@ -144,7 +144,7 @@ export const formatPoolTrx = (data) => {
 		}
 		return {
 			hash: { value: trx.tx_hash, display: hashDisplay },
-			time: { value: time, display: timeAgo },
+			time: { value: time, display: sourceDate.format("DD/MM/YY HH:mm:ss") },
 			pools,
 			tokenIn: { value: trx.amount_in, symbol: trx.symbol_in, symbolDisplay: symbolInDisplay },
 			tokenOut: { value: trx.amount_out, symbol: trx.symbol_out, symbolDisplay: symbolOutDisplay },
@@ -157,12 +157,14 @@ export const formatPoolTrx = (data) => {
 
 export const defaultHistoricalPool = []
 export const formatHistoricalPool = (data) => {
+	if (!data || typeof data !== "object") return defaultHistoricalPool
 	let res = data
 	return res
 }
 
 export const defaultLiquidityPool = { d: [], w: [], m: [] }
 export const formatLiquidityPool = (data) => {
+	if (!data || typeof data !== "object") return defaultLiquidityPool
 	let res = { ...defaultLiquidityPool }
 	let dataW = []
 	let currentWeek = { time: data[0].time, value: 0 }

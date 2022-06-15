@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme) => {
 			color: `${theme.palette.table.link} !important`,
 		},
 		cellTime: {
-			width: "140px",
 			overflow: "hidden",
 			textOverflow: "ellipsis",
 		},

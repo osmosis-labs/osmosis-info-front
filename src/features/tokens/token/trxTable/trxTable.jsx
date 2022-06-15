@@ -6,6 +6,7 @@ import { formateNumberDecimalsAuto } from "../../../../helpers/helpers"
 import CellPool from "../../../pools/pool/trxTable/cellPool"
 import Cell from "./cell"
 import CellSymbol from "./cellSymbol"
+import CellTime from "./cellTime"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -15,17 +16,12 @@ const useStyles = makeStyles((theme) => {
 			minWidth: "115px",
 		},
 		onClickCell: {
-			width: "140px",
+			width: "110px",
 			overflow: "hidden",
 			textOverflow: "ellipsis",
 			color: `${theme.palette.table.link} !important`,
 		},
-		cellTime: {
-			width: "140px",
-			overflow: "hidden",
-			textOverflow: "ellipsis",
-			whiteSpace: "nowrap",
-		},
+
 		cellType: {
 			width: "75px",
 			overflow: "hidden",
@@ -83,12 +79,12 @@ const TrxTable = ({ data, className }) => {
 				cellKey: "time",
 				sortable: true,
 				customClassHeader: null,
-				customClassCell: classes.cellTime,
+				customClassCell: null,
 				onSort: onSortTime,
 				align: "left",
 				onClickCell: null,
 				transform: transformDisplay,
-				cellBody: null,
+				cellBody: CellTime,
 			},
 			{
 				label: "Type",
