@@ -18,7 +18,7 @@ export default class ConfettiBag {
 		this.ctx = ctx
 		this.confettis = []
 		this.opacityText = 0.1
-        this.opacityTextUp = true
+		this.opacityTextUp = true
 	}
 
 	init = () => {
@@ -65,21 +65,35 @@ export default class ConfettiBag {
 	drawText = () => {
 		this.ctx.font = "48px Inter"
 		let offsetText = 0.01
-		if (this.opacityTextUp ) {
+		if (this.opacityTextUp) {
 			this.opacityText += offsetText
 		} else {
 			this.opacityText -= offsetText
 		}
-        if(this.opacityText >= 1) {
-            this.opacityTextUp = false
-        }
+		if (this.opacityText >= 1) {
+			this.opacityTextUp = false
+		}
 
 		this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2)
 		let txt = "Happy birthday Osmosis!"
-		this.ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacityText})`
-		this.ctx.strokeText(txt, 0 - this.ctx.measureText(txt).width / 2, 0)
-		this.ctx.fillStyle = `rgba(172, 157, 216, ${this.opacityText})`
-		this.ctx.fillText(txt, 0 - this.ctx.measureText(txt).width / 2, 0)
+		let widthText = this.ctx.measureText(txt).width
+		if (widthText > this.canvas.width) {
+			let txtTable = txt.split(" ")
+			let yStep = 50
+			let yStart = (-yStep * (txtTable.length - 1)) / 2
+			for (let i = 0; i < txtTable.length; i++) {
+				let currentWidthTxt = this.ctx.measureText(txtTable[i]).width
+				this.ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacityText})`
+				this.ctx.strokeText(txtTable[i], -currentWidthTxt / 2, yStart + yStep * i)
+				this.ctx.fillStyle = `rgba(172, 157, 216, ${this.opacityText})`
+				this.ctx.fillText(txtTable[i], -currentWidthTxt / 2, yStart + yStep * i)
+			}
+		} else {
+			this.ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacityText})`
+			this.ctx.strokeText(txt, 0 - widthText / 2, 0)
+			this.ctx.fillStyle = `rgba(172, 157, 216, ${this.opacityText})`
+			this.ctx.fillText(txt, 0 - widthText / 2, 0)
+		}
 
 		this.ctx.setTransform(1, 0, 0, 1, 0, 0)
 	}
