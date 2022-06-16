@@ -6,6 +6,8 @@ import HBD from "./hbd"
 import OneYear from "./oneYear"
 import coneIMG from "./cone.png"
 import { makeStyles } from "@material-ui/core"
+import Gift from "./gift"
+import useSize from "../../hooks/sizeHook"
 
 const styleCanvas = {
 	position: "fixed",
@@ -16,6 +18,8 @@ const styleCanvas = {
 }
 const OneYear2022 = () => {
 	const classes = useStyles()
+	const size = useSize()
+	const isXS = size === "xs"
 
 	const refCanvas = useRef(null)
 	const refEngine = useRef(null)
@@ -130,6 +134,54 @@ const OneYear2022 = () => {
 				colorHandle="rgba(161,137,188,1)"
 				move={"two"}
 			/>
+			{isXS ? (
+				<>
+					<Gift
+						pos={{ top: "80px", right: "12%" }}
+						colorPaper={{ main: "#84abcb", dark: "#557c9a" }}
+						colorRibbon={{ main: "#fbc02d", dark: "#c49000" }}
+						size={30}
+						variant="one"
+						onPop={onPopBalloon}
+					/>
+
+					<Gift
+						pos={{ top: "90px", left: "12%" }}
+						colorPaper={{ main: "#4000a5", dark: "#000075" }}
+						colorRibbon={{ main: "#fbc02d", dark: "#c49000" }}
+						size={20}
+						variant="three"
+						onPop={onPopBalloon}
+					/>
+				</>
+			) : (
+				<>
+					<Gift
+						pos={{ top: "68px", right: "50%" }}
+						colorPaper={{ main: "#84abcb", dark: "#557c9a" }}
+						colorRibbon={{ main: "#fbc02d", dark: "#c49000" }}
+						size={60}
+						variant="one"
+						onPop={onPopBalloon}
+					/>
+					<Gift
+						pos={{ top: "98px", right: "55%" }}
+						colorPaper={{ main: "#8500b8", dark: "#510087" }}
+						colorRibbon={{ main: "#fbc02d", dark: "#c49000" }}
+						size={30}
+						variant="two"
+						onPop={onPopBalloon}
+					/>
+					<Gift
+						pos={{ top: "88px", right: "45%" }}
+						colorPaper={{ main: "#4000a5", dark: "#000075" }}
+						colorRibbon={{ main: "#fbc02d", dark: "#c49000" }}
+						size={40}
+						variant="three"
+						onPop={onPopBalloon}
+					/>
+				</>
+			)}
 		</>
 	)
 }
