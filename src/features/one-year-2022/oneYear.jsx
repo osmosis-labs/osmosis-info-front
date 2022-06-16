@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { makeStyles } from "@material-ui/core"
-import dogeCakeIMG from "./dogeCake.png"
+import dogeCakeIMG from "./dogecake.png"
 
 const OneYear = () => {
 	const classes = useStyles()
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => {
 			left: "50%",
 			transform: "translate(-50%, -50%)",
 			position: "fixed",
-			zIndex: "999",
+			zIndex: "1001",
 			borderRadius: "50%",
 			backgroundColor: "#c7a600",
 			border: "10px solid #ffd700",
@@ -50,7 +50,8 @@ const useStyles = makeStyles((theme) => {
 			boxShadow: `0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22), inset 0 1px 3px rgba(0,0,0,0.12), inset 0 1px 2px rgba(0,0,0,0.24)`,
 		}),
 		img: {
-            height: "250px",
+            height: "220px",
+            transform: "translate(-10%, 0)",
         },
 
 		one: {
