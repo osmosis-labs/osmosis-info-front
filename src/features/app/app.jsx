@@ -128,8 +128,8 @@ const App = () => {
 											<Helmet>
 												<script src="/charting_library/charting_library.js" type="text/javascript" />
 											</Helmet>
-											<OneYear2022 />
 											<div className={classes.appRoot}>
+											<OneYear2022 />
 												<Toast />
 
 												<InfoBar />
