@@ -84,6 +84,9 @@ const useStyles = makeStyles((theme) => {
 			return {
 				position: "relative",
 				height: "100px",
+				cursor: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>✂️</text></svg>")
+			14 0,
+		auto;`,
 			}
 		},
 		handleNode: ({ color, pos, colorHandle }) => {
@@ -114,9 +117,6 @@ const useStyles = makeStyles((theme) => {
 				left: "calc(50% - 1px)",
 				height: "100px",
 				width: "2px",
-				cursor: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>✂️</text></svg>")
-			14 0,
-		auto;`,
 			}
 		},
 
