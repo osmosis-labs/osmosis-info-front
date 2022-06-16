@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { makeStyles } from "@material-ui/core"
-import dogeCakeIMG from "./dogecake.png"
+import dogeCakeIMG from "./dogeCake.png"
 
 const OneYear = () => {
 	const classes = useStyles()
