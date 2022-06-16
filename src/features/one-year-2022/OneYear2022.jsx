@@ -1,9 +1,11 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import Balloon from "./balloon"
 import ConfettiBag from "./confettiBag"
 import Engine from "./engine"
 import HBD from "./hbd"
 import OneYear from "./oneYear"
+import coneIMG from "./cone.png"
+import { makeStyles } from "@material-ui/core"
 
 const styleCanvas = {
 	position: "fixed",
@@ -13,9 +15,24 @@ const styleCanvas = {
 	zIndex: 999,
 }
 const OneYear2022 = () => {
+	const classes = useStyles()
+
 	const refCanvas = useRef(null)
 	const refEngine = useRef(null)
+	const [poped, setPoped] = useState(false)
+	const refConeOne = useRef(null)
+	const refConeTwo = useRef(null)
 	const rng = (min, max) => Math.random() * (max - min) + min
+
+	useEffect(() => {
+		if (refConeOne.current) {
+			refConeTwo.current.classList.add(classes.pop)
+			refConeOne.current.classList.add(classes.pop)
+			window.setTimeout(() => {
+				setPoped((p) => true)
+			}, 4000)
+		}
+	}, [refConeOne, refConeTwo])
 
 	useEffect(() => {
 		if (refCanvas.current) {
@@ -24,8 +41,8 @@ const OneYear2022 = () => {
 			let engine = new Engine(canvas, ctx)
 			engine.add(
 				new ConfettiBag(canvas, {
-					x: 0,
-					y: canvas.height / 2,
+					x: 30,
+					y: canvas.height / 2 - 10,
 					vxLimit: [10, 30],
 					vyLimit: [-0, -18],
 					nbConfetti: rng(100, 150),
@@ -33,8 +50,8 @@ const OneYear2022 = () => {
 			)
 			engine.add(
 				new ConfettiBag(canvas, {
-					x: canvas.width,
-					y: canvas.height / 2,
+					x: canvas.width - 30,
+					y: canvas.height / 2 - 10,
 					vxLimit: [-10, -30],
 					vyLimit: [-0, -18],
 					nbConfetti: rng(100, 150),
@@ -70,6 +87,12 @@ const OneYear2022 = () => {
 	return (
 		<>
 			<canvas style={styleCanvas} ref={refCanvas}></canvas>
+			{!poped ? (
+				<>
+					<img ref={refConeOne} src={coneIMG} className={`${classes.cone} ${classes.coneLeft}`} />
+					<img ref={refConeTwo} src={coneIMG} className={`${classes.cone} ${classes.coneRight}`} />
+				</>
+			) : null}
 			<HBD />
 			<OneYear />
 			<Balloon
@@ -111,4 +134,31 @@ const OneYear2022 = () => {
 	)
 }
 
+const useStyles = makeStyles((theme) => {
+	return {
+		cone: {
+			animation: "$pop 4s",
+			opacity: "0%",
+			position: "fixed",
+			top: "45%",
+			zIndex: 990,
+			height: "50px",
+		},
+		coneLeft: {
+			left: "10px",
+			transform: "scale(-1, 1)",
+		},
+		coneRight: {
+			right: "10px",
+		},
+
+		"@keyframes pop": {
+			"0%": { opacity: "0%" },
+			"20%": { opacity: "90%" },
+			"60%": { opacity: "90%" },
+			"80%": { opacity: "90%" },
+			"100%": { opacity: "0%" },
+		},
+	}
+})
 export default OneYear2022
