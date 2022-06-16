@@ -38,11 +38,27 @@ const OneYear2022 = () => {
 		}
 	}, [refConeOne, refConeTwo])
 
+	const onClickBody = (e) => {
+		let x = e.clientX
+		let y = e.clientY
+		refEngine.current.add(
+			new ConfettiBag(refCanvas.current, {
+				x,
+				y,
+				vxLimit: [-10, 10],
+				vyLimit: [0, -10],
+				nbConfetti: rng(10, 20),
+			})
+		)
+	}
+
 	useEffect(() => {
 		if (refCanvas.current) {
 			let canvas = refCanvas.current
 			let ctx = refCanvas.current.getContext("2d")
 			let engine = new Engine(canvas, ctx)
+			let body = document.querySelector("body")
+			body.addEventListener("click", onClickBody)
 			engine.add(
 				new ConfettiBag(canvas, {
 					x: 30,
@@ -69,6 +85,7 @@ const OneYear2022 = () => {
 
 			return () => {
 				window.clearTimeout(timer)
+				body.removeEventListener("click", onClickBody)
 			}
 		}
 	}, [refCanvas])

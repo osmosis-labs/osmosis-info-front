@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { makeStyles } from "@material-ui/core"
+import dogeCakeIMG from "./dogeCake.png"
 
 const OneYear = () => {
 	const classes = useStyles()
@@ -20,9 +21,10 @@ const OneYear = () => {
 	}
 	return (
 		<div className={classes.rootOneYear} ref={ref}>
-			<span className={classes.star}>★</span>
+			<img src={dogeCakeIMG} className={classes.img} />
+			{/* <span className={classes.star}>★</span>
 			<span className={classes.one}>1</span>
-			<span className={classes.year}>YEAR</span>
+			<span className={classes.year}>YEAR</span> */}
 		</div>
 	)
 }
@@ -47,6 +49,9 @@ const useStyles = makeStyles((theme) => {
 			opacity: "0%",
 			boxShadow: `0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22), inset 0 1px 3px rgba(0,0,0,0.12), inset 0 1px 2px rgba(0,0,0,0.24)`,
 		}),
+		img: {
+            height: "250px",
+        },
 
 		one: {
 			color: "#ffd700",
