@@ -88,9 +88,10 @@ const useStyles = makeStyles((theme) => {
 
 const Overview = () => {
 	const classes = useStyles()
-	const { data: dataLiquidity, isLoading: isLoadingLiquidity } = useLiquidityChart()
-	const { data: dataVolume, isLoading: isLoadingVolume } = useVolumeChart()
-
+	const { data: dataLiquidity, isLoading: loadingLiquidity, isFetching: isFetchingLiquidity } = useLiquidityChart()
+	const isLoadingLiquidity = loadingLiquidity || isFetchingLiquidity
+	const { data: dataVolume, isLoading: loadingVolume, isFetching: isFetchingVolume } = useVolumeChart()
+	const isLoadingVolume = loadingVolume || isFetchingVolume
 	const { watchlistTokens } = useWatchlistTokens()
 	const { watchlistPools } = useWatchlistPools()
 	const [tokensOnWatchlist, setTokensOnWatchlist] = useState([])
@@ -99,11 +100,16 @@ const Overview = () => {
 	const {
 		data: { current: pools },
 		isLoading: loadingPools,
+		isFetching: isFetchingPools,
 	} = usePools({})
+
+	const isLoadingPools = loadingPools || isFetchingPools
 	const {
 		data: { current: tokens },
 		isLoading: loadingTokens,
+		isFetching: isFetchingTokens,
 	} = useTokens()
+	const isLoadingTokens = loadingTokens || isFetchingTokens
 
 	const [dataPools, setDataPools] = useState([])
 	const [dataTokens, setDataTokens] = useState([])
@@ -234,7 +240,7 @@ const Overview = () => {
 				</Paper>
 				<p className={classes.subTitle}>Top tokens</p>
 				<Paper className={classes.containerLoading}>
-					<BlocLoaderOsmosis open={loadingTokens} borderRadius={true} />
+					<BlocLoaderOsmosis open={isLoadingTokens} borderRadius={true} />
 					<TokensTable
 						data={dataTokens}
 						onClickToken={onClickToken}
@@ -244,7 +250,7 @@ const Overview = () => {
 				</Paper>
 				<p className={classes.subTitle}>Top pools</p>
 				<Paper className={classes.containerLoading}>
-					<BlocLoaderOsmosis open={loadingPools} borderRadius={true} />
+					<BlocLoaderOsmosis open={isLoadingPools} borderRadius={true} />
 					<PoolsTable
 						data={dataPools}
 						onClickPool={onClickPool}

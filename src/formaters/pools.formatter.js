@@ -29,7 +29,7 @@ export const formatTokensPool = (data) => {
 export const defaultPools = { all: [], main: [], frontier: [], current: [] }
 
 export const formatPools = (dataPools, dataAPR, allTokens) => {
-	let res = { ...defaultPools }
+	let res = { all: [], main: [], frontier: [], current: [] }
 	Object.keys(dataPools).forEach((key) => {
 		let row = dataPools[key]
 		let apr = null

@@ -36,8 +36,10 @@ const Tokens = () => {
 	const {
 		data: { current: tokens },
 		isLoading: loadingTokens,
+		isFetching: fetchingTokens,
 	} = useTokens()
 	const { settings, updateSettings } = useSettings()
+	const isLoading = loadingTokens || fetchingTokens
 
 	const setSettingsTokens = (settings) => {
 		updateSettings({ tokenTable: settings })
@@ -80,7 +82,7 @@ const Tokens = () => {
 			<TokenOverview />
 			<p className={classes.subTitle}>All tokens</p>
 			<Paper className={classes.containerLoader}>
-				<BlocLoaderOsmosis open={loadingTokens} borderRadius={true} />
+				<BlocLoaderOsmosis open={isLoading} borderRadius={true} />
 				<TokensTable
 					data={tokens}
 					onClickToken={onClickToken}

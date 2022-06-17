@@ -7,7 +7,7 @@ dayjs.extend(utc)
 
 export const defaultTokens = { all: [], main: [], frontier: [], current: [] }
 export const formatTokens = (data) => {
-	let res = { ...defaultTokens }
+	let res = { all: [], main: [], frontier: [], current: [] }
 
 	data.sort((a, b) => {
 		if (a.liquidity > b.liquidity) return -1

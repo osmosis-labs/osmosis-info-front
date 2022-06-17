@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import { useDebug } from "../../contexts/debug.provider"
 import { useSettings } from "../../contexts/SettingsProvider"
 import { usePrices } from "../../hooks/data/prices.hook"
+import { useQueryClient } from "react-query"
+
 import Toggle from "../toggle/Toggle"
 import ToggleItem from "../toggle/ToggleItem"
 const useStyles = makeStyles((theme) => {
@@ -87,6 +89,8 @@ const useStyles = makeStyles((theme) => {
 
 const InfoBar = () => {
 	const classes = useStyles()
+	const queryClient = useQueryClient()
+
 	const {
 		data: { priceOsmo, priceIon },
 	} = usePrices()
@@ -108,7 +112,8 @@ const InfoBar = () => {
 	}, [])
 
 	const reload = () => {
-		document.location.reload()
+		queryClient.invalidateQueries()
+		setTime((t) => 0)
 	}
 
 	const onOpenDebug = () => {

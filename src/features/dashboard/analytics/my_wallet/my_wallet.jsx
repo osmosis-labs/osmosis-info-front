@@ -41,8 +41,8 @@ const MyWallet = () => {
 	const { address } = useKeplr()
 
 	//Balance
-	const { data: balance, isLoading } = useBalance( { address })
-
+	const { data: balance, isLoading: loading, isFetching } = useBalance({ address })
+	const isLoading = loading || isFetching
 	const [data, setData] = useState([])
 	const [order, setOrder] = useState("asc")
 	const [orderBy, setOrderBy] = useState("value")

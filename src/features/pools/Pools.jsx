@@ -35,9 +35,10 @@ const Pools = () => {
 	const {
 		data: { current: pools },
 		isLoading: isLoadingPools,
+		isFetching: isFetchingPools,
 	} = usePools({})
 	const { settings, updateSettings } = useSettings()
-
+	const isLoading = isLoadingPools || isFetchingPools
 	const setSettingsPools = (settings) => {
 		updateSettings({ poolTable: settings })
 	}
@@ -78,7 +79,7 @@ const Pools = () => {
 			</Paper>
 			<p className={classes.subTitle}>All pools</p>
 			<Paper className={classes.containerLoader}>
-				<BlocLoaderOsmosis open={isLoadingPools} borderRadius={true} />
+				<BlocLoaderOsmosis open={isLoading} borderRadius={true} />
 				<PoolsTable
 					data={pools}
 					onClickPool={onClickPool}
