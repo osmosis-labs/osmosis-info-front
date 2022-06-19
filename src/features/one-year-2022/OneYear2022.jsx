@@ -8,6 +8,7 @@ import coneIMG from "./cone.png"
 import { makeStyles } from "@material-ui/core"
 import Gift from "./gift"
 import useSize from "../../hooks/sizeHook"
+import Birthday from "./birthday/birthday"
 
 const styleCanvas = {
 	position: "fixed",
@@ -114,7 +115,7 @@ const OneYear2022 = () => {
 					<img ref={refConeTwo} src={coneIMG} className={`${classes.cone} ${classes.coneRight}`} />
 				</>
 			) : null}
-			<HBD />
+			{/* <HBD /> */}
 			<OneYear />
 			<Balloon
 				onPopBalloon={onPopBalloon}
@@ -151,6 +152,7 @@ const OneYear2022 = () => {
 				colorHandle="rgba(161,137,188,1)"
 				move={"two"}
 			/>
+			<Birthday onPop={onPopBalloon}/>
 			{isXS ? (
 				<>
 					<Gift

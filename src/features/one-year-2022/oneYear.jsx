@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => {
 		rootOneYear: () => ({
 			height: "300px",
 			width: "300px",
-			top: "30%",
+			top: "50%",
 			left: "50%",
 			transform: "translate(-50%, -50%)",
 			position: "fixed",
@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme) => {
 		img: {
             height: "220px",
             transform: "translate(-10%, 0)",
+
         },
 
 		one: {
