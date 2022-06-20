@@ -294,7 +294,14 @@ const LiquidityReward = () => {
 						</div>
 					</>
 				) : (
-					<p className={classes.textNotFound}>No data found.</p>
+					<>
+						<div className={classes.chartContainer}>
+							<p className={classes.textNotFound}>No data found.</p>
+						</div>
+						<div className={classes.chartInfo}>
+							<SelectToken tokens={tokens} onChangeToken={onChangeToken} currentToken={currentToken} />
+						</div>
+					</>
 				)}
 			</Paper>
 		</div>
