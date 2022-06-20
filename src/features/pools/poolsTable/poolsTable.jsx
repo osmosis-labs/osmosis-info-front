@@ -43,6 +43,7 @@ const PoolsTable = ({
 	maxRowDisplay = null,
 	settings,
 	setSettings,
+	notifChangeRowPerPage = null,
 }) => {
 	const classes = useStyles()
 
@@ -249,7 +250,7 @@ const PoolsTable = ({
 		defaultOrder: "asc",
 		textEmpty: "No pool found",
 		rowsPerPage: 10,
-		rowsPerPageOptions: [5, 10, 20, 50, 100],
+		rowsPerPageOptions: [10, 20, 50, 100],
 		callBackEndPage: null,
 		hideFooter: hideFooter,
 		maxRowDisplay: maxRowDisplay,
@@ -273,7 +274,12 @@ const PoolsTable = ({
 	return (
 		<div className={`${classes.poolsTableRoot} ${className}`}>
 			<TableSettings settings={settings} setSettings={setSettings} />
-			<TableCustom config={poolsTableConfig} data={data} customClass={classes.poolsTable} />
+			<TableCustom
+				config={poolsTableConfig}
+				data={data}
+				customClass={classes.poolsTable}
+				notifChangeRowPerPage={notifChangeRowPerPage}
+			/>
 		</div>
 	)
 }

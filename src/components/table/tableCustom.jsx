@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const TableCustom = ({ config, data, customClass, customClassTable }) => {
+const TableCustom = ({ config, data, customClass, customClassTable, notifChangeRowPerPage = null }) => {
 	const classes = useStyles()
 	const [order, setOrder] = useState(config.defaultOrder)
 	const [orderBy, setOrderBy] = useState(config.defaultOrderBy)
@@ -36,6 +36,7 @@ const TableCustom = ({ config, data, customClass, customClassTable }) => {
 
 	const onChangeRowsPerPage = (event) => {
 		setRowsPerPage(event.target.value)
+		if (notifChangeRowPerPage) notifChangeRowPerPage(event.target.value)
 		setPage(0)
 	}
 
@@ -138,7 +139,7 @@ const TableCustom = ({ config, data, customClass, customClassTable }) => {
 
 	return (
 		<div className={`${classes.tableCustom} ${customClass}`}>
-			<Table className={customClassTable} >
+			<Table className={customClassTable}>
 				<HeaderTableCustom onSort={onSort} cellsHeader={config.cellsConfig} orderBy={orderBy} order={order} />
 				<TableBody>
 					{displayData(data)

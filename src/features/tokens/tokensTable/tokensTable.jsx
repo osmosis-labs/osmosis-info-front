@@ -39,6 +39,7 @@ const TokensTable = ({
 	maxRowDisplay = null,
 	settings,
 	setSettings,
+	notifChangeRowPerPage = null,
 }) => {
 	const classes = useStyles()
 
@@ -173,7 +174,7 @@ const TokensTable = ({
 		defaultOrder: "asc",
 		textEmpty: "No token found",
 		rowsPerPage: 10,
-		rowsPerPageOptions: [5, 10, 20, 50, 100],
+		rowsPerPageOptions: [10, 20, 50, 100],
 		callBackEndPage: null,
 		hideFooter: hideFooter,
 		maxRowDisplay: maxRowDisplay,
@@ -197,7 +198,12 @@ const TokensTable = ({
 		<div className={`${classes.tokensTableRoot} ${className}`}>
 			<TableSettings settings={settings} setSettings={setSettings} />
 
-			<TableCustom config={tokensTableConfig} data={data} customClass={classes.tokensTable} />
+			<TableCustom
+				config={tokensTableConfig}
+				data={data}
+				customClass={classes.tokensTable}
+				notifChangeRowPerPage={notifChangeRowPerPage}
+			/>
 		</div>
 	)
 }

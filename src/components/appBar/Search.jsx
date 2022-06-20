@@ -105,6 +105,8 @@ const Search = () => {
 	const { watchlistTokens } = useWatchlistTokens()
 	const [dataShowPools, setDataShowPools] = useState([])
 	const [dataShowTokens, setDataShowTokens] = useState([])
+	const [rowPerPageToken, setRowPerPageToken] = useState(10)
+	const [rowPerPagePool, setRowPerPagePool] = useState(10)
 	const history = useHistory()
 	const {
 		data: { current: tokens },
@@ -187,6 +189,14 @@ const Search = () => {
 		setSizeToken(sizeToken + 2)
 	}
 
+	const notifChangeRowPerPageToken = (nb) => {
+		setRowPerPageToken(nb)
+	}
+
+	const notifChangeRowPerPagePool = (nb) => {
+		setRowPerPagePool(nb)
+	}
+
 	return (
 		<div className={classes.searchRoot}>
 			<input
@@ -224,12 +234,13 @@ const Search = () => {
 						onClickToken={onClickToken}
 						headerClass={classes.headerClass}
 						maxRowDisplay={sizeToken}
-						hideFooter={!sizeToken > 10}
+						hideFooter={sizeToken < rowPerPageToken}
 						settings={settings.tokenTableSearch}
 						setSettings={setSettingsTokens}
+						notifChangeRowPerPage={notifChangeRowPerPageToken}
 					/>
-					{sizePool < 10 && (
-						<p className={classes.showMore} onClick={onClickShowMorePool}>
+					{sizePool < rowPerPageToken && (
+						<p className={classes.showMore} onClick={onClickShowMoreToken}>
 							Show more...
 						</p>
 					)}
@@ -239,12 +250,13 @@ const Search = () => {
 						onClickPool={onClickPool}
 						headerClass={classes.headerClass}
 						maxRowDisplay={sizePool}
-						hideFooter={!sizePool > 10}
+						hideFooter={sizePool < rowPerPagePool}
 						settings={settings.poolTableSearch}
 						setSettings={setSettingsPools}
+						notifChangeRowPerPage={notifChangeRowPerPagePool}
 					/>
-					{sizeToken < 10 && (
-						<p className={classes.showMore} onClick={onClickShowMoreToken}>
+					{sizeToken < rowPerPagePool && (
+						<p className={classes.showMore} onClick={onClickShowMorePool}>
 							Show more...
 						</p>
 					)}
