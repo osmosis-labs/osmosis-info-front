@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import useFocus from "../../hooks/FocusHook"
 import DialogSearch from "./DialogSearch"
 import { getInclude, normalize } from "../../helpers/helpers"
@@ -83,6 +83,9 @@ const Search = () => {
 	const [inputRef, setInputFocus] = useFocus()
 	const { settings, updateSettings } = useSettings()
 
+	const refPools = useRef(null)
+	const refTokens = useRef(null)
+
 	const setSettingsPools = (poolTableSearch) => {
 		updateSettings({ poolTableSearch })
 	}
@@ -152,6 +155,7 @@ const Search = () => {
 			})
 		}
 		let data = getSearchedData(dataSort, inputSearch)
+		if (refPools.current) refPools.current.onChangePage(0)
 		setDataShowPools(data)
 	}, [pools, inputSearch, watchlistPools, getSearchedData, active])
 
@@ -168,6 +172,7 @@ const Search = () => {
 			})
 		}
 		let data = getSearchedData(dataSort, inputSearch)
+		if (refTokens.current) refTokens.current.onChangePage(0)
 		setDataShowTokens(data)
 	}, [tokens, inputSearch, watchlistTokens, getSearchedData, active])
 
@@ -196,6 +201,7 @@ const Search = () => {
 	const notifChangeRowPerPagePool = (nb) => {
 		setRowPerPagePool(nb)
 	}
+
 
 	return (
 		<div className={classes.searchRoot}>
@@ -230,6 +236,7 @@ const Search = () => {
 				</div>
 				<div className={classes.resultContainer}>
 					<TokensTable
+						ref={refTokens}
 						data={dataShowTokens}
 						onClickToken={onClickToken}
 						headerClass={classes.headerClass}
@@ -239,13 +246,14 @@ const Search = () => {
 						setSettings={setSettingsTokens}
 						notifChangeRowPerPage={notifChangeRowPerPageToken}
 					/>
-					{sizePool < rowPerPageToken && (
+					{sizeToken < rowPerPageToken && (
 						<p className={classes.showMore} onClick={onClickShowMoreToken}>
 							Show more...
 						</p>
 					)}
 
 					<PoolsTable
+						ref={refPools}
 						data={dataShowPools}
 						onClickPool={onClickPool}
 						headerClass={classes.headerClass}
@@ -255,7 +263,7 @@ const Search = () => {
 						setSettings={setSettingsPools}
 						notifChangeRowPerPage={notifChangeRowPerPagePool}
 					/>
-					{sizeToken < rowPerPagePool && (
+					{sizePool < rowPerPagePool && (
 						<p className={classes.showMore} onClick={onClickShowMorePool}>
 							Show more...
 						</p>
