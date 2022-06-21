@@ -237,7 +237,7 @@ export const formatTrxs = (data, { chainId, address }) => {
 }
 
 export const defaultTrades = []
-export const formatTrades = (data) => {
+export const formatTrades = (data, assets) => {
 	let res = []
 	data.forEach((item) => {
 		let trx = {
@@ -295,14 +295,10 @@ export const formatTrades = (data) => {
 		trx.types = types
 		let images = []
 		if (item.symbol_in) {
-			images.push(
-				`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${item.symbol_in.toLowerCase()}.png`
-			)
+			images.push(assets[item.symbol_in]?.image)
 		}
 		if (item.symbol_out) {
-			images.push(
-				`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${item.symbol_out.toLowerCase()}.png`
-			)
+			images.push(assets[item.symbol_out]?.image)
 		}
 
 		let pools = {

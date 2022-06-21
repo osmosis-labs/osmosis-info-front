@@ -69,7 +69,7 @@ export const formatToken = (data) => {
 }
 
 export const defaultTrxToken = []
-export const formatTrxToken = (data, symbol) => {
+export const formatTrxToken = (data, symbol, assets) => {
 	let res = data.map((trx) => {
 		let time = new Date(trx.time_tx)
 		const tzOffset = new Date(trx.time_tx).getTimezoneOffset()
@@ -79,15 +79,11 @@ export const formatTrxToken = (data, symbol) => {
 		let addressDisplay = trx.address.substring(0, 5) + "..." + trx.address.substring(trx.address.length - 5)
 		let hashDisplay = trx.tx_hash.substring(0, 5) + "..." + trx.tx_hash.substring(trx.tx_hash.length - 5)
 
-		console.log("pools.formatter.js -> 127: trx", trx)
 		let symbolInDisplay = formatTokenName(trx.symbol_in)
 		let symbolOutDisplay = formatTokenName(trx.symbol_out)
 
 		let pools = {
-			images: [
-				`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_in.toLowerCase()}.png`,
-				`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_out.toLowerCase()}.png`,
-			],
+			images: [assets[trx.symbol_in]?.image, assets[trx.symbol_out]?.image],
 			name: `${trx.symbol_in}/${trx.symbol_out}`,
 			nameDisplay: `${symbolInDisplay}/${symbolOutDisplay}`,
 			routes: trx.swap_route.routes.map((route) => {

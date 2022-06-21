@@ -77,6 +77,8 @@ const useStyles = makeStyles((theme) => {
 })
 const PopoverPools = ({ routes, open, event, onClose, id }) => {
 	const classes = useStyles()
+	const { data: assets } = useAssets()
+
 	return (
 		<Popover
 			id={id + "p"}
@@ -102,7 +104,7 @@ const PopoverPools = ({ routes, open, event, onClose, id }) => {
 				<div className={classes.body}>
 					{routes.map((route, index) => {
 						let images = route.poolName.split("/").map((tokenName) => {
-							return `https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${tokenName.toLowerCase()}.png`
+							return assets[tokenName]?.image
 						})
 						return (
 							<div key={index} className={classes.row}>

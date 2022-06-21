@@ -98,7 +98,7 @@ const IBCItem = ({ network, className }) => {
 				className={`${classes.image}`}
 				assets={true}
 				pathAssets=""
-				src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${network?.token_symbol?.toLowerCase()}.png`}
+				src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/error/${network?.token_symbol?.toLowerCase()}.png`}
 				srcFallback="../assets/default.png"
 				alt={`${network.symbol}`}
 			/>

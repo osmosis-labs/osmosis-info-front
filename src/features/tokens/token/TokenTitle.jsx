@@ -6,6 +6,7 @@ import StarBorderIcon from "@material-ui/icons/StarBorder"
 import Tooltip from "@material-ui/core/Tooltip"
 import { useWatchlistTokens } from "../../../contexts/WatchlistTokensProvider"
 import { getInclude } from "../../../helpers/helpers"
+import { useAssets } from "../../../hooks/data/assets.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -60,6 +61,7 @@ const useStyles = makeStyles((theme) => {
 const TokenTitle = ({ token }) => {
 	const classes = useStyles()
 	const { watchlistTokens, setWatchlistTokens } = useWatchlistTokens()
+	const { data: assets } = useAssets()
 
 	const toggleWatchlist = () => {
 		let tmpWatchListTokens = [...watchlistTokens]
@@ -84,7 +86,7 @@ const TokenTitle = ({ token }) => {
 					className={`${classes.image} ${classes.tokenImage}`}
 					assets={true}
 					pathAssets=""
-					src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${token?.symbol?.toLowerCase()}.png`}
+					src={assets[token.symbol]?.image}
 					srcFallback="../assets/default.png"
 					alt={`${token.symbol}`}
 				/>

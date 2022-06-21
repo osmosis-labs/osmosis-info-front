@@ -9,6 +9,7 @@ import { getInclude } from "../../../helpers/helpers"
 import DialogAPR from "../poolsTable/dialogAPR/dialogAPR"
 import { useState } from "react"
 import aprIMG from "../poolsTable/apr_logo.png"
+import { useAssets } from "../../../hooks/data/assets.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => {
 			overflow: "hidden",
 			whiteSpace: "nowrap",
 		},
-		name:{
+		name: {
 			textOverflow: "ellipsis",
 			maxWidth: "400px",
 		},
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme) => {
 				gridTemplateColumns: "1fr 30px 30px",
 			},
 		},
-		icons:{
+		icons: {
 			display: "flex",
 			flexDirection: "row",
 			alignItems: "center",
@@ -80,6 +81,8 @@ const useStyles = makeStyles((theme) => {
 
 const PoolTitle = ({ pool, tokens }) => {
 	const classes = useStyles()
+	const { data: assets } = useAssets()
+
 	const { watchlistPools, setWatchlistPools } = useWatchlistPools()
 	const matchMD = useMediaQuery((theme) => theme.breakpoints.down("md"))
 	const [open, setOpen] = useState(false)
@@ -119,7 +122,7 @@ const PoolTitle = ({ pool, tokens }) => {
 							}
 							className={`${classes.image} ${classes.poolImage}`}
 							assets={true}
-							src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${token.symbol.toLowerCase()}.png`}
+							src={assets[token.symbol]?.image}
 							srcFallback="../assets/default.png"
 							pathAssets=""
 							alt={`${token.symbol}`}
@@ -146,7 +149,15 @@ const PoolTitle = ({ pool, tokens }) => {
 						</IconButton>
 					</Tooltip>
 
-					{pool.apr && <img src={aprIMG} alt="calculator icon" className={classes.imageIcon}  style={matchMD ? { transform: `translateX(0)` } : { transform: `translateX(-${tokens.length * 20}px)` }} onClick={onOpen} />}
+					{pool.apr && (
+						<img
+							src={aprIMG}
+							alt="calculator icon"
+							className={classes.imageIcon}
+							style={matchMD ? { transform: `translateX(0)` } : { transform: `translateX(-${tokens.length * 20}px)` }}
+							onClick={onOpen}
+						/>
+					)}
 				</span>
 			</div>
 		</div>

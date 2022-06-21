@@ -113,7 +113,7 @@ export const formatPools = (dataPools, dataAPR, allTokens) => {
 }
 
 export const defaultPoolTrx = []
-export const formatPoolTrx = (data) => {
+export const formatPoolTrx = (data, assets) => {
 	let res = data.map((trx) => {
 		let time = new Date(trx.time_tx)
 		const tzOffset = new Date(trx.time_tx).getTimezoneOffset()
@@ -128,10 +128,7 @@ export const formatPoolTrx = (data) => {
 		let symbolOutDisplay = formatTokenName(trx.symbol_out)
 
 		let pools = {
-			images: [
-				`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_in.toLowerCase()}.png`,
-				`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_out.toLowerCase()}.png`,
-			],
+			images: [assets[trx.symbol_in]?.image, assets[trx.symbol_out]?.image],
 			name: `${trx.symbol_in}/${trx.symbol_out}`,
 			nameDisplay: `${symbolInDisplay}/${symbolOutDisplay}`,
 			routes: trx.swap_route.routes.map((route) => {

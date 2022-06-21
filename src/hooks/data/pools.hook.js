@@ -16,6 +16,7 @@ import {
 	formatVolumePool,
 } from "../../formaters/pools.formatter"
 import useRequest from "../request.hook"
+import { useAssets } from "./assets.hook"
 import { useTokens } from "./tokens.hook"
 
 export const useTokensPool = ({ poolId }) => {
@@ -102,6 +103,7 @@ export const usePools = ({ lowLiquidity = false }) => {
 
 export const usePoolTrx = ({ poolId, limit = 10 }) => {
 	const request = useRequest()
+	const { data: assets } = useAssets()
 
 	const getter = async ({ queryKey, pageParam = 0 }) => {
 		const [_, { poolId, limit }] = queryKey
@@ -111,11 +113,11 @@ export const usePoolTrx = ({ poolId, limit = 10 }) => {
 			url,
 			method: "GET",
 		})
-		return formatPoolTrx(response.data)
+		return formatPoolTrx(response.data, assets)
 	}
 
 	const { data, isLoading, isFetching, fetchNextPage } = useInfiniteQuery(["trxsPool", { poolId, limit }], getter, {
-		enabled: !!poolId,
+		enabled: !!poolId && !!assets.OSMO,
 		getNextPageParam: (_, allPages) => {
 			let nextPage = allPages.length * 10
 			return nextPage

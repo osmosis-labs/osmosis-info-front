@@ -2,6 +2,7 @@ import { makeStyles } from "@material-ui/core"
 import Image from "../../../components/image/Image"
 import Paper from "../../../components/paper/Paper"
 import { formateNumberDecimals, formateNumberDecimalsAuto, getPercent } from "../../../helpers/helpers"
+import { useAssets } from "../../../hooks/data/assets.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -56,6 +57,7 @@ const useStyles = makeStyles((theme) => {
 
 const MoverItem = ({ item, index }) => {
 	const classes = useStyles()
+	const { data: assets } = useAssets()
 	const getClasses = (value, type) => {
 		let res = ""
 		if (!type) res = classes.change
@@ -83,14 +85,14 @@ const MoverItem = ({ item, index }) => {
 				className={`${classes.image}`}
 				assets={true}
 				pathAssets=""
-				src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${item?.symbol?.toLowerCase()}.png`}
+				src={assets[item?.symbol]?.image}
 				srcFallback="../assets/default.png"
 				alt={`${item.symbol}`}
 			/>
 			<div className={classes.infos}>
 				<span className={classes.name}>{item.symbolDisplay}</span>
 				<div className={classes.priceContainer}>
-					<span className={classes.price}>${formateNumberDecimalsAuto({price: item.price})}</span>
+					<span className={classes.price}>${formateNumberDecimalsAuto({ price: item.price })}</span>
 					<span className={getClasses(item.price_24h_change)}>
 						{getArrow(item.price_24h_change)}
 						{getPercent(Math.abs(item.price_24h_change))}

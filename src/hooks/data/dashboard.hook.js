@@ -20,6 +20,7 @@ import {
 	formatTypeTrx,
 } from "../../formaters/dashboard.formatter"
 import useRequest from "../request.hook"
+import { useAssets } from "./assets.hook"
 
 export const useBalance = ({ address }) => {
 	const request = useRequest()
@@ -176,6 +177,7 @@ export const useTrxs = ({ address, limit = 10, type = "all" }, opts = { chainId:
 
 export const useTrades = ({ address, limit = 10 }) => {
 	const request = useRequest()
+	const { data: assets } = useAssets()
 
 	const getter = async ({ queryKey, pageParam = 0 }) => {
 		const [_, { address, limit }] = queryKey
@@ -185,11 +187,11 @@ export const useTrades = ({ address, limit = 10 }) => {
 			url,
 			method: "GET",
 		})
-		return formatTrades(response.data)
+		return formatTrades(response.data, assets)
 	}
 
 	const { data, isLoading, isFetching, fetchNextPage } = useInfiniteQuery(["trades", { address, limit }], getter, {
-		enabled: !!address,
+		enabled: !!address && !!assets.OSMO,
 		getNextPageParam: (_, allPages) => {
 			let nextPage = allPages.length * 10
 			return nextPage
