@@ -1,6 +1,7 @@
 import { makeStyles, Popover } from "@material-ui/core"
 import Image from "../../../../components/image/Image"
 import Paper from "../../../../components/paper/Paper"
+import { useAssets } from "../../../../hooks/data/assets.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
