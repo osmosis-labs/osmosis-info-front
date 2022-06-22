@@ -102,7 +102,7 @@ const Transactions = () => {
 
 	const { data: types, isLoading: isLoadingType } = useTypeTrx(
 		{ address },
-		{ exclude: ["osmosis.gamm.v1beta1.MsgSwapExactAmountIn"] }
+		{ exclude: ["osmosis.gamm.v1beta1.MsgSwapExactAmountIn"], chainId, address }
 	)
 	const {
 		data: trx,
