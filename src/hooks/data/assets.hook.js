@@ -20,3 +20,12 @@ export const useAssets = () => {
 	return { data: assets, isLoading, isFetching }
 }
 
+
+export const getExponent = (asset, denom) => {
+	if(denom === asset.symbol) return 0
+	else {
+		let expo = asset.denomUnits.find(d => d.denom === asset.display).exponent
+		if(!expo) return 0
+		return expo
+	}
+}
