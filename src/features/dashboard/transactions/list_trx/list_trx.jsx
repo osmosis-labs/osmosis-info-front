@@ -92,183 +92,135 @@ const ListTrx = ({ data: currentData, onClickRow, isLoading, loadMore, type }) =
 		return res
 	}
 
-	const itemDefault = [
-		{
-			label: "Status",
-			key: "status",
-			sortable: false,
-			onSort: null,
-			headerClass: null,
-			bodyClass: null,
-			align: "center",
-			onClickAttribut: null,
-			transform: null,
-			body: AttributStatus,
-			space: "75px",
-		},
-		{
-			label: "Time",
-			key: "time",
-			onSort: onSortTime,
-			sortable: true,
-			headerClass: null,
-			bodyClass: classes.cellTime,
-			align: "center",
-			onClickAttribut: null,
-			transform: transformDisplay,
-			body: null,
-			space: "minmax(100px, 150px)",
-		},
-		{
-			label: "Type",
-			key: "type",
-			sortable: false,
-			onSort: null,
-			headerClass: null,
-			bodyClass: null,
-			align: "left",
-			onClickAttribut: null,
-			transform: null,
-			body: AttributType,
-			space: "minmax(200px, 1fr)",
-		},
-		{
-			label: "Hash",
-			key: "hash",
-			onSort: null,
-			sortable: false,
-			headerClass: null,
-			bodyClass: classes.onClickCell,
-			align: "left",
-			onClickAttribut: onClickHash,
-			transform: transformDisplay,
-			body: null,
-			space: "150px",
-		},
-
-		{
-			label: "Fees",
-			key: "fees",
-			sortable: false,
-			onSort: null,
-			headerClass: null,
-			bodyClass: null,
-			align: "right",
-			onClickAttribut: null,
-			transform: null,
-			body: AttributFees,
-			space: "minmax(100px, 150px)",
-		},
-		{
-			label: "Height",
-			key: "height",
-			onSort: null,
-			sortable: true,
-			headerClass: null,
-			bodyClass: null,
-			align: "right",
-			onClickAttribut: null,
-			transform: null,
-			body: null,
-			space: "minmax(100px, 150px)",
-		},
-	]
-	let itemSendReceive = []
-	if (type === "cosmos.bank.v1beta1.MsgSend") {
-		itemSendReceive = [
-			{
-				label: "Status",
-				key: "status",
-				sortable: false,
-				onSort: null,
-				headerClass: null,
-				bodyClass: null,
-				align: "center",
-				onClickAttribut: null,
-				transform: null,
-				body: AttributStatus,
-				space: "75px",
-			},
-			{
-				label: "Time",
-				key: "time",
-				onSort: onSortTime,
-				sortable: true,
-				headerClass: null,
-				bodyClass: classes.cellTime,
-				align: "center",
-				onClickAttribut: null,
-				transform: transformDisplay,
-				body: null,
-				space: "minmax(100px, 150px)",
-			},
-			{
-				label: "Type",
-				key: "type",
-				sortable: false,
-				onSort: null,
-				headerClass: null,
-				bodyClass: null,
-				align: "left",
-				onClickAttribut: null,
-				transform: null,
-				body: AttributType,
-				space: "minmax(150px, 1fr)",
-			},
-			{
-				label: "Hash",
-				key: "hash",
-				onSort: null,
-				sortable: false,
-				headerClass: null,
-				bodyClass: classes.onClickCell,
-				align: "left",
-				onClickAttribut: onClickHash,
-				transform: transformDisplay,
-				body: null,
-				space: "150px",
-			},
-			{
-				label: "Amount",
-				key: "amount",
-				sortable: false,
-				onSort: null,
-				headerClass: null,
-				bodyClass: null,
-				align: "right",
-				onClickAttribut: null,
-				transform: null,
-				body: AttributAmount,
-				space: "minmax(100px, 150px)",
-			},
-			{
-				label: "Fees",
-				key: "fees",
-				sortable: false,
-				onSort: null,
-				headerClass: null,
-				bodyClass: null,
-				align: "right",
-				onClickAttribut: null,
-				transform: null,
-				body: AttributFees,
-				space: "minmax(100px, 150px)",
-			},
-			{
-				label: "Height",
-				key: "height",
-				onSort: null,
-				sortable: true,
-				headerClass: null,
-				bodyClass: null,
-				align: "right",
-				onClickAttribut: null,
-				transform: null,
-				body: null,
-				space: "minmax(100px, 150px)",
-			},
-		]
+	const itemStatus = {
+		label: "Status",
+		key: "status",
+		sortable: false,
+		onSort: null,
+		headerClass: null,
+		bodyClass: null,
+		align: "center",
+		onClickAttribut: null,
+		transform: null,
+		body: AttributStatus,
+		space: "75px",
 	}
+
+	const itemTime = {
+		label: "Time",
+		key: "time",
+		onSort: onSortTime,
+		sortable: true,
+		headerClass: null,
+		bodyClass: classes.cellTime,
+		align: "center",
+		onClickAttribut: null,
+		transform: transformDisplay,
+		body: null,
+		space: "minmax(100px, 150px)",
+	}
+
+	const itemType = {
+		label: "Type",
+		key: "type",
+		sortable: false,
+		onSort: null,
+		headerClass: null,
+		bodyClass: null,
+		align: "left",
+		onClickAttribut: null,
+		transform: null,
+		body: AttributType,
+		space: "minmax(100px, 1fr)",
+	}
+
+	const itemHash = {
+		label: "Hash",
+		key: "hash",
+		onSort: null,
+		sortable: false,
+		headerClass: null,
+		bodyClass: classes.onClickCell,
+		align: "left",
+		onClickAttribut: onClickHash,
+		transform: transformDisplay,
+		body: null,
+		space: "150px",
+	}
+
+	const itemFees = {
+		label: "Fees",
+		key: "fees",
+		sortable: false,
+		onSort: null,
+		headerClass: null,
+		bodyClass: null,
+		align: "right",
+		onClickAttribut: null,
+		transform: null,
+		body: AttributFees,
+		space: "minmax(100px, 150px)",
+	}
+
+	const itemHeight = {
+		label: "Height",
+		key: "height",
+		onSort: null,
+		sortable: true,
+		headerClass: null,
+		bodyClass: null,
+		align: "right",
+		onClickAttribut: null,
+		transform: null,
+		body: null,
+		space: "minmax(100px, 150px)",
+	}
+
+	const itemAmount = {
+		label: "Amount",
+		key: "amount",
+		sortable: false,
+		onSort: null,
+		headerClass: null,
+		bodyClass: null,
+		align: "right",
+		onClickAttribut: null,
+		transform: null,
+		body: AttributAmount,
+		space: "minmax(100px, 150px)",
+	}
+
+	const itemSender = {
+		label: "Sender",
+		key: "sender",
+		onSort: null,
+		sortable: false,
+		headerClass: null,
+		bodyClass: classes.onClickCell,
+		align: "left",
+		onClickAttribut: null,
+		transform: null,
+		body: AttributAddress,
+		space: "minmax(100px, 150px)",
+	}
+
+	const itemReceiver = {
+		label: "Receiver",
+		key: "receiver",
+		onSort: null,
+		sortable: false,
+		headerClass: null,
+		bodyClass: classes.onClickCell,
+		align: "left",
+		onClickAttribut: null,
+		transform: null,
+		body: AttributAddress,
+		space: "minmax(100px, 150px)",
+	}
+
+	const itemsDefault = [itemStatus, itemTime, itemType, itemHash, itemFees, itemHeight]
+	const itemsReceive = [itemStatus, itemTime, itemType, itemHash, itemAmount, itemSender, itemFees, itemHeight]
+	const itemsSend = [itemStatus, itemTime, itemType, itemHash, itemAmount, itemReceiver, itemFees, itemHeight]
 
 	let config = {
 		defaultSort: "name",
@@ -281,7 +233,13 @@ const ListTrx = ({ data: currentData, onClickRow, isLoading, loadMore, type }) =
 		rowId: "hash",
 		fixedHeader: true,
 		showFooter: true,
-		items: type === "cosmos.bank.v1beta1.MsgSend" ? itemSendReceive : itemDefault,
+		items: itemsDefault,
+	}
+
+	if (type === "cosmos.bank.v1beta1.MsgSend.receive") {
+		config.items = itemsReceive
+	} else if (type === "cosmos.bank.v1beta1.MsgSend.send") {
+		config.items = itemsSend
 	}
 
 	if (!isLoading && data.length === 0) {

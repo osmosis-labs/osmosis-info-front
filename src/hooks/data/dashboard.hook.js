@@ -213,7 +213,6 @@ export const useSendReceive = ({ address }, opts = { chainId: "", address: "" })
 		const [_, { address }] = queryKey
 
 		let data = await getAllSendReceive({ request, address })
-		console.log("dashboard.hook.js -> 207: data", data)
 
 		return formatTrxs(data, opts)
 	}
