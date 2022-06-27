@@ -86,6 +86,7 @@ const useStyles = makeStyles((theme) => {
 const Trades = () => {
 	const classes = useStyles()
 	const size = useSize()
+	const [end, setEnd] = useState(false)
 	const [open, setOpen] = useState(false)
 	const [openModalJSON, setOpenModalJSON] = useState(false)
 	const [currentTrade, setCurrentTrade] = useState({})
@@ -130,6 +131,8 @@ const Trades = () => {
 
 	const cbEndPage = async () => {
 		fetchNextPage()
+		let data = await fetchNextPage()
+		setEnd((end) => data.data.pages[data.data.pages.length - 1].length === 0)
 	}
 
 	if (!address || address.length === 0) {
@@ -170,7 +173,7 @@ const Trades = () => {
 							data={trades}
 							className={classes.list}
 							onClickRow={onClickRow}
-							loadMore={cbEndPage}
+							loadMore={!end ? cbEndPage : null}
 							isLoading={isLoading}
 						/>
 					</div>

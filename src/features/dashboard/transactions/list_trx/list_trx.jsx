@@ -49,10 +49,6 @@ const ListTrx = ({ data: currentData, onClickRow, isLoading, loadMore, type }) =
 		setData(data)
 	}, [currentData])
 
-	const onLoadMore = () => {
-		loadMore()
-	}
-
 	const transformDisplay = (data) => {
 		return data.display
 	}
@@ -220,13 +216,13 @@ const ListTrx = ({ data: currentData, onClickRow, isLoading, loadMore, type }) =
 
 	const itemsDefault = [itemStatus, itemTime, itemType, itemHash, itemFees, itemHeight]
 	const itemsReceive = [itemStatus, itemTime, itemType, itemHash, itemAmount, itemSender, itemFees, itemHeight]
-	const itemsSend = [itemStatus, itemTime, itemType, itemHash, itemAmount, itemReceiver, itemFees, itemHeight]
+	const itemsSend = [itemStatus, itemTime, itemType, itemHash, itemAmount, itemFees, itemHeight]
 
 	let config = {
 		defaultSort: "name",
 		defaultOrder: "asc",
 		scrollOnIt: true,
-		onLoadMore: onLoadMore,
+		onLoadMore: loadMore,
 		onClickRow: onClickRow,
 		selectedItemClass: null,
 		selectableRow: true,

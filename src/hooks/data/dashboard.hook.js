@@ -180,6 +180,9 @@ export const useTrxs = ({ address, limit = 10, type = "all" }, opts = { chainId:
 		if (type === "cosmos.bank.v1beta1.MsgSend") {
 			return sendReceive
 		} else if (type === "cosmos.bank.v1beta1.MsgSend.send" || type === "cosmos.bank.v1beta1.MsgSend.receive") {
+			if (pageParam > 0) {
+				return []
+			}
 			return sendReceive.filter((trx) => trx.types.map((type) => type.value).includes(type))
 		}
 
@@ -213,7 +216,6 @@ export const useSendReceive = ({ address }, opts = { chainId: "", address: "" })
 		const [_, { address }] = queryKey
 
 		let data = await getAllSendReceive({ request, address })
-
 		return formatTrxs(data, opts)
 	}
 

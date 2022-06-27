@@ -94,6 +94,7 @@ const Transactions = () => {
 	const size = useSize()
 	const [open, setOpen] = useState(false)
 	const [openModalJSON, setOpenModalJSON] = useState(false)
+	const [end, setEnd] = useState({})
 
 	const [type, setType] = useState("all")
 	const [currentTrx, setCurrentTrx] = useState({})
@@ -146,7 +147,8 @@ const Transactions = () => {
 	}
 
 	const cbEndPage = async () => {
-		fetchNextPage()
+		let data = await fetchNextPage()
+		setEnd((end) => ({ ...end, [type]: data.data.pages[data.data.pages.length - 1].length === 0 }))
 	}
 
 	const onChangeTypeTrx = async (type) => {
@@ -193,7 +195,7 @@ const Transactions = () => {
 							data={trx}
 							className={classes.list}
 							onClickRow={onClickRow}
-							loadMore={cbEndPage}
+							loadMore={!end[type] ? cbEndPage : null}
 							isLoading={isLoading}
 							type={type}
 						/>

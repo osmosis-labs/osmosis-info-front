@@ -35,7 +35,6 @@ const AttributAddress = ({ data, config, itemConfig, itemKey }) => {
 	if (data.type === "Send") address = data.messages[0].to_address
 
 	let display = address.substring(0, 5) + "..." + address.substring(address.length - 5)
-	console.log("attribut_address.jsx (l:43): data.type:", data.type)
 	const onClick = () => {
 		try {
 			navigator.clipboard.writeText(address)
