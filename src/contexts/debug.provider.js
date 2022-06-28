@@ -10,8 +10,7 @@ export const DebugProvider = ({ children }) => {
 	const onClose = () => setOpen(false)
 	const [isAccumulated, setIsAccumulated] = useState(true)
 	const [isStakingAccumulated, setIsStakingAccumulated] = useState(true)
-	const [message, setMessage] = useState("The Terra blockchain has resumed with on-chain swaps disabled and IBC channels closed. LUNA and UST pools rewards will drain shortly")
-	const [messageLevel, setMessageLevel] = useState("info")
+	const [isLoadingDebug, setLoadingDebug] = useState(false)
 
 	const value = {
 		open,
@@ -22,10 +21,8 @@ export const DebugProvider = ({ children }) => {
 		setIsAccumulated,
 		isStakingAccumulated,
 		setIsStakingAccumulated,
-		message,
-		setMessage,
-		messageLevel,
-		setMessageLevel,
+		isLoadingDebug,
+		setLoadingDebug,
 	}
 
 	return <DebugContext.Provider value={value}>{children}</DebugContext.Provider>

@@ -17,6 +17,7 @@ import { useLiquidityChart, useVolumeChart } from "../../hooks/data/charts.hook"
 import { useTokens } from "../../hooks/data/tokens.hook"
 import { usePools } from "../../hooks/data/pools.hook"
 import ContainerChartSkeleton from "./container_chart_skeleton"
+import { useDebug } from "../../contexts/debug.provider"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -91,7 +92,7 @@ const Overview = () => {
 	const classes = useStyles()
 	const { data: dataLiquidity, isLoading: isLoadingLiquidity } = useLiquidityChart()
 	const { data: dataVolume, isLoading: isLoadingVolume } = useVolumeChart()
-
+	const { isLoadingDebug } = useDebug()
 	const { watchlistTokens } = useWatchlistTokens()
 	const { watchlistPools } = useWatchlistPools()
 	const [tokensOnWatchlist, setTokensOnWatchlist] = useState([])
@@ -184,8 +185,7 @@ const Overview = () => {
 				<p className={classes.title}>Osmosis - Overview</p>
 				<div className={classes.charts}>
 					<Paper className={classes.chart}>
-						<BlocLoaderOsmosis open={isLoadingLiquidity} borderRadius={true} />
-						{isLoadingLiquidity ? (
+						{isLoadingLiquidity || isLoadingDebug ? (
 							<ContainerChartSkeleton />
 						) : (
 							<div className={classes.containerChart}>
@@ -199,7 +199,7 @@ const Overview = () => {
 						)}
 					</Paper>
 					<Paper className={classes.chart}>
-						{isLoadingVolume ? (
+						{isLoadingVolume || isLoadingDebug ? (
 							<ContainerChartSkeleton />
 						) : (
 							<div className={classes.containerChart}>
@@ -222,6 +222,7 @@ const Overview = () => {
 							onClickToken={onClickToken}
 							setSettings={setSettingsTokens}
 							settings={settings.tokenTable}
+							isLoading={loadingTokens || isLoadingDebug}
 						/>
 					) : (
 						<p>Saved tokens will appear here</p>
@@ -235,6 +236,7 @@ const Overview = () => {
 							onClickPool={onClickPool}
 							setSettings={setSettingsPools}
 							settings={settings.poolTable}
+							isLoading={loadingPools || isLoadingDebug}
 						/>
 					) : (
 						<p>Saved pools will appear here</p>
@@ -242,22 +244,22 @@ const Overview = () => {
 				</Paper>
 				<p className={classes.subTitle}>Top tokens</p>
 				<Paper className={classes.containerLoading}>
-					<BlocLoaderOsmosis open={loadingTokens} borderRadius={true} />
 					<TokensTable
 						data={dataTokens}
 						onClickToken={onClickToken}
 						setSettings={setSettingsTokens}
 						settings={settings.tokenTable}
+						isLoading={loadingTokens || isLoadingDebug}
 					/>
 				</Paper>
 				<p className={classes.subTitle}>Top pools</p>
 				<Paper className={classes.containerLoading}>
-					<BlocLoaderOsmosis open={loadingPools} borderRadius={true} />
 					<PoolsTable
 						data={dataPools}
 						onClickPool={onClickPool}
 						setSettings={setSettingsPools}
 						settings={settings.poolTable}
+						isLoading={loadingPools || isLoadingDebug}
 					/>
 				</Paper>
 			</div>
