@@ -16,6 +16,7 @@ import OverviewBar from "./overviewBar/overviewBar"
 import { useLiquidityChart, useVolumeChart } from "../../hooks/data/charts.hook"
 import { useTokens } from "../../hooks/data/tokens.hook"
 import { usePools } from "../../hooks/data/pools.hook"
+import ContainerChartSkeleton from "./container_chart_skeleton"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -184,25 +185,32 @@ const Overview = () => {
 				<div className={classes.charts}>
 					<Paper className={classes.chart}>
 						<BlocLoaderOsmosis open={isLoadingLiquidity} borderRadius={true} />
-						<div className={classes.containerChart}>
-							<ContainerChartLiquidity
-								dataDay={dataLiquidity.d}
-								dataWeek={dataLiquidity.w}
-								dataMonth={dataLiquidity.m}
-								title="Liquidity"
-							/>
-						</div>
+						{isLoadingLiquidity ? (
+							<ContainerChartSkeleton />
+						) : (
+							<div className={classes.containerChart}>
+								<ContainerChartLiquidity
+									dataDay={dataLiquidity.d}
+									dataWeek={dataLiquidity.w}
+									dataMonth={dataLiquidity.m}
+									title="Liquidity"
+								/>
+							</div>
+						)}
 					</Paper>
 					<Paper className={classes.chart}>
-						<BlocLoaderOsmosis open={isLoadingVolume} borderRadius={true} />
-						<div className={classes.containerChart}>
-							<ContainerChartVolume
-								dataDay={dataVolume.d}
-								dataWeek={dataVolume.w}
-								dataMonth={dataVolume.m}
-								title="Volume"
-							/>
-						</div>
+						{isLoadingVolume ? (
+							<ContainerChartSkeleton />
+						) : (
+							<div className={classes.containerChart}>
+								<ContainerChartVolume
+									dataDay={dataVolume.d}
+									dataWeek={dataVolume.w}
+									dataMonth={dataVolume.m}
+									title="Volume"
+								/>
+							</div>
+						)}
 					</Paper>
 				</div>
 				<OverviewBar />
