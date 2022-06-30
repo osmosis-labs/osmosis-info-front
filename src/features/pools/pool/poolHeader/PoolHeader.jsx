@@ -1,11 +1,12 @@
 import React from "react"
 import { makeStyles } from "@material-ui/core"
-import Image from "../../../components/image/Image"
-import ContainerLoader from "../../../components/loader/ContainerLoader"
-import Paper from "../../../components/paper/Paper"
 import PoolPath from "./PoolPath"
 import PoolSelect from "./PoolSelect"
 import PoolTitle from "./PoolTitle"
+import ContainerLoader from "../../../../components/loader/ContainerLoader"
+import Paper from "../../../../components/paper/Paper"
+import Image from "../../../../components/image/Image"
+import PoolHeaderSkeleton from "./pool_header_skeleton"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -30,8 +31,11 @@ const useStyles = makeStyles((theme) => {
 
 const PoolHeader = ({ pool, tokens, selectedTokens, onChangeSeletedTokens, loadingPoolDetails, pricesInfo }) => {
 	const classes = useStyles()
+	if (loadingPoolDetails) {
+		return <PoolHeaderSkeleton  />
+	}
 	return (
-		<ContainerLoader className={classes.containerInfo} isLoading={loadingPoolDetails}>
+		<div className={classes.containerInfo}>
 			<PoolPath pool={pool} />
 			<PoolTitle pool={pool} tokens={tokens} />
 
@@ -49,7 +53,7 @@ const PoolHeader = ({ pool, tokens, selectedTokens, onChangeSeletedTokens, loadi
 				</p>
 			</Paper>
 			<PoolSelect tokens={tokens} setSelectedTokens={onChangeSeletedTokens} selectedTokens={selectedTokens} />
-		</ContainerLoader>
+		</div>
 	)
 }
 

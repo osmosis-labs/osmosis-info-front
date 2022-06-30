@@ -12,7 +12,8 @@ import { useSettings } from "../../../contexts/SettingsProvider"
 import { useToast } from "../../../contexts/Toast.provider"
 import { useHistoricalPool, usePool, usePoolTrx, useTokensPool } from "../../../hooks/data/pools.hook"
 import ChartContainer from "./chart_container"
-import PoolHeader from "./PoolHeader"
+import PoolHeader from "./poolHeader/PoolHeader"
+import { useDebug } from "../../../contexts/debug.provider"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -44,6 +45,7 @@ const useStyles = makeStyles((theme) => {
 
 const Pool = () => {
 	const classes = useStyles()
+	const { isLoadingDebug } = useDebug()
 	const history = useHistory()
 	const { showToast } = useToast()
 	const { id } = useParams()
@@ -152,16 +154,15 @@ const Pool = () => {
 				tokens={tokensPool}
 				selectedTokens={selectedTokens}
 				onChangeSeletedTokens={onChangeSeletedTokens}
-				loadingPoolDetails={isLoadingPool}
+				loadingPoolDetails={isLoadingPool || isLoadingDebug}
 				pricesInfo={pricesInfo}
 			/>
 			<div className={classes.charts}>
-				<PoolInfo loadingPoolInfo={isLoadingPool} pool={pool} tokens={tokensPool} fees={fees} />
-				<ChartContainer currency={currency} selectedTokens={selectedTokens} poolId={id} />
+				<PoolInfo loadingPoolInfo={isLoadingPool || isLoadingDebug} pool={pool} tokens={tokensPool} fees={fees} />
+				<ChartContainer currency={currency} selectedTokens={selectedTokens} poolId={id} isLoadingPool={isLoadingPool} />
 			</div>
 			<Paper className={classes.trxContainer}>
-				<BlocLoaderOsmosis open={isLoadingTrx} classNameLoading={classes.loading} borderRadius={true} />
-				<TrxTable data={trx} />
+				<TrxTable data={trx} isLoading={isLoadingTrx || isLoadingDebug} />
 			</Paper>
 		</div>
 	)
