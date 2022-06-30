@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useHistory } from "react-router-dom"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
+import { useDebug } from "../../contexts/debug.provider"
 import { useSettings } from "../../contexts/SettingsProvider"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import { getInclude } from "../../helpers/helpers"
@@ -37,6 +38,7 @@ const Tokens = () => {
 		data: { current: tokens },
 		isLoading: loadingTokens,
 	} = useTokens()
+	const { isLoadingDebug } = useDebug()
 	const { settings, updateSettings } = useSettings()
 
 	const setSettingsTokens = (settings) => {
@@ -71,6 +73,7 @@ const Tokens = () => {
 						onClickToken={onClickToken}
 						setSettings={setSettingsTokens}
 						settings={settings.tokenTable}
+						isLoading={loadingTokens || isLoadingDebug}
 					/>
 				) : (
 					<p>Saved tokens will appear here</p>
@@ -80,12 +83,12 @@ const Tokens = () => {
 			<TokenOverview />
 			<p className={classes.subTitle}>All tokens</p>
 			<Paper className={classes.containerLoader}>
-				<BlocLoaderOsmosis open={loadingTokens} borderRadius={true} />
 				<TokensTable
 					data={tokens}
 					onClickToken={onClickToken}
 					setSettings={setSettingsTokens}
 					settings={settings.tokenTable}
+					isLoading={loadingTokens || isLoadingDebug}
 				/>
 			</Paper>
 		</div>

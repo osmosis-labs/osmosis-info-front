@@ -103,15 +103,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool }) => {
 	}
 	const theme = useTheme()
 
-	// if (loadingPoolInfo) {
-	// 	return (
-	// 		<div className={classes.details}>
-	// 			<Paper className={classes.detailPaper}>
-	// 				<PoolInfoSkeleton />
-	// 			</Paper>
-	// 		</div>
-	// 	)
-	// }
+
 	return (
 		<div className={classes.details}>
 			<Paper className={classes.detailPaper}>
