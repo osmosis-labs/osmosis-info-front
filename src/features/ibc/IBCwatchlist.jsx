@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const IBCwatchlist = ({ ibcCouple }) => {
+const IBCwatchlist = ({ ibcCouple, isLoading }) => {
 	const classes = useStyles()
 	const { watchlistIBC, getWatchList, updateWatchlistIBC, isInWatchlist } = useWatchlistIBC()
 
@@ -52,7 +52,12 @@ const IBCwatchlist = ({ ibcCouple }) => {
 		<div className={classes.IBCwatchlistRoot}>
 			<p className={classes.subTitle}>Your watchlist</p>
 			{watchlist.length > 0 ? (
-				<IbcTable data={watchlist} updateWatchlistIBC={updateWatchlistIBC} isInWatchlist={isInWatchlist} />
+				<IbcTable
+					data={watchlist}
+					updateWatchlistIBC={updateWatchlistIBC}
+					isInWatchlist={isInWatchlist}
+					isLoading={isLoading}
+				/>
 			) : (
 				<p className={classes.text}>Saved IBC will appear here</p>
 			)}

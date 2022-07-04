@@ -10,50 +10,15 @@ const ChartContainerSkeleton = () => {
 		<div className={classes.rootChartContainerSkeleton}>
 			<div className={classes.header}>
 				<div className={classes.left}>
-					<Skeleton
-						animation="wave"
-						variant="rectangular"
-						className={`${classes.skeleton}`}
-						width={300}
-						height={34}
-						sx={{ bgcolor: theme.palette.primary.main, margin: "4px 0" }}
-					/>
-					<Skeleton
-						animation="wave"
-						variant="rectangular"
-						className={`${classes.skeleton}`}
-						width={260}
-						height={18}
-						sx={{ bgcolor: theme.palette.primary.main, margin: "4px 0" }}
-					/>
+					<CustomSkeleton animation="wave" variant="rectangular" width={300} height={34} sx={{ margin: "4px 0" }} />
+					<CustomSkeleton animation="wave" variant="rectangular" width={260} height={18} sx={{ margin: "4px 0" }} />
 				</div>
 				<div className={classes.right}>
-					<Skeleton
-						animation="wave"
-						variant="rectangular"
-						className={`${classes.skeleton}`}
-						width={250}
-						height={24}
-						sx={{ bgcolor: theme.palette.primary.main, margin: "4px 0" }}
-					/>
-					<Skeleton
-						animation="wave"
-						variant="rectangular"
-						className={`${classes.skeleton}`}
-						width={240}
-						height={24}
-						sx={{ bgcolor: theme.palette.primary.main, margin: "4px 0" }}
-					/>
+					<CustomSkeleton animation="wave" variant="rectangular" width={250} height={24} sx={{ margin: "4px 0" }} />
+					<CustomSkeleton animation="wave" variant="rectangular" width={240} height={24} sx={{ margin: "4px 0" }} />
 				</div>
 			</div>
-			<Skeleton
-				animation="wave"
-				variant="rectangular"
-				className={`${classes.skeleton}`}
-				width={"100%"}
-				height={400}
-				sx={{ bgcolor: theme.palette.primary.main, margin: "4px 0" }}
-			/>
+			<CustomSkeleton animation="wave" variant="rectangular" width={"100%"} height={400} sx={{ margin: "4px 0" }} />
 		</div>
 	)
 }

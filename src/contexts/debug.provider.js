@@ -10,7 +10,7 @@ export const DebugProvider = ({ children }) => {
 	const onClose = () => setOpen(false)
 	const [isAccumulated, setIsAccumulated] = useState(true)
 	const [isStakingAccumulated, setIsStakingAccumulated] = useState(true)
-	const [isLoadingDebug, setLoadingDebug] = useState(false)
+	const [isLoadingDebug, setLoadingDebug] = useState(true)
 
 	const value = {
 		open,

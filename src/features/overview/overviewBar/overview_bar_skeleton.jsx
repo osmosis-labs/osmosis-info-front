@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core"
-import { Skeleton } from "@mui/material"
+import CustomSkeleton from "../../../components/skeleton/custom_skeleton"
 
 const OverviewBarSkeleton = () => {
 	const classes = useStyles()
@@ -7,8 +7,8 @@ const OverviewBarSkeleton = () => {
 	return (
 		<div className={classes.rootOverviewBarSkeleton}>
 			<div className={classes.row}>
-				<Skeleton animation="wave" variant="rectangular" className={`${classes.skeleton}`} width={200} height={"1rem"} />
-				<Skeleton animation="wave" variant="rectangular" className={`${classes.skeleton}`} width={200} height={"1rem"} />
+				<CustomSkeleton animation="wave" variant="rectangular" className={`${classes.skeleton}`} width={200} height={"1rem"} />
+				<CustomSkeleton animation="wave" variant="rectangular" className={`${classes.skeleton}`} width={200} height={"1rem"} />
 			</div>
 		</div>
 	)

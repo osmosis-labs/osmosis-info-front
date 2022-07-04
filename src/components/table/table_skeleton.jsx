@@ -1,6 +1,6 @@
-import { makeStyles, Table, TableCell, TableRow } from "@material-ui/core"
-import { Skeleton } from "@mui/material"
+import { makeStyles, Table, TableCell, TableRow, useTheme } from "@material-ui/core"
 import { random } from "../../helpers/helpers"
+import CustomSkeleton from "../skeleton/custom_skeleton"
 import CellCustom from "./body/cellCustom"
 import RowTableCustom from "./body/rowTableCustom"
 import FooterTableCustom from "./footer/footerTableCustom"
@@ -9,6 +9,7 @@ import HeaderTableCustom from "./header/headerTableCustom"
 const TableSkeleton = ({ config, settings }) => {
 	const classes = useStyles()
 	const cellsToDisplay = settings.filter((setting) => setting.display)
+	const theme = useTheme()
 
 	const cells = []
 	const rows = []
@@ -27,7 +28,12 @@ const TableSkeleton = ({ config, settings }) => {
 						width: "100%",
 					}}
 				>
-					<Skeleton animation="wave" variant="rectangular" width={"80%"} height={25} />
+					<CustomSkeleton
+						animation="wave"
+						variant="rectangular"
+						width={"80%"}
+						height={25}
+					/>
 				</div>
 			</td>
 		)

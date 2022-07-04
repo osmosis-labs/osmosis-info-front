@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core"
-import { Skeleton } from "@mui/material"
 import Paper from "../../../../components/paper/Paper"
+import CustomSkeleton from "../../../../components/skeleton/custom_skeleton"
 
 const PoolHeaderSkeleton = () => {
 	const classes = useStyles()
@@ -8,7 +8,7 @@ const PoolHeaderSkeleton = () => {
 	return (
 		<div className={classes.rootPoolHeaderSkeleton}>
 			<div className={classes.row}>
-				<Skeleton
+				<CustomSkeleton
 					animation="wave"
 					variant="rectangular"
 					className={`${classes.skeleton}`}
@@ -17,7 +17,7 @@ const PoolHeaderSkeleton = () => {
 				/>
 			</div>
 			<div className={classes.row}>
-				<Skeleton
+				<CustomSkeleton
 					animation="wave"
 					variant="rectangular"
 					className={`${classes.skeleton}`}
@@ -27,7 +27,7 @@ const PoolHeaderSkeleton = () => {
 			</div>
 			<div className={classes.row}>
 				<Paper className={classes.convertContainer}>
-					<Skeleton
+					<CustomSkeleton
 						animation="wave"
 						variant="rectangular"
 						className={`${classes.skeleton}`}
@@ -37,7 +37,7 @@ const PoolHeaderSkeleton = () => {
 				</Paper>
 			</div>
 			<div className={classes.row}>
-				<Skeleton
+				<CustomSkeleton
 					animation="wave"
 					variant="rectangular"
 					className={`${classes.skeleton}`}

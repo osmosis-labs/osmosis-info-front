@@ -9,6 +9,10 @@ export const ThemeCustomProvider = ({ children }) => {
 	const { settings } = useSettings()
 	let colors = {
 		type: "dark",
+		skeleton: {
+			color: "rgba(255, 255, 255, 0.1)",
+			wave: "rgba(0, 0, 0, 0.1)",
+		},
 		blueButton: {
 			color: "#FFFFFF",
 			background: "#322DC2",
@@ -171,7 +175,6 @@ export const ThemeCustomProvider = ({ children }) => {
 	const themeCustomApp = createTheme({ ...baseTheme, palette: { ...colors, ...colorsApp } })
 
 	const themeCustomFrontier = createTheme({ ...baseTheme, palette: { ...colors, ...colorsFronier } })
-
 	return (
 		<ThemeCustomContext.Provider value={settings.type === "app" ? themeCustomApp : themeCustomFrontier}>
 			{children}

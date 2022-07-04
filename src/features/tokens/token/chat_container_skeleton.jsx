@@ -1,5 +1,5 @@
 import { makeStyles, useTheme } from "@material-ui/core"
-import { Skeleton } from "@mui/material"
+import CustomSkeleton from "../../../components/skeleton/custom_skeleton"
 
 const ChartContainerSkeleton = () => {
 	const classes = useStyles()
@@ -9,57 +9,57 @@ const ChartContainerSkeleton = () => {
 		<div className={classes.rootChartContainerSkeleton}>
 			<div className={classes.header}>
 				<div className={classes.left}>
-					<Skeleton
+					<CustomSkeleton
 						animation="wave"
 						variant="rectangular"
 						className={`${classes.skeleton}`}
 						width={300}
 						height={34}
-						sx={{ bgcolor: theme.palette.primary.main, margin: "4px 0" }}
+						sx={{ margin: "4px 0" }}
 					/>
-					<Skeleton
+					<CustomSkeleton
 						animation="wave"
 						variant="rectangular"
 						className={`${classes.skeleton}`}
 						width={260}
 						height={18}
-						sx={{ bgcolor: theme.palette.primary.main, margin: "4px 0" }}
+						sx={{ margin: "4px 0" }}
 					/>
 				</div>
 				<div className={classes.right}>
-					<Skeleton
+					<CustomSkeleton
 						animation="wave"
 						variant="rectangular"
 						className={`${classes.skeleton}`}
 						width={250}
 						height={24}
-						sx={{ bgcolor: theme.palette.primary.main, margin: "4px 0" }}
+						sx={{ margin: "4px 0" }}
 					/>
-					<Skeleton
+					<CustomSkeleton
 						animation="wave"
 						variant="rectangular"
 						className={`${classes.skeleton}`}
 						width={270}
 						height={24}
-						sx={{ bgcolor: theme.palette.primary.main, margin: "4px 0" }}
+						sx={{ margin: "4px 0" }}
 					/>
-					<Skeleton
+					<CustomSkeleton
 						animation="wave"
 						variant="rectangular"
 						className={`${classes.skeleton}`}
 						width={230}
 						height={28}
-						sx={{ bgcolor: theme.palette.primary.main, margin: "4px 0" }}
+						sx={{ margin: "4px 0" }}
 					/>
 				</div>
 			</div>
-			<Skeleton
+			<CustomSkeleton
 				animation="wave"
 				variant="rectangular"
 				className={`${classes.skeleton}`}
 				width={"100%"}
 				height={350}
-				sx={{ bgcolor: theme.palette.primary.main, margin: "4px 0" }}
+				sx={{ margin: "4px 0" }}
 			/>
 		</div>
 	)
@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme) => {
 		header: {
 			display: "flex",
 			justifyContent: "space-between",
-			alignItems:"center"
+			alignItems: "center",
 		},
 		left: {
 			display: "flex",

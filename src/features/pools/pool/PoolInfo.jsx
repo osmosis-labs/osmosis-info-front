@@ -11,7 +11,7 @@ import {
 
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
-import { Skeleton } from "@mui/material"
+import CustomSkeleton from "../../../components/skeleton/custom_skeleton"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -113,28 +113,28 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool }) => {
 							{loadingPoolInfo ? (
 								<>
 									<div style={{ margin: "4px 0" }} className={classes.rowSkeleton}>
-										<Skeleton
+										<CustomSkeleton
 											animation="wave"
 											variant="rectangular"
 											width={22}
 											height={22}
 											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "4px 0 4px 0" }}
 										/>
-										<Skeleton
+										<CustomSkeleton
 											animation="wave"
 											variant="rectangular"
 											width={40}
 											height={22}
 											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "4px 0 4px 10px" }}
 										/>
-										<Skeleton
+										<CustomSkeleton
 											animation="wave"
 											variant="rectangular"
 											width={50}
 											height={22}
 											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "4px 0 4px 40px" }}
 										/>
-										<Skeleton
+										<CustomSkeleton
 											animation="wave"
 											variant="rectangular"
 											width={50}
@@ -143,28 +143,28 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool }) => {
 										/>
 									</div>
 									<div style={{ margin: "4px 0" }} className={classes.rowSkeleton}>
-										<Skeleton
+										<CustomSkeleton
 											animation="wave"
 											variant="rectangular"
 											width={22}
 											height={22}
 											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "4px 0 4px 0" }}
 										/>
-										<Skeleton
+										<CustomSkeleton
 											animation="wave"
 											variant="rectangular"
 											width={40}
 											height={22}
 											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "4px 0 4px 10px" }}
 										/>
-										<Skeleton
+										<CustomSkeleton
 											animation="wave"
 											variant="rectangular"
 											width={50}
 											height={22}
 											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "4px 0 4px 40px" }}
 										/>
-										<Skeleton
+										<CustomSkeleton
 											animation="wave"
 											variant="rectangular"
 											width={50}
@@ -202,7 +202,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool }) => {
 							{loadingPoolInfo ? (
 								<>
 									<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
-										<Skeleton
+										<CustomSkeleton
 											animation="wave"
 											variant="rectangular"
 											width={120}
@@ -211,7 +211,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool }) => {
 										/>
 									</div>
 									<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
-										<Skeleton
+										<CustomSkeleton
 											animation="wave"
 											variant="rectangular"
 											width={80}
@@ -247,7 +247,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool }) => {
 							{loadingPoolInfo ? (
 								<>
 									<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
-										<Skeleton
+										<CustomSkeleton
 											animation="wave"
 											variant="rectangular"
 											width={120}
@@ -256,7 +256,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool }) => {
 										/>
 									</div>
 									<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
-										<Skeleton
+										<CustomSkeleton
 											animation="wave"
 											variant="rectangular"
 											width={80}
@@ -290,7 +290,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool }) => {
 						{loadingPoolInfo ? (
 							<>
 								<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
-									<Skeleton
+									<CustomSkeleton
 										animation="wave"
 										variant="rectangular"
 										width={120}
@@ -311,7 +311,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool }) => {
 						{loadingPoolInfo ? (
 							<>
 								<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
-									<Skeleton
+									<CustomSkeleton
 										animation="wave"
 										variant="rectangular"
 										width={80}

@@ -1,6 +1,6 @@
 import { makeStyles, useTheme } from "@material-ui/core"
-import { Skeleton } from "@mui/material"
 import Paper from "../../../components/paper/Paper"
+import CustomSkeleton from "../../../components/skeleton/custom_skeleton"
 import { formateNumberPrice, formateNumberPriceDecimals, getPercent } from "../../../helpers/helpers"
 
 const TokenInfo = ({ token, isLoading, priceDecimals }) => {
@@ -16,21 +16,21 @@ const TokenInfo = ({ token, isLoading, priceDecimals }) => {
 						{isLoading ? (
 							<>
 								<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
-									<Skeleton
+									<CustomSkeleton
 										animation="wave"
 										variant="rectangular"
 										width={120}
 										height={30}
-										sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "2px 0 2px 0" }}
+										sx={{ padding: "0px 0", margin: "2px 0 2px 0" }}
 									/>
 								</div>
 								<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
-									<Skeleton
+									<CustomSkeleton
 										animation="wave"
 										variant="rectangular"
 										width={80}
 										height={22}
-										sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "2px 0 2px 0" }}
+										sx={{ padding: "0px 0", margin: "2px 0 2px 0" }}
 									/>
 								</div>
 							</>
@@ -59,21 +59,21 @@ const TokenInfo = ({ token, isLoading, priceDecimals }) => {
 						{isLoading ? (
 							<>
 								<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
-									<Skeleton
+									<CustomSkeleton
 										animation="wave"
 										variant="rectangular"
 										width={120}
 										height={30}
-										sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "2px 0 2px 0" }}
+										sx={{ padding: "0px 0", margin: "2px 0 2px 0" }}
 									/>
 								</div>
 								<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
-									<Skeleton
+									<CustomSkeleton
 										animation="wave"
 										variant="rectangular"
 										width={80}
 										height={22}
-										sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "2px 0 2px 0" }}
+										sx={{ padding: "0px 0", margin: "2px 0 2px 0" }}
 									/>
 								</div>
 							</>
@@ -103,21 +103,21 @@ const TokenInfo = ({ token, isLoading, priceDecimals }) => {
 						{isLoading ? (
 							<>
 								<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
-									<Skeleton
+									<CustomSkeleton
 										animation="wave"
 										variant="rectangular"
 										width={120}
 										height={30}
-										sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "2px 0 2px 0" }}
+										sx={{ padding: "0px 0", margin: "2px 0 2px 0" }}
 									/>
 								</div>
 								<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
-									<Skeleton
+									<CustomSkeleton
 										animation="wave"
 										variant="rectangular"
 										width={80}
 										height={22}
-										sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "2px 0 2px 0" }}
+										sx={{ padding: "0px 0", margin: "2px 0 2px 0" }}
 									/>
 								</div>
 							</>

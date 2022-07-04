@@ -1,6 +1,5 @@
 import { makeStyles } from "@material-ui/core"
-import { Skeleton } from "@mui/material"
-import Paper from "../../../../components/paper/Paper"
+import CustomSkeleton from "../../../../components/skeleton/custom_skeleton"
 
 const TokenHeaderSkeleton = () => {
 	const classes = useStyles()
@@ -8,14 +7,14 @@ const TokenHeaderSkeleton = () => {
 	return (
 		<div className={classes.rootTokenHeaderSkeleton}>
 			<div style={{ margin: "16px 0" }} className={classes.row}>
-				<Skeleton animation="wave" variant="rectangular" className={`${classes.skeleton}`} width={300} height={26} />
+				<CustomSkeleton animation="wave" variant="rectangular" className={`${classes.skeleton}`} width={300} height={26} />
 			</div>
 			<div style={{ margin: "16px 0" }} className={classes.row}>
-				<Skeleton animation="wave" variant="rectangular" className={`${classes.skeleton}`} width={320} height={38} />
+				<CustomSkeleton animation="wave" variant="rectangular" className={`${classes.skeleton}`} width={320} height={38} />
 			</div>
 
 			<div style={{ margin: "16px 0" }} className={classes.row}>
-				<Skeleton animation="wave" variant="rectangular" className={`${classes.skeleton}`} width={150} height={50} />
+				<CustomSkeleton animation="wave" variant="rectangular" className={`${classes.skeleton}`} width={150} height={50} />
 			</div>
 		</div>
 	)

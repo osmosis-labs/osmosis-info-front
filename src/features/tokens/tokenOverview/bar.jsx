@@ -1,6 +1,6 @@
 import { makeStyles, useTheme } from "@material-ui/core"
-import { Skeleton } from "@mui/material"
 import React, { useEffect, useState } from "react"
+import CustomSkeleton from "../../../components/skeleton/custom_skeleton"
 import { useGainers, useLosers } from "../../../hooks/data/metrics.hook"
 import MoverItem from "./moverItem"
 
@@ -49,7 +49,7 @@ const Bar = ({ className, isLoading }, ref) => {
 				{itemsLoading.map((_, index) => {
 					return (
 						<div key={index} className={classes.itemSkeleton}>
-							<Skeleton
+							<CustomSkeleton
 								animation="wave"
 								variant="rectangular"
 								className={`${classes.skeleton}`}

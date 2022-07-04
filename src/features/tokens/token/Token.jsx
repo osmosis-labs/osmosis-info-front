@@ -138,8 +138,8 @@ const Token = () => {
 
 	//token
 	const { data: tkn, isLoading: isLoadingTkn, isFetching: isFetchingTkn } = useToken({ symbol })
-	const isLoadingToken = isLoadingTkn || isFetchingTkn
 	const [token, setToken] = useState({ ...tkn })
+	const isLoadingToken = isLoadingTkn || isFetchingTkn
 
 	//Transactions
 	const {
@@ -232,13 +232,12 @@ const Token = () => {
 			setRangeVolume(range)
 		}
 	}
-
 	return (
 		<div className={classes.tokenRoot}>
 			<ExpertChartDialog open={openExpertChart} onClose={onCloseExpertChart} token={token} />
 
 			<div className={classes.tokenContainer}>
-				{isLoadingToken || isLoadingDebug ? (
+				{isLoadingToken || !token.symbol || isLoadingDebug ? (
 					<>
 						<TokenHeaderSkeleton />
 					</>
@@ -250,14 +249,14 @@ const Token = () => {
 					</div>
 				)}
 				<div className={classes.charts}>
-					<TokenInfo isLoading={isLoadingToken || isLoadingDebug} token={token} priceDecimals={priceDecimals} />
+					<TokenInfo isLoading={isLoadingToken || !token.symbol || isLoadingDebug} token={token} priceDecimals={priceDecimals} />
 					<Paper className={classes.right}>
 						<div className={classes.containerHideShow}>
 							<ContainerCharts
 								token={token}
 								onOpenExpertChart={onOpenExpertChart}
 								changeRange={changeRange}
-								isLoading={isLoadingChart || isLoadingDebug}
+								isLoading={isLoadingChart|| !token.symbol || isLoadingDebug}
 								rangePrice={rangePrice}
 								rangeLiquidity={rangeLiquidity}
 								rangeVolume={rangeVolume}

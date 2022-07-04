@@ -1,5 +1,6 @@
 import { makeStyles } from "@material-ui/core"
-import { Skeleton } from "@mui/material"
+import ChartSkeleton from "../../components/skeleton/chart_skeleton"
+import CustomSkeleton from "../../components/skeleton/custom_skeleton"
 
 const ContainerChartSkeleton = () => {
 	const classes = useStyles()
@@ -7,17 +8,17 @@ const ContainerChartSkeleton = () => {
 	return (
 		<div className={classes.rootContainerChartSkeleton}>
 			<div className={classes.row}>
-				<Skeleton animation="wave" variant="rectangular" className={`${classes.skeleton}`} width={100} height={20} />
+				<CustomSkeleton animation="wave" variant="rectangular" width={100} height={20} />
 			</div>
 			<div className={classes.row}>
-				<Skeleton animation="wave" variant="rectangular" className={`${classes.skeleton}`} width={200} height={50} />
-				<Skeleton animation="wave" variant="rectangular" className={`${classes.skeleton}`} width={100} height={30} />
+				<CustomSkeleton animation="wave" variant="rectangular" width={200} height={50} />
+				<CustomSkeleton animation="wave" variant="rectangular" width={100} height={30} />
 			</div>
 			<div className={classes.row}>
-				<Skeleton animation="wave" variant="rectangular" className={`${classes.skeleton}`} width={100} height={20} />
+				<CustomSkeleton animation="wave" variant="rectangular" width={100} height={20} />
 			</div>
 			<div className={classes.row}>
-				<Skeleton animation="wave" variant="rectangular" className={`${classes.skeleton}`} width={"100%"} height={200} />
+				<ChartSkeleton />
 			</div>
 		</div>
 	)
@@ -29,7 +30,6 @@ const useStyles = makeStyles((theme) => {
 			height: "100%",
 			width: "100%",
 		},
-		skeleton: {},
 		row: {
 			display: "flex",
 			flexDirection: "row",
