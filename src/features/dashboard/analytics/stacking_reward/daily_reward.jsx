@@ -1,5 +1,6 @@
 import { makeStyles } from "@material-ui/core"
 import React, { useImperativeHandle, useFowardRef, useState } from "react"
+import CustomSkeleton from "../../../../components/skeleton/custom_skeleton"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -32,10 +33,20 @@ const DailyReward = React.forwardRef((props, ref) => {
 	return (
 		<div ref={ref} className={classes.rowInfo}>
 			<p className={classes.name}>Daily reward</p>
-			<p className={classes.name}>{currentItem.time}</p>
-			<p className={classes.value}>
-				{currentItem.dayValue} <span className={classes.token}>OSMO</span>
-			</p>
+			{props.isLoading ? (
+				<CustomSkeleton
+					height={30}
+					width={80}
+					sx={{ margin: "0px", padding: "0px", transformOrigin: "0 20% !important" }}
+				/>
+			) : (
+				<>
+					<p className={classes.name}>{currentItem.time}</p>
+					<p className={classes.value}>
+						{currentItem.dayValue} <span className={classes.token}>OSMO</span>
+					</p>
+				</>
+			)}
 		</div>
 	)
 })

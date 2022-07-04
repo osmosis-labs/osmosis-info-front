@@ -1,10 +1,10 @@
 import { makeStyles } from "@material-ui/core"
 
-const ChartSkeleton = () => {
+const ChartSkeleton = ({className}) => {
 	const classes = useStyles()
 
 	return (
-		<div className={classes.rootChartSkeleton}>
+		<div className={classes.rootChartSkeleton + " " + className}>
 			<svg
 				className={classes.svg}
 				id="Layer_1"
