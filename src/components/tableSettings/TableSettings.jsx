@@ -85,6 +85,16 @@ const TableSettings = ({ settings, setSettings }) => {
 
 	const handleClose = () => {
 		setAnchorEl(null)
+		if (settings && settings.length > 0) {
+			let values = {}
+			settings.sort((a, b) => a.order - b.order)
+			settings.forEach((setting) => {
+				let value = setting.display
+				let name = setting.name
+				values[setting.key] = { value, name }
+			})
+			setValues(values)
+		}
 	}
 	const onChangeSettings = () => {
 		let newSettings = []

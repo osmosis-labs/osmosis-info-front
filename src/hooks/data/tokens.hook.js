@@ -15,6 +15,7 @@ import {
 	formatVolumeToken,
 } from "../../formaters/tokens.formatter"
 import useRequest from "../request.hook"
+import { useAssets } from "./assets.hook"
 
 export const useTokens = () => {
 	const request = useRequest()
@@ -65,6 +66,7 @@ export const useToken = ({ symbol }) => {
 
 export const useTrxToken = ({ symbol, limit = 10 }) => {
 	const request = useRequest()
+	const { data: assets } = useAssets()
 
 	const getter = async ({ queryKey, pageParam = 0 }) => {
 		const [_, { symbol, limit }] = queryKey
@@ -74,11 +76,11 @@ export const useTrxToken = ({ symbol, limit = 10 }) => {
 			url,
 			method: "GET",
 		})
-		return formatTrxToken(response.data, symbol)
+		return formatTrxToken(response.data, symbol, assets)
 	}
 
 	const { data, isLoading, isFetching, fetchNextPage } = useInfiniteQuery(["trxsTokens", { symbol, limit }], getter, {
-		enabled: !!symbol,
+		enabled: !!symbol && !!assets.OSMO,
 		getNextPageParam: (_, allPages) => {
 			let nextPage = allPages.length * 10
 			return nextPage

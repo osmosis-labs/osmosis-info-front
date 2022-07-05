@@ -4,6 +4,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder"
 import { Tooltip, IconButton } from "@mui/material"
 import Image from "../../../components/image/Image"
 import { MIN_BLOCKED, MIN_CONGESTED } from "../../../formaters/ibc.formatter"
+import { useAssets } from "../../../hooks/data/assets.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -72,6 +73,7 @@ const useStyles = makeStyles((theme) => {
 })
 const CellChain = ({ cellKey, cellConfig, data }) => {
 	const classes = useStyles()
+	const { data: assets } = useAssets()
 
 	const toggleWatchlist = () => {
 		cellConfig.updateWatchlistIBC(data)
@@ -115,25 +117,27 @@ const CellChain = ({ cellKey, cellConfig, data }) => {
 						<Image
 							className={`${classes.image}`}
 							assets={true}
-							src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${data[0]?.token_symbol?.toLowerCase()}.png`}
+							src={assets[data[0]?.token_symbol]?.image}
 							srcFallback="../assets/default.png"
 							pathAssets=""
 						/>
 						<span className={`${classDotOne}`} />
-						<span>{data[0].token_name} <span className={classes.source}>({data[0].source})</span></span>
-						
+						<span>
+							{data[0].token_name} <span className={classes.source}>({data[0].source})</span>
+						</span>
 					</div>
 					<div className={classes.row}>
 						<Image
 							className={`${classes.image}`}
 							assets={true}
-							src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${data[1]?.token_symbol?.toLowerCase()}.png`}
+							src={assets[data[1]?.token_symbol]?.image}
 							srcFallback="../assets/default.png"
 							pathAssets=""
 						/>
 						<span className={`${classDotTwo}`} />
-						<span>{data[1].token_name} <span className={classes.source}>({data[1].source})</span></span>
-						
+						<span>
+							{data[1].token_name} <span className={classes.source}>({data[1].source})</span>
+						</span>
 					</div>
 				</div>
 			</div>

@@ -1,6 +1,7 @@
 import { makeStyles } from "@material-ui/core"
 import Image from "../../../../components/image/Image"
 import { formateNumberDecimalsAuto, getPercent } from "../../../../helpers/helpers"
+import { useAssets } from "../../../../hooks/data/assets.hook"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootWalletItem: {
@@ -48,6 +49,7 @@ const useStyles = makeStyles((theme) => {
 
 const WalletItem = ({ data }) => {
 	const classes = useStyles()
+	const { data: assets } = useAssets()
 
 	const getPercentDisplay = (percent) => {
 		if (percent === 0) return <span className={classes.data}>{getPercent(percent)}</span>
@@ -61,7 +63,7 @@ const WalletItem = ({ data }) => {
 				<Image
 					className={`${classes.image}`}
 					assets={true}
-					src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${data.symbol.toLowerCase()}.png`}
+					src={assets[data.symbol]?.image}
 					srcFallback="../assets/default.png"
 					pathAssets=""
 				/>

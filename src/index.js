@@ -14,7 +14,7 @@ import { ReactQueryDevtools } from "react-query/devtools"
 
 const queryClient = new QueryClient({
 	defaultOptions: {
-		queries: { refetchOnWindowFocus: false, staleTime: 10 * 60 * 1_000 },
+		queries: { refetchOnWindowFocus: false, staleTime: Infinity },
 	},
 })
 

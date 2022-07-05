@@ -22,6 +22,17 @@ const useStyles = makeStyles((theme) => {
 				color: theme.palette.primary.contrastText,
 			},
 		},
+		buttonDisabled: {
+			cursor: "no-drop",
+			"&:hover": {
+				color: theme.palette.gray.main,
+			},
+			icon: {
+				marginRight: "8px",
+				color: theme.palette.gray.main,
+			},
+		},
+
 		icon: {
 			marginRight: "8px",
 			color: theme.palette.primary.contrastText,
@@ -41,7 +52,10 @@ const ListFooter = ({ onLoadMore, isLoading }) => {
 
 	return (
 		<div className={classes.rootListFooter}>
-			<div className={classes.button} onClick={!isLoading ? onLoadMore : null}>
+			<div
+				className={onLoadMore ? classes.button : `${classes.button} ${classes.buttonDisabled}`}
+				onClick={!isLoading && onLoadMore ? onLoadMore : null}
+			>
 				<CachedIcon className={isLoading ? `${classes.icon} ${classes.iconLoad}` : classes.icon} />
 				<p>{isLoading ? "Loading ..." : "Load more"}</p>
 			</div>

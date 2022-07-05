@@ -4,6 +4,8 @@
   "ibc.core.channel.v1.MsgAcknowledgement": "IBC Acknowledgement",
   "ibc.core.channel.v1.MsgRecvPacket": "IBC Recv Packet",
   "cosmos.bank.v1beta1.MsgSend": "Send/Receive",
+  "cosmos.bank.v1beta1.MsgSend.send": "Send",
+  "cosmos.bank.v1beta1.MsgSend.receive": "Receive",
   "cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward": "Withdraw Reward",
   "ibc.applications.transfer.v1.MsgTransfer": "IBC Transfer",
   "osmosis.lockup.MsgLockTokens": "Lock Tokens",

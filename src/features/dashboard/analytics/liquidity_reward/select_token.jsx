@@ -3,6 +3,7 @@ import { styled } from "@material-ui/styles"
 import { Select } from "@mui/material"
 import Image from "../../../../components/image/Image"
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
+import { useAssets } from "../../../../hooks/data/assets.hook"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootSelectToken: {
@@ -24,18 +25,16 @@ const useStyles = makeStyles((theme) => {
 		paper: {
 			backgroundColor: `${theme.palette.primary.dark} !important`,
 		},
-        label:{
+		label: {
 			color: theme.palette.table.cellDark,
 			fontSize: "14px",
-            paddingBottom: "6px",
-
-        }
+			paddingBottom: "6px",
+		},
 	}
 })
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
-	"label + &": {
-	},
+	"label + &": {},
 	"& .MuiInputBase-input": {
 		color: `${theme.palette.primary.contrastText} !important`,
 		outline: "none",
@@ -58,6 +57,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 
 const SelectToken = ({ tokens, currentToken, onChangeToken }) => {
 	const classes = useStyles()
+	const { data: assets } = useAssets()
 
 	const onChange = (event) => {
 		onChangeToken(event.target.value)
@@ -65,7 +65,7 @@ const SelectToken = ({ tokens, currentToken, onChangeToken }) => {
 
 	return (
 		<div className={classes.rootSelectToken}>
-            <p className={classes.label}>Select asset</p>
+			<p className={classes.label}>Select asset</p>
 			<Select
 				value={currentToken}
 				label="Select asset"
@@ -81,7 +81,7 @@ const SelectToken = ({ tokens, currentToken, onChangeToken }) => {
 								<Image
 									className={`${classes.image}`}
 									assets={true}
-									src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${token.symbol.toLowerCase()}.png`}
+									src={assets[token.symbol]?.image}
 									srcFallback="../assets/default.png"
 									pathAssets=""
 								/>

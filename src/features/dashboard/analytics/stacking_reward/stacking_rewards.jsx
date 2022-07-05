@@ -96,15 +96,19 @@ const StackingRewards = () => {
 
 	const [isAccumulated, setIsAccumulated] = useState(true)
 
-	const { data: balance, isLoading: isLoadingBalance } = useBalance({ address })
+	const { data: balance, isLoading: isLoadingBalance, isFetching: isFetchingBalance } = useBalance({ address })
 
-	const { data: chartStaking, isLoading: isLoadingStaking } = useChartStaking({
+	const {
+		data: chartStaking,
+		isLoading: isLoadingStaking,
+		isFetching: isFetchingStaking,
+	} = useChartStaking({
 		address,
 		isAccumulated,
 	})
 	const { isLoadingDebug } = useDebug()
 
-	const isLoading = isLoadingBalance || isLoadingStaking || isLoadingDebug
+	const isLoading = isLoadingBalance || isLoadingStaking || isFetchingBalance || isFetchingStaking || isLoadingDebug
 
 	const [data, setData] = useState([])
 	const [total, setTotal] = useState(0)

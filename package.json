@@ -37,7 +37,7 @@
 	},
 	"scripts": {
 		"startssl": "env-cmd -f .env react-scripts --openssl-legacy-provider start",
-		"start": "env-cmd -f .env react-scripts start",
+		"start": "set PORT=3002 && env-cmd -f .env react-scripts start",
 		"build": "env-cmd -f .env react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"

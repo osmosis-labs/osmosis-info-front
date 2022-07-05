@@ -44,8 +44,8 @@ const MyWallet = () => {
 	const { isLoadingDebug } = useDebug()
 
 	//Balance
-	const { data: balance, isLoading } = useBalance({ address })
-
+	const { data: balance, isLoading: loading, isFetching } = useBalance({ address })
+	const isLoading = loading || isFetching || isLoadingDebug
 	const [data, setData] = useState([])
 	const [order, setOrder] = useState("asc")
 	const [orderBy, setOrderBy] = useState("value")
@@ -70,13 +70,14 @@ const MyWallet = () => {
 			return order === "desc" ? -res : res
 		})
 	}
+	console.log("my_wallet.jsx (l:70): data:", data)
 
 	return (
 		<div className={classes.rootMyWallet}>
 			<p className={classes.title}>My Wallet</p>
 			<Paper className={classes.paper}>
 				<WalletHeader onSort={onSort} order={order} orderBy={orderBy} />
-				{isLoading || isLoadingDebug ? (
+				{isLoading ? (
 					<div className={classes.list}>
 						<WalletItemSkeleton />
 						<WalletItemSkeleton />

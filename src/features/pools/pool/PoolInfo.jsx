@@ -12,6 +12,7 @@ import {
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import CustomSkeleton from "../../../components/skeleton/custom_skeleton"
+import { useAssets } from "../../../hooks/data/assets.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -98,6 +99,8 @@ const useStyles = makeStyles((theme) => {
 
 const PoolInfo = ({ loadingPoolInfo, tokens, pool }) => {
 	const classes = useStyles()
+	const { data: assets } = useAssets()
+
 	const formatPercent = (value) => {
 		return formateNumberDecimalsAuto({ price: value, minDecimal: 0, minPrice: 1, maxDecimal: 2, unit: "%" })
 	}
@@ -182,7 +185,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool }) => {
 													className={`${classes.image} ${classes.pooledTokensImages}`}
 													assets={true}
 													alt={`${token.symbol}`}
-													src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${token.symbol.toLowerCase()}.png`}
+													src={assets[token.symbol]?.image}
 													srcFallback="../assets/default.png"
 													pathAssets=""
 												/>

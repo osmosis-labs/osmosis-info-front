@@ -1,5 +1,6 @@
 import { makeStyles, TableCell } from "@material-ui/core"
 import Image from "../../../components/image/Image"
+import { useAssets } from "../../../hooks/data/assets.hook"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootCellTokenName: {
@@ -22,11 +23,11 @@ const useStyles = makeStyles((theme) => {
 			marginRight: theme.spacing(1),
 			marginLeft: theme.spacing(1),
 			position: "absolute",
-			padding:"2px",
+			padding: "2px",
 			top: "-50%",
 			[theme.breakpoints.down("xs")]: {
 				width: "34px",
-			top: "-50%",
+				top: "-50%",
 			},
 		},
 		images: {
@@ -49,6 +50,7 @@ const useStyles = makeStyles((theme) => {
 const CellTokenName = ({ cellKey, cellConfig, data }) => {
 	const classes = useStyles()
 	let currentData = data[cellConfig.cellKey]
+	const { data: assets } = useAssets()
 	return (
 		<TableCell
 			key={cellKey}
@@ -63,7 +65,7 @@ const CellTokenName = ({ cellKey, cellConfig, data }) => {
 						className={classes.image}
 						assets={true}
 						alt={`${currentData}`}
-						src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${data.symbol.toLowerCase()}.png`}
+						src={assets[data.symbol]?.image}
 						srcFallback="../assets/default.png"
 						pathAssets=""
 					/>

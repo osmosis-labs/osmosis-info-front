@@ -6,6 +6,7 @@ import { IconButton, MenuItem, Select } from "@material-ui/core"
 import { useEffect } from "react"
 import { getInclude } from "../../../../helpers/helpers"
 import Image from "../../../../components/image/Image"
+import { useAssets } from "../../../../hooks/data/assets.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -46,6 +47,8 @@ const useStyles = makeStyles((theme) => {
 
 const PoolSelect = ({ tokens, setSelectedTokens, selectedTokens }) => {
 	const classes = useStyles()
+	const { data: assets } = useAssets()
+
 	const matchXS = useMediaQuery((theme) => theme.breakpoints.down("xs"))
 
 	const [selectPairs, setSelectPairs] = useState({ one: "", two: "" }) // values for selects
@@ -95,7 +98,7 @@ const PoolSelect = ({ tokens, setSelectedTokens, selectedTokens }) => {
 				<Image
 					className={`${classes.image} ${classes.select}`}
 					assets={true}
-					src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${selectedTokens.two?.symbol?.toLowerCase()}.png`}
+					src={assets[selectedTokens.two?.symbol]?.image}
 					srcFallback="../assets/default.png"
 					pathAssets=""
 					alt={`${selectedTokens.two.symbol}`}
@@ -128,7 +131,7 @@ const PoolSelect = ({ tokens, setSelectedTokens, selectedTokens }) => {
 				<Image
 					className={`${classes.image} ${classes.select}`}
 					assets={true}
-					src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${selectedTokens.one?.symbol?.toLowerCase()}.png`}
+					src={assets[selectedTokens.one?.symbol]?.image}
 					srcFallback="../assets/default.png"
 					pathAssets=""
 					alt={`${selectedTokens.one.symbol}`}

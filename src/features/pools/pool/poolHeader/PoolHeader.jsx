@@ -3,10 +3,10 @@ import { makeStyles } from "@material-ui/core"
 import PoolPath from "./PoolPath"
 import PoolSelect from "./PoolSelect"
 import PoolTitle from "./PoolTitle"
-import ContainerLoader from "../../../../components/loader/ContainerLoader"
 import Paper from "../../../../components/paper/Paper"
 import Image from "../../../../components/image/Image"
 import PoolHeaderSkeleton from "./pool_header_skeleton"
+import { useAssets } from "../../../../hooks/data/assets.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -31,9 +31,11 @@ const useStyles = makeStyles((theme) => {
 
 const PoolHeader = ({ pool, tokens, selectedTokens, onChangeSeletedTokens, loadingPoolDetails, pricesInfo }) => {
 	const classes = useStyles()
+	const { data: assets } = useAssets()
 	if (loadingPoolDetails) {
-		return <PoolHeaderSkeleton  />
+		return <PoolHeaderSkeleton />
 	}
+
 	return (
 		<div className={classes.containerInfo}>
 			<PoolPath pool={pool} />
@@ -44,7 +46,7 @@ const PoolHeader = ({ pool, tokens, selectedTokens, onChangeSeletedTokens, loadi
 					className={`${classes.image}`}
 					assets={true}
 					alt={`${selectedTokens.two.symbol}`}
-					src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${selectedTokens.two?.symbol?.toLowerCase()}.png`}
+					src={assets[selectedTokens.two?.symbol]?.image}
 					srcFallback="../assets/default.png"
 					pathAssets=""
 				/>

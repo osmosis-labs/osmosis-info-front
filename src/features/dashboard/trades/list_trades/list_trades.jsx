@@ -41,10 +41,6 @@ const ListTrades = ({ data: currentData, onClickRow, isLoading, loadMore }) => {
 		setData(data)
 	}, [currentData])
 
-	const onLoadMore = () => {
-		loadMore()
-	}
-
 	const transformDisplay = (data) => {
 		return data.display
 	}
@@ -70,7 +66,7 @@ const ListTrades = ({ data: currentData, onClickRow, isLoading, loadMore }) => {
 		defaultSort: "name",
 		defaultOrder: "asc",
 		scrollOnIt: true,
-		onLoadMore: onLoadMore,
+		onLoadMore: loadMore,
 		onClickRow: onClickRow,
 		selectedItemClass: null,
 		selectableRow: true,

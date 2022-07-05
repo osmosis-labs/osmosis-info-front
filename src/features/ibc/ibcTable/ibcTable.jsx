@@ -1,6 +1,7 @@
 import { makeStyles } from "@material-ui/core"
 
 import React, { memo } from "react"
+import { forwardRef } from "react"
 import Paper from "../../../components/paper/Paper"
 import TableCustom from "../../../components/table/tableCustom"
 import TableSkeleton from "../../../components/table/table_skeleton"
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const IBCTable = ({ data, isLoading, className, updateWatchlistIBC, isInWatchlist }) => {
+const IBCTable = forwardRef(({ data, isLoading, className, updateWatchlistIBC, isInWatchlist }, ref) => {
 	const classes = useStyles()
 
 	const sortPendingTrx = (a, b, orderBy) => {
@@ -165,9 +166,9 @@ const IBCTable = ({ data, isLoading, className, updateWatchlistIBC, isInWatchlis
 	}
 	return (
 		<Paper className={`${classes.rootIBCTable} ${className}`}>
-			<TableCustom config={configIBCTable} data={data} customClassTable={classes.table} />
+			<TableCustom config={configIBCTable} data={data} customClassTable={classes.table} ref={ref} />
 		</Paper>
 	)
-}
+})
 
-export default memo(IBCTable)
+export default IBCTable

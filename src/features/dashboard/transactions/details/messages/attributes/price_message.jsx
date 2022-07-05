@@ -1,5 +1,6 @@
 import { makeStyles } from "@material-ui/core"
 import { capitalizeFirstLetter, formateNumberDecimalsAuto } from "../../../../../../helpers/helpers"
+import { getExponent, useAssets } from "../../../../../../hooks/data/assets.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -40,12 +41,19 @@ const useStyles = makeStyles((theme) => {
 })
 const PriceMessage = ({ denom, amount, name, usd = null }) => {
 	const classes = useStyles()
+	const { data: assets } = useAssets()
+
+
+	let asset = assets[denom]
+	if (asset) {
+		let expo = getExponent(asset, denom)
+		denom = asset.symbol
+		amount = amount / Math.pow(10, expo)
+	}
+
 
 	let nameDisplay = capitalizeFirstLetter(name.replace("_", " "))
-	if (denom === "uosmo") {
-		amount /= 1_000_000
-		denom = "OSMO"
-	}
+	
 	let splitNumber = formateNumberDecimalsAuto({ price: amount }).toString().split(".")
 
 	return (

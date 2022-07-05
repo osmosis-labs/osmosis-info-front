@@ -17,9 +17,11 @@ import {
 	formatTrades,
 	formatTrx,
 	formatTrxs,
+	formatTrxsSendReceive,
 	formatTypeTrx,
 } from "../../formaters/dashboard.formatter"
 import useRequest from "../request.hook"
+import { useAssets } from "./assets.hook"
 
 export const useBalance = ({ address }) => {
 	const request = useRequest()
@@ -122,10 +124,16 @@ export const useLiquidityToken = ({ address }) => {
 	return { data: liquidityToken, isLoading, isFetching }
 }
 
-export const useTypeTrx = ({ address }, opts = { exclude: [] }) => {
+export const useTypeTrx = ({ address }, opts = { exclude: [], chainId: "", address: "" }) => {
 	const request = useRequest()
 
-	const { exclude } = opts
+	const {
+		data: sendReceive,
+		isLoading: isLoadingSendReceive,
+		isFetching: isFetchingSendReceive,
+	} = useSendReceive({ address }, opts)
+
+	const isLoadingSendReceiveOrFetching = isLoadingSendReceive || isFetchingSendReceive
 
 	const getter = async ({ queryKey }) => {
 		const [_, { address }] = queryKey
@@ -133,20 +141,35 @@ export const useTypeTrx = ({ address }, opts = { exclude: [] }) => {
 			url: `https://api-osmosis-chain.imperator.co/txs/v1/tx/count/${address}`,
 			method: "GET",
 		})
-		return formatTypeTrx(response.data, exclude)
+		let exclude = opts.exclude
+		let excludeOPT = []
+		if (exclude) {
+			excludeOPT = [...exclude, "cosmos.bank.v1beta1.MsgSend"]
+		} else {
+			excludeOPT = ["cosmos.bank.v1beta1.MsgSend"]
+		}
+		return formatTypeTrx(response.data, { ...opts, exclude: excludeOPT }, sendReceive)
 	}
 
 	const { data, isLoading, isFetching } = useQuery(["typeTrx", { address }], getter, {
-		enabled: !!address,
+		enabled: !!address && !isLoadingSendReceiveOrFetching,
 	})
 
 	const typeTrx = data ? data : defaultTypeTrx
 
-	return { data: typeTrx, isLoading, isFetching }
+	return { data: typeTrx, isLoading: isLoading || isLoadingSendReceiveOrFetching, isFetching }
 }
 
-export const useTrxs = ({ address, limit = 10, type = "all" }, opts = { chainId: "", address: "" }) => {
+export const useTrxs = ({ address, limit = 10, type = "all" }, opts = { chainId: "", address: "", exclude: [] }) => {
 	const request = useRequest()
+
+	const {
+		data: sendReceive,
+		isLoading: isLoadingSendReceive,
+		isFetching: isFetchingSendReceive,
+	} = useSendReceive({ address }, opts)
+
+	const isLoadingSendReceiveOrFetching = isLoadingSendReceive || isFetchingSendReceive
 
 	const getter = async ({ queryKey, pageParam = 0 }) => {
 		const [_, { address, limit, type }] = queryKey
@@ -154,15 +177,27 @@ export const useTrxs = ({ address, limit = 10, type = "all" }, opts = { chainId:
 
 		if (type && type !== "all") url += `&type=${type}`
 
+		if (type === "cosmos.bank.v1beta1.MsgSend") {
+			return sendReceive
+		} else if (type === "cosmos.bank.v1beta1.MsgSend.send" || type === "cosmos.bank.v1beta1.MsgSend.receive") {
+			if (pageParam > 0) {
+				return []
+			}
+			return sendReceive.filter((trx) => trx.types.map((type) => type.value).includes(type))
+		}
+
 		const response = await request({
 			url,
 			method: "GET",
 		})
-		return formatTrxs(response.data, opts)
+
+		let formatedData = formatTrxs(response.data, { ...opts })
+
+		return formatedData
 	}
 
 	const { data, isLoading, isFetching, fetchNextPage } = useInfiniteQuery(["trxs", { address, limit, type }], getter, {
-		enabled: !!address,
+		enabled: !!address && !isLoadingSendReceiveOrFetching,
 		getNextPageParam: (_, allPages) => {
 			let nextPage = allPages.length * 10
 			return nextPage
@@ -171,11 +206,51 @@ export const useTrxs = ({ address, limit = 10, type = "all" }, opts = { chainId:
 
 	const trxs = data && data.pages ? data.pages.flat() : defaultTrxs
 
-	return { data: trxs, isLoading, isFetching, fetchNextPage }
+	return { data: trxs, isLoading: isLoading || isLoadingSendReceiveOrFetching, isFetching, fetchNextPage }
+}
+
+export const useSendReceive = ({ address }, opts = { chainId: "", address: "" }) => {
+	const request = useRequest()
+
+	const getter = async ({ queryKey }) => {
+		const [_, { address }] = queryKey
+
+		let data = await getAllSendReceive({ request, address })
+		return formatTrxs(data, opts)
+	}
+
+	const { data, isLoading, isFetching } = useQuery(["sendReceive", { address }], getter, {
+		enabled: !!address,
+	})
+
+	const sendReceive = data ? data : []
+
+	return { data: sendReceive, isLoading, isFetching }
+}
+
+const getSendReceive = ({ request, address, offset }) => {
+	let url = `https://api-osmosis-chain.imperator.co/txs/v1/tx/address/${address}?type=cosmos.bank.v1beta1.MsgSend&limit=${100}&offset=${offset}`
+	return request({
+		url,
+		method: "GET",
+	})
+}
+
+const getAllSendReceive = async ({ request, address, offset = 0 }) => {
+	let result = await getSendReceive({ request, address, offset })
+
+	offset += 100
+	if (result.data.length >= 100) {
+		let res = await getAllSendReceive({ request, address, offset })
+		return [...res, ...result.data]
+	} else {
+		return [...result.data]
+	}
 }
 
 export const useTrades = ({ address, limit = 10 }) => {
 	const request = useRequest()
+	const { data: assets } = useAssets()
 
 	const getter = async ({ queryKey, pageParam = 0 }) => {
 		const [_, { address, limit }] = queryKey
@@ -185,11 +260,11 @@ export const useTrades = ({ address, limit = 10 }) => {
 			url,
 			method: "GET",
 		})
-		return formatTrades(response.data)
+		return formatTrades(response.data, assets)
 	}
 
 	const { data, isLoading, isFetching, fetchNextPage } = useInfiniteQuery(["trades", { address, limit }], getter, {
-		enabled: !!address,
+		enabled: !!address && !!assets.OSMO,
 		getNextPageParam: (_, allPages) => {
 			let nextPage = allPages.length * 10
 			return nextPage

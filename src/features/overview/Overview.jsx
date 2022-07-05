@@ -90,9 +90,12 @@ const useStyles = makeStyles((theme) => {
 
 const Overview = () => {
 	const classes = useStyles()
-	const { data: dataLiquidity, isLoading: isLoadingLiquidity } = useLiquidityChart()
-	const { data: dataVolume, isLoading: isLoadingVolume } = useVolumeChart()
 	const { isLoadingDebug } = useDebug()
+
+	const { data: dataLiquidity, isLoading: loadingLiquidity, isFetching: isFetchingLiquidity } = useLiquidityChart()
+	const isLoadingLiquidity = loadingLiquidity || isFetchingLiquidity || isLoadingDebug
+	const { data: dataVolume, isLoading: loadingVolume, isFetching: isFetchingVolume } = useVolumeChart()
+	const isLoadingVolume = loadingVolume || isFetchingVolume || isLoadingDebug
 	const { watchlistTokens } = useWatchlistTokens()
 	const { watchlistPools } = useWatchlistPools()
 	const [tokensOnWatchlist, setTokensOnWatchlist] = useState([])
@@ -101,11 +104,16 @@ const Overview = () => {
 	const {
 		data: { current: pools },
 		isLoading: loadingPools,
+		isFetching: isFetchingPools,
 	} = usePools({})
+
+	const isLoadingPools = loadingPools || isFetchingPools || isLoadingDebug
 	const {
 		data: { current: tokens },
 		isLoading: loadingTokens,
+		isFetching: isFetchingTokens,
 	} = useTokens()
+	const isLoadingTokens = loadingTokens || isFetchingTokens || isLoadingDebug
 
 	const [dataPools, setDataPools] = useState([])
 	const [dataTokens, setDataTokens] = useState([])
@@ -185,7 +193,7 @@ const Overview = () => {
 				<p className={classes.title}>Osmosis - Overview</p>
 				<div className={classes.charts}>
 					<Paper className={classes.chart}>
-						{isLoadingLiquidity || isLoadingDebug ? (
+						{isLoadingLiquidity ? (
 							<ContainerChartSkeleton />
 						) : (
 							<div className={classes.containerChart}>
@@ -199,7 +207,7 @@ const Overview = () => {
 						)}
 					</Paper>
 					<Paper className={classes.chart}>
-						{isLoadingVolume || isLoadingDebug ? (
+						{isLoadingVolume ? (
 							<ContainerChartSkeleton />
 						) : (
 							<div className={classes.containerChart}>
@@ -222,7 +230,7 @@ const Overview = () => {
 							onClickToken={onClickToken}
 							setSettings={setSettingsTokens}
 							settings={settings.tokenTable}
-							isLoading={loadingTokens || isLoadingDebug}
+							isLoading={isLoadingTokens}
 						/>
 					) : (
 						<p>Saved tokens will appear here</p>
@@ -236,7 +244,7 @@ const Overview = () => {
 							onClickPool={onClickPool}
 							setSettings={setSettingsPools}
 							settings={settings.poolTable}
-							isLoading={loadingPools || isLoadingDebug}
+							isLoading={isLoadingPools}
 						/>
 					) : (
 						<p>Saved pools will appear here</p>
@@ -249,7 +257,7 @@ const Overview = () => {
 						onClickToken={onClickToken}
 						setSettings={setSettingsTokens}
 						settings={settings.tokenTable}
-						isLoading={loadingTokens || isLoadingDebug}
+						isLoading={isLoadingTokens}
 					/>
 				</Paper>
 				<p className={classes.subTitle}>Top pools</p>
@@ -259,7 +267,7 @@ const Overview = () => {
 						onClickPool={onClickPool}
 						setSettings={setSettingsPools}
 						settings={settings.poolTable}
-						isLoading={loadingPools || isLoadingDebug}
+						isLoading={isLoadingPools}
 					/>
 				</Paper>
 			</div>

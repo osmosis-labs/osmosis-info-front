@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import useFocus from "../../hooks/FocusHook"
 import DialogSearch from "./DialogSearch"
 import { getInclude, normalize } from "../../helpers/helpers"
@@ -83,6 +83,9 @@ const Search = () => {
 	const [inputRef, setInputFocus] = useFocus()
 	const { settings, updateSettings } = useSettings()
 
+	const refPools = useRef(null)
+	const refTokens = useRef(null)
+
 	const setSettingsPools = (poolTableSearch) => {
 		updateSettings({ poolTableSearch })
 	}
@@ -105,6 +108,8 @@ const Search = () => {
 	const { watchlistTokens } = useWatchlistTokens()
 	const [dataShowPools, setDataShowPools] = useState([])
 	const [dataShowTokens, setDataShowTokens] = useState([])
+	const [rowPerPageToken, setRowPerPageToken] = useState(10)
+	const [rowPerPagePool, setRowPerPagePool] = useState(10)
 	const history = useHistory()
 	const {
 		data: { current: tokens },
@@ -150,6 +155,7 @@ const Search = () => {
 			})
 		}
 		let data = getSearchedData(dataSort, inputSearch)
+		if (refPools.current) refPools.current.onChangePage(0)
 		setDataShowPools(data)
 	}, [pools, inputSearch, watchlistPools, getSearchedData, active])
 
@@ -166,6 +172,7 @@ const Search = () => {
 			})
 		}
 		let data = getSearchedData(dataSort, inputSearch)
+		if (refTokens.current) refTokens.current.onChangePage(0)
 		setDataShowTokens(data)
 	}, [tokens, inputSearch, watchlistTokens, getSearchedData, active])
 
@@ -186,6 +193,15 @@ const Search = () => {
 	const onClickShowMoreToken = () => {
 		setSizeToken(sizeToken + 2)
 	}
+
+	const notifChangeRowPerPageToken = (nb) => {
+		setRowPerPageToken(nb)
+	}
+
+	const notifChangeRowPerPagePool = (nb) => {
+		setRowPerPagePool(nb)
+	}
+
 
 	return (
 		<div className={classes.searchRoot}>
@@ -220,31 +236,35 @@ const Search = () => {
 				</div>
 				<div className={classes.resultContainer}>
 					<TokensTable
+						ref={refTokens}
 						data={dataShowTokens}
 						onClickToken={onClickToken}
 						headerClass={classes.headerClass}
 						maxRowDisplay={sizeToken}
-						hideFooter={!sizeToken > 10}
+						hideFooter={sizeToken < rowPerPageToken}
 						settings={settings.tokenTableSearch}
 						setSettings={setSettingsTokens}
+						notifChangeRowPerPage={notifChangeRowPerPageToken}
 					/>
-					{sizePool < 10 && (
-						<p className={classes.showMore} onClick={onClickShowMorePool}>
+					{sizeToken < rowPerPageToken && (
+						<p className={classes.showMore} onClick={onClickShowMoreToken}>
 							Show more...
 						</p>
 					)}
 
 					<PoolsTable
+						ref={refPools}
 						data={dataShowPools}
 						onClickPool={onClickPool}
 						headerClass={classes.headerClass}
 						maxRowDisplay={sizePool}
-						hideFooter={!sizePool > 10}
+						hideFooter={sizePool < rowPerPagePool}
 						settings={settings.poolTableSearch}
 						setSettings={setSettingsPools}
+						notifChangeRowPerPage={notifChangeRowPerPagePool}
 					/>
-					{sizeToken < 10 && (
-						<p className={classes.showMore} onClick={onClickShowMoreToken}>
+					{sizePool < rowPerPagePool && (
+						<p className={classes.showMore} onClick={onClickShowMorePool}>
 							Show more...
 						</p>
 					)}

@@ -37,9 +37,11 @@ const Tokens = () => {
 	const {
 		data: { current: tokens },
 		isLoading: loadingTokens,
+		isFetching: fetchingTokens,
 	} = useTokens()
 	const { isLoadingDebug } = useDebug()
 	const { settings, updateSettings } = useSettings()
+	const isLoading = loadingTokens || fetchingTokens || isLoadingDebug
 
 	const setSettingsTokens = (settings) => {
 		updateSettings({ tokenTable: settings })
@@ -73,7 +75,7 @@ const Tokens = () => {
 						onClickToken={onClickToken}
 						setSettings={setSettingsTokens}
 						settings={settings.tokenTable}
-						isLoading={loadingTokens || isLoadingDebug}
+						isLoading={isLoading}
 					/>
 				) : (
 					<p>Saved tokens will appear here</p>
@@ -88,7 +90,7 @@ const Tokens = () => {
 					onClickToken={onClickToken}
 					setSettings={setSettingsTokens}
 					settings={settings.tokenTable}
-					isLoading={loadingTokens || isLoadingDebug}
+					isLoading={isLoading}
 				/>
 			</Paper>
 		</div>

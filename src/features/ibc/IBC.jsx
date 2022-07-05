@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import { useDebug } from "../../contexts/debug.provider"
 import { useWatchlistIBC } from "../../contexts/WatchlistIBCProvider"
@@ -67,6 +67,7 @@ const IBC = () => {
 	const { updateWatchlistIBC, isInWatchlist } = useWatchlistIBC()
 	const [ibcSearch, setIbcSearch] = useState("")
 	const [ibcSearchList, setIbcSearchList] = useState([])
+	const ref = useRef(null)
 
 	const [ibcFilter, setIbcFilter] = useState("")
 
@@ -114,6 +115,9 @@ const IBC = () => {
 		let list = filterSearch(ibcCouple, ibcSearch)
 		list = filterStatus(list, ibcFilter)
 		setIbcSearchList(list)
+		if (ref.current) {
+			ref.current.onChangePage(0)
+		}
 	}, [ibcSearch, ibcCouple, ibcFilter])
 
 	useEffect(() => {
@@ -147,6 +151,7 @@ const IBC = () => {
 					<div className={classes.containerTable}>
 						<IbcTable
 							isLoading={isLoading || isLoadingDebug}
+							ref={ref}
 							data={ibcSearchList}
 							updateWatchlistIBC={updateWatchlistIBC}
 							isInWatchlist={isInWatchlist}

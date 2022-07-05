@@ -4,6 +4,7 @@ import redArrow from "./arrowRed.svg"
 import orangeArrow from "./arrowOrange.svg"
 import greenArrow from "./arrowGreen.svg"
 import { MIN_BLOCKED, MIN_CONGESTED } from "../../../formaters/ibc.formatter"
+import { useAssets } from "../../../hooks/data/assets.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -32,6 +33,7 @@ const useStyles = makeStyles((theme) => {
 })
 const CellStatus = ({ cellKey, cellConfig, data }) => {
 	const classes = useStyles()
+	const { data: assets } = useAssets()
 	let arrowFirstSrc = greenArrow
 	let arrowSecondSrc = greenArrow
 	if (data[0].duration_minutes < MIN_CONGESTED) {
@@ -54,7 +56,7 @@ const CellStatus = ({ cellKey, cellConfig, data }) => {
 				<Image
 					className={`${classes.image}`}
 					assets={true}
-					src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${data[0]?.token_symbol?.toLowerCase()}.png`}
+					src={assets[data[0]?.token_symbol]?.image}
 					srcFallback="../assets/default.png"
 					pathAssets=""
 				/>
@@ -65,7 +67,7 @@ const CellStatus = ({ cellKey, cellConfig, data }) => {
 				<Image
 					className={`${classes.image}`}
 					assets={true}
-					src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${data[1]?.token_symbol?.toLowerCase()}.png`}
+					src={assets[data[1]?.token_symbol]?.image}
 					srcFallback="../assets/default.png"
 					pathAssets=""
 				/>
