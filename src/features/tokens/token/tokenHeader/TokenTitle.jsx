@@ -1,11 +1,11 @@
 import { IconButton } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core"
-import Image from "../../../components/image/Image"
+import Image from "../../../../components/image/Image"
 import StarIcon from "@material-ui/icons/Star"
 import StarBorderIcon from "@material-ui/icons/StarBorder"
 import Tooltip from "@material-ui/core/Tooltip"
-import { useWatchlistTokens } from "../../../contexts/WatchlistTokensProvider"
-import { getInclude } from "../../../helpers/helpers"
+import { useWatchlistTokens } from "../../../../contexts/WatchlistTokensProvider"
+import { getInclude } from "../../../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {

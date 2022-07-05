@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core"
 import React, { memo } from "react"
 import Paper from "../../../components/paper/Paper"
 import TableCustom from "../../../components/table/tableCustom"
+import TableSkeleton from "../../../components/table/table_skeleton"
 import { MIN_BLOCKED, MIN_CONGESTED } from "../../../formaters/ibc.formatter"
 import CellChain from "./cellChain"
 import CellChannel from "./cellChannel"
@@ -19,14 +20,14 @@ const useStyles = makeStyles((theme) => {
 			minWidth: "115px",
 		},
 		onClickCell: { color: `${theme.palette.table.link} !important` },
-		headChains:{ width:"100px !important"},
-		headChannels:{ width:"100px !important"},
-		headTrx:{ width:"100px !important"},
-		headStatus:{ width:"100px !important"},
+		headChains: { width: "100px !important" },
+		headChannels: { width: "100px !important" },
+		headTrx: { width: "100px !important" },
+		headStatus: { width: "100px !important" },
 	}
 })
 
-const IBCTable = ({ data, loadingIBC, className, updateWatchlistIBC, isInWatchlist }) => {
+const IBCTable = ({ data, isLoading, className, updateWatchlistIBC, isInWatchlist }) => {
 	const classes = useStyles()
 
 	const sortPendingTrx = (a, b, orderBy) => {
@@ -100,7 +101,6 @@ const IBCTable = ({ data, loadingIBC, className, updateWatchlistIBC, isInWatchli
 				cellBody: CellChain,
 				updateWatchlistIBC,
 				isInWatchlist,
-				
 			},
 			{
 				label: "Channels",
@@ -113,7 +113,7 @@ const IBCTable = ({ data, loadingIBC, className, updateWatchlistIBC, isInWatchli
 				onClickCell: null,
 				transform: null,
 				cellBody: CellChannel,
-				width: "140px"
+				width: "140px",
 			},
 			// {
 			// 	label: "Source",
@@ -138,7 +138,7 @@ const IBCTable = ({ data, loadingIBC, className, updateWatchlistIBC, isInWatchli
 				onClickCell: null,
 				transform: null,
 				cellBody: PendingTrx,
-				width: "140px"
+				width: "140px",
 			},
 			{
 				label: "Status",
@@ -151,9 +151,17 @@ const IBCTable = ({ data, loadingIBC, className, updateWatchlistIBC, isInWatchli
 				onClickCell: null,
 				transform: null,
 				cellBody: CellStatus,
-				width: "140px"
+				width: "140px",
 			},
 		], //CellSource
+	}
+	if (isLoading) {
+		const settings = configIBCTable.cellsConfig.map((conf) => ({ display: conf.cellKey }))
+		return (
+			<Paper className={`${classes.rootIBCTable} ${className}`}>
+				<TableSkeleton config={configIBCTable} settings={settings} />
+			</Paper>
+		)
 	}
 	return (
 		<Paper className={`${classes.rootIBCTable} ${className}`}>

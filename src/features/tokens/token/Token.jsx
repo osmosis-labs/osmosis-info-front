@@ -9,8 +9,8 @@ import {
 	formateNumberPriceDecimals,
 	getPercent,
 } from "../../../helpers/helpers"
-import TokenPath from "./TokenPath"
-import TokenTitle from "./TokenTitle"
+import TokenPath from "./tokenHeader/TokenPath"
+import TokenTitle from "./tokenHeader/TokenTitle"
 import ContainerCharts from "./ContainerCharts"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 import ExpertChartDialog from "./expertChart/ExpertChartDialog"
@@ -24,6 +24,10 @@ import {
 	useTrxToken,
 	useVolumeToken,
 } from "../../../hooks/data/tokens.hook"
+import { useDebug } from "../../../contexts/debug.provider"
+import TokenHeaderSkeleton from "./tokenHeader/token_header_skeleton"
+import { TabPanel } from "@mui/lab"
+import TokenInfo from "./token_info"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -63,33 +67,6 @@ const useStyles = makeStyles((theme) => {
 			flexGrow: "1",
 		},
 
-		details: {
-			display: "flex",
-			flexDirection: "column",
-			width: "100%",
-			minHeight: "350px",
-		},
-		detail: {
-			width: "100%",
-			padding: "0px 0px 50px 0",
-		},
-		dataDetail: {
-			fontSize: "1.5rem",
-			color: theme.palette.gray.contrastText,
-		},
-		detailsValues: {
-			display: "flex",
-			flexDirection: "column",
-			justifyContent: "space-between",
-			paddingTop: "10px",
-			width: "100%",
-		},
-		dataDetailChange: {
-			fontSize: "1.2rem",
-		},
-		titleDetail: {
-			fontWeight: "600",
-		},
 		tokenPrice: {
 			marginTop: "20px",
 			fontWeight: "500",
@@ -105,12 +82,7 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "flex-start",
 			minHeight: "180px",
 		},
-		loaderDetails: {
-			position: "relative",
-			height: "100%",
-			width: "100%",
-			display: "flex",
-		},
+
 		actions: {
 			display: "flex",
 			justifyContent: "flex-end",
@@ -139,14 +111,6 @@ const useStyles = makeStyles((theme) => {
 			flexGrow: "1",
 			flexDirection: "column",
 		},
-
-		colorUp: { color: theme.palette.green.text },
-		colorDown: { color: theme.palette.error.main },
-		containerUpDown: {
-			display: "flex",
-			flexDirection: "row",
-			alignItems: "center",
-		},
 		trxContainer: {
 			marginBottom: `${theme.spacing(2)}px`,
 			position: "relative",
@@ -159,6 +123,7 @@ const Token = () => {
 	const classes = useStyles()
 	const history = useHistory()
 	const { showToast } = useToast()
+	const { isLoadingDebug } = useDebug()
 
 	const { symbol } = useParams()
 	const { settings, updateSettings } = useSettings()
@@ -173,8 +138,8 @@ const Token = () => {
 
 	//token
 	const { data: tkn, isLoading: isLoadingTkn, isFetching: isFetchingTkn } = useToken({ symbol })
-	const isLoadingToken = isLoadingTkn || isFetchingTkn
 	const [token, setToken] = useState({ ...tkn })
+	const isLoadingToken = isLoadingTkn || isFetchingTkn
 
 	//Transactions
 	const {
@@ -267,86 +232,31 @@ const Token = () => {
 			setRangeVolume(range)
 		}
 	}
-
 	return (
 		<div className={classes.tokenRoot}>
 			<ExpertChartDialog open={openExpertChart} onClose={onCloseExpertChart} token={token} />
 
 			<div className={classes.tokenContainer}>
-				<ContainerLoader className={classes.containerInfo} isLoading={isLoadingToken}>
-					<TokenPath token={token} />
-					<TokenTitle token={token} />
-					<p className={classes.tokenPrice}>{formateNumberPriceDecimals(token.price, priceDecimals.current)}</p>
-				</ContainerLoader>
+				{isLoadingToken || !token.symbol || isLoadingDebug ? (
+					<>
+						<TokenHeaderSkeleton />
+					</>
+				) : (
+					<div className={classes.containerInfo}>
+						<TokenPath token={token} />
+						<TokenTitle token={token} />
+						<p className={classes.tokenPrice}>{formateNumberPriceDecimals(token.price, priceDecimals.current)}</p>
+					</div>
+				)}
 				<div className={classes.charts}>
-					<Paper className={classes.loaderDetails}>
-						<BlocLoaderOsmosis open={isLoadingToken} classNameLoading={classes.loading} />
-						<div className={classes.details}>
-							<div className={classes.detail}>
-								<p className={classes.titleDetail}>Liquidity</p>
-								<div className={classes.detailsValues}>
-									<p className={classes.dataDetail}>{formateNumberPrice(token.liquidity)}</p>
-									<p
-										className={
-											token.liquidity24hChange < 0
-												? `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
-												: token.liquidity24hChange > 0
-												? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
-												: classes.dataDetailChange
-										}
-									>
-										{token.liquidity24hChange > 0 ? "↑" : token.liquidity24hChange < 0 ? "↓" : <span />}
-										{getPercent(Math.abs(token.liquidity24hChange))}
-									</p>
-								</div>
-							</div>
-							<div className={classes.detail}>
-								<p className={classes.titleDetail}>Volume (24hrs)</p>
-								<div className={classes.detailsValues}>
-									<p className={classes.dataDetail}>{formateNumberPrice(token.volume24h)}</p>
-									<p
-										className={
-											token.volume24hChange > 0
-												? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
-												: token.volume24hChange < 0
-												? `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
-												: classes.dataDetailChange
-										}
-									>
-										{token.volume24hChange > 0 ? "↑" : token.volume24hChange < 0 ? "↓" : <span />}
-										{getPercent(Math.abs(token.volume24hChange))}
-									</p>
-								</div>
-							</div>
-
-							<div className={classes.detail}>
-								<p className={classes.titleDetail}>Price</p>
-								<div className={classes.detailsValues}>
-									<p className={classes.dataDetail}>{formateNumberPriceDecimals(token.price, priceDecimals.current)}</p>
-									<p
-										className={
-											token.price24hChange === 0
-												? classes.dataDetailChange
-												: token.price24hChange > 0
-												? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
-												: `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
-										}
-									>
-										{token.price24hChange > 0 ? "↑" : token.price24hChange < 0 ? "↓" : <span />}
-										{getPercent(Math.abs(token.price24hChange))}
-									</p>
-								</div>
-							</div>
-						</div>
-					</Paper>
+					<TokenInfo isLoading={isLoadingToken || !token.symbol || isLoadingDebug} token={token} priceDecimals={priceDecimals} />
 					<Paper className={classes.right}>
-						<BlocLoaderOsmosis open={isLoadingChart} classNameLoading={classes.loading} />
 						<div className={classes.containerHideShow}>
 							<ContainerCharts
 								token={token}
 								onOpenExpertChart={onOpenExpertChart}
 								changeRange={changeRange}
-								isLoading={isLoadingChart}
+								isLoading={isLoadingChart|| !token.symbol || isLoadingDebug}
 								rangePrice={rangePrice}
 								rangeLiquidity={rangeLiquidity}
 								rangeVolume={rangeVolume}
@@ -358,8 +268,7 @@ const Token = () => {
 					</Paper>
 				</div>
 				<Paper className={classes.trxContainer}>
-					<BlocLoaderOsmosis open={isLoadingTrx} classNameLoading={classes.loading} borderRadius={true} />
-					<TrxTable data={trxs} />
+					<TrxTable data={trxs} isLoading={isLoadingTrx || isLoadingDebug} />
 				</Paper>
 			</div>
 		</div>

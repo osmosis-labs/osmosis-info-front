@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core"
+import { makeStyles, Table } from "@material-ui/core"
 
 import React, { memo, useEffect } from "react"
 import TableCustom from "../../../components/table/tableCustom"
@@ -7,6 +7,9 @@ import { formateNumberDecimalsAuto, formaterNumber, getInclude, getPercent } fro
 import CellTokenName from "./cellTokenName"
 import CellTokenChange from "./cellTokenChange"
 import { useSettings } from "../../../contexts/SettingsProvider"
+import TableSkeleton from "../../../components/table/table_skeleton"
+import HeaderTableCustom from "../../../components/table/header/headerTableCustom"
+import FooterTableCustom from "../../../components/table/footer/footerTableCustom"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -39,6 +42,7 @@ const TokensTable = ({
 	maxRowDisplay = null,
 	settings,
 	setSettings,
+	isLoading,
 }) => {
 	const classes = useStyles()
 
@@ -193,10 +197,13 @@ const TokensTable = ({
 	} else {
 		tokensTableConfig.cellsConfig = [...cellsConfig]
 	}
+
+	if (isLoading ) {
+		return <TableSkeleton config={tokensTableConfig} settings={settings} />
+	}
 	return (
 		<div className={`${classes.tokensTableRoot} ${className}`}>
 			<TableSettings settings={settings} setSettings={setSettings} />
-
 			<TableCustom config={tokensTableConfig} data={data} customClass={classes.tokensTable} />
 		</div>
 	)

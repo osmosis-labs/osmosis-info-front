@@ -1,7 +1,6 @@
 import React from "react"
-import { makeStyles } from "@material-ui/core"
+import { makeStyles, useTheme } from "@material-ui/core"
 import Image from "../../../components/image/Image"
-import ContainerLoader from "../../../components/loader/ContainerLoader"
 import Paper from "../../../components/paper/Paper"
 import {
 	formateNumberDecimalsAuto,
@@ -12,6 +11,7 @@ import {
 
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
+import CustomSkeleton from "../../../components/skeleton/custom_skeleton"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -88,6 +88,11 @@ const useStyles = makeStyles((theme) => {
 			flexDirection: "row",
 			alignItems: "center",
 		},
+
+		rowSkeleton: {
+			display: "flex",
+			flexDirection: "row",
+		},
 	}
 })
 
@@ -96,80 +101,232 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool }) => {
 	const formatPercent = (value) => {
 		return formateNumberDecimalsAuto({ price: value, minDecimal: 0, minPrice: 1, maxDecimal: 2, unit: "%" })
 	}
+	const theme = useTheme()
+
 	return (
 		<div className={classes.details}>
 			<Paper className={classes.detailPaper}>
-				<ContainerLoader classChildren={classes.loaderDetails} isLoading={loadingPoolInfo}>
+				<div className={classes.loaderDetails}>
 					<div className={classes.pooledTokens}>
 						<p className={classes.pooledTokensTitle}>Pooled tokens</p>
 						<div className={classes.tokensContainer}>
-							{tokens.map((token, i) => {
-								return (
-									<div className={classes.token} key={token.denom}>
-										<div className={classes.tokenName}>
-											<Image
-												className={`${classes.image} ${classes.pooledTokensImages}`}
-												assets={true}
-												alt={`${token.symbol}`}
-												src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${token.symbol.toLowerCase()}.png`}
-												srcFallback="../assets/default.png"
-												pathAssets=""
-											/>
-											<p>{token.symbolDisplay}</p>
-										</div>
-										<p className={classes.pooledTokensNumber}>{formaterNumber(token.amount, 0)}</p>
-										<p className={classes.pooledTokensNumber}>{formateNumberDecimalsAuto({ price: token.price })}</p>
+							{loadingPoolInfo ? (
+								<>
+									<div style={{ margin: "4px 0" }} className={classes.rowSkeleton}>
+										<CustomSkeleton
+											animation="wave"
+											variant="rectangular"
+											width={22}
+											height={22}
+											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "4px 0 4px 0" }}
+										/>
+										<CustomSkeleton
+											animation="wave"
+											variant="rectangular"
+											width={40}
+											height={22}
+											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "4px 0 4px 10px" }}
+										/>
+										<CustomSkeleton
+											animation="wave"
+											variant="rectangular"
+											width={50}
+											height={22}
+											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "4px 0 4px 40px" }}
+										/>
+										<CustomSkeleton
+											animation="wave"
+											variant="rectangular"
+											width={50}
+											height={22}
+											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "4px 0 4px 40px" }}
+										/>
 									</div>
-								)
-							})}
+									<div style={{ margin: "4px 0" }} className={classes.rowSkeleton}>
+										<CustomSkeleton
+											animation="wave"
+											variant="rectangular"
+											width={22}
+											height={22}
+											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "4px 0 4px 0" }}
+										/>
+										<CustomSkeleton
+											animation="wave"
+											variant="rectangular"
+											width={40}
+											height={22}
+											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "4px 0 4px 10px" }}
+										/>
+										<CustomSkeleton
+											animation="wave"
+											variant="rectangular"
+											width={50}
+											height={22}
+											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "4px 0 4px 40px" }}
+										/>
+										<CustomSkeleton
+											animation="wave"
+											variant="rectangular"
+											width={50}
+											height={22}
+											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "4px 0 4px 40px" }}
+										/>
+									</div>
+								</>
+							) : (
+								tokens.map((token, i) => {
+									return (
+										<div className={classes.token} key={token.denom}>
+											<div className={classes.tokenName}>
+												<Image
+													className={`${classes.image} ${classes.pooledTokensImages}`}
+													assets={true}
+													alt={`${token.symbol}`}
+													src={`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${token.symbol.toLowerCase()}.png`}
+													srcFallback="../assets/default.png"
+													pathAssets=""
+												/>
+												<p>{token.symbolDisplay}</p>
+											</div>
+											<p className={classes.pooledTokensNumber}>{formaterNumber(token.amount, 0)}</p>
+											<p className={classes.pooledTokensNumber}>{formateNumberDecimalsAuto({ price: token.price })}</p>
+										</div>
+									)
+								})
+							)}
 						</div>
 					</div>
 					<div className={classes.detail}>
 						<p className={classes.titleDetail}>Liquidity</p>
 						<div className={classes.detailsValues}>
-							<p className={classes.dataDetail}>{formateNumberPrice(pool.liquidity)}</p>
-							<p
-								className={
-									pool.liquidity24hChange === 0
-										? classes.dataDetailChange
-										: pool.liquidity24hChange > 0
-										? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
-										: `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
-								}
-							>
-								{pool.liquidity24hChange > 0 ? "↑" : pool.liquidity24hChange < 0 ? "↓" : <span />}
-								{formatPercent(Math.abs(pool.liquidity24hChange))}
-							</p>
+							{loadingPoolInfo ? (
+								<>
+									<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
+										<CustomSkeleton
+											animation="wave"
+											variant="rectangular"
+											width={120}
+											height={30}
+											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "2px 0 2px 0" }}
+										/>
+									</div>
+									<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
+										<CustomSkeleton
+											animation="wave"
+											variant="rectangular"
+											width={80}
+											height={22}
+											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "2px 0 2px 0" }}
+										/>
+									</div>
+								</>
+							) : (
+								<>
+									<p className={classes.dataDetail}>{formateNumberPrice(pool.liquidity)}</p>
+
+									<p
+										className={
+											pool.liquidity24hChange === 0
+												? classes.dataDetailChange
+												: pool.liquidity24hChange > 0
+												? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
+												: `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
+										}
+									>
+										{pool.liquidity24hChange > 0 ? "↑" : pool.liquidity24hChange < 0 ? "↓" : <span />}
+										{formatPercent(Math.abs(pool.liquidity24hChange))}
+									</p>
+								</>
+							)}
 						</div>
 					</div>
 					<div className={classes.detail}>
 						<p className={classes.titleDetail}>Volume (24hrs)</p>
+
 						<div className={classes.detailsValues}>
-							<p className={classes.dataDetail}>{formateNumberPrice(pool.volume24h)}</p>
-							<p
-								className={
-									pool.volume24hChange === 0
-										? classes.dataDetailChange
-										: pool.volume24hChange > 0
-										? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
-										: `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
-								}
-							>
-								{pool.volume24hChange > 0 ? "↑" : pool.volume24hChange < 0 ? "↓" : <span />}
-								{formatPercent(Math.abs(pool.volume24hChange))}
-							</p>
+							{loadingPoolInfo ? (
+								<>
+									<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
+										<CustomSkeleton
+											animation="wave"
+											variant="rectangular"
+											width={120}
+											height={30}
+											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "2px 0 2px 0" }}
+										/>
+									</div>
+									<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
+										<CustomSkeleton
+											animation="wave"
+											variant="rectangular"
+											width={80}
+											height={22}
+											sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "2px 0 2px 0" }}
+										/>
+									</div>
+								</>
+							) : (
+								<>
+									<p className={classes.dataDetail}>{formateNumberPrice(pool.volume24h)}</p>
+									<p
+										className={
+											pool.volume24hChange === 0
+												? classes.dataDetailChange
+												: pool.volume24hChange > 0
+												? `${classes.dataDetailChange} ${classes.colorUp} ${classes.containerUpDown}`
+												: `${classes.dataDetailChange} ${classes.colorDown} ${classes.containerUpDown}`
+										}
+									>
+										{pool.volume24hChange > 0 ? "↑" : pool.volume24hChange < 0 ? "↓" : <span />}
+										{formatPercent(Math.abs(pool.volume24hChange))}
+									</p>
+								</>
+							)}
 						</div>
 					</div>
 
 					<div className={classes.detail}>
 						<p className={classes.titleDetail}>Volume (7d)</p>
-						<p className={classes.dataDetail}>{formateNumberPrice(pool.volume7d)}</p>
+						{loadingPoolInfo ? (
+							<>
+								<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
+									<CustomSkeleton
+										animation="wave"
+										variant="rectangular"
+										width={120}
+										height={30}
+										sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "4px 0 4px 0" }}
+									/>
+								</div>
+							</>
+						) : (
+							<>
+								<p className={classes.dataDetail}>{formateNumberPrice(pool.volume7d)}</p>
+							</>
+						)}
 					</div>
 					<div className={classes.detail}>
 						<p className={classes.titleDetail}>Fees</p>
-						<p className={classes.dataDetail}>{formatPercent(parseFloat(pool.fees))}</p>
+
+						{loadingPoolInfo ? (
+							<>
+								<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
+									<CustomSkeleton
+										animation="wave"
+										variant="rectangular"
+										width={80}
+										height={22}
+										sx={{ bgcolor: theme.palette.primary.main, padding: "0px 0", margin: "4px 0 4px 0" }}
+									/>
+								</div>
+							</>
+						) : (
+							<>
+								<p className={classes.dataDetail}>{formatPercent(parseFloat(pool.fees))}</p>
+							</>
+						)}
 					</div>
-				</ContainerLoader>
+				</div>
 			</Paper>
 		</div>
 	)

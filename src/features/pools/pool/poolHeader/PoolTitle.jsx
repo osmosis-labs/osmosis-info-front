@@ -1,14 +1,14 @@
 import { IconButton, useMediaQuery } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core"
-import Image from "../../../components/image/Image"
 import StarIcon from "@material-ui/icons/Star"
 import StarBorderIcon from "@material-ui/icons/StarBorder"
 import Tooltip from "@material-ui/core/Tooltip"
-import { useWatchlistPools } from "../../../contexts/WatchlistPoolsProvider"
-import { getInclude } from "../../../helpers/helpers"
-import DialogAPR from "../poolsTable/dialogAPR/dialogAPR"
+import { useWatchlistPools } from "../../../../contexts/WatchlistPoolsProvider"
+import DialogAPR from "../../poolsTable/dialogAPR/dialogAPR"
 import { useState } from "react"
-import aprIMG from "../poolsTable/apr_logo.png"
+import aprIMG from "../../poolsTable/apr_logo.png"
+import Image from "../../../../components/image/Image"
+import { getInclude } from "../../../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {

@@ -2,6 +2,7 @@ import { makeStyles } from "@material-ui/core"
 
 import React, { memo } from "react"
 import TableCustom from "../../../components/table/tableCustom"
+import TableSkeleton from "../../../components/table/table_skeleton"
 import TableSettings from "../../../components/tableSettings/TableSettings"
 import { formaterNumber, getInclude, getPercent } from "../../../helpers/helpers"
 import CellPoolAPR from "./cellPoolAPR"
@@ -43,6 +44,7 @@ const PoolsTable = ({
 	maxRowDisplay = null,
 	settings,
 	setSettings,
+	isLoading,
 }) => {
 	const classes = useStyles()
 
@@ -269,6 +271,9 @@ const PoolsTable = ({
 			})
 	} else {
 		poolsTableConfig.cellsConfig = [...cellsConfig]
+	}
+	if (isLoading) {
+		return <TableSkeleton config={poolsTableConfig} settings={settings} />
 	}
 	return (
 		<div className={`${classes.poolsTableRoot} ${className}`}>

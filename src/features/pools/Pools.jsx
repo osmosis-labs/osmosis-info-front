@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useHistory } from "react-router-dom"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
+import { useDebug } from "../../contexts/debug.provider"
 import { useSettings } from "../../contexts/SettingsProvider"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
 import { getInclude } from "../../helpers/helpers"
@@ -37,6 +38,7 @@ const Pools = () => {
 		isLoading: isLoadingPools,
 	} = usePools({})
 	const { settings, updateSettings } = useSettings()
+	const { isLoadingDebug } = useDebug()
 
 	const setSettingsPools = (settings) => {
 		updateSettings({ poolTable: settings })
@@ -71,6 +73,7 @@ const Pools = () => {
 						onClickPool={onClickPool}
 						setSettings={setSettingsPools}
 						settings={settings.poolTable}
+						isLoading={isLoadingPools || isLoadingDebug}
 					/>
 				) : (
 					<p>Saved pools will appear here</p>
@@ -84,6 +87,7 @@ const Pools = () => {
 					onClickPool={onClickPool}
 					setSettings={setSettingsPools}
 					settings={settings.poolTable}
+					isLoading={isLoadingPools || isLoadingDebug}
 				/>
 			</Paper>
 		</div>

@@ -7,6 +7,7 @@ import ButtonsTypeChart from "../../../components/chart/charts/ButtonsTypeChart"
 import Charts from "../../../components/chart/charts/Charts"
 import InfoCharts from "../../../components/chart/charts/InfoCharts"
 import Button from "../../../components/button/Button"
+import ChartContainerSkeleton from "./chat_container_skeleton"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -173,6 +174,10 @@ const ContainerCharts = ({
 
 	const onChangeTypeChart = (value) => {
 		setTypeChart(value)
+	}
+
+	if (isLoading) {
+		return <ChartContainerSkeleton />
 	}
 
 	return (

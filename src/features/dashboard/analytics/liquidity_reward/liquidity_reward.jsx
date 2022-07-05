@@ -4,7 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import ButtonCSV from "../../../../components/button/button_csv"
 import BlocLoaderOsmosis from "../../../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../../../components/paper/Paper"
+import ChartSkeleton from "../../../../components/skeleton/chart_skeleton"
+import CustomSkeleton from "../../../../components/skeleton/custom_skeleton"
 import SwitchStyled from "../../../../components/switch/SwitchStyled"
+import { useDebug } from "../../../../contexts/debug.provider"
 import { useKeplr } from "../../../../contexts/KeplrProvider"
 import { formatDate, formaterNumber, getPercent, twoNumber } from "../../../../helpers/helpers"
 import { useBalance, useLiquidity, useLiquidityToken } from "../../../../hooks/data/dashboard.hook"
@@ -88,12 +91,15 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			alignItems: "center",
 		},
+		chartSkeleton: { margin: "10px" },
+
 	}
 })
 const LiquidityReward = () => {
 	const classes = useStyles()
 	const [currentToken, setCurrentToken] = useState({ symbol: "", symbolDisplay: "" })
 	const [isAccumulated, setIsAccumulated] = useState(true)
+	const { isLoadingDebug } = useDebug()
 
 	const { address } = useKeplr()
 
@@ -111,7 +117,8 @@ const LiquidityReward = () => {
 	} = useLiquidity({ address, symbol: currentToken.symbol, isAccumulated })
 
 	//Merge loading
-	const isLoading = isLoadingBalance || isLoadingLiquidityToken || isLoadingLiquidity || isFetchingLiquidity
+	const isLoading =
+		isLoadingBalance || isLoadingLiquidityToken || isLoadingLiquidity || isFetchingLiquidity || isLoadingDebug
 
 	const [data, setData] = useState([])
 	const [total, setTotal] = useState(0)
@@ -266,27 +273,71 @@ const LiquidityReward = () => {
 				</ButtonCSV>
 			</div>
 			<Paper className={classes.paper}>
-				<BlocLoaderOsmosis open={isLoading} classNameLoading={classes.loading} />
-				{data.length > 0 ? (
+				{data.length|| isLoading > 0 ? (
 					<>
 						<div className={classes.chartContainer}>
-							<Chart data={data} crossMove={crossMove} onMouseLeave={onMouseLeave} />
+							{isLoading ? (
+								<ChartSkeleton className={classes.chartSkeleton} sx={{ margin: "0px" }} />
+							) : (
+								<Chart data={data} crossMove={crossMove} onMouseLeave={onMouseLeave} />
+							)}
 						</div>
 						<div className={classes.chartInfo}>
-							<ButtonChart range={range} onChangeRange={onChangeRange} />
-							<SelectToken tokens={tokens} onChangeToken={onChangeToken} currentToken={currentToken} />
+							{isLoading ? (
+								<CustomSkeleton
+									height={50}
+									width={120}
+									sx={{ margin: "0px", padding: "0px", transformOrigin: "0 20% !important" }}
+								/>
+							) : (
+								<ButtonChart range={range} onChangeRange={onChangeRange} />
+							)}
+							{isLoading ? (
+								<CustomSkeleton
+									height={50}
+									width={120}
+									sx={{ margin: "0px", padding: "0px", transformOrigin: "0 20% !important" }}
+								/>
+							) : (
+								<SelectToken tokens={tokens} onChangeToken={onChangeToken} currentToken={currentToken} />
+							)}
 							<div className={classes.rowInfo}>
 								<p className={classes.name}>{currentToken.symbolDisplay} Balance</p>
-								<p className={classes.value}>${formaterNumber(currentBalance.value)}</p>
-								<p className={classes.value}>{getDiplayBalance(currentBalance)}</p>
+								{isLoading ? (
+									<>
+										<CustomSkeleton
+											height={30}
+											width={80}
+											sx={{ margin: "0px", padding: "0px", transformOrigin: "0 20% !important" }}
+										/>
+										<CustomSkeleton
+											height={30}
+											width={80}
+											sx={{ margin: "0px", padding: "0px", transformOrigin: "0 20% !important" }}
+										/>
+									</>
+								) : (
+									<>
+										<p className={classes.value}>${formaterNumber(currentBalance.value)}</p>
+										<p className={classes.value}>{getDiplayBalance(currentBalance)}</p>
+									</>
+								)}
 							</div>
 							<div className={classes.rowInfo}>
 								<p className={classes.name}>Total reward</p>
-								<p className={classes.value}>
-									{formaterNumber(total)} <span className={classes.token}>{currentToken.symbolDisplay}</span>
-								</p>
+								{isLoading ? (
+									<CustomSkeleton
+										height={30}
+										width={100}
+										sx={{ margin: "0px", padding: "0px", transformOrigin: "0 20% !important" }}
+									/>
+								) : (
+									<p className={classes.value}>
+										{formaterNumber(total)} <span className={classes.token}>{currentToken.symbolDisplay}</span>
+									</p>
+								)}
 							</div>
-							<DailyReward currentToken={currentToken} ref={refDailyReward} />
+							<DailyReward currentToken={currentToken} ref={refDailyReward} isLoading={isLoading} />
 							<div className={classes.toggle}>
 								<SwitchStyled size="small" checked={isAccumulated} onChange={toggleAccumulated} />
 								<p className={classes.name}>Accumulated values</p>

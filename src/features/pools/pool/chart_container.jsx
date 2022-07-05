@@ -6,8 +6,10 @@ import Charts from "../../../components/chart/charts/Charts"
 import InfoCharts from "../../../components/chart/charts/InfoCharts"
 import ContainerLoader from "../../../components/loader/ContainerLoader"
 import Paper from "../../../components/paper/Paper"
+import { useDebug } from "../../../contexts/debug.provider"
 import { getInclude } from "../../../helpers/helpers"
 import { useHistoricalPool, useLiquidityPool, useVolumePool } from "../../../hooks/data/pools.hook"
+import ChartContainerSkeleton from "./chat_container_skeleton"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -59,11 +61,12 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const ChartContainer = ({ currency, selectedTokens, poolId }) => {
+const ChartContainer = ({ currency, selectedTokens, poolId, isLoadingPool }) => {
 	const classes = useStyles()
 	const [currentItem, setCurrentItem] = useState({ value: 0, date: "-" })
 	const dataClick = useRef({ time: { day: 1, month: 1, year: 1 }, value: 0, clickedTwice: true })
 	const [typeChart, setTypeChart] = useState("price") // price, volume, liquidity
+	const { isLoadingDebug } = useDebug()
 
 	const [rangePrice, setRangePrice] = useState("7d") // 7d, 1m, 1y, all
 	const [rangeVolume, setRangeVolume] = useState("d") // d, w, m
@@ -103,7 +106,7 @@ const ChartContainer = ({ currency, selectedTokens, poolId }) => {
 
 	const isLoadingLiquidity = isLdgLiquidity || isFetchingLiquidity
 
-	const isLoadingCharts = isLoadingHistorical || isLoadingVolume || isLoadingLiquidity
+	const isLoadingCharts = isLoadingHistorical || isLoadingVolume || isLoadingLiquidity || isLoadingPool 
 
 	const currentVolume = volume[rangeVolume]
 	const currentLiquidity = liquidity[rangeLiquidity]
@@ -188,6 +191,12 @@ const ChartContainer = ({ currency, selectedTokens, poolId }) => {
 			setCurrentItem(liquidity[rangeLiquidity][liquidity[rangeLiquidity].length - 1])
 		}
 		setTypeChart(value)
+	}
+
+	if (isLoadingCharts || isLoadingDebug) {
+		return <Paper className={classes.rootChartContainer}>
+			<ChartContainerSkeleton />
+		</Paper>
 	}
 
 	return (

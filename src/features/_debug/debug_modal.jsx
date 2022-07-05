@@ -90,10 +90,8 @@ const DebugModal = ({}) => {
 		setIsAccumulated,
 		isStakingAccumulated,
 		setIsStakingAccumulated,
-		message,
-		setMessage,
-		messageLevel,
-		setMessageLevel,
+		isLoadingDebug,
+		setLoadingDebug,
 	} = useDebug()
 	const { address, setAddress } = useKeplr()
 	const [addressInput, setAddressInput] = useState(address)
@@ -120,8 +118,6 @@ const DebugModal = ({}) => {
 	const onChangeStakingAccumulated = (e) => {
 		setIsStakingAccumulated(e.target.checked)
 	}
-
-
 
 	return (
 		<div
@@ -165,6 +161,18 @@ const DebugModal = ({}) => {
 							label={"Accumulation for staking reward"}
 							checked={isStakingAccumulated}
 							onChange={onChangeStakingAccumulated}
+						/>
+					</div>
+				</div>
+				<div className={classes.row}>
+					<div>
+						<span>Force loading</span>
+						<Switch
+							label={"Force overview loading"}
+							checked={isLoadingDebug}
+							onChange={(e) => {
+								setLoadingDebug((l) => e.target.checked)
+							}}
 						/>
 					</div>
 				</div>

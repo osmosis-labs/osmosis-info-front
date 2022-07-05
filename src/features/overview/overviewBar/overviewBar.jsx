@@ -1,7 +1,9 @@
 import { makeStyles } from "@material-ui/core"
 import Paper from "../../../components/paper/Paper"
+import { useDebug } from "../../../contexts/debug.provider"
 import { formaterNumber, getPercent } from "../../../helpers/helpers"
 import { useMetrics } from "../../../hooks/data/metrics.hook"
+import OverviewBarSkeleton from "./overview_bar_skeleton"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -51,8 +53,11 @@ const useStyles = makeStyles((theme) => {
 
 const OverviewBar = () => {
 	const classes = useStyles()
+	const { isLoadingDebug } = useDebug()
+
 	const {
 		data: { volume24h, volume24hChange, liquidityUSD, liquidityUSD24h },
+		isLoading,
 	} = useMetrics()
 
 	const getClasses = (value, type) => {
@@ -74,6 +79,13 @@ const OverviewBar = () => {
 		} else if (value < 0) {
 			return "↓"
 		} else return null
+	}
+	if (isLoading || isLoadingDebug) {
+		return (
+			<Paper className={classes.rootOverviewBar}>
+				<OverviewBarSkeleton />
+			</Paper>
+		)
 	}
 	return (
 		<Paper className={classes.rootOverviewBar}>
