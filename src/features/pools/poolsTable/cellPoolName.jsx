@@ -1,6 +1,6 @@
 import { makeStyles, TableCell } from "@material-ui/core"
 import Image from "../../../components/image/Image"
-import { useAssets } from "../../../hooks/data/assets.hook"
+import { getImageFromAsset, useAssets } from "../../../hooks/data/assets.hook"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootCellPoolName: {
@@ -66,7 +66,7 @@ const CellPoolName = ({ cellKey, cellConfig, data }) => {
 									className={classes.image}
 									assets={true}
 									alt={`${name}`}
-									src={assets[name]?.image}
+									src={getImageFromAsset(assets, { symbol: name })}
 									srcFallback="../assets/default.png"
 									pathAssets=""
 								/>

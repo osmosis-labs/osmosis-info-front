@@ -9,7 +9,7 @@ import { useState } from "react"
 import aprIMG from "../../poolsTable/apr_logo.png"
 import Image from "../../../../components/image/Image"
 import { getInclude } from "../../../../helpers/helpers"
-import { useAssets } from "../../../../hooks/data/assets.hook"
+import { getImageFromAsset, useAssets } from "../../../../hooks/data/assets.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -122,7 +122,7 @@ const PoolTitle = ({ pool, tokens }) => {
 							}
 							className={`${classes.image} ${classes.poolImage}`}
 							assets={true}
-							src={assets[token.symbol]?.image}
+							src={getImageFromAsset(assets, token)}
 							srcFallback="../assets/default.png"
 							pathAssets=""
 							alt={`${token.symbol}`}

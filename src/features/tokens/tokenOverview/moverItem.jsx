@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core"
 import Image from "../../../components/image/Image"
 import Paper from "../../../components/paper/Paper"
 import { formateNumberDecimals, formateNumberDecimalsAuto, getPercent } from "../../../helpers/helpers"
-import { useAssets } from "../../../hooks/data/assets.hook"
+import { getImageFromAsset, useAssets } from "../../../hooks/data/assets.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -85,7 +85,7 @@ const MoverItem = ({ item, index }) => {
 				className={`${classes.image}`}
 				assets={true}
 				pathAssets=""
-				src={assets[item?.symbol]?.image}
+				src={getImageFromAsset(assets, item)}
 				srcFallback="../assets/default.png"
 				alt={`${item.symbol}`}
 			/>

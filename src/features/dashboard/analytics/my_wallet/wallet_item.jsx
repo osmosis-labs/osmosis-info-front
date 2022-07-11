@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core"
 import Image from "../../../../components/image/Image"
 import { formateNumberDecimalsAuto, getPercent } from "../../../../helpers/helpers"
-import { useAssets } from "../../../../hooks/data/assets.hook"
+import { getImageFromAsset, useAssets } from "../../../../hooks/data/assets.hook"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootWalletItem: {
@@ -57,13 +57,15 @@ const WalletItem = ({ data }) => {
 		return <span className={` ${classes.data} ${classes.down}`}>↓ {getPercent(percent)}</span>
 	}
 
+	const image = getImageFromAsset(assets, data)
+
 	return (
 		<div className={classes.rootWalletItem}>
 			<div className={classes.nameContainer}>
 				<Image
 					className={`${classes.image}`}
 					assets={true}
-					src={assets[data.symbol]?.image}
+					src={image}
 					srcFallback="../assets/default.png"
 					pathAssets=""
 				/>

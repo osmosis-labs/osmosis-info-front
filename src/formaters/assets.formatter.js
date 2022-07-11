@@ -14,6 +14,10 @@ export const formatAssets = (data) => {
 		}
 
 		res[asset.symbol] = currentAsset
+		if (asset.symbol.includes(".")) {
+			let name = asset.symbol.split(".")[0]
+			res[name] = currentAsset
+		}
 
 		currentAsset.denomUnits.forEach((denomUnit, index) => {
 			res[denomUnit.denom] = currentAsset

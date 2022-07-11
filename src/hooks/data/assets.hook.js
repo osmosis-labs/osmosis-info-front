@@ -20,12 +20,33 @@ export const useAssets = () => {
 	return { data: assets, isLoading, isFetching }
 }
 
-
 export const getExponent = (asset, denom) => {
-	if(denom === asset.symbol) return 0
+	if (denom === asset.symbol) return 0
 	else {
-		let expo = asset.denomUnits.find(d => d.denom === asset.display).exponent
-		if(!expo) return 0
+		let expo = asset.denomUnits.find((d) => d.denom === asset.display).exponent
+		if (!expo) return 0
 		return expo
 	}
+}
+
+export const getAsset = (assets, token) => {
+	let asset = null
+	if (token.denom) {
+		asset = assets[token.denom]
+	}
+	if (!asset && token.symbol) {
+		asset = assets[token.symbol]
+	}
+	if (!asset && token.symbol) {
+		if (token.symbol.includes(".")) {
+			let name = token.symbol.split(".")[0]
+			asset = assets[name]
+		}
+	}
+	return asset
+}
+
+export const getImageFromAsset = (assets, token) => {
+	let asset = getAsset(assets, token)
+	return asset?.image
 }

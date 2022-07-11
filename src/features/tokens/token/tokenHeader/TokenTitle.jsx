@@ -5,7 +5,7 @@ import StarIcon from "@material-ui/icons/Star"
 import StarBorderIcon from "@material-ui/icons/StarBorder"
 import Tooltip from "@material-ui/core/Tooltip"
 import { getInclude } from "../../../../helpers/helpers"
-import { useAssets } from "../../../../hooks/data/assets.hook"
+import { getImageFromAsset, useAssets } from "../../../../hooks/data/assets.hook"
 import { useWatchlistTokens } from "../../../../contexts/WatchlistTokensProvider"
 
 const useStyles = makeStyles((theme) => {
@@ -86,7 +86,7 @@ const TokenTitle = ({ token }) => {
 					className={`${classes.image} ${classes.tokenImage}`}
 					assets={true}
 					pathAssets=""
-					src={assets[token.symbol]?.image}
+					src={getImageFromAsset(assets, token)}
 					srcFallback="../assets/default.png"
 					alt={`${token.symbol}`}
 				/>
