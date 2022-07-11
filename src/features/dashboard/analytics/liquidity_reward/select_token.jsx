@@ -3,7 +3,7 @@ import { styled } from "@material-ui/styles"
 import { Select } from "@mui/material"
 import Image from "../../../../components/image/Image"
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
-import { useAssets } from "../../../../hooks/data/assets.hook"
+import { getImageFromAsset, useAssets } from "../../../../hooks/data/assets.hook"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootSelectToken: {
@@ -75,13 +75,15 @@ const SelectToken = ({ tokens, currentToken, onChangeToken }) => {
 				IconComponent={ArrowBackIosNewIcon}
 			>
 				{tokens.map((token) => {
+					const image = getImageFromAsset(assets, token)
+
 					return (
 						<MenuItem className={classes.container} key={token.symbol} value={token} classes={{ root: classes.paper }}>
 							<div className={classes.container}>
 								<Image
 									className={`${classes.image}`}
 									assets={true}
-									src={assets[token.symbol]?.image}
+									src={image}
 									srcFallback="../assets/default.png"
 									pathAssets=""
 								/>

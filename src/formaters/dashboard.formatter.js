@@ -2,6 +2,7 @@ import { contains, formatTokenName, getDaysInMonth, getTypeDashboard } from "../
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import relativeTime from "dayjs/plugin/relativeTime"
+import { getImageFromAsset } from "../hooks/data/assets.hook"
 dayjs.extend(relativeTime)
 dayjs.extend(utc)
 
@@ -166,7 +167,6 @@ export const formatTypeTrx = (data, { exclude, chainId, address }, sendReceive) 
 	let typeSend = { type: "cosmos.bank.v1beta1.MsgSend.send", count: 0 }
 
 	sendReceive.forEach((trx) => {
-	
 		if (trx.types.map((type) => type.value).includes(typeReceive.type)) {
 			typeReceive.count++
 		} else {
@@ -318,10 +318,10 @@ export const formatTrades = (data, assets) => {
 		trx.types = types
 		let images = []
 		if (item.symbol_in) {
-			images.push(assets[item.symbol_in]?.image)
+			images.push(getImageFromAsset(assets, { symbol: item.symbol_in }))
 		}
 		if (item.symbol_out) {
-			images.push(assets[item.symbol_out]?.image)
+			images.push(getImageFromAsset(assets, { symbol: item.symbol_out }))
 		}
 
 		let pools = {

@@ -1,6 +1,5 @@
 import { makeStyles, useTheme } from "@material-ui/core"
-import { Skeleton } from "@mui/material"
-import Paper from "../../../components/paper/Paper"
+import CustomSkeleton from "../../../components/skeleton/custom_skeleton"
 
 const ChartContainerSkeleton = () => {
 	const classes = useStyles()

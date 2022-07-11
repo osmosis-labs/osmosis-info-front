@@ -4,7 +4,7 @@ import redArrow from "./arrowRed.svg"
 import orangeArrow from "./arrowOrange.svg"
 import greenArrow from "./arrowGreen.svg"
 import { MIN_BLOCKED, MIN_CONGESTED } from "../../../formaters/ibc.formatter"
-import { useAssets } from "../../../hooks/data/assets.hook"
+import { getImageFromAsset, useAssets } from "../../../hooks/data/assets.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -50,13 +50,15 @@ const CellStatus = ({ cellKey, cellConfig, data }) => {
 	} else {
 		arrowSecondSrc = redArrow
 	}
+	const imageOne = getImageFromAsset(assets, { symbol: data[0]?.token_symbol })
+	const imageTwo = getImageFromAsset(assets, { symbol: data[1]?.token_symbol })
 	return (
 		<TableCell key={cellKey}>
 			<div className={classes.rootCellStatus}>
 				<Image
 					className={`${classes.image}`}
 					assets={true}
-					src={assets[data[0]?.token_symbol]?.image}
+					src={imageOne}
 					srcFallback="../assets/default.png"
 					pathAssets=""
 				/>
@@ -67,7 +69,7 @@ const CellStatus = ({ cellKey, cellConfig, data }) => {
 				<Image
 					className={`${classes.image}`}
 					assets={true}
-					src={assets[data[1]?.token_symbol]?.image}
+					src={imageTwo}
 					srcFallback="../assets/default.png"
 					pathAssets=""
 				/>

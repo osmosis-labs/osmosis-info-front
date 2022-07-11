@@ -6,7 +6,7 @@ import PoolTitle from "./PoolTitle"
 import Paper from "../../../../components/paper/Paper"
 import Image from "../../../../components/image/Image"
 import PoolHeaderSkeleton from "./pool_header_skeleton"
-import { useAssets } from "../../../../hooks/data/assets.hook"
+import { getImageFromAsset, useAssets } from "../../../../hooks/data/assets.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -46,7 +46,7 @@ const PoolHeader = ({ pool, tokens, selectedTokens, onChangeSeletedTokens, loadi
 					className={`${classes.image}`}
 					assets={true}
 					alt={`${selectedTokens.two.symbol}`}
-					src={assets[selectedTokens.two?.symbol]?.image}
+					src={getImageFromAsset(assets, selectedTokens.two)}
 					srcFallback="../assets/default.png"
 					pathAssets=""
 				/>

@@ -6,7 +6,7 @@ import { IconButton, MenuItem, Select } from "@material-ui/core"
 import { useEffect } from "react"
 import { getInclude } from "../../../../helpers/helpers"
 import Image from "../../../../components/image/Image"
-import { useAssets } from "../../../../hooks/data/assets.hook"
+import { getImageFromAsset, useAssets } from "../../../../hooks/data/assets.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -98,7 +98,7 @@ const PoolSelect = ({ tokens, setSelectedTokens, selectedTokens }) => {
 				<Image
 					className={`${classes.image} ${classes.select}`}
 					assets={true}
-					src={assets[selectedTokens.two?.symbol]?.image}
+					src={getImageFromAsset(assets, selectedTokens.two)}
 					srcFallback="../assets/default.png"
 					pathAssets=""
 					alt={`${selectedTokens.two.symbol}`}
@@ -131,7 +131,7 @@ const PoolSelect = ({ tokens, setSelectedTokens, selectedTokens }) => {
 				<Image
 					className={`${classes.image} ${classes.select}`}
 					assets={true}
-					src={assets[selectedTokens.one?.symbol]?.image}
+					src={getImageFromAsset(assets, selectedTokens.one)}
 					srcFallback="../assets/default.png"
 					pathAssets=""
 					alt={`${selectedTokens.one.symbol}`}

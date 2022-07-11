@@ -12,7 +12,7 @@ import {
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import CustomSkeleton from "../../../components/skeleton/custom_skeleton"
-import { useAssets } from "../../../hooks/data/assets.hook"
+import { getImageFromAsset, useAssets } from "../../../hooks/data/assets.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -185,7 +185,7 @@ const PoolInfo = ({ loadingPoolInfo, tokens, pool }) => {
 													className={`${classes.image} ${classes.pooledTokensImages}`}
 													assets={true}
 													alt={`${token.symbol}`}
-													src={assets[token.symbol]?.image}
+													src={getImageFromAsset(assets, token)}
 													srcFallback="../assets/default.png"
 													pathAssets=""
 												/>

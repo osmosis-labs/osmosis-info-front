@@ -1,6 +1,6 @@
 import { makeStyles, TableCell } from "@material-ui/core"
 import Image from "../../../components/image/Image"
-import { useAssets } from "../../../hooks/data/assets.hook"
+import { getImageFromAsset, useAssets } from "../../../hooks/data/assets.hook"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootCellTokenName: {
@@ -51,6 +51,7 @@ const CellTokenName = ({ cellKey, cellConfig, data }) => {
 	const classes = useStyles()
 	let currentData = data[cellConfig.cellKey]
 	const { data: assets } = useAssets()
+	const image = getImageFromAsset(assets, data)
 	return (
 		<TableCell
 			key={cellKey}
@@ -65,7 +66,7 @@ const CellTokenName = ({ cellKey, cellConfig, data }) => {
 						className={classes.image}
 						assets={true}
 						alt={`${currentData}`}
-						src={assets[data.symbol]?.image}
+						src={image}
 						srcFallback="../assets/default.png"
 						pathAssets=""
 					/>

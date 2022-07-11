@@ -1,7 +1,7 @@
 import { makeStyles, Popover } from "@material-ui/core"
 import Image from "../../../../components/image/Image"
 import Paper from "../../../../components/paper/Paper"
-import { useAssets } from "../../../../hooks/data/assets.hook"
+import { getImageFromAsset, useAssets } from "../../../../hooks/data/assets.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -105,7 +105,8 @@ const PopoverPools = ({ routes, open, event, onClose, id }) => {
 				<div className={classes.body}>
 					{routes.map((route, index) => {
 						let images = route.poolName.split("/").map((tokenName) => {
-							return assets[tokenName]?.image
+							const image = getImageFromAsset(assets, { symbol: tokenName })
+							return image
 						})
 						return (
 							<div key={index} className={classes.row}>

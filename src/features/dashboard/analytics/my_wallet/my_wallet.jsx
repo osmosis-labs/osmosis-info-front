@@ -70,7 +70,6 @@ const MyWallet = () => {
 			return order === "desc" ? -res : res
 		})
 	}
-	console.log("my_wallet.jsx (l:70): data:", data)
 
 	return (
 		<div className={classes.rootMyWallet}>

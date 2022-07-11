@@ -2,6 +2,7 @@ import { formatTokenName, getWeekNumber, timeToDateUTC } from "../helpers/helper
 import relativeTime from "dayjs/plugin/relativeTime"
 import utc from "dayjs/plugin/utc"
 import dayjs from "dayjs"
+import { getImageFromAsset } from "../hooks/data/assets.hook"
 dayjs.extend(relativeTime)
 dayjs.extend(utc)
 
@@ -83,7 +84,10 @@ export const formatTrxToken = (data, symbol, assets) => {
 		let symbolOutDisplay = formatTokenName(trx.symbol_out)
 
 		let pools = {
-			images: [assets[trx.symbol_in]?.image, assets[trx.symbol_out]?.image],
+			images: [
+				getImageFromAsset(assets, { symbol: trx.symbol_in }),
+				getImageFromAsset(assets, { symbol: trx.symbol_out }),
+			],
 			name: `${trx.symbol_in}/${trx.symbol_out}`,
 			nameDisplay: `${symbolInDisplay}/${symbolOutDisplay}`,
 			routes: trx.swap_route.routes.map((route) => {
