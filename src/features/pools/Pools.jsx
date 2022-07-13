@@ -75,7 +75,7 @@ const Pools = () => {
 						onClickPool={onClickPool}
 						setSettings={setSettingsPools}
 						settings={settings.poolTable}
-						isLoading={isLoadingPools}
+						isLoading={isLoading}
 					/>
 				) : (
 					<p>Saved pools will appear here</p>
@@ -83,13 +83,12 @@ const Pools = () => {
 			</Paper>
 			<p className={classes.subTitle}>All pools</p>
 			<Paper className={classes.containerLoader}>
-				<BlocLoaderOsmosis open={isLoading} borderRadius={true} />
 				<PoolsTable
 					data={pools}
 					onClickPool={onClickPool}
 					setSettings={setSettingsPools}
 					settings={settings.poolTable}
-					isLoading={isLoadingPools}
+					isLoading={isLoading}
 				/>
 			</Paper>
 		</div>
