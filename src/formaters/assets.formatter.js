@@ -14,7 +14,7 @@ export const formatAssets = (data) => {
 		}
 
 		res[asset.symbol] = currentAsset
-		if (asset.symbol.includes(".")) {
+		if (asset.symbol.includes(".axl")) {
 			let name = asset.symbol.split(".")[0]
 			res[name] = currentAsset
 		}

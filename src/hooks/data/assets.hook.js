@@ -33,15 +33,8 @@ export const getAsset = (assets, token) => {
 	let asset = null
 	if (token.denom) {
 		asset = assets[token.denom]
-	}
-	if (!asset && token.symbol) {
+	}else if (token.symbol) {
 		asset = assets[token.symbol]
-	}
-	if (!asset && token.symbol) {
-		if (token.symbol.includes(".")) {
-			let name = token.symbol.split(".")[0]
-			asset = assets[name]
-		}
 	}
 	return asset
 }
