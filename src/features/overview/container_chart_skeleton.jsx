@@ -17,8 +17,8 @@ const ContainerChartSkeleton = () => {
 			<div className={classes.row}>
 				<CustomSkeleton animation="wave" variant="rectangular" width={100} height={20} />
 			</div>
-			<div className={classes.row}>
-				<ChartSkeleton />
+			<div className={`${classes.row} `}>
+				<ChartSkeleton classNameSvg={`${classes.chart}`} />
 			</div>
 		</div>
 	)
@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme) => {
 		rootContainerChartSkeleton: {
 			height: "100%",
 			width: "100%",
+		},
+		chart: {
+			height:"200px",
 		},
 		row: {
 			display: "flex",

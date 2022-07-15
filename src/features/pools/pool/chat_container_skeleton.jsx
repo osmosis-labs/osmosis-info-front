@@ -1,4 +1,5 @@
 import { makeStyles, useTheme } from "@material-ui/core"
+import ChartSkeleton from "../../../components/skeleton/chart_skeleton"
 import CustomSkeleton from "../../../components/skeleton/custom_skeleton"
 
 const ChartContainerSkeleton = () => {
@@ -17,7 +18,8 @@ const ChartContainerSkeleton = () => {
 					<CustomSkeleton animation="wave" variant="rectangular" width={240} height={24} sx={{ margin: "4px 0" }} />
 				</div>
 			</div>
-			<CustomSkeleton animation="wave" variant="rectangular" width={"100%"} height={400} sx={{ margin: "4px 0" }} />
+			<ChartSkeleton classNameSvg={`${classes.chartSkeleton}`} />
+
 		</div>
 	)
 }
@@ -31,7 +33,9 @@ const useStyles = makeStyles((theme) => {
 			flexDirection: "column",
 			justifyContent: "space-between",
 		},
-
+		chartSkeleton:{
+			height:"350px"
+		},
 		skeleton: {
 			margin: "0 40px 0 0",
 		},

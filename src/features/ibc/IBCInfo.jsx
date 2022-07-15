@@ -34,10 +34,15 @@ const useStyles = makeStyles((theme) => {
 			flexDirection: "row",
 			[theme.breakpoints.down("xs")]: {
 				marginTop: "20px",
+				width: "100%",
+				justifyContent: "space-between",
 			},
 		},
 		buble: {
 			marginRight: "15px",
+			[theme.breakpoints.down("xs")]: {
+				marginRight: "0px",
+			},
 			borderRadius: "50px",
 			padding: "4px 14px",
 			display: "flex",
