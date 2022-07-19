@@ -4,7 +4,7 @@ import LogItem from "./log_item"
 
 const ChangeLog = () => {
 	const classes = useStyles()
-
+	console.log("change_log.jsx (l:7): data:", data)
 	return (
 		<div className={classes.rootChangeLog}>
 			<div className={classes.container}>
