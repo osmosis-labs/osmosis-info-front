@@ -9,6 +9,7 @@ import { useSettings } from "../../contexts/SettingsProvider"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import { getInclude } from "../../helpers/helpers"
 import { useTokens } from "../../hooks/data/tokens.hook"
+import { useScrollTop } from "../../hooks/scroll.hook"
 import TokenOverview from "./tokenOverview/tokenOverview"
 import TokensTable from "./tokensTable/tokensTable"
 
@@ -39,6 +40,7 @@ const Tokens = () => {
 		isLoading: loadingTokens,
 		isFetching: fetchingTokens,
 	} = useTokens()
+	useScrollTop()
 	const { isLoadingDebug } = useDebug()
 	const { settings, updateSettings } = useSettings()
 	const isLoading = loadingTokens || fetchingTokens || isLoadingDebug

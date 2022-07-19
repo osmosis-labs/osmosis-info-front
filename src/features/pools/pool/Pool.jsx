@@ -14,6 +14,7 @@ import { useHistoricalPool, usePool, usePoolTrx, useTokensPool } from "../../../
 import ChartContainer from "./chart_container"
 import PoolHeader from "./poolHeader/PoolHeader"
 import { useDebug } from "../../../contexts/debug.provider"
+import { useScrollTop } from "../../../hooks/scroll.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -45,6 +46,8 @@ const useStyles = makeStyles((theme) => {
 
 const Pool = () => {
 	const classes = useStyles()
+	useScrollTop()
+
 	const { isLoadingDebug } = useDebug()
 	const history = useHistory()
 	const { showToast } = useToast()

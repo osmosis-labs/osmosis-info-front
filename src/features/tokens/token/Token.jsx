@@ -28,6 +28,7 @@ import { useDebug } from "../../../contexts/debug.provider"
 import TokenHeaderSkeleton from "./tokenHeader/token_header_skeleton"
 import { TabPanel } from "@mui/lab"
 import TokenInfo from "./token_info"
+import { useScrollTop } from "../../../hooks/scroll.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -124,6 +125,7 @@ const Token = () => {
 	const history = useHistory()
 	const { showToast } = useToast()
 	const { isLoadingDebug } = useDebug()
+	useScrollTop()
 
 	const { symbol } = useParams()
 	const { settings, updateSettings } = useSettings()

@@ -2,7 +2,6 @@ import { makeStyles } from "@material-ui/core"
 import { useEffect } from "react"
 import { useState } from "react"
 import { useHistory } from "react-router-dom"
-import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
@@ -18,6 +17,7 @@ import { useTokens } from "../../hooks/data/tokens.hook"
 import { usePools } from "../../hooks/data/pools.hook"
 import ContainerChartSkeleton from "./container_chart_skeleton"
 import { useDebug } from "../../contexts/debug.provider"
+import { useScrollTop } from "../../hooks/scroll.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -91,6 +91,7 @@ const useStyles = makeStyles((theme) => {
 const Overview = () => {
 	const classes = useStyles()
 	const { isLoadingDebug } = useDebug()
+	useScrollTop()
 
 	const { data: dataLiquidity, isLoading: loadingLiquidity, isFetching: isFetchingLiquidity } = useLiquidityChart()
 	const isLoadingLiquidity = loadingLiquidity || isFetchingLiquidity || isLoadingDebug
@@ -158,7 +159,7 @@ const Overview = () => {
 		})
 		setDataTokens(data)
 	}, [tokens])
-
+	
 	const onClickPool = (pool) => {
 		history.push(`/pool/${pool.id}`)
 	}

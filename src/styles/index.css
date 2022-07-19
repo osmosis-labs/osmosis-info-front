@@ -10,3 +10,10 @@
 	scroll-behavior: smooth;
 }
 
+html {
+	height: 100%;
+	overflow: auto;
+}
+body {
+	height: 100%;
+}
