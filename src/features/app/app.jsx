@@ -29,6 +29,7 @@ import Trades from "../dashboard/trades/trades"
 import { DebugProvider } from "../../contexts/debug.provider"
 import DebugModal from "../_debug/debug_modal"
 import ModalMessage from "../modal_message/modal_message"
+import ChangeLog from "../change_log/change_log"
 
 const MODE = process.env.REACT_APP_MODE
 const useStyles = makeStyles((theme) => {
@@ -168,6 +169,11 @@ const App = () => {
 															</Route>
 															<Route path="/dashboard/trades">
 																<Trades />
+															</Route>
+															<Route path="/changelog">
+																<div className={classes.content}>
+																	<ChangeLog />
+																</div>
 															</Route>
 															<Route>
 																<div className={classes.content}>

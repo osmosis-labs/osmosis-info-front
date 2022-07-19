@@ -8,6 +8,7 @@ import { useQueryClient } from "react-query"
 
 import Toggle from "../toggle/Toggle"
 import ToggleItem from "../toggle/ToggleItem"
+import BadgeChangeLog from "../../features/change_log/badge_change_log"
 const useStyles = makeStyles((theme) => {
 	return {
 		infoBarRoot: {
@@ -36,6 +37,9 @@ const useStyles = makeStyles((theme) => {
 			paddingLeft: theme.spacing(2),
 		},
 		right: {
+			display: "flex",
+			flexDirection: "row",
+			alignItems: "center",
 			paddingRight: theme.spacing(3),
 			[theme.breakpoints.down("xs")]: {
 				display: "none",
@@ -139,6 +143,7 @@ const InfoBar = () => {
 							Debug
 						</Button>
 					)}
+					<BadgeChangeLog />
 					<Toggle color="primary" value={settings.type} exclusive onChange={onChangeType}>
 						<ToggleItem value="app">App</ToggleItem>
 						<ToggleItem value="frontier">Frontier</ToggleItem>
