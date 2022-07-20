@@ -3,7 +3,7 @@ import UpgradeIcon from "@mui/icons-material/Upgrade"
 import { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
 import { useSettings } from "../../contexts/SettingsProvider"
-import data from "./change_log"
+import data from "./data_change_log"
 const BadgeChangeLog = () => {
 	const classes = useStyles()
 	const history = useHistory()

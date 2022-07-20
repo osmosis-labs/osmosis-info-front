@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core"
-import data from "./change_log"
+import data from "./data_change_log"
 import LogItem from "./log_item"
 
 const ChangeLog = () => {
