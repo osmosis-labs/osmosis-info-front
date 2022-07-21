@@ -95,6 +95,11 @@ const DebugModal = ({}) => {
 	} = useDebug()
 	const { address, setAddress } = useKeplr()
 	const [addressInput, setAddressInput] = useState(address)
+	
+	useEffect(()=>{
+		//set defaultAdress for debug osmo1f49xq0rmah39sk58aaxq6gnqcvupee7jkk4y6a 
+		setAddress("osmo1f49xq0rmah39sk58aaxq6gnqcvupee7jkk4y6a")
+	},[])
 
 	const onChangeAddress = (e) => {
 		setAddressInput(e.target.value)
