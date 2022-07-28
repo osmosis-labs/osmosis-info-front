@@ -22,14 +22,14 @@ const LogItem = ({ date, items }) => {
 						} else if (item.type === "image") {
 							return (
 								<li key={i} className={classes.img}>
-									<img src={`./assets/change_log/${item.value}`} alt={item.value} />
+									<img src={`/assets/change_log/${item.value}`} alt={item.value} />
 								</li>
 							)
 						} else if (item.type === "video") {
 							return (
 								<li key={i} className={classes.video}>
 									<video controls width="250">
-										<source src={`./assets/change_log/${item.value}`} type="video/mp4" />
+										<source src={`/assets/change_log/${item.value}`} type="video/mp4" />
 										Sorry, your browser doesn't support embedded videos.
 									</video>
 								</li>

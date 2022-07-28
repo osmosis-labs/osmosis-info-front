@@ -1,14 +1,15 @@
 import { makeStyles } from "@material-ui/core"
-import UpgradeIcon from "@mui/icons-material/Upgrade"
 import { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
 import { useSettings } from "../../contexts/SettingsProvider"
 import data from "./data_change_log"
+import LightbulbIcon from "@mui/icons-material/Lightbulb"
+import { useChangeLog } from "../../contexts/change_log.provider"
 const BadgeChangeLog = () => {
 	const classes = useStyles()
-	const history = useHistory()
 	const { settings, updateSettings } = useSettings()
 	const [newsUpdates, setNewsUpdates] = useState(false)
+	const { onOpen } = useChangeLog()
 
 	useEffect(() => {
 		console.log("badge_change_log.jsx (l:14): settings.dateUpdate:", settings.dateUpdate)
@@ -31,13 +32,13 @@ const BadgeChangeLog = () => {
 
 	const onClick = () => {
 		updateSettings({ dateUpdate: data[0].date })
-		history.push(`/changelog`)
+		onOpen()
 	}
 
 	return (
 		<span className={classes.rootBadgeChangeLog} onClick={onClick}>
 			{newsUpdates ? <span className={classes.badge}>!</span> : null}
-			<UpgradeIcon />
+			<LightbulbIcon />
 		</span>
 	)
 }

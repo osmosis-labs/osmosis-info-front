@@ -30,6 +30,8 @@ import { DebugProvider } from "../../contexts/debug.provider"
 import DebugModal from "../_debug/debug_modal"
 import ModalMessage from "../modal_message/modal_message"
 import ChangeLog from "../change_log/change_log"
+import { ChangeLogProvider } from "../../contexts/change_log.provider"
+import ChangeLogDialog from "../change_log/change_log_dialog"
 
 const MODE = process.env.REACT_APP_MODE
 const useStyles = makeStyles((theme) => {
@@ -121,69 +123,67 @@ const App = () => {
 								<KeplrProvider>
 									<LoaderProvider>
 										<ToastProvider>
-											{MODE === "dev" ? <DebugModal /> : null}
-											<ModalMessage />
-											<LoaderOsmosis />
-											<Helmet>
-												<script src="/charting_library/charting_library.js" type="text/javascript" />
-											</Helmet>
-											<div className={classes.appRoot}>
-												<Toast />
+											<ChangeLogProvider>
+												{MODE === "dev" ? <DebugModal /> : null}
+												<ModalMessage />
+												<LoaderOsmosis />
+												<Helmet>
+													<script src="/charting_library/charting_library.js" type="text/javascript" />
+												</Helmet>
+												<div className={classes.appRoot}>
+													<Toast />
+													<InfoBar />
+													<AppBar />
+													<div className={classes.container}>
+														<div className={classes.contentContainer} id="mainContainer">
+															<ChangeLogDialog />
+															<Switch>
+																<Route path="/" exact={true}>
+																	<div className={classes.content}>
+																		<Overview />
+																	</div>
+																</Route>
+																<Route path="/pools">
+																	<div className={classes.content}>
+																		<Pools />
+																	</div>
+																</Route>
+																<Route path="/pool/:id">
+																	<div className={classes.content}>
+																		<Pool />
+																	</div>
+																</Route>
+																<Route path="/tokens">
+																	<div className={classes.content}>
+																		<Tokens />
+																	</div>
+																</Route>
+																<Route path="/token/:symbol">
+																	<Token />
+																</Route>
+																<Route path="/ibc">
+																	<IBC />
+																</Route>
+																<Route exact={true} path="/dashboard/">
+																	<Analytics />
+																</Route>
+																<Route path="/dashboard/transactions">
+																	<Transactions />
+																</Route>
+																<Route path="/dashboard/trades">
+																	<Trades />
+																</Route>
 
-												<InfoBar />
-												<AppBar />
-												<div className={classes.container}>
-													<div className={classes.contentContainer} id="mainContainer">
-														<Switch>
-															<Route path="/" exact={true}>
-																<div className={classes.content}>
-																	<Overview />
-																</div>
-															</Route>
-															<Route path="/pools">
-																<div className={classes.content}>
-																	<Pools />
-																</div>
-															</Route>
-															<Route path="/pool/:id">
-																<div className={classes.content}>
-																	<Pool />
-																</div>
-															</Route>
-															<Route path="/tokens">
-																<div className={classes.content}>
-																	<Tokens />
-																</div>
-															</Route>
-															<Route path="/token/:symbol">
-																<Token />
-															</Route>
-															<Route path="/ibc">
-																<IBC />
-															</Route>
-															<Route exact={true} path="/dashboard/">
-																<Analytics />
-															</Route>
-															<Route path="/dashboard/transactions">
-																<Transactions />
-															</Route>
-															<Route path="/dashboard/trades">
-																<Trades />
-															</Route>
-															<Route path="/changelog">
-																<div className={classes.content}>
-																	<ChangeLog />
-																</div>
-															</Route>
-															<Route>
-																<div className={classes.content}>
-																	<NotFound />
-																</div>
-															</Route>
-														</Switch>
+																<Route>
+																	<div className={classes.content}>
+																		<NotFound />
+																	</div>
+																</Route>
+															</Switch>
+														</div>
 													</div>
 												</div>
-											</div>
+											</ChangeLogProvider>
 										</ToastProvider>
 									</LoaderProvider>
 								</KeplrProvider>

@@ -102,6 +102,7 @@ export const ThemeCustomProvider = ({ children }) => {
 
 	let baseTheme = {
 		fontSize,
+		type: "dark",
 		breakpoints: {
 			values: {
 				xs: 0,

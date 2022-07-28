@@ -45,6 +45,12 @@ const useStyles = makeStyles((theme) => {
 				display: "none",
 			},
 		},
+		badgeLeft: {
+			display: "none",
+			[theme.breakpoints.down("xs")]: {
+				display: "flex",
+			},
+		},
 		prices: {
 			margin: theme.spacing(2),
 		},
@@ -123,6 +129,7 @@ const InfoBar = () => {
 	const onOpenDebug = () => {
 		setOpen(true)
 	}
+
 	return (
 		<div className={classes.infoBarRoot}>
 			<div className={classes.appBarContent}>
@@ -136,6 +143,9 @@ const InfoBar = () => {
 					<p className={classes.prices}>
 						ION: <em className={classes.price}>{priceIon}</em>
 					</p>
+					<div className={classes.badgeLeft}>
+						<BadgeChangeLog />
+					</div>
 				</div>
 				<div className={classes.right}>
 					{MODE === "dev" && (

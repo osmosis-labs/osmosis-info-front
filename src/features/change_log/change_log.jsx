@@ -1,14 +1,24 @@
-import { makeStyles } from "@material-ui/core"
+import { IconButton, makeStyles } from "@material-ui/core"
+import GoTop from "../../components/gotop/gotop"
 import data from "./data_change_log"
 import LogItem from "./log_item"
-
+import CloseIcon from "@mui/icons-material/Close"
+import { useHistory } from "react-router-dom"
 const ChangeLog = () => {
 	const classes = useStyles()
-	console.log("change_log.jsx (l:7): data:", data)
+	const history = useHistory()
+
+	const goBack = () => {
+		let a = history.goBack()
+		console.log("change_log.jsx (l:14): history:", history, a)
+	}
 	return (
 		<div className={classes.rootChangeLog}>
 			<div className={classes.container}>
-				<p className={classes.title}>Change log</p>
+				<GoTop />
+				<div className={classes.titleContainer}>
+					<p className={classes.title}>Change log</p>
+				</div>
 				<div className={classes.containerItems}>
 					<span className={classes.line} />
 					{data.map((maj, i) => {
@@ -23,8 +33,7 @@ const ChangeLog = () => {
 const useStyles = makeStyles((theme) => {
 	return {
 		rootChangeLog: {
-			marginTop: "30px",
-			marginBottom: "30px",
+			padding: "30px",
 			overflowX: "hidden",
 			height: "100%",
 			margin: `${theme.spacing(2)}px 0`,
@@ -33,6 +42,12 @@ const useStyles = makeStyles((theme) => {
 		container: {
 			position: "relative",
 		},
+		titleContainer: {
+			display: "flex",
+			justifyContent: "space-between",
+			alignItems: "center",
+		},
+
 		line: {
 			[theme.breakpoints.down("xs")]: { display: "none" },
 
