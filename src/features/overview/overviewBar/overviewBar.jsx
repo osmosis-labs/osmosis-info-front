@@ -102,7 +102,7 @@ const OverviewBar = () => {
 			<div className={`${classes.item} ${classes.liquidity}`}>
 				<span className={classes.itemLabel}>Liquidity (-24h):</span>
 				<span className={getClasses(liquidityUSD24h)}>
-					{liquidityUSD24h > 0 ? "+" : "-"}${formaterNumber(Math.abs((liquidityUSD * liquidityUSD24h) / 100))}
+					${formaterNumber(Math.abs((liquidityUSD * liquidityUSD24h) / 100))}
 				</span>
 
 				<span className={`${getClasses(liquidityUSD24h, "percent")}`}>
