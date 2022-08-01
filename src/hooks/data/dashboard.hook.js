@@ -124,6 +124,14 @@ export const useLiquidityToken = ({ address }) => {
 	return { data: liquidityToken, isLoading, isFetching }
 }
 
+export const getTrx = ({ request, address, offset }) => {
+	let url = `https://api-osmosis-chain.imperator.co/swap/v1/address/${address}?limit=${100}&offset=${offset}`
+	return request({
+		url,
+		method: "GET",
+	})
+}
+
 export const useTypeTrx = ({ address }, opts = { exclude: [], chainId: "", address: "" }) => {
 	const request = useRequest()
 
@@ -260,6 +268,7 @@ export const useTrades = ({ address, limit = 10 }) => {
 			url,
 			method: "GET",
 		})
+		console.log("dashboard.hook.js -> 283: response.data, assets", response.data, assets  )
 		return formatTrades(response.data, assets)
 	}
 
