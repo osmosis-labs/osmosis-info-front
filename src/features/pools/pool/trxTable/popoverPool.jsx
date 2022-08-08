@@ -2,6 +2,7 @@ import { makeStyles, Popover } from "@material-ui/core"
 import { useEffect } from "react"
 import Image from "../../../../components/image/Image"
 import Paper from "../../../../components/paper/Paper"
+import { getImageFromAsset, useAssets } from "../../../../hooks/data/assets.hook"
 // import Popover from "../../../../components/popover/popover"
 const useStyles = makeStyles((theme) => {
 	return {
@@ -78,6 +79,8 @@ const useStyles = makeStyles((theme) => {
 })
 const PopoverPool = ({ routes, open, event, onClose, id }) => {
 	const classes = useStyles()
+	const { data: assets } = useAssets()
+
 	return (
 		<Popover
 			id={id + "p"}
@@ -104,7 +107,7 @@ const PopoverPool = ({ routes, open, event, onClose, id }) => {
 				<div className={classes.body}>
 					{routes.map((route, index) => {
 						let images = route.poolName.split("/").map((tokenName) => {
-							return `https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${tokenName.toLowerCase()}.png`
+							return getImageFromAsset(assets, { symbol: tokenName })
 						})
 						return (
 							<div key={index} className={classes.row}>

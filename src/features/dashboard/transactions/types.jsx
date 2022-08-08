@@ -19,8 +19,8 @@ import StartIcon from "@mui/icons-material/Start"
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange"
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz"
 import InputScroll from "../../../components/input_scroll/input_scroll"
-import FileUploadIcon from '@mui/icons-material/FileUpload';
-import DownloadIcon from '@mui/icons-material/Download';
+import FileUploadIcon from "@mui/icons-material/FileUpload"
+import DownloadIcon from "@mui/icons-material/Download"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -76,6 +76,8 @@ const Types = ({ types, onChangeType }) => {
 		if (type.includes("ibc.core.")) return <HubIcon className={classes.icon} />
 		if (type === "osmosis.gamm.v1beta1.MsgSwapExactAmountI") return <SwapVerticalCircleIcon className={classes.icon} />
 		if (type === "cosmos.bank.v1beta1.MsgSend") return <SwapHorizIcon className={classes.icon} />
+		if (type === "cosmos.bank.v1beta1.MsgSend.send") return <FileUploadIcon className={classes.icon} />
+		if (type === "cosmos.bank.v1beta1.MsgSend.receive") return <DownloadIcon className={classes.icon} />
 		if (type === "cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward")
 			return <CurrencyExchangeIcon className={classes.icon} />
 		if (type === "ibc.applications.transfer.v1.MsgTransfer") return <StartIcon className={classes.icon} />
@@ -114,7 +116,7 @@ const Types = ({ types, onChangeType }) => {
 							}}
 						>
 							{getIcon(type.type)}
-							{type.type} ({type.count})
+							{type.type} {type.count > 99 ? "99+" : type.count}
 						</div>
 					)
 				})}

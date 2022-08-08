@@ -2,12 +2,13 @@ import { formatTokenName, getWeekNumber, timeToDateUTC } from "../helpers/helper
 import relativeTime from "dayjs/plugin/relativeTime"
 import utc from "dayjs/plugin/utc"
 import dayjs from "dayjs"
+import { getImageFromAsset } from "../hooks/data/assets.hook"
 dayjs.extend(relativeTime)
 dayjs.extend(utc)
 
 export const defaultTokens = { all: [], main: [], frontier: [], current: [] }
 export const formatTokens = (data) => {
-	let res = { ...defaultTokens }
+	let res = { all: [], main: [], frontier: [], current: [] }
 
 	data.sort((a, b) => {
 		if (a.liquidity > b.liquidity) return -1
@@ -69,7 +70,7 @@ export const formatToken = (data) => {
 }
 
 export const defaultTrxToken = []
-export const formatTrxToken = (data, symbol) => {
+export const formatTrxToken = (data, symbol, assets) => {
 	let res = data.map((trx) => {
 		let time = new Date(trx.time_tx)
 		const tzOffset = new Date(trx.time_tx).getTimezoneOffset()
@@ -79,14 +80,13 @@ export const formatTrxToken = (data, symbol) => {
 		let addressDisplay = trx.address.substring(0, 5) + "..." + trx.address.substring(trx.address.length - 5)
 		let hashDisplay = trx.tx_hash.substring(0, 5) + "..." + trx.tx_hash.substring(trx.tx_hash.length - 5)
 
-		console.log("pools.formatter.js -> 127: trx", trx)
 		let symbolInDisplay = formatTokenName(trx.symbol_in)
 		let symbolOutDisplay = formatTokenName(trx.symbol_out)
 
 		let pools = {
 			images: [
-				`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_in.toLowerCase()}.png`,
-				`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_out.toLowerCase()}.png`,
+				getImageFromAsset(assets, { symbol: trx.symbol_in }),
+				getImageFromAsset(assets, { symbol: trx.symbol_out }),
 			],
 			name: `${trx.symbol_in}/${trx.symbol_out}`,
 			nameDisplay: `${symbolInDisplay}/${symbolOutDisplay}`,

@@ -4,10 +4,12 @@ import { useState } from "react"
 import { useHistory } from "react-router-dom"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
+import { useDebug } from "../../contexts/debug.provider"
 import { useSettings } from "../../contexts/SettingsProvider"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
 import { getInclude } from "../../helpers/helpers"
 import { usePools } from "../../hooks/data/pools.hook"
+import { useScrollTop } from "../../hooks/scroll.hook"
 import PoolsTable from "./poolsTable/poolsTable"
 
 const useStyles = makeStyles((theme) => {
@@ -35,9 +37,13 @@ const Pools = () => {
 	const {
 		data: { current: pools },
 		isLoading: isLoadingPools,
+		isFetching: isFetchingPools,
 	} = usePools({})
 	const { settings, updateSettings } = useSettings()
+	const { isLoadingDebug } = useDebug()
+	useScrollTop()
 
+	const isLoading = isLoadingPools || isFetchingPools || isLoadingDebug
 	const setSettingsPools = (settings) => {
 		updateSettings({ poolTable: settings })
 	}
@@ -62,7 +68,7 @@ const Pools = () => {
 	}, [watchlistPools, pools])
 
 	return (
-		<div className={classes.poolsRoot}>
+		<div className={classes.poolsRoot} id="topPools">
 			<p className={classes.subTitle}>Your watchlist</p>
 			<Paper className={classes.containerWatchlist}>
 				{watchlistPools.length > 0 ? (
@@ -71,6 +77,7 @@ const Pools = () => {
 						onClickPool={onClickPool}
 						setSettings={setSettingsPools}
 						settings={settings.poolTable}
+						isLoading={isLoading}
 					/>
 				) : (
 					<p>Saved pools will appear here</p>
@@ -78,12 +85,12 @@ const Pools = () => {
 			</Paper>
 			<p className={classes.subTitle}>All pools</p>
 			<Paper className={classes.containerLoader}>
-				<BlocLoaderOsmosis open={isLoadingPools} borderRadius={true} />
 				<PoolsTable
 					data={pools}
 					onClickPool={onClickPool}
 					setSettings={setSettingsPools}
 					settings={settings.poolTable}
+					isLoading={isLoading}
 				/>
 			</Paper>
 		</div>

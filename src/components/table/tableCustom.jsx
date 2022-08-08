@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react"
 import { makeStyles, Table, TableBody, TableCell, TableRow } from "@material-ui/core"
 import HeaderTableCustom from "./header/headerTableCustom"
 import RowTableCustom from "./body/rowTableCustom"
@@ -20,13 +20,19 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const TableCustom = ({ config, data, customClass, customClassTable }) => {
+const TableCustom = forwardRef(({ config, data, customClass, customClassTable, notifChangeRowPerPage = null }, ref) => {
 	const classes = useStyles()
 	const [order, setOrder] = useState(config.defaultOrder)
 	const [orderBy, setOrderBy] = useState(config.defaultOrderBy)
 	const [page, setPage] = useState(0)
 	const [rowsPerPage, setRowsPerPage] = useState(config.rowsPerPage)
 	const { settings } = useSettings()
+
+	useImperativeHandle(ref, () => ({
+		onChangePage: (newPage) => {
+			setPage(newPage)
+		},
+	}))
 
 	useEffect(() => {
 		setOrder(config.defaultOrder)
@@ -36,6 +42,7 @@ const TableCustom = ({ config, data, customClass, customClassTable }) => {
 
 	const onChangeRowsPerPage = (event) => {
 		setRowsPerPage(event.target.value)
+		if (notifChangeRowPerPage) notifChangeRowPerPage(event.target.value)
 		setPage(0)
 	}
 
@@ -138,7 +145,7 @@ const TableCustom = ({ config, data, customClass, customClassTable }) => {
 
 	return (
 		<div className={`${classes.tableCustom} ${customClass}`}>
-			<Table className={customClassTable} >
+			<Table className={customClassTable}>
 				<HeaderTableCustom onSort={onSort} cellsHeader={config.cellsConfig} orderBy={orderBy} order={order} />
 				<TableBody>
 					{displayData(data)
@@ -166,6 +173,6 @@ const TableCustom = ({ config, data, customClass, customClassTable }) => {
 			)}
 		</div>
 	)
-}
+})
 
 export default TableCustom

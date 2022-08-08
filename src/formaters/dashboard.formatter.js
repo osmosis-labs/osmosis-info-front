@@ -1,7 +1,8 @@
-import { formatTokenName, getDaysInMonth, getTypeDashboard } from "../helpers/helpers"
+import { contains, formatTokenName, getDaysInMonth, getTypeDashboard } from "../helpers/helpers"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import relativeTime from "dayjs/plugin/relativeTime"
+import { getImageFromAsset } from "../hooks/data/assets.hook"
 dayjs.extend(relativeTime)
 dayjs.extend(utc)
 
@@ -160,8 +161,26 @@ export const formatLiqudity = (dataLiquidity, isAccumulated = true) => {
 }
 
 export const defaultTypeTrx = []
-export const formatTypeTrx = (data, exclude) => {
+export const formatTypeTrx = (data, { exclude, chainId, address }, sendReceive) => {
 	let res = []
+	let typeReceive = { type: "cosmos.bank.v1beta1.MsgSend.receive", count: 0 }
+	let typeSend = { type: "cosmos.bank.v1beta1.MsgSend.send", count: 0 }
+
+	sendReceive.forEach((trx) => {
+		if (trx.types.map((type) => type.value).includes(typeReceive.type)) {
+			typeReceive.count++
+		} else {
+			typeSend.count++
+		}
+	})
+	if (typeReceive.count > 0) {
+		typeReceive.type = getTypeDashboard("cosmos.bank.v1beta1.MsgSend.receive")
+		res.push(typeReceive)
+	}
+	if (typeSend.count > 0) {
+		typeSend.type = getTypeDashboard("cosmos.bank.v1beta1.MsgSend.send")
+		res.push(typeSend)
+	}
 	data.forEach((type) => {
 		if (exclude.length === 0 || !exclude.includes(type.type)) {
 			res.push({
@@ -177,7 +196,8 @@ export const formatTypeTrx = (data, exclude) => {
 }
 
 export const defaultTrxs = []
-export const formatTrxs = (data, { chainId, address }) => {
+
+export const formatTrxs = (data, { chainId, address, exclude }) => {
 	let res = []
 	data.forEach((item) => {
 		let trx = {
@@ -218,8 +238,10 @@ export const formatTrxs = (data, { chainId, address }) => {
 			if (!msg.type.display) msg.type.display = type
 			if (msg.type.value === "cosmos.bank.v1beta1.MsgSend") {
 				if (msg.to_address === address) {
+					msg.type.value = "cosmos.bank.v1beta1.MsgSend.receive"
 					msg.type.display = "Receive"
 				} else {
+					msg.type.value = "cosmos.bank.v1beta1.MsgSend.send"
 					msg.type.display = "Send"
 				}
 			}
@@ -229,15 +251,16 @@ export const formatTrxs = (data, { chainId, address }) => {
 		trx.types = types
 
 		trx.chainId = chainId
-
-		res.push(trx)
+		if (!exclude || (exclude && exclude.length === 0) || (exclude && !contains(exclude, trx.types))) {
+			res.push(trx)
+		}
 	})
 
 	return res
 }
 
 export const defaultTrades = []
-export const formatTrades = (data) => {
+export const formatTrades = (data, assets) => {
 	let res = []
 	data.forEach((item) => {
 		let trx = {
@@ -295,14 +318,10 @@ export const formatTrades = (data) => {
 		trx.types = types
 		let images = []
 		if (item.symbol_in) {
-			images.push(
-				`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${item.symbol_in.toLowerCase()}.png`
-			)
+			images.push(getImageFromAsset(assets, { symbol: item.symbol_in }))
 		}
 		if (item.symbol_out) {
-			images.push(
-				`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${item.symbol_out.toLowerCase()}.png`
-			)
+			images.push(getImageFromAsset(assets, { symbol: item.symbol_out }))
 		}
 
 		let pools = {

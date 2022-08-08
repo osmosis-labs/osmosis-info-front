@@ -1,5 +1,6 @@
 import React from "react"
 import { makeStyles } from "@material-ui/core"
+import CustomSkeleton from "../../components/skeleton/custom_skeleton"
 const useStyles = makeStyles((theme) => {
 	return {
 		IBCInfoRoot: {
@@ -33,10 +34,15 @@ const useStyles = makeStyles((theme) => {
 			flexDirection: "row",
 			[theme.breakpoints.down("xs")]: {
 				marginTop: "20px",
+				width: "100%",
+				justifyContent: "space-between",
 			},
 		},
 		buble: {
 			marginRight: "15px",
+			[theme.breakpoints.down("xs")]: {
+				marginRight: "0px",
+			},
 			borderRadius: "50px",
 			padding: "4px 14px",
 			display: "flex",
@@ -108,6 +114,7 @@ const IBCInfo = ({
 	nbNetwork,
 	setIbcFilter,
 	ibcFilter,
+	isLoading,
 }) => {
 	const classes = useStyles()
 	return (
@@ -117,7 +124,7 @@ const IBCInfo = ({
 					<span className={classes.title}>IBC Status</span>
 					<div className={classes.bubles}>
 						<span
-						onClick={()=>setIbcFilter("normal")}
+							onClick={() => setIbcFilter("normal")}
 							className={
 								ibcFilter === "normal"
 									? `${classes.buble} ${classes.bubleGreen} ${classes.bubleSelected}`
@@ -125,10 +132,11 @@ const IBCInfo = ({
 							}
 						>
 							<span className={`${classes.dot} ${classes.dotGreen}`} />
-							<span>{`${statusNormal} Normal`}</span>
+							{isLoading ? <CustomSkeleton width={20} /> : <span>{`${statusNormal}`}</span>}
+							<span>&nbsp;{` Normal`}</span>
 						</span>
 						<span
-						onClick={()=>setIbcFilter("congested")}
+							onClick={() => setIbcFilter("congested")}
 							className={
 								ibcFilter === "congested"
 									? `${classes.buble} ${classes.bubleOrange} ${classes.bubleSelected}`
@@ -136,10 +144,11 @@ const IBCInfo = ({
 							}
 						>
 							<span className={`${classes.dot} ${classes.dotOrange}`} />
-							<span>{`${statusCongested} Congested`}</span>
+							{isLoading ? <CustomSkeleton width={20} /> : <span>{`${statusCongested}`}</span>}
+							<span>&nbsp;{` Congested`}</span>
 						</span>
 						<span
-						onClick={()=>setIbcFilter("blocked")}
+							onClick={() => setIbcFilter("blocked")}
 							className={
 								ibcFilter === "blocked"
 									? `${classes.buble} ${classes.bubleRed} ${classes.bubleSelected}`
@@ -147,7 +156,8 @@ const IBCInfo = ({
 							}
 						>
 							<span className={`${classes.dot} ${classes.dotRed}`} />
-							<span>{`${statusBlocked} Blocked`}</span>
+							{isLoading ? <CustomSkeleton width={20} /> : <span>{`${statusBlocked}`}</span>}
+							<span>&nbsp; {` Blocked`}</span>
 						</span>
 					</div>
 				</div>
@@ -158,7 +168,8 @@ const IBCInfo = ({
 					</div>
 					<div className={classes.info}>
 						<p className={classes.name}>Networks</p>
-						<p className={classes.data}>{nbNetwork}</p>
+
+						{isLoading ? <CustomSkeleton width={30} height={50} /> : <p className={classes.data}>{nbNetwork}</p>}
 					</div>
 				</div>
 			</div>

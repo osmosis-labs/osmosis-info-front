@@ -1,6 +1,7 @@
 import { makeStyles } from "@material-ui/core"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
+import { useDebug } from "../../contexts/debug.provider"
 import { useWatchlistIBC } from "../../contexts/WatchlistIBCProvider"
 import { MIN_BLOCKED, MIN_CONGESTED } from "../../formaters/ibc.formatter"
 import { getInclude } from "../../helpers/helpers"
@@ -54,6 +55,7 @@ const useStyles = makeStyles((theme) => {
 
 const IBC = () => {
 	const classes = useStyles()
+	const { isLoadingDebug } = useDebug()
 	const {
 		data: { ibcCouple, statusNormal, statusCongested, statusBlocked },
 		isLoading: isLoadingIbc,
@@ -65,6 +67,7 @@ const IBC = () => {
 	const { updateWatchlistIBC, isInWatchlist } = useWatchlistIBC()
 	const [ibcSearch, setIbcSearch] = useState("")
 	const [ibcSearchList, setIbcSearchList] = useState([])
+	const ref = useRef(null)
 
 	const [ibcFilter, setIbcFilter] = useState("")
 
@@ -112,6 +115,9 @@ const IBC = () => {
 		let list = filterSearch(ibcCouple, ibcSearch)
 		list = filterStatus(list, ibcFilter)
 		setIbcSearchList(list)
+		if (ref.current) {
+			ref.current.onChangePage(0)
+		}
 	}, [ibcSearch, ibcCouple, ibcFilter])
 
 	useEffect(() => {
@@ -127,7 +133,6 @@ const IBC = () => {
 	})
 	return (
 		<div className={classes.IBCRoot}>
-			<BlocLoaderOsmosis open={isLoading} classNameLoading={classes.loading} />
 			<IBCInfo
 				timeLastUpdate={timeLastUpdate}
 				statusNormal={statusNormal}
@@ -136,14 +141,17 @@ const IBC = () => {
 				nbNetwork={ibcCouple.length}
 				setIbcFilter={updateFilter}
 				ibcFilter={ibcFilter}
+				isLoading={isLoading || isLoadingDebug}
 			/>
 			<div className={classes.container}>
 				<div className={classes.content}>
-					<IBCwatchlist ibcCouple={ibcCouple} />
+					<IBCwatchlist ibcCouple={ibcCouple} isLoading={isLoading || isLoadingDebug} />
 					<p className={classes.subTitle}>IBC list</p>
 					<IBCSearch ibcSearch={ibcSearch} setIbcSearch={setIbcSearch} />
 					<div className={classes.containerTable}>
 						<IbcTable
+							isLoading={isLoading || isLoadingDebug}
+							ref={ref}
 							data={ibcSearchList}
 							updateWatchlistIBC={updateWatchlistIBC}
 							isInWatchlist={isInWatchlist}

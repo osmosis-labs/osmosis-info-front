@@ -165,7 +165,7 @@ const AppBarDesktop = ({ type, onChangeType, message, diplayMessage }) => {
 	}, [data])
 
 	return (
-		<div className={classes.appBarDesktopRoot}>
+		<div className={classes.appBarDesktopRoot} id="top">
 			{diplayMessage && (
 				<div className={classes.message}>
 					<WarningIcon className={classes.messageIcon} />

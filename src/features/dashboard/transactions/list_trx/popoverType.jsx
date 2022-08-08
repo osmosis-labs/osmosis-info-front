@@ -1,4 +1,5 @@
 import { makeStyles, Popover } from "@material-ui/core"
+import { useEffect, useState } from "react"
 import Paper from "../../../../components/paper/Paper"
 
 const useStyles = makeStyles((theme) => {
@@ -37,6 +38,21 @@ const useStyles = makeStyles((theme) => {
 })
 const PopoverTypes = ({ types, open, event, onClose, id }) => {
 	const classes = useStyles()
+	const [typesAggregated, setTypesAggregated] = useState({})
+
+	useEffect(() => {
+		if (types.length > 0) {
+			let aggregated = {}
+			types.forEach((type) => {
+				if (aggregated[type.value]) {
+					aggregated[type.value].nb++
+				} else {
+					aggregated[type.value] = { ...type, nb: 1 }
+				}
+			})
+			setTypesAggregated((t) => aggregated)
+		}
+	}, [types])
 	return (
 		<Popover
 			id={id + "p"}
@@ -55,10 +71,14 @@ const PopoverTypes = ({ types, open, event, onClose, id }) => {
 			PaperProps={{ className: classes.paperPopover }}
 		>
 			<Paper className={classes.rootPopoverTypes}>
-				{types.map((type, index) => {
+				{Object.keys(typesAggregated).map((key, index) => {
+					let type = typesAggregated[key]
 					return (
 						<div key={id + "type" + index} className={classes.row}>
-							<span className={classes.type}>{type.display}</span>
+							<span className={classes.type}>
+								{type.display}
+								{type.nb > 1 ? ` (${type.nb})` : null}
+							</span>
 						</div>
 					)
 				})}

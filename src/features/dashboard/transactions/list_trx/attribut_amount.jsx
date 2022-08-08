@@ -1,5 +1,6 @@
 import { makeStyles, TableCell } from "@material-ui/core"
 import { formateNumberDecimalsAuto } from "../../../../helpers/helpers"
+import { getExponent, useAssets } from "../../../../hooks/data/assets.hook"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootAttributAmount: {
@@ -29,6 +30,8 @@ const useStyles = makeStyles((theme) => {
 })
 const AttributAmount = ({ data, config, itemConfig, itemKey }) => {
 	const classes = useStyles()
+	const { data: assets } = useAssets()
+
 	if (!data?.messages?.length === 0 || !data?.messages?.[0]?.amount)
 		return (
 			<div className={classes.rootAttributFees}>
@@ -37,11 +40,13 @@ const AttributAmount = ({ data, config, itemConfig, itemKey }) => {
 			</div>
 		)
 
-	let amount = data.messages[0].amount[0].amount
-	let denom = data.messages[0].amount[0].denom
-	if (denom === "uosmo") {
-		amount /= 1_000_000
-		denom = "OSMO"
+	let amount = data.messages[0]?.amount[0]?.amount
+	let denom = data.messages[0]?.amount[0]?.denom
+	let asset = assets[denom]
+	if (asset) {
+		let expo = getExponent(asset, denom)
+		denom = asset.symbol
+		amount = amount / Math.pow(10, expo)
 	}
 
 	let splitNumber = formateNumberDecimalsAuto({ price: amount }).toString().split(".")

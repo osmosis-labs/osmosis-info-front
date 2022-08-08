@@ -30,6 +30,7 @@
 		"react-query": "^3.39.0",
 		"react-router-dom": "^5.2.0",
 		"react-scripts": "4.0.3",
+		"react-scroll": "^1.8.7",
 		"react-tooltip": "^4.2.21",
 		"react-transition-group": "1.x",
 		"resize-observer": "^1.0.2",
@@ -37,7 +38,7 @@
 	},
 	"scripts": {
 		"startssl": "env-cmd -f .env react-scripts --openssl-legacy-provider start",
-		"start": "env-cmd -f .env react-scripts start",
+		"start": "set PORT=3002 && env-cmd -f .env react-scripts start",
 		"build": "env-cmd -f .env react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"

@@ -2,6 +2,7 @@ import { formatTokenName, getInclude, getItemInclude, getWeekNumber, timeToDateU
 import relativeTime from "dayjs/plugin/relativeTime"
 import utc from "dayjs/plugin/utc"
 import dayjs from "dayjs"
+import { getImageFromAsset } from "../hooks/data/assets.hook"
 dayjs.extend(relativeTime)
 dayjs.extend(utc)
 
@@ -29,7 +30,7 @@ export const formatTokensPool = (data) => {
 export const defaultPools = { all: [], main: [], frontier: [], current: [] }
 
 export const formatPools = (dataPools, dataAPR, allTokens) => {
-	let res = { ...defaultPools }
+	let res = { all: [], main: [], frontier: [], current: [] }
 	Object.keys(dataPools).forEach((key) => {
 		let row = dataPools[key]
 		let apr = null
@@ -113,7 +114,7 @@ export const formatPools = (dataPools, dataAPR, allTokens) => {
 }
 
 export const defaultPoolTrx = []
-export const formatPoolTrx = (data) => {
+export const formatPoolTrx = (data, assets) => {
 	let res = data.map((trx) => {
 		let time = new Date(trx.time_tx)
 		const tzOffset = new Date(trx.time_tx).getTimezoneOffset()
@@ -129,8 +130,8 @@ export const formatPoolTrx = (data) => {
 
 		let pools = {
 			images: [
-				`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_in.toLowerCase()}.png`,
-				`https://raw.githubusercontent.com/osmosis-labs/assetlists/main/images/${trx.symbol_out.toLowerCase()}.png`,
+				getImageFromAsset(assets, { symbol: trx.symbol_in }),
+				getImageFromAsset(assets, { symbol: trx.symbol_out }),
 			],
 			name: `${trx.symbol_in}/${trx.symbol_out}`,
 			nameDisplay: `${symbolInDisplay}/${symbolOutDisplay}`,

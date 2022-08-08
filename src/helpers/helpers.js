@@ -1,9 +1,9 @@
 import typesDashboard from "./typesDashboard.json"
 
 export const formatTokenName = (tokenName) => {
-	let res = ""
-	if (tokenName) res = tokenName.replace("axl", "")
-	return res
+	// let res = ""
+	// if (tokenName) res = tokenName.replace("axl", "")
+	return tokenName
 }
 
 export const getTypeDashboard = (type, reverse = false) => {
@@ -17,6 +17,16 @@ export const getTypeDashboard = (type, reverse = false) => {
 	}
 	if (!res) res = type
 	return res
+}
+
+export const contains = (arrayOne, arrayTwo) => {
+	let finded = false
+	let index = 0
+	while (index < arrayOne.length && !finded) {
+		finded = arrayTwo.includes(arrayOne[index])
+		index++
+	}
+	return finded
 }
 
 export const getDaysInMonth = (month, year) => new Date(year, month, 0).getDate()
@@ -164,6 +174,8 @@ export const normalize = (string) => {
 		return ""
 	}
 }
+
+export const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
 export const getWeekNumber = (date) => {
 	let d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))

@@ -10,6 +10,9 @@ import ButtonChart from "./button_chart"
 import Chart from "./chart"
 import SwitchStyled from "../../../../components/switch/SwitchStyled"
 import DailyReward from "./daily_reward"
+import { useDebug } from "../../../../contexts/debug.provider"
+import ChartSkeleton from "../../../../components/skeleton/chart_skeleton"
+import CustomSkeleton from "../../../../components/skeleton/custom_skeleton"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootStackingRewards: {
@@ -51,7 +54,6 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "flex-start",
 		},
 		rowInfo: {
-			margin: "4px 2px",
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "flex-start",
@@ -59,11 +61,11 @@ const useStyles = makeStyles((theme) => {
 		},
 		name: {
 			fontSize: "11px",
-			marginBottom: "2px",
 			color: theme.palette.table.cellDark,
 		},
 		value: {
 			color: theme.palette.gray.contrastText,
+			marginTop: "4px",
 		},
 		token: {
 			color: theme.palette.table.cellDark,
@@ -85,6 +87,7 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			alignItems: "center",
 		},
+		chartSkeleton: { margin: "10px" },
 	}
 })
 const StackingRewards = () => {
@@ -93,14 +96,19 @@ const StackingRewards = () => {
 
 	const [isAccumulated, setIsAccumulated] = useState(true)
 
-	const { data: balance, isLoading: isLoadingBalance } = useBalance({ address })
+	const { data: balance, isLoading: isLoadingBalance, isFetching: isFetchingBalance } = useBalance({ address })
 
-	const { data: chartStaking, isLoading: isLoadingStaking } = useChartStaking({
+	const {
+		data: chartStaking,
+		isLoading: isLoadingStaking,
+		isFetching: isFetchingStaking,
+	} = useChartStaking({
 		address,
 		isAccumulated,
 	})
+	const { isLoadingDebug } = useDebug()
 
-	const isLoading = isLoadingBalance || isLoadingStaking
+	const isLoading = isLoadingBalance || isLoadingStaking || isFetchingBalance || isFetchingStaking || isLoadingDebug
 
 	const [data, setData] = useState([])
 	const [total, setTotal] = useState(0)
@@ -231,41 +239,89 @@ const StackingRewards = () => {
 				</ButtonCSV>
 			</div>
 			<Paper className={classes.paper}>
-				<BlocLoaderOsmosis open={isLoading} classNameLoading={classes.loading} />
-				{data.length > 0 ? (
+				{data.length || isLoading > 0 ? (
 					<>
 						<div className={classes.chartContainer}>
-							<Chart data={data} crossMove={crossMove} onMouseLeave={onMouseLeave} />
+							{isLoading ? (
+								<ChartSkeleton className={classes.chartSkeleton} sx={{ margin: "0px" }} />
+							) : (
+								<Chart data={data} crossMove={crossMove} onMouseLeave={onMouseLeave} />
+							)}
 						</div>
 						<div className={classes.chartInfo}>
-							<ButtonChart range={range} onChangeRange={onChangeRange} />
+							{isLoading ? (
+								<CustomSkeleton
+									height={50}
+									width={120}
+									sx={{ margin: "0px", padding: "0px", transformOrigin: "0 20% !important" }}
+								/>
+							) : (
+								<ButtonChart range={range} onChangeRange={onChangeRange} />
+							)}
 							<div className={classes.rowInfo}>
 								<p className={classes.name}>Total staked</p>
-								<p className={classes.value}>
-									{formaterNumber(osmoStaked)} <span className={classes.token}>OSMO</span>
-								</p>
+								{isLoading ? (
+									<CustomSkeleton
+										height={30}
+										width={80}
+										sx={{ margin: "0px", padding: "0px", transformOrigin: "0 20% !important" }}
+									/>
+								) : (
+									<p className={classes.value}>
+										{formaterNumber(osmoStaked)} <span className={classes.token}>OSMO</span>
+									</p>
+								)}
 							</div>
 							<div className={classes.rowInfo}>
 								<p className={classes.name}>Total reward</p>
-								<p className={classes.value}>
-									{formaterNumber(total)} <span className={classes.token}>OSMO</span>
-								</p>
-								<p className={classes.value}>{getPercentDisplay()}</p>
+								{isLoading ? (
+									<CustomSkeleton
+										height={30}
+										width={80}
+										sx={{ margin: "0px", padding: "0px", transformOrigin: "0 20% !important" }}
+									/>
+								) : (
+									<>
+										<p className={classes.value}>
+											{formaterNumber(total)} <span className={classes.token}>OSMO</span>
+										</p>
+										<p className={classes.value}>{getPercentDisplay()}</p>
+									</>
+								)}
 							</div>
 							<div className={classes.rowInfo}>
 								<p className={classes.name}>Pending reward</p>
-								<p className={classes.value}>
-									{formaterNumber(osmoReward)} <span className={classes.token}>OSMO</span>
-								</p>
+								{isLoading ? (
+									<CustomSkeleton
+										height={30}
+										width={80}
+										sx={{ margin: "0px", padding: "0px", transformOrigin: "0 20% !important" }}
+									/>
+								) : (
+									<p className={classes.value}>
+										{formaterNumber(osmoReward)} <span className={classes.token}>OSMO</span>
+									</p>
+								)}
 							</div>
 							<div className={classes.rowInfo}>
 								<p className={classes.name}>Current reward</p>
-								<p className={classes.name}>{currentItem.time}</p>
-								<p className={classes.value}>
-									{currentItem.value} <span className={classes.token}>OSMO</span>
-								</p>
+								{isLoading ? (
+									<CustomSkeleton
+										height={30}
+										width={80}
+										sx={{ margin: "0px", padding: "0px", transformOrigin: "0 20% !important" }}
+									/>
+								) : (
+									<>
+										<p className={classes.name}>{currentItem.time}</p>
+										<p className={classes.value}>
+											{currentItem.value} <span className={classes.token}>OSMO</span>
+										</p>
+									</>
+								)}
 							</div>
-							<DailyReward ref={refDailyReward} />
+
+							<DailyReward ref={refDailyReward} isLoading={isLoading} />
 
 							<div className={classes.toggle}>
 								<SwitchStyled size="small" checked={isAccumulated} onChange={toggleAccumulated} />

@@ -4,10 +4,12 @@ import { useState } from "react"
 import { useHistory } from "react-router-dom"
 import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
+import { useDebug } from "../../contexts/debug.provider"
 import { useSettings } from "../../contexts/SettingsProvider"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import { getInclude } from "../../helpers/helpers"
 import { useTokens } from "../../hooks/data/tokens.hook"
+import { useScrollTop } from "../../hooks/scroll.hook"
 import TokenOverview from "./tokenOverview/tokenOverview"
 import TokensTable from "./tokensTable/tokensTable"
 
@@ -36,8 +38,12 @@ const Tokens = () => {
 	const {
 		data: { current: tokens },
 		isLoading: loadingTokens,
+		isFetching: fetchingTokens,
 	} = useTokens()
+	useScrollTop()
+	const { isLoadingDebug } = useDebug()
 	const { settings, updateSettings } = useSettings()
+	const isLoading = loadingTokens || fetchingTokens || isLoadingDebug
 
 	const setSettingsTokens = (settings) => {
 		updateSettings({ tokenTable: settings })
@@ -71,6 +77,7 @@ const Tokens = () => {
 						onClickToken={onClickToken}
 						setSettings={setSettingsTokens}
 						settings={settings.tokenTable}
+						isLoading={isLoading}
 					/>
 				) : (
 					<p>Saved tokens will appear here</p>
@@ -80,12 +87,12 @@ const Tokens = () => {
 			<TokenOverview />
 			<p className={classes.subTitle}>All tokens</p>
 			<Paper className={classes.containerLoader}>
-				<BlocLoaderOsmosis open={loadingTokens} borderRadius={true} />
 				<TokensTable
 					data={tokens}
 					onClickToken={onClickToken}
 					setSettings={setSettingsTokens}
 					settings={settings.tokenTable}
+					isLoading={isLoading}
 				/>
 			</Paper>
 		</div>

@@ -6,6 +6,8 @@ import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 import { useBalance, useExposure } from "../../../hooks/data/dashboard.hook"
 import { formatWorth } from "../../../formaters/dashboard.formatter"
 import { useKeplr } from "../../../contexts/KeplrProvider"
+import { useDebug } from "../../../contexts/debug.provider"
+import CustomSkeleton from "../../../components/skeleton/custom_skeleton"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -46,12 +48,13 @@ const useStyles = makeStyles((theme) => {
 			marginRight: "80px",
 		},
 		titleInfo: {
-			margin: "32px 0 16px 0",
+			margin: "32px 0 0 0",
 			fontSize: "12px",
 			color: theme.palette.gray.textLight,
 		},
 		dataInfo: {
 			fontSize: "1.6rem",
+			marginTop: "16px",
 			color: theme.palette.primary.contrastText,
 		},
 
@@ -67,6 +70,7 @@ const useStyles = makeStyles((theme) => {
 		},
 		dataInfoReturn: {
 			fontSize: "1.6rem",
+			marginTop: "16px",
 			color: theme.palette.primary.contrastText,
 			display: "flex",
 			flexDirection: "row",
@@ -107,19 +111,20 @@ const useStyles = makeStyles((theme) => {
 const Overview = () => {
 	const classes = useStyles()
 	const { address } = useKeplr()
+	const { isLoadingDebug } = useDebug()
 
 	//Balance
 	const { data: balance, isLoading: isLoadingBalance } = useBalance({ address })
 
 	//Exposure
-	const { data:exposure, isLoading: isLoadingExposure } = useExposure({ address })
-	
+	const { data: exposure, isLoading: isLoadingExposure } = useExposure({ address })
+
 	const [worth, setWorth] = useState(0)
 	const [osmosStaked, setOsmosStaked] = useState(0)
 	const [return24h, setReturn24h] = useState(0)
 	const [returnChange24h, setReturnChange24h] = useState(0)
 
-	const isLoading = isLoadingBalance || isLoadingExposure
+	const isLoading = isLoadingBalance || isLoadingExposure || isLoadingDebug
 
 	useEffect(() => {
 		if (balance && exposure) {
@@ -154,26 +159,36 @@ const Overview = () => {
 
 	return (
 		<div className={classes.rootOverview}>
-			<BlocLoaderOsmosis open={isLoading} classNameLoading={classes.loading} />
-
 			<div className={classes.container}>
 				<p className={classes.title}>Analytics</p>
 				<div className={classes.containerInfo}>
 					<div className={classes.info}>
 						<p className={classes.titleInfo}>Total worth</p>
-						<p className={classes.dataInfo}>${formateNumberDecimalsAuto({ price: worth })}</p>
+						{isLoading ? (
+							<CustomSkeleton height={50} width={100} sx={{ marginTop: "0px" }} />
+						) : (
+							<p className={classes.dataInfo}>${formateNumberDecimalsAuto({ price: worth })}</p>
+						)}
 					</div>
 
 					<div className={classes.info}>
 						<p className={classes.titleInfo}>Available liquidity</p>
-						<p className={classes.dataInfoReturn}>${formateNumberDecimalsAuto({ price: osmosStaked })}</p>
+						{isLoading  ? (
+							<CustomSkeleton height={50} width={100} sx={{ marginTop: "0px" }} />
+						) : (
+							<p className={classes.dataInfoReturn}>${formateNumberDecimalsAuto({ price: osmosStaked })}</p>
+						)}
 					</div>
 					<div className={classes.info}>
 						<p className={classes.titleInfo}>Return 24h</p>
-						<p className={classes.dataInfoReturn}>
-							{return24h > 0 ? "+" : ""}${formateNumberDecimalsAuto({ price: return24h })}
-							{getPercentDisplay(returnChange24h)}
-						</p>
+						{isLoading ? (
+							<CustomSkeleton height={50} width={100} sx={{ marginTop: "0px" }} />
+						) : (
+							<p className={classes.dataInfoReturn}>
+								{return24h > 0 ? "+" : ""}${formateNumberDecimalsAuto({ price: return24h })}
+								{getPercentDisplay(returnChange24h)}
+							</p>
+						)}
 					</div>
 				</div>
 			</div>

@@ -2,7 +2,6 @@ import { makeStyles } from "@material-ui/core"
 import { useEffect } from "react"
 import { useState } from "react"
 import { useHistory } from "react-router-dom"
-import BlocLoaderOsmosis from "../../components/loader/BlocLoaderOsmosis"
 import Paper from "../../components/paper/Paper"
 import { useWatchlistTokens } from "../../contexts/WatchlistTokensProvider"
 import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
@@ -16,6 +15,9 @@ import OverviewBar from "./overviewBar/overviewBar"
 import { useLiquidityChart, useVolumeChart } from "../../hooks/data/charts.hook"
 import { useTokens } from "../../hooks/data/tokens.hook"
 import { usePools } from "../../hooks/data/pools.hook"
+import ContainerChartSkeleton from "./container_chart_skeleton"
+import { useDebug } from "../../contexts/debug.provider"
+import { useScrollTop } from "../../hooks/scroll.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -88,9 +90,13 @@ const useStyles = makeStyles((theme) => {
 
 const Overview = () => {
 	const classes = useStyles()
-	const { data: dataLiquidity, isLoading: isLoadingLiquidity } = useLiquidityChart()
-	const { data: dataVolume, isLoading: isLoadingVolume } = useVolumeChart()
+	const { isLoadingDebug } = useDebug()
+	useScrollTop()
 
+	const { data: dataLiquidity, isLoading: loadingLiquidity, isFetching: isFetchingLiquidity } = useLiquidityChart()
+	const isLoadingLiquidity = loadingLiquidity || isFetchingLiquidity || isLoadingDebug
+	const { data: dataVolume, isLoading: loadingVolume, isFetching: isFetchingVolume } = useVolumeChart()
+	const isLoadingVolume = loadingVolume || isFetchingVolume || isLoadingDebug
 	const { watchlistTokens } = useWatchlistTokens()
 	const { watchlistPools } = useWatchlistPools()
 	const [tokensOnWatchlist, setTokensOnWatchlist] = useState([])
@@ -99,11 +105,16 @@ const Overview = () => {
 	const {
 		data: { current: pools },
 		isLoading: loadingPools,
+		isFetching: isFetchingPools,
 	} = usePools({})
+
+	const isLoadingPools = loadingPools || isFetchingPools || isLoadingDebug
 	const {
 		data: { current: tokens },
 		isLoading: loadingTokens,
+		isFetching: isFetchingTokens,
 	} = useTokens()
+	const isLoadingTokens = loadingTokens || isFetchingTokens || isLoadingDebug
 
 	const [dataPools, setDataPools] = useState([])
 	const [dataTokens, setDataTokens] = useState([])
@@ -148,7 +159,7 @@ const Overview = () => {
 		})
 		setDataTokens(data)
 	}, [tokens])
-
+	
 	const onClickPool = (pool) => {
 		history.push(`/pool/${pool.id}`)
 	}
@@ -183,26 +194,32 @@ const Overview = () => {
 				<p className={classes.title}>Osmosis - Overview</p>
 				<div className={classes.charts}>
 					<Paper className={classes.chart}>
-						<BlocLoaderOsmosis open={isLoadingLiquidity} borderRadius={true} />
-						<div className={classes.containerChart}>
-							<ContainerChartLiquidity
-								dataDay={dataLiquidity.d}
-								dataWeek={dataLiquidity.w}
-								dataMonth={dataLiquidity.m}
-								title="Liquidity"
-							/>
-						</div>
+						{isLoadingLiquidity ? (
+							<ContainerChartSkeleton />
+						) : (
+							<div className={classes.containerChart}>
+								<ContainerChartLiquidity
+									dataDay={dataLiquidity.d}
+									dataWeek={dataLiquidity.w}
+									dataMonth={dataLiquidity.m}
+									title="Liquidity"
+								/>
+							</div>
+						)}
 					</Paper>
 					<Paper className={classes.chart}>
-						<BlocLoaderOsmosis open={isLoadingVolume} borderRadius={true} />
-						<div className={classes.containerChart}>
-							<ContainerChartVolume
-								dataDay={dataVolume.d}
-								dataWeek={dataVolume.w}
-								dataMonth={dataVolume.m}
-								title="Volume"
-							/>
-						</div>
+						{isLoadingVolume ? (
+							<ContainerChartSkeleton />
+						) : (
+							<div className={classes.containerChart}>
+								<ContainerChartVolume
+									dataDay={dataVolume.d}
+									dataWeek={dataVolume.w}
+									dataMonth={dataVolume.m}
+									title="Volume"
+								/>
+							</div>
+						)}
 					</Paper>
 				</div>
 				<OverviewBar />
@@ -214,6 +231,7 @@ const Overview = () => {
 							onClickToken={onClickToken}
 							setSettings={setSettingsTokens}
 							settings={settings.tokenTable}
+							isLoading={isLoadingTokens}
 						/>
 					) : (
 						<p>Saved tokens will appear here</p>
@@ -227,6 +245,7 @@ const Overview = () => {
 							onClickPool={onClickPool}
 							setSettings={setSettingsPools}
 							settings={settings.poolTable}
+							isLoading={isLoadingPools}
 						/>
 					) : (
 						<p>Saved pools will appear here</p>
@@ -234,22 +253,22 @@ const Overview = () => {
 				</Paper>
 				<p className={classes.subTitle}>Top tokens</p>
 				<Paper className={classes.containerLoading}>
-					<BlocLoaderOsmosis open={loadingTokens} borderRadius={true} />
 					<TokensTable
 						data={dataTokens}
 						onClickToken={onClickToken}
 						setSettings={setSettingsTokens}
 						settings={settings.tokenTable}
+						isLoading={isLoadingTokens}
 					/>
 				</Paper>
 				<p className={classes.subTitle}>Top pools</p>
 				<Paper className={classes.containerLoading}>
-					<BlocLoaderOsmosis open={loadingPools} borderRadius={true} />
 					<PoolsTable
 						data={dataPools}
 						onClickPool={onClickPool}
 						setSettings={setSettingsPools}
 						settings={settings.poolTable}
+						isLoading={isLoadingPools}
 					/>
 				</Paper>
 			</div>

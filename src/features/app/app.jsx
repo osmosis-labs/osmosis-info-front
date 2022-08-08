@@ -132,7 +132,7 @@ const App = () => {
 												<InfoBar />
 												<AppBar />
 												<div className={classes.container}>
-													<div className={classes.contentContainer}>
+													<div className={classes.contentContainer} id="mainContainer">
 														<Switch>
 															<Route path="/" exact={true}>
 																<div className={classes.content}>

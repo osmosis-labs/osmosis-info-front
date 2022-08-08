@@ -2,6 +2,7 @@ import { makeStyles, TableCell } from "@material-ui/core"
 
 import React, { memo, useEffect, useState } from "react"
 import TableCustom from "../../../../components/table/tableCustom"
+import TableSkeleton from "../../../../components/table/table_skeleton"
 import { formateNumberDecimalsAuto } from "../../../../helpers/helpers"
 import CellPool from "../../../pools/pool/trxTable/cellPool"
 import Cell from "./cell"
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const TrxTable = ({ data, className }) => {
+const TrxTable = ({ data, className, isLoading }) => {
 	const classes = useStyles()
 
 	const onClickAddress = (row) => {
@@ -160,6 +161,10 @@ const TrxTable = ({ data, className }) => {
 				cellBody: null,
 			},
 		],
+	}
+	if (isLoading) {
+		const settings = trxTableConfig.cellsConfig.map((conf) => ({ display: conf.cellKey }))
+		return <TableSkeleton config={trxTableConfig} settings={settings} />
 	}
 
 	return (
