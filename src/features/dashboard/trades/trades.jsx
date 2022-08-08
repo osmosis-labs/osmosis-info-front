@@ -286,7 +286,7 @@ const Trades = () => {
 						<ButtonCSV
 							className={classes.btnCsv}
 							onClick={downloadTrades}
-							disabled={trade.length === 0 || isLoading || nbTrx <= 0}
+							disabled={trades.length === 0 || isLoading || nbTrx <= 0}
 						>
 							.CSV
 						</ButtonCSV>

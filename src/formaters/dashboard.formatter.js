@@ -261,7 +261,6 @@ export const formatTrxs = (data, { chainId, address, exclude }) => {
 
 export const defaultTrades = []
 export const formatTrades = (data, assets) => {
-	console.log("%cdashboard.formatter.js -> 264 BLUE: data, assets",'background: #2196f3; color:#FFFFFF', data, assets  )
 	let res = []
 	data.forEach((item) => {
 		let trx = {
