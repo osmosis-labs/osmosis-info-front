@@ -186,8 +186,10 @@ const Trades = () => {
 			let formatToCSV = [
 				["status", "time", "pool", "value_in", "token_in", "value_out", "token_out", "value_usd"],
 				...tradesDwn.map((d) => {
-					let date = `${d.time.value.getFullYear()}-${twoNumber(d.time.value.getMonth() + 1)}-${twoNumber(
+					let date = `${d.time.value.getFullYear()}/${twoNumber(d.time.value.getMonth() + 1)}/${twoNumber(
 						d.time.value.getDate()
+					)} ${twoNumber(d.time.value.getHours())}:${twoNumber(d.time.value.getMinutes())}:${twoNumber(
+						d.time.value.getSeconds()
 					)}`
 
 					return [
