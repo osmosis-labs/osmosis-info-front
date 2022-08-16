@@ -220,7 +220,7 @@ const TotalAPR = ({ apr, periode, staked }) => {
 						<p className={`${classes.item} ${classes.itemInfo}`}>External daily</p>
 						<p className={`${classes.item} ${classes.itemUSD}`}>${formaterNumber(external.usd)}</p>
 						<p className={`${classes.item}`}>
-							{formaterNumber(external.external)} {external.symbol}
+							{formaterNumber(external.external)} {/*external.symbol*/}OSMO
 						</p>
 						{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(external.percent / 365)})</p>}
 					</div>
