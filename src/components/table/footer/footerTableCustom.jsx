@@ -81,7 +81,7 @@ const FooterTableCustom = ({
 
 	const cbBackEndPage = async () => {
 		needToChangePage.current = true
-		await callBackEndPage()
+		await callBackEndPage(page, onChangePage)
 	}
 	return (
 		<div className={classes.footerTableCustomRoot}>

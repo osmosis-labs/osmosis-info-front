@@ -148,8 +148,10 @@ const Token = () => {
 		data: trxs,
 		isLoading: isLdgTrx,
 		isFetching: isFetchingTrx,
+		fetchNextPage,
 	} = useTrxToken({ symbol: token.symbol, limit: 100 })
 	const isLoadingTrx = isLdgTrx || isFetchingTrx
+	const [defaultPage, setDefaultPage] = useState(0)
 
 	//Historical
 	const {
@@ -234,6 +236,18 @@ const Token = () => {
 			setRangeVolume(range)
 		}
 	}
+
+	const loadmore = async (currentPage) => {
+		// need to loadmore transaction
+		let length = trxs.length
+		let result = await fetchNextPage()
+		if (length < result.data.pages.flat().length) {
+			// more result, go to the next page
+			setDefaultPage(currentPage + 1)
+		} else {
+			setDefaultPage(currentPage)
+		}
+	}
 	return (
 		<div className={classes.tokenRoot}>
 			<ExpertChartDialog open={openExpertChart} onClose={onCloseExpertChart} token={token} />
@@ -251,14 +265,18 @@ const Token = () => {
 					</div>
 				)}
 				<div className={classes.charts}>
-					<TokenInfo isLoading={isLoadingToken || !token.symbol || isLoadingDebug} token={token} priceDecimals={priceDecimals} />
+					<TokenInfo
+						isLoading={isLoadingToken || !token.symbol || isLoadingDebug}
+						token={token}
+						priceDecimals={priceDecimals}
+					/>
 					<Paper className={classes.right}>
 						<div className={classes.containerHideShow}>
 							<ContainerCharts
 								token={token}
 								onOpenExpertChart={onOpenExpertChart}
 								changeRange={changeRange}
-								isLoading={isLoadingChart|| !token.symbol || isLoadingDebug}
+								isLoading={isLoadingChart || !token.symbol || isLoadingDebug}
 								rangePrice={rangePrice}
 								rangeLiquidity={rangeLiquidity}
 								rangeVolume={rangeVolume}
@@ -270,7 +288,12 @@ const Token = () => {
 					</Paper>
 				</div>
 				<Paper className={classes.trxContainer}>
-					<TrxTable data={trxs} isLoading={isLoadingTrx || isLoadingDebug} />
+					<TrxTable
+						data={trxs}
+						isLoading={isLoadingTrx || isLoadingDebug}
+						loadmore={loadmore}
+						defaultPage={defaultPage}
+					/>
 				</Paper>
 			</div>
 		</div>
