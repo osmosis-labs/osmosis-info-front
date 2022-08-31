@@ -116,6 +116,7 @@ const FooterTableCustom = ({
 				</IconButton>
 				<p>
 					{page + 1}/{Math.ceil(count / rowsPerPage)}
+					{callBackEndPage && maxPage < count && "...and more"}
 				</p>
 				{callBackEndPage && maxPage >= count ? (
 					<p
