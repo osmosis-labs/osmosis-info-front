@@ -65,7 +65,6 @@ const Message = ({ message, index, data }) => {
 				let name = `Trade (${data.symbol})`
 				res = <TradePriceMessage key={key + i} index={i} amount={data.value} denom={"$"} name={name} type={key} />
 			} else if (key === "amount") {
-				console.log("message.jsx (l:68): data:", data)
 				name = "Amount"
 				res = (
 					<PriceMessage key={key + i} index={i} amount={data[0].amount} denom={data[0].denom} name={name} type={key} />
@@ -73,11 +72,11 @@ const Message = ({ message, index, data }) => {
 			} else if (typeof data === "string") {
 				res = <DefaultMessage key={key + i} index={i} data={data} name={key} />
 			} else {
-				console.log("%cmessage.jsx -> 35 BLUE: key", "background: #2196f3; color:#FFFFFF", key)
-				console.log("%cmessage.jsx -> 36 PINK: data", "background: #e91e63; color:#FFFFFF", data)
-				console.log("%cmessage.jsx -> 35 ORANGE:", "background: #ff5722; color:#FFFFFF", "message", message)
-				console.log("message.jsx -> 67: type: object ->", isObject, ", array -> ", isArray, ", typeof ->", typeof data)
-				console.log("-")
+				// console.log("%cmessage.jsx -> 35 BLUE: key", "background: #2196f3; color:#FFFFFF", key)
+				// console.log("%cmessage.jsx -> 36 PINK: data", "background: #e91e63; color:#FFFFFF", data)
+				// console.log("%cmessage.jsx -> 35 ORANGE:", "background: #ff5722; color:#FFFFFF", "message", message)
+				// console.log("message.jsx -> 67: type: object ->", isObject, ", array -> ", isArray, ", typeof ->", typeof data)
+				// console.log("-")
 			}
 		}
 		return res

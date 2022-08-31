@@ -164,7 +164,7 @@ const Trades = () => {
 	}
 
 	const onClickRow = async (data) => {
-		setCurrentTrade(data)
+		setCurrentTrade((d) => data)
 		if (size === "xs") {
 			onOpen()
 		}
@@ -181,7 +181,6 @@ const Trades = () => {
 			setOpenSnack((op) => true)
 			setTextTrades((tt) => `Collecting ${nbTrx} trades...`)
 			let tradesDwn = await getAllTrades()
-			console.log("trades.jsx (l:150): tradesDwn:", tradesDwn)
 
 			let formatToCSV = [
 				["status", "time", "pool", "value_in", "token_in", "value_out", "token_out", "value_usd"],
@@ -235,7 +234,6 @@ const Trades = () => {
 			return res
 		}
 	}
-
 	if (!address || address.length === 0) {
 		return (
 			<div className={classes.rootTrades}>

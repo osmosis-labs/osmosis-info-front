@@ -268,7 +268,6 @@ export const useTrades = ({ address, limit = 10 }) => {
 			url,
 			method: "GET",
 		})
-		console.log("dashboard.hook.js -> 283: response.data, assets", response.data, assets  )
 		return formatTrades(response.data, assets)
 	}
 
@@ -302,7 +301,7 @@ export const useInfoTrx = ({ hash }, opts = { chainId: "", address: "", currentT
 		enabled: !!hash,
 	})
 
-	const trx = data ? { ...currentTrade, ...data } : { ...currentTrade, ...defaultTrx }
+	const trx = data ? { ...data, ...currentTrade } : { ...currentTrade, ...defaultTrx }
 
 	return { data: trx, isLoading, isFetching }
 }
