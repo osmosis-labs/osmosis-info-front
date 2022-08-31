@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const TrxTable = ({ data, className, isLoading }) => {
+const TrxTable = ({ data, className, isLoading, loadmore, defaultPage }) => {
 	const classes = useStyles()
 
 	const onClickAddress = (row) => {
@@ -61,7 +61,8 @@ const TrxTable = ({ data, className, isLoading }) => {
 		textEmpty: "No transactions found",
 		rowsPerPage: 10,
 		rowsPerPageOptions: [5, 10, 20, 50, 100],
-		callBackEndPage: null,
+		callBackEndPage: loadmore,
+		defaultPage,
 		cellsConfig: [
 			{
 				label: "Hash",

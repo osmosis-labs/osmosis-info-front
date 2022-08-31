@@ -42,6 +42,15 @@ const useStyles = makeStyles((theme) => {
 				justifyContent: "flex-end",
 			},
 		},
+		loadmore: {
+			color: theme.palette.primary.contrastText,
+			cursor: "pointer",
+			paddingLeft: "10px",
+			transition: "all 0.3s",
+			"&:hover": {
+				color: theme.palette.gray.textLight,
+			},
+		},
 	}
 })
 
@@ -81,7 +90,7 @@ const FooterTableCustom = ({
 
 	const cbBackEndPage = async () => {
 		needToChangePage.current = true
-		await callBackEndPage()
+		await callBackEndPage(page, onChangePage)
 	}
 	return (
 		<div className={classes.footerTableCustomRoot}>
@@ -107,16 +116,28 @@ const FooterTableCustom = ({
 				</IconButton>
 				<p>
 					{page + 1}/{Math.ceil(count / rowsPerPage)}
+					{callBackEndPage && maxPage < count && "...and more"}
 				</p>
-				<IconButton
-					onClick={() => {
-						onClickChangePage(true)
-					}}
-					disabled={maxPage >= count && !callBackEndPage}
-					component="span"
-				>
-					<NavigateNextIcon />
-				</IconButton>
+				{callBackEndPage && maxPage >= count ? (
+					<p
+						className={classes.loadmore}
+						onClick={() => {
+							onClickChangePage(true)
+						}}
+					>
+						Load more
+					</p>
+				) : (
+					<IconButton
+						onClick={() => {
+							onClickChangePage(true)
+						}}
+						disabled={maxPage >= count && !callBackEndPage}
+						component="span"
+					>
+						<NavigateNextIcon />
+					</IconButton>
+				)}
 			</div>
 		</div>
 	)

@@ -40,6 +40,12 @@ const TableCustom = forwardRef(({ config, data, customClass, customClassTable, n
 		setPage(0)
 	}, [settings.type])
 
+	useEffect(() => {
+		if (config.defaultPage) {
+			setPage(config.defaultPage)
+		}
+	}, [config.defaultPage])
+
 	const onChangeRowsPerPage = (event) => {
 		setRowsPerPage(event.target.value)
 		if (notifChangeRowPerPage) notifChangeRowPerPage(event.target.value)

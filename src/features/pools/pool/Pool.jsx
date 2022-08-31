@@ -67,7 +67,15 @@ const Pool = () => {
 	const isLoadingPool = isLoadingTokensPool || isLoadingDataPool
 
 	//Trx
-	const { data: trx, isLoading: isLoadingTrx } = usePoolTrx({ poolId: id, limit: 100 })
+	const {
+		data: trx,
+		isLoading: isLdgTrx,
+		isFetching: isFetchingTrx,
+		fetchNextPage,
+	} = usePoolTrx({ poolId: id, limit: 100 })
+	const isLoadingTrx = isLdgTrx || isFetchingTrx
+
+	const [defaultPage, setDefaultPage] = useState(0)
 
 	const { data: historical } = useHistoricalPool({
 		poolId: id,
@@ -150,6 +158,18 @@ const Pool = () => {
 		[selectedTokens]
 	)
 
+	const loadmore = async (currentPage) => {
+		// need to loadmore transaction
+		let length = trx.length
+		let result = await fetchNextPage()
+		if (length < result.data.pages.flat().length) {
+			// more result, go to the next page
+			setDefaultPage(currentPage + 1)
+		} else {
+			setDefaultPage(currentPage)
+		}
+	}
+
 	return (
 		<div className={classes.poolRoot}>
 			<PoolHeader
@@ -165,7 +185,7 @@ const Pool = () => {
 				<ChartContainer currency={currency} selectedTokens={selectedTokens} poolId={id} isLoadingPool={isLoadingPool} />
 			</div>
 			<Paper className={classes.trxContainer}>
-				<TrxTable data={trx} isLoading={isLoadingTrx || isLoadingDebug} />
+				<TrxTable data={trx} isLoading={isLoadingTrx || isLoadingDebug} loadmore={loadmore} defaultPage={defaultPage} />
 			</Paper>
 		</div>
 	)
