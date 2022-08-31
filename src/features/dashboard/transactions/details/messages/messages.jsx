@@ -29,8 +29,6 @@ const useStyles = makeStyles((theme) => {
 })
 const Messages = ({ data }) => {
 	const classes = useStyles()
-	console.log("%cmessages.jsx -> 32 TEAL: messages", "background: #009688; color:#FFFFFF", data.messages)
-
 	return (
 		<div className={classes.rootMessages}>
 			<p className={classes.title}>{data.messages.length > 1 ? "Messages" : "Message"}</p>
