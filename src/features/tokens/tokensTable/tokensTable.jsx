@@ -174,6 +174,18 @@ const TokensTable = forwardRef(
 				transform: getPercent,
 				cellBody: CellTokenChange,
 			},
+			{
+				label: "Market cap",
+				cellKey: "mcap",
+				sortable: true,
+				customClassHeader: classes.headerCell,
+				customClassCell: classes.cell,
+				onSort: null,
+				align: "right",
+				onClickCell: onClickToken,
+				transform: transformPriceMK,
+				cellBody: null,
+			},
 		]
 
 		let tokensTableConfig = {

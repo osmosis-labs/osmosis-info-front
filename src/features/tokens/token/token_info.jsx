@@ -1,7 +1,7 @@
 import { makeStyles, useTheme } from "@material-ui/core"
 import Paper from "../../../components/paper/Paper"
 import CustomSkeleton from "../../../components/skeleton/custom_skeleton"
-import { formateNumberPrice, formateNumberPriceDecimals, getPercent } from "../../../helpers/helpers"
+import { formateNumberPrice, formateNumberPriceDecimals, formaterNumber, getPercent } from "../../../helpers/helpers"
 
 const TokenInfo = ({ token, isLoading, priceDecimals }) => {
 	const classes = useStyles()
@@ -136,6 +136,28 @@ const TokenInfo = ({ token, isLoading, priceDecimals }) => {
 									{token.price24hChange > 0 ? "↑" : token.price24hChange < 0 ? "↓" : <span />}
 									{getPercent(Math.abs(token.price24hChange))}
 								</p>
+							</>
+						)}
+					</div>
+				</div>
+				<div className={classes.detail}>
+					<p className={classes.titleDetail}>Market cap</p>
+					<div className={classes.detailsValues}>
+						{isLoading ? (
+							<>
+								<div style={{ margin: "0px 0" }} className={classes.rowSkeleton}>
+									<CustomSkeleton
+										animation="wave"
+										variant="rectangular"
+										width={120}
+										height={30}
+										sx={{ padding: "0px 0", margin: "2px 0 2px 0" }}
+									/>
+								</div>
+							</>
+						) : (
+							<>
+								<p className={classes.dataDetail}>{`$${formaterNumber(token.mcap)}`}</p>
 							</>
 						)}
 					</div>
