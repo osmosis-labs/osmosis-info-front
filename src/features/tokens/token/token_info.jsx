@@ -157,7 +157,7 @@ const TokenInfo = ({ token, isLoading, priceDecimals }) => {
 							</>
 						) : (
 							<>
-								<p className={classes.dataDetail}>{`$${formaterNumber(token.mcap)}`}</p>
+								<p className={classes.dataDetail}>{token.mcap === 0 ? "-" : `$${formaterNumber(token.mcap)}`}</p>
 							</>
 						)}
 					</div>
