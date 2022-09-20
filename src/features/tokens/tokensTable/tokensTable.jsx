@@ -65,6 +65,13 @@ const TokensTable = forwardRef(
 			return `$${formaterNumber(price)}`
 		}
 
+		const transformMCap = (price) => {
+			if (price) {
+				return `$${formaterNumber(price)}`
+			}
+			return "-"
+		}
+
 		const formatTokenPrice = (value) => {
 			return "$" + formateNumberDecimalsAuto({ price: value })
 		}
@@ -82,6 +89,25 @@ const TokensTable = forwardRef(
 				res = -1
 			} else if (!a.volume24hChange && b.volume24hChange) {
 				res = 1
+			} else {
+				res = 0
+			}
+			return res
+		}
+
+		const onSortMCap = (a, b, orderBy, order) => {
+			let res = 0
+			if (a.mcap && b.mcap) {
+				if (b.mcap < a.mcap) {
+					res = -1
+				}
+				if (b.mcap > a.mcap) {
+					res = 1
+				}
+			} else if (a.mcap && !b.mcap) {
+				res = order === "asc" ? -1 : 1
+			} else if (b.mcap && !a.mcap) {
+				res = order === "asc" ? 1 : -1
 			} else {
 				res = 0
 			}
@@ -173,6 +199,18 @@ const TokensTable = forwardRef(
 				onClickCell: onClickToken,
 				transform: getPercent,
 				cellBody: CellTokenChange,
+			},
+			{
+				label: "Market cap",
+				cellKey: "mcap",
+				sortable: true,
+				customClassHeader: classes.headerCell,
+				customClassCell: classes.cell,
+				onSort: onSortMCap,
+				align: "right",
+				onClickCell: onClickToken,
+				transform: transformMCap,
+				cellBody: null,
 			},
 		]
 
