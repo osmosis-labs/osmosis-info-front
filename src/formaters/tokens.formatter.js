@@ -6,8 +6,10 @@ import { getImageFromAsset } from "../hooks/data/assets.hook"
 dayjs.extend(relativeTime)
 dayjs.extend(utc)
 
+export const defaultMCap = []
+
 export const defaultTokens = { all: [], main: [], frontier: [], current: [] }
-export const formatTokens = (data) => {
+export const formatTokens = (data, mcap) => {
 	let res = { all: [], main: [], frontier: [], current: [] }
 
 	data.sort((a, b) => {
@@ -29,6 +31,13 @@ export const formatTokens = (data) => {
 			name: row.name,
 			main: row.main,
 			price24hChange: row.price_24h_change,
+			mcap: 0,
+		}
+		let mcapToken = mcap.find((mc) => {
+			return mc.symbol == token.symbol
+		})
+		if (mcapToken) {
+			token.mcap = mcapToken.market_cap
 		}
 		if (token.main) {
 			res.main.push(token)
@@ -36,7 +45,6 @@ export const formatTokens = (data) => {
 		res.frontier.push(token)
 		res.all.push(token)
 	})
-
 	return res
 }
 
@@ -52,8 +60,9 @@ export const defaultToken = {
 	volume24hChange: 0,
 	name: "",
 	price24hChange: "",
+	mcap: 0,
 }
-export const formatToken = (data) => {
+export const formatToken = (data, mcap) => {
 	let token = { ...defaultToken }
 	token.price = data.price
 	token.denom = data.denom
@@ -66,6 +75,12 @@ export const formatToken = (data) => {
 	token.name = data.name
 	token.price24hChange = data.price_24h_change
 	token.main = data.main
+	let mcapToken = mcap.find((mc) => {
+		return mc.symbol == token.symbol
+	})
+	if (mcapToken) {
+		token.mcap = mcapToken.market_cap
+	}
 	return token
 }
 

@@ -7,6 +7,7 @@ import {
 	detectBestDecimalsDisplay,
 	formateNumberPrice,
 	formateNumberPriceDecimals,
+	formaterNumber,
 	getPercent,
 } from "../../../helpers/helpers"
 import TokenPath from "./tokenHeader/TokenPath"

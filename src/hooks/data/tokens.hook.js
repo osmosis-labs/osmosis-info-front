@@ -3,6 +3,7 @@ import { useSettings } from "../../contexts/SettingsProvider"
 import {
 	defaultHistoricalToken,
 	defaultLiquidityToken,
+	defaultMCap,
 	defaultToken,
 	defaultTokens,
 	defaultTrxToken,
@@ -17,9 +18,29 @@ import {
 import useRequest from "../request.hook"
 import { useAssets } from "./assets.hook"
 
+export const useMCapTokens = () => {
+	const request = useRequest()
+
+	const getter = async ({ queryKey }) => {
+		const [_, {}] = queryKey
+		const response = await request({
+			url: `https://api-osmosis.imperator.co/tokens/v2/mcap`,
+			method: "GET",
+		})
+		return response.data
+	}
+
+	const { data, isLoading, isFetching } = useQuery(["mcap-tokens", {}], getter, {})
+	const tokens = data ? data : defaultMCap
+
+	return { data: tokens, isLoading, isFetching }
+}
+
 export const useTokens = () => {
 	const request = useRequest()
 	const { settings } = useSettings()
+
+	const { data: mcap, isFetching: isFetchingMCap, isLoading: isLoadingMCap } = useMCapTokens()
 
 	const getter = async ({ queryKey }) => {
 		const [_, {}] = queryKey
@@ -27,10 +48,10 @@ export const useTokens = () => {
 			url: `https://api-osmosis.imperator.co/tokens/v2/all`,
 			method: "GET",
 		})
-		return formatTokens(response.data)
+		return formatTokens(response.data, mcap)
 	}
 
-	const { data, isLoading, isFetching } = useQuery(["tokens", {}], getter, {})
+	const { data, isLoading, isFetching } = useQuery(["tokens", { mcap }], getter, {})
 	if (data) {
 		if (settings.type === "app") {
 			data.current = data.main
@@ -40,11 +61,13 @@ export const useTokens = () => {
 	}
 	const tokens = data ? data : defaultTokens
 
-	return { data: tokens, isLoading, isFetching }
+	return { data: tokens, isLoading: isLoading || isLoadingMCap, isFetching: isFetching || isFetchingMCap }
 }
 
 export const useToken = ({ symbol }) => {
 	const request = useRequest()
+
+	const { data: mcap, isFetching: isFetchingMCap, isLoading: isLoadingMCap } = useMCapTokens()
 
 	const getter = async ({ queryKey }) => {
 		const [_, { symbol }] = queryKey
@@ -52,10 +75,10 @@ export const useToken = ({ symbol }) => {
 			url: `https://api-osmosis.imperator.co/tokens/v2/${symbol}`,
 			method: "GET",
 		})
-		return formatToken(response.data[0])
+		return formatToken(response.data[0], mcap)
 	}
 
-	const { data, isLoading, isFetching } = useQuery(["token", { symbol }], getter, {
+	const { data, isLoading, isFetching } = useQuery(["token", { symbol, mcap }], getter, {
 		enabled: !!symbol,
 	})
 
