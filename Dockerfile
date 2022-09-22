@@ -5,10 +5,12 @@ WORKDIR /app
 
 ENV NODE_ENV production
 COPY package*.json /app/
-RUN yarn install 
+COPY .yarnrc /app/
+COPY config-overrides.js /app/
+RUN yarn
 
 COPY . /app/
-RUN yarn build
+RUN yarn buildProd
 
 # Serve build folder via NGINX
 FROM nginx:1.21.6-alpine
