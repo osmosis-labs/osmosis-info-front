@@ -35,14 +35,6 @@ if ((process.env.NODE_ENV && process.env.NODE_ENV !== "production") || process.e
 	MODE = "dev"
 }
 
-console.log(
-	"%cdebug.provider.js -> 18 BLUE: MODE",
-	"background: #2196f3; color:#FFFFFF",
-	process.env.NODE_ENV,
-	"=>",
-	MODE
-)
-
 const useStyles = makeStyles((theme) => {
 	return {
 		"@global": {
