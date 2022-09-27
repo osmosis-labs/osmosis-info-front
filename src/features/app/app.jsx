@@ -30,7 +30,19 @@ import { DebugProvider } from "../../contexts/debug.provider"
 import DebugModal from "../_debug/debug_modal"
 import ModalMessage from "../modal_message/modal_message"
 
-const MODE = process.env.REACT_APP_MODE
+let MODE = "production"
+if ((process.env.NODE_ENV && process.env.NODE_ENV !== "production") || process.env.REACT_APP_DEBUG === "true") {
+	MODE = "dev"
+}
+
+console.log(
+	"%cdebug.provider.js -> 18 BLUE: MODE",
+	"background: #2196f3; color:#FFFFFF",
+	process.env.NODE_ENV,
+	"=>",
+	MODE
+)
+
 const useStyles = makeStyles((theme) => {
 	return {
 		"@global": {
@@ -112,7 +124,7 @@ const App = () => {
 
 	return (
 		<BrowserRouter basename=".">
-			<DebugProvider>
+			<DebugProvider MODE={MODE}>
 				<WalletManagerProvider walletInfoList={walletInfoList}>
 					<WatchlistPoolsProvider>
 						<WatchlistTokensProvider>
