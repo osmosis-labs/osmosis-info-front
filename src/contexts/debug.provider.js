@@ -3,21 +3,12 @@ const DebugContext = createContext()
 
 export const useDebug = () => useContext(DebugContext)
 
-export const DebugProvider = ({ children }) => {
+export const DebugProvider = ({ children, MODE }) => {
 	const [open, setOpen] = useState(false)
 	const onClose = () => setOpen(false)
 	const [isAccumulated, setIsAccumulated] = useState(true)
 	const [isStakingAccumulated, setIsStakingAccumulated] = useState(true)
 	const [isLoadingDebug, setLoadingDebug] = useState(false)
-
-	let MODE = "production"
-	if (
-		window.location.hostname === "localhost" ||
-		window.location.hostname === "osmosis.latouche.dev" ||
-		window.location.hostname === "osmosis2.latouche.dev"
-	) {
-		MODE = "dev"
-	}
 
 	const value = {
 		open,
