@@ -132,7 +132,7 @@ const TotalAPR = ({ apr, periode, staked }) => {
 	const size = useSize()
 	const [total, setTotal] = useState({ osmo: 0, usd: 0, percent: 0 })
 	const [internal, setInternal] = useState({ osmo: 0, usd: 0, percent: 0 })
-	const [external, setExternal] = useState({ external: 0, usd: 0, percent: 0, symbol: "" })
+	const [external, setExternal] = useState([])
 	const [hasExternal, setHasExternal] = useState(false)
 	const [hasInternal, setHasInternal] = useState(false)
 
@@ -181,18 +181,22 @@ const TotalAPR = ({ apr, periode, staked }) => {
 	}
 
 	const getExternal = () => {
-		let res = { external: 0, usd: 0, percent: 0, symbol: "" }
-		if (apr.external.token) {
-			res.symbol = apr.external.token.symbol
-		}
-		let currentApr = getPeriode(apr.external)
-		res.percent = currentApr
-		res.usd = ((currentApr / 100) * parseFloat(staked)) / 365
-		res.external = res.usd / apr.external.token.price
-		setExternal(res)
-		return res
-	}
+		let ext = []
+		apr.external.details.forEach((detail) => {
+			let res = { external: 0, usd: 0, percent: 0, symbol: "" }
 
+			if (detail.token) {
+				res.symbol = detail.token.symbol
+			}
+			let currentApr = getPeriode(detail)
+			res.percent = currentApr
+			res.usd = ((currentApr / 100) * parseFloat(staked)) / 365
+			res.external = res.usd / detail.token.price
+			ext.push(res)
+		})
+		setExternal((external) => ext)
+		return ext
+	}
 	const switchDropdown = () => setOpen(!open)
 	return (
 		<div className={classes.resultContainer}>
@@ -214,17 +218,22 @@ const TotalAPR = ({ apr, periode, staked }) => {
 						{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(internal.percent / 365)})</p>}
 					</div>
 				)}
-				{hasExternal && (
-					<div className={classes.row}>
-						<span></span>
-						<p className={`${classes.item} ${classes.itemInfo}`}>External daily</p>
-						<p className={`${classes.item} ${classes.itemUSD}`}>${formaterNumber(external.usd)}</p>
-						<p className={`${classes.item}`}>
-							{formaterNumber(external.external)} {/*external.symbol*/}OSMO
-						</p>
-						{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(external.percent / 365)})</p>}
-					</div>
-				)}
+				{hasExternal &&
+					external.map((ext) => {
+						let percent = ext.percent / 365
+						if (percent < 0.1) return null
+						return (
+							<div className={classes.row} key={ext.symbol}>
+								<span></span>
+								<p className={`${classes.item} ${classes.itemInfo}`}>External daily</p>
+								<p className={`${classes.item} ${classes.itemUSD}`}>${formaterNumber(ext.usd)}</p>
+								<p className={`${classes.item}`}>
+									{formaterNumber(ext.external)} {ext.symbol}
+								</p>
+								{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(percent)})</p>}
+							</div>
+						)
+					})}
 			</div>
 		</div>
 	)
