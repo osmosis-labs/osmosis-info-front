@@ -198,6 +198,7 @@ const TotalAPR = ({ apr, periode, staked }) => {
 		return ext
 	}
 	const switchDropdown = () => setOpen(!open)
+	let percentInternal = internal.percent / 365
 	return (
 		<div className={classes.resultContainer}>
 			<p className={classes.resultTitle}>Roi at current rates</p>
@@ -209,13 +210,13 @@ const TotalAPR = ({ apr, periode, staked }) => {
 				{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(total.percent / 365)})</p>}
 			</div>
 			<div className={`${classes.dropdown} ${open ? classes.dropdownOpened : null}`}>
-				{hasInternal && (
+				{hasInternal && percentInternal >= 0.1 && (
 					<div className={classes.row}>
 						<span></span>
 						<p className={`${classes.item} ${classes.itemInfo}`}>Internal daily</p>
 						<p className={`${classes.item} ${classes.itemUSD}`}>${formaterNumber(internal.usd)}</p>
 						<p className={`${classes.item}`}>{formaterNumber(internal.osmo)} OSMO</p>
-						{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(internal.percent / 365)})</p>}
+						{size !== "xs" && <p className={`${classes.itemPercent}`}>({getPercent(percentInternal)})</p>}
 					</div>
 				)}
 				{hasExternal &&
