@@ -57,13 +57,20 @@ export const formatPools = (dataPools, dataAPR, allTokens) => {
 					let date = new Date(aprItem.start_date)
 					if (date <= new Date()) {
 						let token = getItemInclude(allTokens, (token) => aprItem.symbol === token.symbol)
+						let details = { apr1d: 0, apr7d: 0, apr14d: 0, token }
 						if (!apr.external) {
-							apr.external = { apr1d: 0, apr7d: 0, apr14d: 0, token }
+							apr.external = { apr1d: 0, apr7d: 0, apr14d: 0, token, details: [] }
 						}
 						apr.external.apr1d += aprItem.apr_1d
 						apr.external.apr7d += aprItem.apr_7d
 						apr.external.apr14d += aprItem.apr_14d
 						apr.external.token = { ...token, symbolDisplay: token ? formatTokenName(token.symbol) : "" }
+
+						details.apr1d = aprItem.apr_1d
+						details.apr7d = aprItem.apr_7d
+						details.apr14d = aprItem.apr_14d
+						details.token = { ...token, symbolDisplay: token ? formatTokenName(token.symbol) : "" }
+						apr.external.details.push(details)
 					}
 				}
 			})
