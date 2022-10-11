@@ -6,6 +6,8 @@ import { formatHistoricalToken } from "../../../../formaters/tokens.formatter"
 import useRequest from "../../../../hooks/request.hook"
 import getDataFeed from "./getDataFeed"
 
+const API_URL = process.env.REACT_APP_API_URL
+
 const useStyles = makeStyles((theme) => {
 	return {
 		expertChartRoot: {
@@ -34,7 +36,7 @@ const ExpertChart = ({ token, className }) => {
 	const getHistoricalChartToken = async ({ symbol, tf }) => {
 		try {
 			let response = await request({
-				url: `https://api-osmosis.imperator.co/tokens/v2/historical/${symbol}/chart?tf=${tf}`,
+				url: `${API_URL}/tokens/v2/historical/${symbol}/chart?tf=${tf}`,
 				method: "GET",
 			})
 			return formatHistoricalToken(response.data)

@@ -19,13 +19,16 @@ import useRequest from "../request.hook"
 import { useAssets } from "./assets.hook"
 import { useTokens } from "./tokens.hook"
 
+const API_URL = process.env.REACT_APP_API_URL
+const CHAIN_API_URL = process.env.REACT_APP_CHAIN_API_URL
+
 export const useTokensPool = ({ poolId }) => {
 	const request = useRequest()
 
 	const getter = async ({ queryKey }) => {
 		const [_, { poolId }] = queryKey
 		const response = await request({
-			url: `https://api-osmosis.imperator.co/pools/v2/${poolId}`,
+			url: `${API_URL}/pools/v2/${poolId}`,
 			method: "GET",
 		})
 		return formatTokensPool(response.data, poolId)
@@ -57,7 +60,7 @@ export const usePoolApr = () => {
 	const getter = async ({ queryKey }) => {
 		const [_, {}] = queryKey
 		const response = await request({
-			url: `https://api-osmosis.imperator.co/apr/v2/all`,
+			url: `${API_URL}/apr/v2/all`,
 			method: "GET",
 		})
 		return response.data
@@ -81,7 +84,7 @@ export const usePools = ({ lowLiquidity = false }) => {
 	const getter = async ({ queryKey }) => {
 		const [_, { lowLiquidity }] = queryKey
 		const response = await request({
-			url: `https://api-osmosis.imperator.co/pools/v2/all?low_liquidity=${lowLiquidity}`,
+			url: `${API_URL}/pools/v2/all?low_liquidity=${lowLiquidity}`,
 			method: "GET",
 		})
 		return formatPools(response.data, poolApr, allTokens)
@@ -107,7 +110,7 @@ export const usePoolTrx = ({ poolId, limit = 10 }) => {
 
 	const getter = async ({ queryKey, pageParam = 0 }) => {
 		const [_, { poolId, limit }] = queryKey
-		let url = `https://api-osmosis-chain.imperator.co/swap/v1/pool/${poolId}?only_success=true&limit=${limit}&offset=${pageParam}`
+		let url = `${CHAIN_API_URL}/swap/v1/pool/${poolId}?only_success=true&limit=${limit}&offset=${pageParam}`
 
 		const response = await request({
 			url,
@@ -134,7 +137,7 @@ export const useHistoricalPool = ({ poolId, denomIn, denomOut, range }) => {
 
 	const getter = async ({ queryKey }) => {
 		const [_, { poolId, denomIn, denomOut, range }] = queryKey
-		const url = `https://api-osmosis.imperator.co/pairs/v1/historical/${poolId}/chart?asset_in=${denomIn}&asset_out=${denomOut}&range=${range}&asset_type=denom`
+		const url = `${API_URL}/pairs/v1/historical/${poolId}/chart?asset_in=${denomIn}&asset_out=${denomOut}&range=${range}&asset_type=denom`
 		const response = await request({
 			url,
 			method: "GET",
@@ -155,7 +158,7 @@ export const useLiquidityPool = ({ poolId }) => {
 
 	const getter = async ({ queryKey }) => {
 		const [_, { poolId }] = queryKey
-		const url = `https://api-osmosis.imperator.co/pools/v2/liquidity/${poolId}/chart`
+		const url = `${API_URL}/pools/v2/liquidity/${poolId}/chart`
 		const response = await request({
 			url,
 			method: "GET",
@@ -176,7 +179,7 @@ export const useVolumePool = ({ poolId }) => {
 
 	const getter = async ({ queryKey }) => {
 		const [_, { poolId }] = queryKey
-		const url = `https://api-osmosis.imperator.co/pools/v2/volume/${poolId}/chart`
+		const url = `${API_URL}/pools/v2/volume/${poolId}/chart`
 		const response = await request({
 			url,
 			method: "GET",

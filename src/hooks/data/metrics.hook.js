@@ -2,6 +2,7 @@ import { useQuery } from "react-query"
 import { useSettings } from "../../contexts/SettingsProvider"
 import { defaultMetrics, defaultTop, formatMetrics, formatTop } from "../../formaters/metrics.formatter"
 import useRequest from "../request.hook"
+const API_URL = process.env.REACT_APP_API_URL
 
 export const useMetrics = () => {
 	const request = useRequest()
@@ -9,7 +10,7 @@ export const useMetrics = () => {
 	const getter = async ({ queryKey }) => {
 		const [_, {}] = queryKey
 		const response = await request({
-			url: `https://api-osmosis.imperator.co/overview/v1/metrics`,
+			url: `${API_URL}/overview/v1/metrics`,
 			method: "GET",
 		})
 		return formatMetrics(response.data)
@@ -27,15 +28,15 @@ export const useGainers = () => {
 	const main = settings.type === "app"
 
 	const getter = async ({ queryKey }) => {
-		const [_, {main}] = queryKey
+		const [_, { main }] = queryKey
 		const response = await request({
-			url: `https://api-osmosis.imperator.co/tokens/v2/top/gainers`,
+			url: `${API_URL}/tokens/v2/top/gainers`,
 			method: "GET",
 		})
 		return formatTop(response.data, main)
 	}
 
-	const { data, isLoading, isFetching } = useQuery(["top", {main}], getter, {})
+	const { data, isLoading, isFetching } = useQuery(["top", { main }], getter, {})
 	const gainers = data ? data : defaultTop
 
 	return { data: gainers, isLoading, isFetching }
@@ -49,7 +50,7 @@ export const useLosers = () => {
 	const getter = async ({ queryKey }) => {
 		const [_, { main }] = queryKey
 		const response = await request({
-			url: `https://api-osmosis.imperator.co/tokens/v2/top/losers`,
+			url: `${API_URL}/tokens/v2/top/losers`,
 			method: "GET",
 		})
 		return formatTop(response.data, main)
