@@ -11,6 +11,7 @@ import { getImageFromAsset, useAssets } from "../../../../hooks/data/assets.hook
 const useStyles = makeStyles((theme) => {
 	return {
 		containerInfo: {
+			zIndex: 1,
 			minHeight: "180px",
 			alignItems: "flex-start",
 		},

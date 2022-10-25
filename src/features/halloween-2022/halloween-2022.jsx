@@ -1,22 +1,22 @@
 import { Ghost } from "./ghost"
 import { makeStyles } from "@material-ui/core"
-import grass from "./assets/grass.png"
-import grass2 from "./assets/grass2.png"
-import grass3 from "./assets/grass3.png"
-import smoke from "./assets/smoke.png"
-import smoke2 from "./assets/smoke2.png"
-import smoke3 from "./assets/smoke3.png"
-import scarecrow from "./assets/scarecrow.png"
-import moon from "./assets/moon.png"
+import grass from "./assets/grass.webp"
+import grass2 from "./assets/grass2.webp"
+import grass3 from "./assets/grass3.webp"
+import smoke from "./assets/smoke.webp"
+import smoke2 from "./assets/smoke2.webp"
+import smoke3 from "./assets/smoke3.webp"
+import scarecrow from "./assets/scarecrow.webp"
+import moon from "./assets/moon.webp"
 import sir from "./assets/sir.png"
 import sir2 from "./assets/sir2.png"
 import sir3 from "./assets/sir3.png"
 import sir4 from "./assets/sir4.png"
 import sir5 from "./assets/sir5.png"
 import sir6 from "./assets/sir6.png"
-import stone from "./assets/stone.png"
-import stone2 from "./assets/stone2.png"
-import hand from "./assets/hand.png"
+import stone from "./assets/stone.webp"
+import stone2 from "./assets/stone2.webp"
+import hand from "./assets/hand.webp"
 import { Stars } from "./stars"
 
 const maxGhost = 3
@@ -27,7 +27,6 @@ export const Halloween2022 = () => {
 	for (let i = 0; i <= maxGhost - 1; i++) {
 		ghosts.push(<Ghost key={i} />)
 	}
-	console.log("halloween-2022.jsx (l:24): go:", ghosts)
 	return (
 		<div className={classes.rootHalloween}>
 			{ghosts}
@@ -132,6 +131,9 @@ const useStyles = makeStyles((theme) => {
 			animation: "$sir 8s linear infinite",
 			transformOrigin: "50% 100%",
 			width: 150,
+			[theme.breakpoints.down("xs")]: {
+				bottom: 210,
+			},
 		},
 		hand: {
 			position: "absolute",
@@ -142,6 +144,9 @@ const useStyles = makeStyles((theme) => {
 			width: 60,
 			animation: "$hand 8s linear infinite",
 			transform: "scaleX(-1)",
+			[theme.breakpoints.down("xs")]: {
+				display: "none",
+			},
 		},
 		stone2: {
 			position: "absolute",
@@ -151,6 +156,9 @@ const useStyles = makeStyles((theme) => {
 			left: 60,
 			width: 200,
 			transform: "scaleX(-1)",
+			[theme.breakpoints.down("xs")]: {
+				display: "none",
+			},
 		},
 		stone: {
 			position: "absolute",
@@ -159,6 +167,9 @@ const useStyles = makeStyles((theme) => {
 			bottom: 260,
 			left: 200,
 			width: 60,
+			[theme.breakpoints.down("xs")]: {
+				display: "none",
+			},
 		},
 		sir2: {
 			position: "absolute",
@@ -169,6 +180,9 @@ const useStyles = makeStyles((theme) => {
 			animation: "$sir 8s linear infinite",
 			transformOrigin: "50% 100%",
 			width: 100,
+			[theme.breakpoints.down("xs")]: {
+				display: "none",
+			},
 		},
 		sir3: {
 			position: "absolute",
@@ -179,6 +193,9 @@ const useStyles = makeStyles((theme) => {
 			animation: "$sir 8s linear infinite",
 			transformOrigin: "50% 100%",
 			width: 100,
+			[theme.breakpoints.down("xs")]: {
+				display: "none",
+			},
 		},
 		sir4: {
 			position: "absolute",
@@ -189,6 +206,9 @@ const useStyles = makeStyles((theme) => {
 			animation: "$sir 8s linear infinite",
 			transformOrigin: "50% 100%",
 			width: 100,
+			[theme.breakpoints.down("xs")]: {
+				display: "none",
+			},
 		},
 		sir5: {
 			position: "absolute",
@@ -199,6 +219,9 @@ const useStyles = makeStyles((theme) => {
 			animation: "$sir 8s linear infinite",
 			transformOrigin: "50% 100%",
 			width: 100,
+			[theme.breakpoints.down("xs")]: {
+				display: "none",
+			},
 		},
 		sir6: {
 			position: "absolute",
@@ -209,6 +232,9 @@ const useStyles = makeStyles((theme) => {
 			animation: "$sir 8s linear infinite",
 			transformOrigin: "50% 100%",
 			width: 100,
+			[theme.breakpoints.down("xs")]: {
+				bottom: 100,
+			},
 		},
 		moon: {
 			position: "absolute",
@@ -233,6 +259,11 @@ const useStyles = makeStyles((theme) => {
 			bottom: -10,
 			right: 30,
 			transformOrigin: "50% 100%",
+			[theme.breakpoints.down("xs")]: {
+				bottom: -30,
+				width: "300px",
+				right: "80px",
+			},
 		},
 		smoke3: {
 			position: "absolute",
@@ -266,6 +297,11 @@ const useStyles = makeStyles((theme) => {
 			bottom: -10,
 			animation: "$grass 4s linear infinite",
 			animationDelay: "1.5s",
+			[theme.breakpoints.down("xs")]: {
+				width: "210%",
+				left: -60,
+				bottom: -20,
+			},
 		},
 		grass2: {
 			position: "absolute",
@@ -275,6 +311,11 @@ const useStyles = makeStyles((theme) => {
 			zIndex: 0,
 			width: "100%",
 			bottom: -10,
+			[theme.breakpoints.down("xs")]: {
+				width: "210%",
+				left: -60,
+				bottom: -20,
+			},
 		},
 		grass: {
 			position: "absolute",
@@ -284,6 +325,11 @@ const useStyles = makeStyles((theme) => {
 			bottom: -115,
 			left: -10,
 			animation: "$grass 4s linear infinite",
+			[theme.breakpoints.down("xs")]: {
+				width: "210%",
+				left: -60,
+				bottom: -60,
+			},
 		},
 	}
 })

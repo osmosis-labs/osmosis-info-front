@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core"
 import { random } from "../../helpers/helpers"
-import starPNG from "./assets/star.png"
+import starPNG from "./assets/star.webp"
 const useStyles = makeStyles((theme) => {
 	return {
 		"@keyframes starA1": {
@@ -50,7 +50,6 @@ export const Stars = () => {
 			/>
 		)
 	}
-	console.log("stars.jsx (l:41): stars:", stars)
 	return <div className={classes.root}>{stars}</div>
 }
 

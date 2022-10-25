@@ -2,9 +2,9 @@ import { makeStyles } from "@material-ui/core"
 import { useRef } from "react"
 import { useState, useEffect } from "react"
 import { random } from "../../helpers/helpers"
-import GhostRight from "./assets/ghostRight.png"
-import GhostDead from "./assets/ghostDead.png"
-import Cursor from "./assets/cursor.png"
+import GhostRight from "./assets/ghostRight.webp"
+import GhostDead from "./assets/ghostDead.webp"
+import Cursor from "./assets/cursor.webp"
 const DIM = { x: 75, y: 75 }
 export const Ghost = () => {
 	const classes = useStyles()
@@ -127,7 +127,6 @@ export const Ghost = () => {
 		refTimer.current = window.setTimeout(initGhost, random(1, 3) * 1000)
 		return () => clearTimeout(refTimer.current)
 	}, [])
-
 	return (
 		<div className={classes.rootGhost} ref={refElt} onClick={onClick}>
 			<img className={classes.ghostImg} src={alive ? GhostRight : GhostDead} />

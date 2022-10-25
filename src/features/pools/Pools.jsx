@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme) => {
 			position: "relative",
 			minWidth: "200px",
 		},
+		subTitle: {
+			zIndex: 1,
+		},
 	}
 })
 

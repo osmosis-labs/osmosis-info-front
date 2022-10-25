@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			alignItems: "center",
 			overflow: "hidden",
+			zIndex: 1,
 		},
 		bar: {
 			animation: "$defil 120s linear infinite",
