@@ -1,0 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Griffy&display=swap");
+
+* {
+}
+
+.customTitle {
+	font-family: "Griffy", cursive !important;
+	letter-spacing: 2px;
+	color: #e65100 !important;
+}

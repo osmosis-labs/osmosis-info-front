@@ -5,7 +5,7 @@ import HeaderCellCustom from "./headerCellCustom"
 const useStyles = makeStyles((theme) => {
 	return {
 		tableHeader: {
-			backgroundColor: theme.palette.primary.light,
+			// backgroundColor: `${theme.palette.primary.light}DD`,
 			"& th:first-child": {
 				borderRadius: "20px 0 0 0",
 				paddingLeft: "25px",
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => {
 				fontSize: "15px",
 				lineHeight: "23px",
 				borderBottom: `1px solid ${theme.palette.table.border}`,
-			}
+			},
 		},
 	}
 })

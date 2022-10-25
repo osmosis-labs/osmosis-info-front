@@ -29,6 +29,7 @@ import Trades from "../dashboard/trades/trades"
 import { DebugProvider } from "../../contexts/debug.provider"
 import DebugModal from "../_debug/debug_modal"
 import ModalMessage from "../modal_message/modal_message"
+import { Halloween2022 } from "../halloween-2022/halloween-2022"
 
 let MODE = "production"
 if (process.env.NODE_ENV && process.env.NODE_ENV !== "production" && process.env.REACT_APP_DEBUG === "true") {
@@ -131,6 +132,7 @@ const App = () => {
 												<script src="/charting_library/charting_library.js" type="text/javascript" />
 											</Helmet>
 											<div className={classes.appRoot}>
+												<Halloween2022 />
 												<Toast />
 
 												<InfoBar />

@@ -240,7 +240,7 @@ const Trades = () => {
 				<div className={classes.content}>
 					<div className={classes.mainContainer}>
 						<div className={classes.titleContainer}>
-							<p className={classes.title}>Trading History</p>
+							<p className={classes.title + " customTitle"}>Trading History</p>
 							<ButtonCSV className={classes.btnCsv} onClick={downloadTrades} disabled={true}>
 								.CSV
 							</ButtonCSV>
@@ -280,7 +280,7 @@ const Trades = () => {
 			<div className={classes.content}>
 				<div className={classes.mainContainer}>
 					<div className={classes.titleContainer}>
-						<p className={classes.title}>Trading History</p>
+						<p className={classes.title + " customTitle"}>Trading History</p>
 						<ButtonCSV
 							className={classes.btnCsv}
 							onClick={downloadTrades}

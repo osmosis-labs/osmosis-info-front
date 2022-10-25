@@ -17,6 +17,7 @@ import { getImageFromAsset, useAssets } from "../../../hooks/data/assets.hook"
 const useStyles = makeStyles((theme) => {
 	return {
 		details: {
+			zIndex: 1,
 			display: "flex",
 			flexDirection: "column",
 			[theme.breakpoints.down("xs")]: {

@@ -160,7 +160,7 @@ const Overview = () => {
 	return (
 		<div className={classes.rootOverview}>
 			<div className={classes.container}>
-				<p className={classes.title}>Analytics</p>
+				<p className={classes.title + " customTitle"}>Analytics</p>
 				<div className={classes.containerInfo}>
 					<div className={classes.info}>
 						<p className={classes.titleInfo}>Total worth</p>
@@ -173,7 +173,7 @@ const Overview = () => {
 
 					<div className={classes.info}>
 						<p className={classes.titleInfo}>Available liquidity</p>
-						{isLoading  ? (
+						{isLoading ? (
 							<CustomSkeleton height={50} width={100} sx={{ marginTop: "0px" }} />
 						) : (
 							<p className={classes.dataInfoReturn}>${formateNumberDecimalsAuto({ price: osmosStaked })}</p>

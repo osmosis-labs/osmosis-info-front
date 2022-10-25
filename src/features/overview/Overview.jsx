@@ -43,8 +43,10 @@ const useStyles = makeStyles((theme) => {
 			fontSize: "1.6rem",
 			color: theme.palette.gray.contrastText,
 			marginBottom: "20px",
+			zIndex: 1,
 		},
 		subTitle: {
+			zIndex: 1,
 			color: theme.palette.gray.main,
 		},
 		container: {
@@ -159,7 +161,7 @@ const Overview = () => {
 		})
 		setDataTokens(data)
 	}, [tokens])
-	
+
 	const onClickPool = (pool) => {
 		history.push(`/pool/${pool.id}`)
 	}
@@ -191,7 +193,7 @@ const Overview = () => {
 	return (
 		<div className={classes.overviewRoot}>
 			<div className={classes.container}>
-				<p className={classes.title}>Osmosis - Overview</p>
+				<p className={classes.title + " customTitle"}>Osmosis - Overview</p>
 				<div className={classes.charts}>
 					<Paper className={classes.chart}>
 						{isLoadingLiquidity ? (

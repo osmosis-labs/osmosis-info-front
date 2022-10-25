@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme) => {
 	return {
 		rootOverviewBar: {
 			display: "flex",
+			zIndex: "1",
 			alignItems: "center",
 			overflow: "hidden",
 			[theme.breakpoints.down("sm")]: {

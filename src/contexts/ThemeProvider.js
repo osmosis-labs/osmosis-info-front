@@ -131,7 +131,7 @@ export const ThemeCustomProvider = ({ children }) => {
 
 	let colorsApp = {
 		primary: {
-			light: "rgb(45, 39, 85)",
+			light: "#2d2755",
 			lightLowOpacity: "rgba(45, 39, 85, 0.9)",
 			light2: "#8E83AA",
 			main: "rgb(35, 29, 75)",

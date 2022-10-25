@@ -161,7 +161,7 @@ const Transactions = () => {
 				<div className={classes.content}>
 					<div className={classes.mainContainer}>
 						<div className={classes.titleContainer}>
-							<p className={classes.title}>Transactions</p>
+							<p className={classes.title + " customTitle"}>Transactions</p>
 						</div>
 						<div className={classes.containerNotFound}>
 							<AccountBalanceWalletIcon className={classes.iconNotFound} />
@@ -187,7 +187,7 @@ const Transactions = () => {
 			<div className={classes.content}>
 				<div className={classes.mainContainer}>
 					<div className={classes.titleContainer}>
-						<p className={classes.title}>Transactions</p>
+						<p className={classes.title + " customTitle"}>Transactions</p>
 					</div>
 					<Types onChangeType={onChangeTypeTrx} types={types} />
 					<div className={classes.listContainer}>

@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme) => {
 		paperRoot: {
 			padding: theme.spacing(2),
 			borderRadius: theme.spacing(2),
-			backgroundColor: `${theme.palette.primary.light}`,
+			backgroundColor: `${theme.palette.primary.light}DD`,
 		},
 	}
 })

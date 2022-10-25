@@ -121,7 +121,7 @@ const IBCInfo = ({
 		<div className={classes.IBCInfoRoot}>
 			<div className={classes.content}>
 				<div className={classes.header}>
-					<span className={classes.title}>IBC Status</span>
+					<span className={classes.title + " customTitle"}>IBC Status</span>
 					<div className={classes.bubles}>
 						<span
 							onClick={() => setIbcFilter("normal")}
