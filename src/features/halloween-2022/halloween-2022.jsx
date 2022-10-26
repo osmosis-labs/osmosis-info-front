@@ -7,7 +7,6 @@ import smoke from "./assets/smoke.webp"
 import smoke2 from "./assets/smoke2.webp"
 import smoke3 from "./assets/smoke3.webp"
 import scarecrow from "./assets/scarecrow.webp"
-import moon from "./assets/moon.webp"
 import sir from "./assets/sir.png"
 import sir2 from "./assets/sir2.png"
 import sir3 from "./assets/sir3.png"
@@ -18,6 +17,8 @@ import stone from "./assets/stone.webp"
 import stone2 from "./assets/stone2.webp"
 import hand from "./assets/hand.webp"
 import { Stars } from "./stars"
+import { Moon } from "./moon"
+import { Riven } from "./riven"
 
 const maxGhost = 3
 export const Halloween2022 = () => {
@@ -33,7 +34,10 @@ export const Halloween2022 = () => {
 			{/* <img src={stars} className={classes.stars} /> */}
 			{/* <img src={stars} className={classes.stars} /> */}
 			<Stars />
-			<img src={moon} className={classes.moon} />
+			<Moon className={classes.moon} />
+			<Riven type="small" />
+			<Riven type="smallReverse" />
+			<Riven />
 			<img src={smoke2} className={classes.smoke2} />
 			<img src={smoke} className={classes.smoke} />
 			<img src={grass3} className={classes.grass3} />
