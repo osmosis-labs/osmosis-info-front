@@ -19,15 +19,16 @@ import hand from "./assets/hand.webp"
 import { Stars } from "./stars"
 import { Moon } from "./moon"
 import { Riven } from "./riven"
+import "./Bones.js"
 
 const maxGhost = 3
 export const Halloween2022 = () => {
 	const classes = useStyles()
-
 	let ghosts = []
 	for (let i = 0; i <= maxGhost - 1; i++) {
 		ghosts.push(<Ghost key={i} />)
 	}
+
 	return (
 		<div className={classes.rootHalloween}>
 			{ghosts}

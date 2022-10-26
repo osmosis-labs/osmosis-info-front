@@ -8,3 +8,29 @@
 	letter-spacing: 2px;
 	color: #e65100 !important;
 }
+
+@keyframes bone {
+	0% {
+		transform: rotate(0deg);
+	}
+	30% {
+		transform: rotate(181deg);
+	}
+
+	70% {
+		transform: rotate(0deg);
+		opacity: 1;
+	}
+	100% {
+		transform: rotate(30deg);
+		opacity: 0;
+	}
+}
+
+.bone {
+	background: url("../features/halloween-2022/assets/bone.png");
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	animation: bone;
+}
