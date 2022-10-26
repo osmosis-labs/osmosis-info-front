@@ -10,6 +10,7 @@ import { useDebug } from "../../../contexts/debug.provider"
 import { getInclude } from "../../../helpers/helpers"
 import { useHistoricalPool, useLiquidityPool, useVolumePool } from "../../../hooks/data/pools.hook"
 import ChartContainerSkeleton from "./chat_container_skeleton"
+import imgHalloween from "../../../features/halloween-2022/assets/dracula.webp"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -19,6 +20,7 @@ const useStyles = makeStyles((theme) => {
 			width: "100%",
 			display: "flex",
 			flexDirection: "column",
+			position: "relative",
 		},
 		chartContainer: {
 			position: "relative",
@@ -56,6 +58,15 @@ const useStyles = makeStyles((theme) => {
 				flexDirection: "row",
 				justifyContent: "space-between",
 				width: "100%",
+			},
+		},
+		imgHalloween: {
+			height: "200px",
+			position: "absolute",
+			top: "-200px",
+			left: "60px",
+			[theme.breakpoints.down("xs")]: {
+				display: "none",
 			},
 		},
 	}
@@ -106,7 +117,7 @@ const ChartContainer = ({ currency, selectedTokens, poolId, isLoadingPool }) => 
 
 	const isLoadingLiquidity = isLdgLiquidity || isFetchingLiquidity
 
-	const isLoadingCharts = isLoadingHistorical || isLoadingVolume || isLoadingLiquidity || isLoadingPool 
+	const isLoadingCharts = isLoadingHistorical || isLoadingVolume || isLoadingLiquidity || isLoadingPool
 
 	const currentVolume = volume[rangeVolume]
 	const currentLiquidity = liquidity[rangeLiquidity]
@@ -194,13 +205,17 @@ const ChartContainer = ({ currency, selectedTokens, poolId, isLoadingPool }) => 
 	}
 
 	if (isLoadingCharts || isLoadingDebug) {
-		return <Paper className={classes.rootChartContainer}>
-			<ChartContainerSkeleton />
-		</Paper>
+		return (
+			<Paper className={classes.rootChartContainer}>
+				<ChartContainerSkeleton />
+			</Paper>
+		)
 	}
 
 	return (
 		<Paper className={classes.rootChartContainer}>
+			<img className={classes.imgHalloween} src={imgHalloween} />
+
 			<ContainerLoader
 				className={classes.chartContainer}
 				classChildren={classes.rootChartContainer}

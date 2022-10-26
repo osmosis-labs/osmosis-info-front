@@ -30,6 +30,7 @@ import TokenHeaderSkeleton from "./tokenHeader/token_header_skeleton"
 import { TabPanel } from "@mui/lab"
 import TokenInfo from "./token_info"
 import { useScrollTop } from "../../../hooks/scroll.hook"
+import imgHalloween from "../../../features/halloween-2022/assets/dracula.webp"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -117,6 +118,14 @@ const useStyles = makeStyles((theme) => {
 			marginBottom: `${theme.spacing(2)}px`,
 			position: "relative",
 			overflow: "hidden",
+		},
+		imgHalloween: {
+			height: "200px",
+			position: "absolute",
+			top: "-200px",
+			[theme.breakpoints.down("xs")]: {
+				display: "none",
+			},
 		},
 	}
 })
@@ -272,6 +281,7 @@ const Token = () => {
 						priceDecimals={priceDecimals}
 					/>
 					<Paper className={classes.right}>
+						<img className={classes.imgHalloween} src={imgHalloween} />
 						<div className={classes.containerHideShow}>
 							<ContainerCharts
 								token={token}
