@@ -11,6 +11,7 @@ import Toggle from "../toggle/Toggle"
 import ToggleItem from "../toggle/ToggleItem"
 import SelectDashboard from "./selectDashboard/select_dashboard"
 import WarningIcon from "@mui/icons-material/Warning"
+import { useHalloween } from "../../contexts/halloween.provider"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -101,6 +102,7 @@ const AppBarMobile = ({ type, onChangeType, diplayMessage, message }) => {
 	let location = useLocation()
 	const [currentPath, setCurrentPath] = useState("/")
 	const [open, setOpen] = useState(false)
+	const { show, onToggle } = useHalloween()
 
 	const handleClick = (event) => {
 		setOpen(true)
@@ -203,6 +205,15 @@ const AppBarMobile = ({ type, onChangeType, diplayMessage, message }) => {
 							<Toggle color="primary" value={type} exclusive onChange={onChangeType}>
 								<ToggleItem value="app">App</ToggleItem>
 								<ToggleItem value="frontier">Frontier</ToggleItem>
+							</Toggle>
+						</div>
+						<div className={classes.center}>
+							<Toggle color="primary" value={show} exclusive onChange={onToggle}>
+								{show ? (
+									<ToggleItem value={false}>Hide theme</ToggleItem>
+								) : (
+									<ToggleItem value={true}>Show theme</ToggleItem>
+								)}
 							</Toggle>
 						</div>
 

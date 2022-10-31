@@ -31,6 +31,7 @@ import { TabPanel } from "@mui/lab"
 import TokenInfo from "./token_info"
 import { useScrollTop } from "../../../hooks/scroll.hook"
 import imgHalloween from "../../../features/halloween-2022/assets/dracula.webp"
+import { useHalloween } from "../../../contexts/halloween.provider"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "center",
 		},
 		tokenContainer: {
-			margin: `${theme.spacing(2)}px 0`,
+			margin: `${theme.spacing(2)}px 0 ${theme.spacing(4)}px 0`,
 			display: "grid",
 			gridAutoRows: "auto",
 			rowGap: theme.spacing(2),
@@ -115,7 +116,7 @@ const useStyles = makeStyles((theme) => {
 			flexDirection: "column",
 		},
 		trxContainer: {
-			marginBottom: `${theme.spacing(2)}px`,
+			marginBottom: `${theme.spacing(4)}px`,
 			position: "relative",
 			overflow: "hidden",
 		},
@@ -136,6 +137,8 @@ const Token = () => {
 	const { showToast } = useToast()
 	const { isLoadingDebug } = useDebug()
 	useScrollTop()
+
+	const { show } = useHalloween()
 
 	const { symbol } = useParams()
 	const { settings, updateSettings } = useSettings()
@@ -281,7 +284,7 @@ const Token = () => {
 						priceDecimals={priceDecimals}
 					/>
 					<Paper className={classes.right}>
-						<img className={classes.imgHalloween} src={imgHalloween} />
+						{show && <img className={classes.imgHalloween} src={imgHalloween} />}
 						<div className={classes.containerHideShow}>
 							<ContainerCharts
 								token={token}

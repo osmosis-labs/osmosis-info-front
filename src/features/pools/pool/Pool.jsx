@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => {
 		},
 
 		trxContainer: {
-			marginBottom: `${theme.spacing(2)}px`,
+			marginBottom: `${theme.spacing(4)}px`,
 			position: "relative",
 			overflow: "hidden",
 		},

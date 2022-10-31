@@ -8,6 +8,7 @@ import { useQueryClient } from "react-query"
 
 import Toggle from "../toggle/Toggle"
 import ToggleItem from "../toggle/ToggleItem"
+import { useHalloween } from "../../contexts/halloween.provider"
 const useStyles = makeStyles((theme) => {
 	return {
 		infoBarRoot: {
@@ -84,6 +85,10 @@ const useStyles = makeStyles((theme) => {
 			fontSize: theme.fontSize.verySmall,
 			marginRight: "16px !important",
 		},
+		theme: {
+			display: "inline-block",
+			marginRight: "16px !important",
+		},
 	}
 })
 
@@ -96,6 +101,7 @@ const InfoBar = () => {
 	} = usePrices()
 	const [time, setTime] = useState(0)
 	const { MODE, setOpen } = useDebug()
+	const { show, onToggle } = useHalloween()
 	const { settings, updateSettings } = useSettings()
 
 	const onChangeType = (event, value) => {
@@ -139,6 +145,15 @@ const InfoBar = () => {
 							Debug
 						</Button>
 					)}
+					<div className={classes.theme}>
+						<Toggle color="primary" value={show} exclusive onChange={onToggle}>
+							{show ? (
+								<ToggleItem value={false}>Hide theme</ToggleItem>
+							) : (
+								<ToggleItem value={true}>Show theme</ToggleItem>
+							)}
+						</Toggle>
+					</div>
 					<Toggle color="primary" value={settings.type} exclusive onChange={onChangeType}>
 						<ToggleItem value="app">App</ToggleItem>
 						<ToggleItem value="frontier">Frontier</ToggleItem>

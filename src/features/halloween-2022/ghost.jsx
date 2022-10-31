@@ -106,10 +106,10 @@ export const Ghost = () => {
 
 		refElt.current.style.transform = `scale(${direction === "right" ? 1 : -1}, -1)`
 		clearTimeout(refTimer.current)
-		refTimer.current = window.setTimeout(() => {
-			reinitialize()
-			initGhost()
-		}, duration * 1_000 + random(3, 10) * 1_000)
+		// refTimer.current = window.setTimeout(() => {
+		// 	 reinitialize()
+		// 	 initGhost()
+		// }, duration * 1_000 + random(3, 10) * 1_000)
 	}
 	const reinitialize = () => {
 		setAlive((a) => true)

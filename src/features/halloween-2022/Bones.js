@@ -1,9 +1,9 @@
 import { random } from "../../helpers/helpers";
 import { Bone } from "./Bone"
 
-const body = document.querySelector("body");
 
-body.addEventListener("click", (e) => {
+const onClick = (e) => {
+	const body = document.querySelector("body");
 	for (let i = 0; i < random(1, 6); i++) {
 		requestAnimationFrame((timestamp) => {
 			let size = random(10, 20)
@@ -19,4 +19,16 @@ body.addEventListener("click", (e) => {
 			}, Bone.timeAlive);
 		});
 	}
-});
+}
+export const addBody = () => {
+	const body = document.querySelector("body");
+
+	body.addEventListener("click", onClick);
+}
+
+
+export const removeBody = () => {
+	const body = document.querySelector("body");
+
+	body.removeEventListener("click", onClick);
+}

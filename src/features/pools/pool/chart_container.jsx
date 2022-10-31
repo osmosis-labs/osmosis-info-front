@@ -11,6 +11,7 @@ import { getInclude } from "../../../helpers/helpers"
 import { useHistoricalPool, useLiquidityPool, useVolumePool } from "../../../hooks/data/pools.hook"
 import ChartContainerSkeleton from "./chat_container_skeleton"
 import imgHalloween from "../../../features/halloween-2022/assets/dracula.webp"
+import { useHalloween } from "../../../contexts/halloween.provider"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -82,6 +83,8 @@ const ChartContainer = ({ currency, selectedTokens, poolId, isLoadingPool }) => 
 	const [rangePrice, setRangePrice] = useState("7d") // 7d, 1m, 1y, all
 	const [rangeVolume, setRangeVolume] = useState("d") // d, w, m
 	const [rangeLiquidity, setRangeLiquidity] = useState("d") // d, w, m
+
+	const { show } = useHalloween()
 
 	//price
 	const {
@@ -214,7 +217,7 @@ const ChartContainer = ({ currency, selectedTokens, poolId, isLoadingPool }) => 
 
 	return (
 		<Paper className={classes.rootChartContainer}>
-			<img className={classes.imgHalloween} src={imgHalloween} />
+			{show && <img className={classes.imgHalloween} src={imgHalloween} />}
 
 			<ContainerLoader
 				className={classes.chartContainer}

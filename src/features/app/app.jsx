@@ -30,6 +30,7 @@ import { DebugProvider } from "../../contexts/debug.provider"
 import DebugModal from "../_debug/debug_modal"
 import ModalMessage from "../modal_message/modal_message"
 import { Halloween2022 } from "../halloween-2022/halloween-2022"
+import { HalloweenProvider } from "../../contexts/halloween.provider"
 
 let MODE = "production"
 if (process.env.NODE_ENV && process.env.NODE_ENV !== "production" && process.env.REACT_APP_DEBUG === "true") {
@@ -123,69 +124,71 @@ const App = () => {
 						<WatchlistTokensProvider>
 							<WatchlistIBCProvider>
 								<KeplrProvider>
-									<LoaderProvider>
-										<ToastProvider>
-											{MODE === "dev" ? <DebugModal /> : null}
-											<ModalMessage />
-											<LoaderOsmosis />
-											<Helmet>
-												<script src="/charting_library/charting_library.js" type="text/javascript" />
-											</Helmet>
-											<div className={classes.appRoot}>
-												<Halloween2022 />
-												<Toast />
+									<HalloweenProvider>
+										<LoaderProvider>
+											<ToastProvider>
+												{MODE === "dev" ? <DebugModal /> : null}
+												<ModalMessage />
+												<LoaderOsmosis />
+												<Helmet>
+													<script src="/charting_library/charting_library.js" type="text/javascript" />
+												</Helmet>
+												<div className={classes.appRoot}>
+													<Halloween2022 />
+													<Toast />
 
-												<InfoBar />
-												<AppBar />
-												<div className={classes.container}>
-													<div className={classes.contentContainer} id="mainContainer">
-														<Switch>
-															<Route path="/" exact={true}>
-																<div className={classes.content}>
-																	<Overview />
-																</div>
-															</Route>
-															<Route path="/pools">
-																<div className={classes.content}>
-																	<Pools />
-																</div>
-															</Route>
-															<Route path="/pool/:id">
-																<div className={classes.content}>
-																	<Pool />
-																</div>
-															</Route>
-															<Route path="/tokens">
-																<div className={classes.content}>
-																	<Tokens />
-																</div>
-															</Route>
-															<Route path="/token/:symbol">
-																<Token />
-															</Route>
-															<Route path="/ibc">
-																<IBC />
-															</Route>
-															<Route exact={true} path="/dashboard/">
-																<Analytics />
-															</Route>
-															<Route path="/dashboard/transactions">
-																<Transactions />
-															</Route>
-															<Route path="/dashboard/trades">
-																<Trades />
-															</Route>
-															<Route>
-																<div className={classes.content}>
-																	<NotFound />
-																</div>
-															</Route>
-														</Switch>
+													<InfoBar />
+													<AppBar />
+													<div className={classes.container}>
+														<div className={classes.contentContainer} id="mainContainer">
+															<Switch>
+																<Route path="/" exact={true}>
+																	<div className={classes.content}>
+																		<Overview />
+																	</div>
+																</Route>
+																<Route path="/pools">
+																	<div className={classes.content}>
+																		<Pools />
+																	</div>
+																</Route>
+																<Route path="/pool/:id">
+																	<div className={classes.content}>
+																		<Pool />
+																	</div>
+																</Route>
+																<Route path="/tokens">
+																	<div className={classes.content}>
+																		<Tokens />
+																	</div>
+																</Route>
+																<Route path="/token/:symbol">
+																	<Token />
+																</Route>
+																<Route path="/ibc">
+																	<IBC />
+																</Route>
+																<Route exact={true} path="/dashboard/">
+																	<Analytics />
+																</Route>
+																<Route path="/dashboard/transactions">
+																	<Transactions />
+																</Route>
+																<Route path="/dashboard/trades">
+																	<Trades />
+																</Route>
+																<Route>
+																	<div className={classes.content}>
+																		<NotFound />
+																	</div>
+																</Route>
+															</Switch>
+														</div>
 													</div>
 												</div>
-											</div>
-										</ToastProvider>
-									</LoaderProvider>
+											</ToastProvider>
+										</LoaderProvider>
+									</HalloweenProvider>
 								</KeplrProvider>
 							</WatchlistIBCProvider>
 						</WatchlistTokensProvider>
