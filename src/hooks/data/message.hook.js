@@ -2,6 +2,7 @@ import { useQuery } from "react-query"
 import { useDebug } from "../../contexts/debug.provider"
 import { defaultMessage, formatMessage } from "../../formaters/message.formatter"
 import useRequest from "../request.hook"
+const API_URL = process.env.REACT_APP_API_URL
 
 export const useMessage = () => {
 	const request = useRequest()
@@ -10,7 +11,7 @@ export const useMessage = () => {
 	const getter = async ({ queryKey }) => {
 		const [_, {}] = queryKey
 		const response = await request({
-			url: `https://api-osmosis.imperator.co/overview/v1/message`,
+			url: `${API_URL}/overview/v1/message`,
 			method: "GET",
 		})
 		return formatMessage(response.data)

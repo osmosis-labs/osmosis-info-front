@@ -18,13 +18,16 @@ import {
 import useRequest from "../request.hook"
 import { useAssets } from "./assets.hook"
 
+const API_URL = process.env.REACT_APP_API_URL
+const CHAIN_API_URL = process.env.REACT_APP_CHAIN_API_URL
+
 export const useMCapTokens = () => {
 	const request = useRequest()
 
 	const getter = async ({ queryKey }) => {
 		const [_, {}] = queryKey
 		const response = await request({
-			url: `https://api-osmosis.imperator.co/tokens/v2/mcap`,
+			url: `${API_URL}/tokens/v2/mcap`,
 			method: "GET",
 		})
 		return response.data
@@ -45,7 +48,7 @@ export const useTokens = () => {
 	const getter = async ({ queryKey }) => {
 		const [_, {}] = queryKey
 		const response = await request({
-			url: `https://api-osmosis.imperator.co/tokens/v2/all`,
+			url: `${API_URL}/tokens/v2/all`,
 			method: "GET",
 		})
 		return formatTokens(response.data, mcap)
@@ -72,7 +75,7 @@ export const useToken = ({ symbol }) => {
 	const getter = async ({ queryKey }) => {
 		const [_, { symbol }] = queryKey
 		const response = await request({
-			url: `https://api-osmosis.imperator.co/tokens/v2/${symbol}`,
+			url: `${API_URL}/tokens/v2/${symbol}`,
 			method: "GET",
 		})
 		return formatToken(response.data[0], mcap)
@@ -93,7 +96,7 @@ export const useTrxToken = ({ symbol, limit = 10 }) => {
 
 	const getter = async ({ queryKey, pageParam = 0 }) => {
 		const [_, { symbol, limit }] = queryKey
-		let url = `https://api-osmosis-chain.imperator.co/swap/v1/token/${symbol}?only_success=true&limit=${limit}&offset=${pageParam}`
+		let url = `${CHAIN_API_URL}/swap/v1/token/${symbol}?only_success=true&limit=${limit}&offset=${pageParam}`
 
 		const response = await request({
 			url,
@@ -121,7 +124,7 @@ export const useVolumeToken = ({ symbol }) => {
 	const getter = async ({ queryKey }) => {
 		const [_, { symbol }] = queryKey
 		const response = await request({
-			url: `https://api-osmosis.imperator.co/tokens/v2/volume/${symbol}/chart`,
+			url: `${API_URL}/tokens/v2/volume/${symbol}/chart`,
 			method: "GET",
 		})
 		return formatVolumeToken(response.data)
@@ -142,7 +145,7 @@ export const useLiquidityToken = ({ symbol }) => {
 	const getter = async ({ queryKey }) => {
 		const [_, { symbol }] = queryKey
 		const response = await request({
-			url: `https://api-osmosis.imperator.co/tokens/v2/liquidity/${symbol}/chart`,
+			url: `${API_URL}/tokens/v2/liquidity/${symbol}/chart`,
 			method: "GET",
 		})
 		return formatLiquidityToken(response.data)
@@ -163,7 +166,7 @@ export const useHistoricalToken = ({ symbol, tf }) => {
 	const getter = async ({ queryKey }) => {
 		const [_, { symbol, tf }] = queryKey
 		const response = await request({
-			url: `https://api-osmosis.imperator.co/tokens/v2/historical/${symbol}/chart?tf=${tf}`,
+			url: `${API_URL}/tokens/v2/historical/${symbol}/chart?tf=${tf}`,
 			method: "GET",
 		})
 		return formatHistoricalToken(response.data)

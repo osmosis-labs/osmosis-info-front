@@ -1,6 +1,7 @@
 import { useQuery } from "react-query"
 import { defaultIbc, formatIbc } from "../../formaters/ibc.formatter"
 import useRequest from "../request.hook"
+const API_URL = process.env.REACT_APP_API_URL
 
 export const useIbc = () => {
 	const request = useRequest()
@@ -8,7 +9,7 @@ export const useIbc = () => {
 	const getter = async ({ queryKey }) => {
 		const [_, {}] = queryKey
 		const response = await request({
-			url: `https://api-osmosis.imperator.co/ibc/v1/all?dex=osmosis`,
+			url: `${API_URL}/ibc/v1/all?dex=osmosis`,
 			method: "GET",
 		})
 		return formatIbc(response.data)

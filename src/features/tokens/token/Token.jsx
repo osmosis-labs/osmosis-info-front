@@ -9,6 +9,7 @@ import {
 	formateNumberPriceDecimals,
 	formaterNumber,
 	getPercent,
+	normalize,
 } from "../../../helpers/helpers"
 import TokenPath from "./tokenHeader/TokenPath"
 import TokenTitle from "./tokenHeader/TokenTitle"
@@ -30,6 +31,8 @@ import TokenHeaderSkeleton from "./tokenHeader/token_header_skeleton"
 import { TabPanel } from "@mui/lab"
 import TokenInfo from "./token_info"
 import { useScrollTop } from "../../../hooks/scroll.hook"
+import PoolsTable from "../../pools/poolsTable/poolsTable"
+import { usePools } from "../../../hooks/data/pools.hook"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -118,6 +121,12 @@ const useStyles = makeStyles((theme) => {
 			position: "relative",
 			overflow: "hidden",
 		},
+
+		poolsContainer: {
+			margin: `${theme.spacing(2)}px 0`,
+			position: "relative",
+			overflow: "hidden",
+		},
 	}
 })
 
@@ -131,6 +140,52 @@ const Token = () => {
 	const { symbol } = useParams()
 	const { settings, updateSettings } = useSettings()
 
+	//token
+	const { data: tkn, isLoading: isLoadingTkn, isFetching: isFetchingTkn } = useToken({ symbol })
+	const [token, setToken] = useState({ ...tkn })
+	const isLoadingToken = isLoadingTkn || isFetchingTkn
+
+	// For pools
+	const [dataPools, setDataPools] = useState([])
+	const {
+		data: { current: pools },
+		isLoading: loadingPools,
+		isFetching: isFetchingPools,
+	} = usePools({})
+
+	const isLoadingPools = loadingPools || isFetchingPools || isLoadingDebug
+
+	useEffect(() => {
+		// sort pools on the first time is fetched
+		if (token && token.symbol) {
+			let data = [...pools]
+			data.sort((a, b) => {
+				if (b.liquidity < a.liquidity) {
+					return -1
+				}
+				if (b.liquidity > a.liquidity) {
+					return 1
+				}
+				return 0
+			})
+			setDataPools(
+				data.filter(
+					(value) =>
+						normalize(value.name).includes(normalize(token.symbol)) ||
+						normalize(value.symbol).includes(normalize(token.symbol))
+				)
+			)
+		}
+	}, [pools, token])
+
+	const onClickPool = (pool) => {
+		history.push(`/pool/${pool.id}`)
+	}
+
+	const setSettingsPools = (settings) => {
+		updateSettings({ poolTable: settings })
+	}
+
 	const priceDecimals = useRef(2)
 
 	const [openExpertChart, setOpenExpertChart] = useState(false)
@@ -138,11 +193,6 @@ const Token = () => {
 	const [rangePrice, setRangePrice] = useState(60)
 	const [rangeLiquidity, setRangeLiquidity] = useState("d")
 	const [rangeVolume, setRangeVolume] = useState("d")
-
-	//token
-	const { data: tkn, isLoading: isLoadingTkn, isFetching: isFetchingTkn } = useToken({ symbol })
-	const [token, setToken] = useState({ ...tkn })
-	const isLoadingToken = isLoadingTkn || isFetchingTkn
 
 	//Transactions
 	const {
@@ -288,6 +338,15 @@ const Token = () => {
 						</div>
 					</Paper>
 				</div>
+				<Paper className={classes.poolsContainer}>
+					<PoolsTable
+						data={dataPools}
+						onClickPool={onClickPool}
+						setSettings={setSettingsPools}
+						settings={settings.poolTable}
+						isLoading={isLoadingPools}
+					/>
+				</Paper>
 				<Paper className={classes.trxContainer}>
 					<TrxTable
 						data={trxs}

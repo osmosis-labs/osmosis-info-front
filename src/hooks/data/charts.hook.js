@@ -6,13 +6,14 @@ import {
 	formatVolumeChart,
 } from "../../formaters/charts.formatter"
 import useRequest from "../request.hook"
+const API_URL = process.env.REACT_APP_API_URL
 
 export const useLiquidityChart = () => {
 	const request = useRequest()
 	const getter = async ({ queryKey }) => {
 		const [_] = queryKey
 		const response = await request({
-			url: `https://api-osmosis.imperator.co/liquidity/v2/historical/chart`,
+			url: `${API_URL}/liquidity/v2/historical/chart`,
 			method: "GET",
 		})
 		return formatLiquidityChart(response.data)
@@ -28,7 +29,7 @@ export const useVolumeChart = () => {
 	const getter = async ({ queryKey }) => {
 		const [_] = queryKey
 		const response = await request({
-			url: `https://api-osmosis.imperator.co/volume/v2/historical/chart`,
+			url: `${API_URL}/volume/v2/historical/chart`,
 			method: "GET",
 		})
 		return formatVolumeChart(response.data)

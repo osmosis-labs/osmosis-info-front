@@ -22,6 +22,7 @@ import {
 } from "../../formaters/dashboard.formatter"
 import useRequest from "../request.hook"
 import { useAssets } from "./assets.hook"
+const CHAIN_API_URL = process.env.REACT_APP_CHAIN_API_URL
 
 export const useBalance = ({ address }) => {
 	const request = useRequest()
@@ -29,7 +30,7 @@ export const useBalance = ({ address }) => {
 	const getter = async ({ queryKey }) => {
 		const [_, { address }] = queryKey
 		const response = await request({
-			url: `https://api-osmosis-chain.imperator.co/account/v1/balance/${address}`,
+			url: `${CHAIN_API_URL}/account/v1/balance/${address}`,
 			method: "GET",
 		})
 		return formatBalance(response.data)
@@ -49,7 +50,7 @@ export const useExposure = ({ address }) => {
 	const getter = async ({ queryKey }) => {
 		const [_, { address }] = queryKey
 		const response = await request({
-			url: `https://api-osmosis-chain.imperator.co/account/v1/exposure/${address}`,
+			url: `${CHAIN_API_URL}/account/v1/exposure/${address}`,
 			method: "GET",
 		})
 		return formatExposure(response.data)
@@ -68,7 +69,7 @@ export const useChartStaking = ({ address, isAccumulated }) => {
 	const getter = async ({ queryKey }) => {
 		const [_, { address, isAccumulated }] = queryKey
 		const response = await request({
-			url: `https://api-osmosis-chain.imperator.co/staking/v1/rewards/historical/${address}`,
+			url: `${CHAIN_API_URL}/staking/v1/rewards/historical/${address}`,
 			method: "GET",
 		})
 		return formatChartStaking(response.data, isAccumulated)
@@ -88,7 +89,7 @@ export const useLiquidity = ({ address, symbol, isAccumulated }) => {
 	const getter = async ({ queryKey }) => {
 		const [_, { address, symbol, isAccumulated }] = queryKey
 		const response = await request({
-			url: `https://api-osmosis-chain.imperator.co/lp/v1/rewards/historical/${address}/${symbol}`,
+			url: `${CHAIN_API_URL}/lp/v1/rewards/historical/${address}/${symbol}`,
 			method: "GET",
 		})
 		return formatLiqudity(response.data, isAccumulated)
@@ -109,7 +110,7 @@ export const useLiquidityToken = ({ address }) => {
 	const getter = async ({ queryKey }) => {
 		const [_, { address }] = queryKey
 		const response = await request({
-			url: `https://api-osmosis-chain.imperator.co/lp/v1/rewards/token/${address}`,
+			url: `${CHAIN_API_URL}/lp/v1/rewards/token/${address}`,
 			method: "GET",
 		})
 		return formatLiqudityToken(response.data)
@@ -125,7 +126,7 @@ export const useLiquidityToken = ({ address }) => {
 }
 
 export const getTrx = ({ request, address, offset }) => {
-	let url = `https://api-osmosis-chain.imperator.co/swap/v1/address/${address}?limit=${100}&offset=${offset}`
+	let url = `${CHAIN_API_URL}/swap/v1/address/${address}?limit=${100}&offset=${offset}`
 	return request({
 		url,
 		method: "GET",
@@ -146,7 +147,7 @@ export const useTypeTrx = ({ address }, opts = { exclude: [], chainId: "", addre
 	const getter = async ({ queryKey }) => {
 		const [_, { address }] = queryKey
 		const response = await request({
-			url: `https://api-osmosis-chain.imperator.co/txs/v1/tx/count/${address}`,
+			url: `${CHAIN_API_URL}/txs/v1/tx/count/${address}`,
 			method: "GET",
 		})
 		let exclude = opts.exclude
@@ -181,7 +182,7 @@ export const useTrxs = ({ address, limit = 10, type = "all" }, opts = { chainId:
 
 	const getter = async ({ queryKey, pageParam = 0 }) => {
 		const [_, { address, limit, type }] = queryKey
-		let url = `https://api-osmosis-chain.imperator.co/txs/v1/tx/address/${address}?limit=${limit}&offset=${pageParam}`
+		let url = `${CHAIN_API_URL}/txs/v1/tx/address/${address}?limit=${limit}&offset=${pageParam}`
 
 		if (type && type !== "all") url += `&type=${type}`
 
@@ -237,7 +238,7 @@ export const useSendReceive = ({ address }, opts = { chainId: "", address: "" })
 }
 
 const getSendReceive = ({ request, address, offset }) => {
-	let url = `https://api-osmosis-chain.imperator.co/txs/v1/tx/address/${address}?type=cosmos.bank.v1beta1.MsgSend&limit=${100}&offset=${offset}`
+	let url = `${CHAIN_API_URL}/txs/v1/tx/address/${address}?type=cosmos.bank.v1beta1.MsgSend&limit=${100}&offset=${offset}`
 	return request({
 		url,
 		method: "GET",
@@ -262,7 +263,7 @@ export const useTrades = ({ address, limit = 10 }) => {
 
 	const getter = async ({ queryKey, pageParam = 0 }) => {
 		const [_, { address, limit }] = queryKey
-		let url = `https://api-osmosis-chain.imperator.co/swap/v1/address/${address}?limit=${limit}&offset=${pageParam}`
+		let url = `${CHAIN_API_URL}/swap/v1/address/${address}?limit=${limit}&offset=${pageParam}`
 
 		const response = await request({
 			url,
@@ -291,7 +292,7 @@ export const useInfoTrx = ({ hash }, opts = { chainId: "", address: "", currentT
 	const getter = async ({ queryKey }) => {
 		const [_, { hash }] = queryKey
 		const response = await request({
-			url: `https://api-osmosis-chain.imperator.co/txs/v1/tx/hash/${hash}`,
+			url: `${CHAIN_API_URL}/txs/v1/tx/hash/${hash}`,
 			method: "GET",
 		})
 		return formatTrx(response.data, opts)
