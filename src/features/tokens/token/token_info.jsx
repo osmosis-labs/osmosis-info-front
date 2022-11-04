@@ -6,7 +6,6 @@ import { formateNumberPrice, formateNumberPriceDecimals, formaterNumber, getPerc
 const TokenInfo = ({ token, isLoading, priceDecimals }) => {
 	const classes = useStyles()
 	const theme = useTheme()
-
 	return (
 		<Paper className={classes.loaderDetails}>
 			<div className={classes.details}>
@@ -157,7 +156,9 @@ const TokenInfo = ({ token, isLoading, priceDecimals }) => {
 							</>
 						) : (
 							<>
-								<p className={classes.dataDetail}>{token.mcap === 0 ? "-" : `$${formaterNumber(token.mcap)}`}</p>
+								<p className={classes.dataDetail}>
+									{token.mcap === 0 || !token.mcap ? "-" : `$${formaterNumber(token.mcap)}`}
+								</p>
 							</>
 						)}
 					</div>
