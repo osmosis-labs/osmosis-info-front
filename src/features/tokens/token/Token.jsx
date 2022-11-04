@@ -14,7 +14,6 @@ import {
 import TokenPath from "./tokenHeader/TokenPath"
 import TokenTitle from "./tokenHeader/TokenTitle"
 import ContainerCharts from "./ContainerCharts"
-import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
 import ExpertChartDialog from "./expertChart/ExpertChartDialog"
 import TrxTable from "./trxTable/trxTable"
 import { useSettings } from "../../../contexts/SettingsProvider"
@@ -157,7 +156,8 @@ const Token = () => {
 
 	useEffect(() => {
 		// sort pools on the first time is fetched
-		if (token && token.symbol) {
+
+		if (token && token.denom) {
 			let data = [...pools]
 			data.sort((a, b) => {
 				if (b.liquidity < a.liquidity) {
@@ -168,13 +168,7 @@ const Token = () => {
 				}
 				return 0
 			})
-			setDataPools(
-				data.filter(
-					(value) =>
-						normalize(value.name).includes(normalize(token.symbol)) ||
-						normalize(value.symbol).includes(normalize(token.symbol))
-				)
-			)
+			setDataPools(data.filter((value) => value.denoms.some((denom) => denom === token.denom)))
 		}
 	}, [pools, token])
 

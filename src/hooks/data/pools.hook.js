@@ -58,7 +58,7 @@ export const usePoolApr = () => {
 	const request = useRequest()
 
 	const getter = async ({ queryKey }) => {
-		const [_, {}] = queryKey
+		const [_, { }] = queryKey
 		const response = await request({
 			url: `${API_URL}/apr/v2/all`,
 			method: "GET",
