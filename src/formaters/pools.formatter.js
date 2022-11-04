@@ -102,6 +102,7 @@ export const formatPools = (dataPools, dataAPR, allTokens) => {
 				symbolName = formatTokenName(symbolName)
 				return `${acc}${acc.length > 0 ? "/" : ""}${symbolName}`
 			}, ""),
+			denoms: row.map(token => token.denom),
 			liquidity: row[0].liquidity,
 			liquidity24hChange: row[0].liquidity_24h_change,
 			volume7d: row[0].volume_7d,

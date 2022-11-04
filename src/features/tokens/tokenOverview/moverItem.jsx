@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core"
+import { useHistory } from "react-router-dom"
 import Image from "../../../components/image/Image"
 import Paper from "../../../components/paper/Paper"
 import { formateNumberDecimals, formateNumberDecimalsAuto, getPercent } from "../../../helpers/helpers"
@@ -14,6 +15,7 @@ const useStyles = makeStyles((theme) => {
 			display: "flex",
 			alignItems: "center",
 			justifyContent: "space-between",
+			cursor: "pointer",
 		},
 		arrow: {},
 		up: {
@@ -58,6 +60,7 @@ const useStyles = makeStyles((theme) => {
 const MoverItem = ({ item, index }) => {
 	const classes = useStyles()
 	const { data: assets } = useAssets()
+	const history = useHistory()
 	const getClasses = (value, type) => {
 		let res = ""
 		if (!type) res = classes.change
@@ -79,8 +82,12 @@ const MoverItem = ({ item, index }) => {
 		} else return null
 	}
 
+	const onClick = () => {
+		history.push(`/token/${item.symbol}`)
+	}
+
 	return (
-		<div className={classes.rootMoverItem}>
+		<div className={classes.rootMoverItem} onClick={onClick}>
 			<Image
 				className={`${classes.image}`}
 				assets={true}
