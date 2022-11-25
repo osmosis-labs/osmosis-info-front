@@ -8,7 +8,7 @@ export const useAssets = () => {
 	const getter = async ({ queryKey }) => {
 		const [_, {}] = queryKey
 		const response = await request({
-			url: `https://raw.githubusercontent.com/osmosis-labs/assetlists/main/osmosis-1/osmosis-frontier.assetlist.json`,
+			url: `https://raw.githubusercontent.com/osmosis-labs/assetlists/main/osmosis-1/osmosis-1.assetlist.json`,
 			method: "GET",
 		})
 		return formatAssets(response.data)
