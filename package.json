@@ -1,6 +1,6 @@
 {
   "name": "@latouche/osmosis-info",
-  "version": "independant",
+  "version": "0.0.1",
   "main": "index.js",
   "repository": "https://github.dev/osmosis-labs/osmosis-info/osmosis-info.git",
   "author": "Dorian <dorian@latouche.dev>",
