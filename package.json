@@ -31,10 +31,12 @@
   },
   "scripts": {
     "build:packages": "yarn lerna run build --scope @latouche/osmosis-info-ui",
+    "build:app": "yarn lerna run build --scope @latouche/osmosis-info-web",
     "dev:app": "yarn lerna run dev --scope @latouche/osmosis-info-web",
     "dev:packages": "yarn lerna run dev --scope @latouche/osmosis-info-ui",
     "dev:css": "yarn lerna run dev:css --scope @latouche/osmosis-info-ui",
     "dev": "concurrently \"yarn dev:app\" \"yarn dev:css\" \"yarn dev:packages\"",
+    "start:app": "yarn lerna run start --scope @latouche/osmosis-info-web",
     "publish": "yarn lerna run publish",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
