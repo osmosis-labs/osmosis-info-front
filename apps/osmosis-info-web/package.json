@@ -1,0 +1,50 @@
+{
+    "name": "@latouche/osmosis-info-web",
+    "version": "0.0.1",
+    "description": "Osmosis info website",
+    "author": "Dorian <dorian@latouche.dev>",
+    "homepage": "https://github.com/osmosis-labs/osmosis-info#readme",
+    "private": "true",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/osmosis-labs/osmosis-info/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/osmosis-labs/osmosis-info.git"
+    },
+    "scripts": {
+        "dev": "next dev",
+        "clean": "rm -rf node_modules && rm -rf .next",
+        "build": "next build",
+        "start": "next start"
+    },
+    "dependencies": {
+        "@latouche/osmosis-info-ui": "*",
+        "@types/node": "18.11.9",
+        "@types/react": "18.0.25",
+        "@types/react-dom": "18.0.9",
+        "eslint": "^8.28.0",
+        "eslint-config-next": "13.0.4",
+        "mobx": "^6.7.0",
+        "mobx-react-lite": "^3.4.0",
+        "next": "13.0.4",
+        "react": "18.2.0",
+        "react-dom": "18.2.0",
+        "react-toastify": "^9.1.1",
+        "typescript": "4.9.3"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.20.2",
+        "@typescript-eslint/eslint-plugin": "^5.43.0",
+        "@typescript-eslint/parser": "^5.43.0",
+        "autoprefixer": "^10.4.13",
+        "babel-loader": "^8.3.0",
+        "eslint-plugin-react": "^7.31.11",
+        "eslint-plugin-storybook": "^0.6.7",
+        "lint-staged": "^13.0.3",
+        "postcss": "^8.4.19",
+        "prettier": "^2.7.1",
+        "tailwindcss": "^3.2.4"
+    }
+}

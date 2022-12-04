@@ -1,0 +1,36 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;500;600;700&display=swap");
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@layer components {
+	html {
+		font-family: Inter, ui-sans-serif, system-ui;
+		color: #ffffff;
+	}
+}
+.dialogTransitionOpen {
+	transition-property: opacity, z-index;
+	transition-duration: 300ms, 0ms;
+	transition-delay: 0ms, 0ms;
+}
+
+.dialogTransitionClose {
+	transition-property: opacity, z-index;
+	transition-duration: 300ms, 0ms;
+	transition-delay: 0ms, 300ms;
+}
+
+.popoverTransitionOpen {
+	transition-property: opacity, top, left;
+	transition-duration: 300ms, 0ms, 0ms;
+	transition-delay: 0ms, 0ms, 0ms;
+}
+
+.popoverTransitionClose {
+	transition-property: opacity, top, left;
+	transition-duration: 300ms, 0ms, 0ms;
+	transition-delay: 0ms, 300ms, 300ms;
+}

@@ -1,0 +1,75 @@
+{
+  "name": "@latouche/osmosis-info",
+  "version": "independant",
+  "main": "index.js",
+  "repository": "https://github.dev/osmosis-labs/osmosis-info/osmosis-info.git",
+  "author": "Dorian <dorian@latouche.dev>",
+  "license": "MIT",
+  "private": "true",
+  "workspaces": [
+    "packages/*",
+    "apps/**"
+  ],
+  "lint-staged": {
+    "apps/**/*.{html,ts,tsx,scss}": [
+      "prettier --write"
+    ],
+    "packages/**/*.{html,ts,tsx,scss}": [
+      "prettier --write"
+    ],
+    "apps/**/*.{ts,tsx}": [
+      "eslint --fix"
+    ],
+    "packages/**/*.{ts,tsx}": [
+      "eslint --fix"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "scripts": {
+    "build:packages": "yarn lerna run build --scope @latouche/osmosis-info-ui",
+    "dev:app": "yarn lerna run dev --scope @latouche/osmosis-info-web",
+    "dev:packages": "yarn lerna run dev --scope @latouche/osmosis-info-ui",
+    "dev:css": "yarn lerna run dev:css --scope @latouche/osmosis-info-ui",
+    "dev": "concurrently \"yarn dev:app\" \"yarn dev:css\" \"yarn dev:packages\"",
+    "publish": "yarn lerna run publish",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.5",
+    "@storybook/addon-actions": "^6.5.13",
+    "@storybook/addon-essentials": "^6.5.13",
+    "@storybook/addon-interactions": "^6.5.13",
+    "@storybook/addon-links": "^6.5.13",
+    "@storybook/addon-postcss": "^2.0.0",
+    "@storybook/builder-webpack4": "^6.5.13",
+    "@storybook/builder-webpack5": "^6.5.13",
+    "@storybook/manager-webpack4": "^6.5.13",
+    "@storybook/manager-webpack5": "^6.5.13",
+    "@storybook/react": "^6.5.13",
+    "@storybook/testing-library": "^0.0.13",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "babel-loader": "^8.3.0",
+    "concurrently": "^7.6.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.29.0",
+    "eslint-plugin-react": "^7.31.11",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-storybook": "^0.6.7",
+    "lerna": "^6.1.0",
+    "lint-staged": "^13.0.4",
+    "postcss": "^8.4.19",
+    "prettier": "^2.8.0",
+    "react-docgen-typescript": "^2.2.2",
+    "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "husky": "^8.0.2"
+  }
+}

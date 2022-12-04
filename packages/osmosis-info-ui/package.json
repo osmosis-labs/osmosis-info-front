@@ -1,0 +1,37 @@
+{
+  "name": "@latouche/osmosis-info-ui",
+  "version": "0.0.1",
+  "license": "MIT",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "types": "./lib/esm/index.d.ts",
+  "scripts": {
+    "clean": "rm -rf node_modules && rm -rf lib",
+    "build": "rm -rf /lib && yarn build:esm && yarn build:cjs && yarn build:css",
+    "build:css": "yarn tailwindcss -i ./src/styles/globals.css -o ./lib/styles.css --minify",
+    "build:cjs": "tsc --module commonjs --outDir lib/cjs",
+    "build:esm": "tsc",
+    "dev:css": "yarn tailwindcss -i ./src/styles/globals.css -o ./lib/styles.css --watch",
+    "publish": "yarn build",
+    "dev": "tsc -w"
+  },
+  "files": [
+    "lib"
+  ],
+  "dependencies": {
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "@types/react": "^18.0.25",
+    "autoprefixer": "^10.4.13",
+    "postcss": "^8.4.19",
+    "react": "^18.2.0",
+    "tailwindcss": "^3.2.4",
+    "typescript": "^4.9.3"
+  }
+}
