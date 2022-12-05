@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import React from "react";
+import Portal from "../portal/portal";
 
 /**
  * Backdrop is used for dialog, dropdown menu, popover...
@@ -17,24 +17,26 @@ export interface BackdropProps {
 }
 
 export const Backdrop = ({ children, className, open, onClick }: BackdropProps) => {
-	const [mountNode, setMountNode] = useState<null | HTMLElement>(null);
-	useEffect(() => {
-		setMountNode(document.body);
-	}, []);
-
+	// const [isMounted, setIsMounted] = useState<boolean>(false);
+	// useEffect(() => {
+	// 	setIsMounted(true);
+	// }, []);
 	const classNameDefault = `fixed inset-0 overflow-hidden`;
 	const classNameOpen = `${classNameDefault} ${className} z-50 opacity-100 dialogTransitionOpen`;
 	const classNameClose = `${classNameDefault} ${className} -z-50 opacity-0 dialogTransitionClose`;
+	console.log(
+		"backdrop.tsx -> 25: children, open, classNameOpen, classNameClose,",
+		children,
+		open,
+		classNameOpen,
+		classNameClose,
+		onClick
+	);
 	return (
-		<React.Fragment>
-			{mountNode
-				? createPortal(
-						<div onClick={onClick} className={open ? classNameOpen : classNameClose}>
-							{children}
-						</div>,
-						mountNode
-				  )
-				: null}
-		</React.Fragment>
+		<Portal>
+			<div onClick={onClick} className={open ? classNameOpen : classNameClose}>
+				{children}
+			</div>
+		</Portal>
 	);
 };

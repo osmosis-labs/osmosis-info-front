@@ -43,7 +43,7 @@ export const Popover = ({
 	anchorPosition = { x: "left", y: "bottom" },
 	popoverPosition = { x: "left", y: "top" },
 }: PopoverProps) => {
-	const refPaper = useRef<HTMLDivElement>(null);
+	const refPaper = useRef<any>(null);
 	let x = 0;
 	let y = 0;
 	if (refPaper.current && anchorElement) {

@@ -6,3 +6,4 @@ export * from "./paper/paper";
 export * from "./popover/popover";
 export * from "./svg/index";
 export * from "./no-ssr/no-srr";
+export * from "./portal/portal";
