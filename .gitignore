@@ -4,6 +4,7 @@ dist/
 build/
 .next/
 storybook-static/
+lib/
 
 # typescript
 *.tsbuildinfo
