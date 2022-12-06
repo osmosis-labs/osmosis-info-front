@@ -1,8 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 // eslint-disable-next-line no-undef
+
+const topMenuHeight = 68;
+const sideMenuWidthOpen = 200;
+const sideMenuWidthClose = 69;
+const paddingChildren = 10;
+const bottomMenuHeight = 88;
+
 module.exports = {
   content: [
-    "./packages/**/src/**/*.{js,jsx,ts,tsx}",
+    "./packages/**/*.{js,jsx,ts,tsx}",
+    "./apps/**/*.{js,jsx,ts,tsx}",
+
   ],
   darkMode: ['class'],
 
@@ -148,14 +157,33 @@ module.exports = {
     },
     extend: {
       maxWidth: {
-        container: "1280px"
+        container: "1280px",
       },
+      height: {
+        topMenu: `${topMenuHeight}px`,
+        bottomMenu: `${bottomMenuHeight}px`,
+      },
+      width: {
+        sideMenuOpen: `${sideMenuWidthOpen}px`,
+        sideMenuClose: `${sideMenuWidthClose}px`,
+        childrenClose: `calc(100% - ${sideMenuWidthClose}px)`,
+        childrenOpen: `calc(100% - ${sideMenuWidthOpen}px)`,
+        container: "1280px",
+      },
+      spacing: {
+        childrenClose: `${topMenuHeight + paddingChildren}px ${paddingChildren}px ${paddingChildren}px ${sideMenuWidthClose + paddingChildren
+          }px`,
+        childrenOpen: `${topMenuHeight + paddingChildren}px ${paddingChildren}px ${paddingChildren}px ${sideMenuWidthOpen + paddingChildren
+          }px`,
+        childrenBottomMenu: `${topMenuHeight + paddingChildren}px 0px ${paddingChildren + bottomMenuHeight}px 0px`,
+      },
+
       transitionDuration: {
         default: "300ms",
         fast: "150ms",
       },
       gridTemplateRows: {
-        itemMenu: '2fr 1fr',
+        itemMenu: "2fr 1fr",
       },
     },
     plugins: [],

@@ -17,21 +17,9 @@ export interface BackdropProps {
 }
 
 export const Backdrop = ({ children, className, open, onClick }: BackdropProps) => {
-	// const [isMounted, setIsMounted] = useState<boolean>(false);
-	// useEffect(() => {
-	// 	setIsMounted(true);
-	// }, []);
 	const classNameDefault = `fixed inset-0 overflow-hidden`;
 	const classNameOpen = `${classNameDefault} ${className} z-50 opacity-100 dialogTransitionOpen`;
 	const classNameClose = `${classNameDefault} ${className} -z-50 opacity-0 dialogTransitionClose`;
-	console.log(
-		"backdrop.tsx -> 25: children, open, classNameOpen, classNameClose,",
-		children,
-		open,
-		classNameOpen,
-		classNameClose,
-		onClick
-	);
 	return (
 		<Portal>
 			<div onClick={onClick} className={open ? classNameOpen : classNameClose}>

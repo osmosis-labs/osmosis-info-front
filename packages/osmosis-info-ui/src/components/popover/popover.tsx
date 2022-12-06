@@ -65,7 +65,7 @@ export const Popover = ({
 			else if (popoverPosition.y === "center") y = y - rectPaper.height / 2;
 		}
 	}
-	const classNameDefault = `${classNamePaper} fixed bg-main-300 `;
+	const classNameDefault = `${classNamePaper} fixed `;
 	const classNameOpen = `${classNameDefault} popoverTransitionOpen`;
 	const classNameClose = `${classNameDefault} popoverTransitionClose`;
 

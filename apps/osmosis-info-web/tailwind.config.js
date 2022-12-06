@@ -49,7 +49,7 @@ module.exports = {
         700: "#8c6b2e",
         800: "#5d481f",
         900: "#2f240f",
-        1000: "#0c0000",
+        1000: "#0c0000"
       },
       ammelia: {
         100: "#F8DEF3",
@@ -102,19 +102,19 @@ module.exports = {
         800: "#2D1B8F",
       },
       backdrop: {
-        main: "rgba(20, 15, 52, 0.7)",
+        main: "rgba(20, 15, 52, 0.7)"
       },
     },
     backgroundSize: {
-      "size-x-200": "200% 100%",
+      "size-x-200": "200% 100%"
     },
     backgroundPosition: {
-      "pos-0": "0% 0%",
-      "pos-100": "100% 0%",
+      'pos-0': '0% 0%',
+      'pos-100': '100% 0%',
     },
     fontFamily: {
-      title: ["Poppins", "ui-sans-serif", "system-ui"],
-      body: ["Inter", "ui-sans-serif", "system-ui"],
+      title: ['Poppins', "ui-sans-serif", "system-ui"],
+      body: ['Inter', "ui-sans-serif", "system-ui"],
     },
     screens: {
       "3xl": { max: "1792px" },

@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 import { SettingsPopover } from "../settings/settings-popover";
 
 export default function TopMenu() {
-	console.log("%ctop-menu.tsx -> 10 BLUE: SettingsPopover", "background: #2196f3; color:#FFFFFF");
 	const isMobile = useIsMobile();
 	const {
 		menuStore: { open },
