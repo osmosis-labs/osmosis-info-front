@@ -10,8 +10,8 @@
   "module": "./lib/esm/index.js",
   "types": "./lib/esm/index.d.ts",
   "scripts": {
-    "clean": "rm -rf node_modules && rm -rf lib",
-    "build": "rm -rf /lib && yarn build:esm && yarn build:cjs && yarn build:css",
+    "clean": "echo \"CLEAN\" && rm -rf ./node_modules && rm -rf ./lib",
+    "build": "rm -rf ./lib && yarn build:esm && yarn build:cjs && yarn build:css",
     "build:css": "yarn tailwindcss -i ./src/styles/globals.css -o ./lib/styles.css --minify",
     "build:cjs": "tsc --module commonjs --outDir lib/cjs",
     "build:esm": "tsc",

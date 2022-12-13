@@ -5,13 +5,7 @@ import { Button } from "./button";
 export default {
 	title: "Components/Inputs/Buttons/Button",
 	component: Button,
-	parameters: {
-		docs: {
-			description: {
-				component: "Button is used to catch user action.",
-			},
-		},
-	},
+	parameters: {},
 } as ComponentMeta<typeof Button>;
 
 const Template: ComponentStory<typeof Button> = (args) => {

@@ -11,7 +11,7 @@ export interface PaperProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const Paper = forwardRef<HTMLDivElement, PaperProps>(({ children, className, ...props }: PaperProps, ref) => {
 	return (
-		<div ref={ref} className={`${className} p-2 bg-main-800 rounded-xl`} {...props}>
+		<div ref={ref} className={className ?? `p-2 bg-main-800 rounded-xl`} {...props}>
 			{children}
 		</div>
 	);

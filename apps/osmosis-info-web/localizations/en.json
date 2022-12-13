@@ -1,0 +1,28 @@
+{
+    "overview": {
+        "title": "Overview"
+    },
+    "pools": {
+        "title": "Pools"
+    },
+    "tokens": {
+        "title": "Tokens"
+    },
+    "dashboard": {
+        "title": "Dashboard"
+    },
+    "404": {
+        "title": "Page not found",
+        "body": "Oops, we could not find the page you were looking for. Come back to <link>Overview</link>."
+    },
+    "settings": {
+        "title": "Settings",
+        "langue": "Language"
+    },
+    "menu": {
+        "overview": "Overview",
+        "pools": "Pools",
+        "tokens": "Tokens",
+        "dashboard": "Dashboard"
+    }
+}

@@ -41,6 +41,7 @@ export function ItemMenuTitle() {
 			</div>
 			<LeftSvg
 				onClick={onClick}
+				strokeWidth={2}
 				className="my-2 ml-2 pr-2 cursor-pointer stroke-main-400 scale-150 duration-300 hover:stroke-wosmongton-100 hover:-translate-x-2"
 			/>
 		</div>

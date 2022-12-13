@@ -1,7 +1,19 @@
 import React from "react";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 
-import { SettingsSvg, DashboardSvg, MenuSvg, TokensSvg, LeftSvg, OsmosisSvg, OverviewSvg, PoolSvg } from "./";
+import {
+	SettingsSvg,
+	DashboardSvg,
+	MenuSvg,
+	TokensSvg,
+	LeftSvg,
+	OsmosisSvg,
+	OverviewSvg,
+	PoolSvg,
+	FrenchSvg,
+	EnglishSvg,
+	BottomSvg,
+} from "./";
 
 export default {
 	title: "Assets/Icons",
@@ -39,11 +51,13 @@ const argsTypeStroke = {
 	},
 };
 
-export const Osmosis: ComponentStory<typeof OsmosisSvg> = (args) => <OsmosisSvg {...args} />;
-Osmosis.args = {
+const argsSize = {
 	height: 60,
 	width: 60,
 };
+
+export const Osmosis: ComponentStory<typeof OsmosisSvg> = (args) => <OsmosisSvg {...args} />;
+Osmosis.args = argsSize;
 
 export const Dashboard: ComponentStory<typeof DashboardSvg> = (args) => <DashboardSvg {...args} />;
 Dashboard.args = argsFill;
@@ -72,3 +86,13 @@ Tokens.argTypes = argsTypeFill;
 export const Settings: ComponentStory<typeof SettingsSvg> = (args) => <SettingsSvg {...args} />;
 Settings.args = argsFill;
 Settings.argTypes = argsTypeFill;
+
+export const French: ComponentStory<typeof FrenchSvg> = (args) => <FrenchSvg {...args} />;
+French.args = argsFill;
+
+export const English: ComponentStory<typeof EnglishSvg> = (args) => <EnglishSvg {...args} />;
+English.args = argsSize;
+
+export const Bottom: ComponentStory<typeof BottomSvg> = (args) => <BottomSvg {...args} />;
+Bottom.args = argsFill;
+Bottom.argTypes = argsTypeFill;

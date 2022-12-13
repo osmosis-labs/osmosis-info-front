@@ -1,0 +1,28 @@
+{
+    "overview": {
+        "title": "Vue d'ensemble"
+    },
+    "pools": {
+        "title": "Bassins"
+    },
+    "tokens": {
+        "title": "Jetons"
+    },
+    "dashboard": {
+        "title": "Tableau de bord"
+    },
+    "404": {
+        "title": "Page non trouvée",
+        "body": "Oups, nous trouvons pas la page que vous cherchez. Revenez à <link>La vue d'ensemble</link>."
+    },
+    "settings": {
+        "title": "Paramètres",
+        "langue": "Langue"
+    },
+    "menu": {
+        "overview": "Vue d'ensemble",
+        "pools": "Bassins",
+        "tokens": "Jetons",
+        "dashboard": "Tableau de bord"
+    }
+}

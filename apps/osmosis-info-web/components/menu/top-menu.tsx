@@ -1,7 +1,6 @@
 import React from "react";
 import { useIsMobile } from "../../hooks/use-is-mobile";
 import { useStore } from "../../stores";
-import dynamic from "next/dynamic";
 import { SettingsPopover } from "../settings/settings-popover";
 
 export default function TopMenu() {

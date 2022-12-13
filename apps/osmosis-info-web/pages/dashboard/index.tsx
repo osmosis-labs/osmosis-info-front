@@ -1,11 +1,12 @@
 import React from "react";
-export default function Home() {
+import { useTranslation } from "react-multi-lang";
+export default function Dashboard() {
+	const t = useTranslation();
+
 	return (
 		<div>
-			<h1 className="text-2xl">Dashboard</h1>
-			<div>
-				<p className="mt-4 text-gray-600 dark:text">Dashboard Page</p>
-			</div>
+			<h1 className="text-2xl">{t("dashboard.title")}</h1>
+			<div></div>
 		</div>
 	);
 }

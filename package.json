@@ -38,6 +38,8 @@
     "dev": "concurrently \"yarn dev:app\" \"yarn dev:css\" \"yarn dev:packages\"",
     "start:app": "yarn lerna run start --scope @latouche/osmosis-info-web",
     "publish": "yarn lerna run publish",
+    "clean": "yarn lerna run clean",
+    "cleanDev": "yarn lerna clean -y && yarn build:packages && yarn dev",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "prepare": "husky install"

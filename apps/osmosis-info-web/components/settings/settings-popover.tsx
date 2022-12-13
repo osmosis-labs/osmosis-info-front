@@ -1,8 +1,13 @@
 import React, { useState } from "react";
-import { IconButton, Popover, SettingsSvg } from "@latouche/osmosis-info-ui";
+import { Dropdown, IconButton, ItemDropdown, Popover, SettingsSvg } from "@latouche/osmosis-info-ui";
+import { observer } from "mobx-react-lite";
+import { useStore } from "../../stores";
+import { SUPPORTED_LANGUAGES } from "../../stores/app/settings-store/language";
 
-export const SettingsPopover = () => {
+export const SettingsPopover = observer(() => {
 	const [anchorElPopover, setAnchorElPopover] = useState<null | HTMLElement>(null);
+	const { settingsStore } = useStore();
+	const language = settingsStore.getSettingById("language")?.state.value;
 
 	const onClickOpen = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorElPopover(event.currentTarget);
@@ -10,6 +15,11 @@ export const SettingsPopover = () => {
 	const onClose = () => setAnchorElPopover(null);
 
 	const openPopover = Boolean(anchorElPopover);
+
+	const onChangeLanguage = (item: ItemDropdown<string>) => {
+		settingsStore.getSettingById("language")?.setState({ value: item.value });
+	};
+
 	return (
 		<>
 			<IconButton onClick={onClickOpen} Icon={SettingsSvg} className="ml-2" />
@@ -17,14 +27,26 @@ export const SettingsPopover = () => {
 				onClose={onClose}
 				open={openPopover}
 				anchorElement={anchorElPopover}
-				anchorPosition={{ x: "left", y: "bottom" }}
+				anchorPosition={{ x: "right", y: "bottom" }}
 				popoverPosition={{
-					x: "left",
+					x: "right",
 					y: "top",
 				}}
 			>
-				<p>Hello</p>
+				<div className="p-4">
+					<p className="mb-4 text-xl">Paramètres</p>
+					<div className="flex items-center">
+						<p className="mr-4">Langue:</p>
+						<Dropdown<string>
+							onChange={onChangeLanguage}
+							value={language}
+							items={SUPPORTED_LANGUAGES}
+							size="small"
+							variant={"icon"}
+						/>
+					</div>
+				</div>
 			</Popover>
 		</>
 	);
-};
+});

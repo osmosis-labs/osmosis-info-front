@@ -31,6 +31,8 @@ export interface PopoverProps {
 	anchorPosition?: PopoverPosisiton;
 	/** the place where the popover will be positioned in relation to the anchor */
 	popoverPosition?: PopoverPosisiton;
+	/** Default is true, Allow to close the dialog when the user click outside */
+	closeOnClickAway?: boolean;
 }
 
 export const Popover = ({
@@ -42,6 +44,7 @@ export const Popover = ({
 	classNameBackdrop,
 	anchorPosition = { x: "left", y: "bottom" },
 	popoverPosition = { x: "left", y: "top" },
+	closeOnClickAway = true,
 }: PopoverProps) => {
 	const refPaper = useRef<any>(null);
 	let x = 0;
@@ -65,12 +68,24 @@ export const Popover = ({
 			else if (popoverPosition.y === "center") y = y - rectPaper.height / 2;
 		}
 	}
-	const classNameDefault = `${classNamePaper} fixed `;
+	const classNameDefault = `${classNamePaper} fixed bg-main-800 rounded-xl`;
 	const classNameOpen = `${classNameDefault} popoverTransitionOpen`;
 	const classNameClose = `${classNameDefault} popoverTransitionClose`;
 
+	const onClick = (event: React.MouseEvent<HTMLDivElement>) => {
+		if (refPaper.current) {
+			const rectPaper = refPaper.current.getBoundingClientRect();
+			const isInPaper =
+				rectPaper.top <= event.clientY &&
+				event.clientY <= rectPaper.top + rectPaper.height &&
+				rectPaper.left <= event.clientX &&
+				event.clientX <= rectPaper.left + rectPaper.width;
+			if (!isInPaper && closeOnClickAway) onClose();
+		}
+	};
+
 	return (
-		<Backdrop open={open} onClick={onClose} className={classNameBackdrop}>
+		<Backdrop open={open} onClick={onClick} className={classNameBackdrop}>
 			<Paper ref={refPaper} className={open ? classNameOpen : classNameClose} style={{ top: y, left: x }}>
 				{children}
 			</Paper>

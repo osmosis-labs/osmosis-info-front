@@ -6,3 +6,6 @@ export * from "./overview-svg";
 export * from "./pool-svg";
 export * from "./settings-svg";
 export * from "./tokens-svg";
+export * from "./french-svg";
+export * from "./english-svg";
+export * from "./bottom-svg";

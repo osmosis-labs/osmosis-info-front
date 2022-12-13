@@ -1,52 +1,60 @@
 import { observer } from "mobx-react-lite";
-import React, { PropsWithChildren, FunctionComponent, useMemo } from "react";
+import React, { PropsWithChildren, FunctionComponent, useMemo, useEffect } from "react";
 import { useIsMobile } from "../../hooks/use-is-mobile";
 import { useStore } from "../../stores";
 import BottomMenu from "../menu/bottom-menu";
 import SideMenu from "../menu/side-menu";
+import { getLanguage, setLanguage, useTranslation } from "react-multi-lang";
 
 import TopMenu from "../menu/top-menu";
 import { MainLayoutProps } from "./types";
 import { Item } from "../menu/item/types";
 import { DashboardSvg, OverviewSvg, PoolSvg, TokensSvg } from "@latouche/osmosis-info-ui";
 
-const MainLayout: FunctionComponent<PropsWithChildren<MainLayoutProps>> = ({ children, className }) => {
+const MainLayout: FunctionComponent<PropsWithChildren<MainLayoutProps>> = observer(({ children, className }) => {
 	const isMobile = useIsMobile();
 	const {
 		menuStore: { open },
+		settingsStore,
 	} = useStore();
+	const language = settingsStore.getSettingById("language")?.state.value;
 
+	// useLanguage();
+	const t = useTranslation();
 	const items = useMemo<Item[]>(() => {
 		const its: Item[] = [];
 		its.push({
-			name: "Overview",
+			name: t("menu.overview"),
 			path: "/",
 			Icon: OverviewSvg,
 			selectionTest: /\/$/,
 		});
 
 		its.push({
-			name: "Pools",
+			name: t("menu.pools"),
 			path: "/pools",
 			Icon: PoolSvg,
 			selectionTest: /\/pools/,
 		});
 
 		its.push({
-			name: "Tokens",
+			name: t("menu.tokens"),
 			path: "/tokens",
 			Icon: TokensSvg,
 			selectionTest: /\/tokens/,
 		});
 		its.push({
-			name: "Dashboard",
+			name: t("menu.dashboard"),
 			path: "/dashboard",
 			Icon: DashboardSvg,
 			selectionTest: /\/dashboard/,
 		});
 
 		return its;
-	}, []);
+	}, [t]);
+	useEffect(() => {
+		setLanguage(language);
+	}, [language]);
 
 	let childrenClassName = ``;
 	const defaultChildrenClassName = "min-h-screen w-full transition-colors";
@@ -56,6 +64,7 @@ const MainLayout: FunctionComponent<PropsWithChildren<MainLayoutProps>> = ({ chi
 	} else {
 		childrenClassName = `${defaultChildrenClassName} p-childrenBottomMenu`;
 	}
+
 	return (
 		<div className="bg-main-900 flex">
 			<TopMenu />
@@ -66,6 +75,6 @@ const MainLayout: FunctionComponent<PropsWithChildren<MainLayoutProps>> = ({ chi
 			</div>
 		</div>
 	);
-};
+});
 
-export default observer(MainLayout);
+export default MainLayout;
