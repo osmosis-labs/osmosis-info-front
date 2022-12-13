@@ -4,7 +4,7 @@ import { useIsMobile } from "../../hooks/use-is-mobile";
 import { useStore } from "../../stores";
 import BottomMenu from "../menu/bottom-menu";
 import SideMenu from "../menu/side-menu";
-import { getLanguage, setLanguage, useTranslation } from "react-multi-lang";
+import { setLanguage, useTranslation } from "react-multi-lang";
 
 import TopMenu from "../menu/top-menu";
 import { MainLayoutProps } from "./types";
