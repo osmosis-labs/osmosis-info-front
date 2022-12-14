@@ -177,6 +177,10 @@ export const normalize = (string) => {
 
 export const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
+export const randomArray = (array) => {
+	return array[Math.floor(Math.random() * array.length)]
+}
+
 export const getWeekNumber = (date) => {
 	let d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
 	let dayNum = d.getUTCDay() || 7
