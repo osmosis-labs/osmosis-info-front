@@ -256,6 +256,7 @@ const Overview = () => {
 				</Paper>
 				<p className={classes.subTitle}>Top tokens</p>
 				<Paper className={classes.containerLoading}>
+					<Snow x={"20%"} y={0} type={"snowHorizontal2"} />
 					<TokensTable
 						data={dataTokens}
 						onClickToken={onClickToken}

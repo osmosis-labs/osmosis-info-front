@@ -28,14 +28,14 @@ export const ChristmasTheme = () => {
 		let x = e.clientX
 		let y = e.clientY
 		refTrail.current.updateColor
-		if (refLights.current.length > maxLight) {
-			const removed = refLights.current.shift()
-			removed.updateColor("#EEEEEEAA")
-			refEngine.current.remove(removed)
-		}
-		const newLight = new Light({ x, y, color: colors[refIndexColors.current], size: 10, maxLighting: 20 })
-		refLights.current.push(newLight)
-		refEngine.current.add(newLight)
+		// if (refLights.current.length > maxLight) {
+		// 	const removed = refLights.current.shift()
+		// 	removed.updateColor("#EEEEEEAA")
+		// 	refEngine.current.remove(removed)
+		// }
+		// const newLight = new Light({ x, y, color: colors[refIndexColors.current], size: 10, maxLighting: 20 })
+		// refLights.current.push(newLight)
+		// refEngine.current.add(newLight)
 		refIndexColors.current++
 		if (refIndexColors.current > colors.length - 1) refIndexColors.current = 0
 		refTrail.current.updateColor(colors[refIndexColors.current])
@@ -48,33 +48,33 @@ export const ChristmasTheme = () => {
 		}
 	}
 
-	// useEffect(() => {
-	// 	if (refCanvas.current) {
-	// 		let canvas = refCanvas.current
-	// 		let ctx = refCanvas.current.getContext("2d")
-	// 		let engine = new Engine({ canvas, ctx, clear: "soft" })
-	// 		let body = document.querySelector("body")
-	// 		body.addEventListener("click", onClickBody)
-	// 		refTrail.current = new Trail({ x: 0, y: 0, size: 10, color: colors[refIndexColors.current], maxLighting: 20 })
-	// 		engine.add(refTrail.current)
-	// 		refEngine.current = engine
+	useEffect(() => {
+		if (refCanvas.current) {
+			let canvas = refCanvas.current
+			let ctx = refCanvas.current.getContext("2d")
+			let engine = new Engine({ canvas, ctx, clear: "soft" })
+			let body = document.querySelector("body")
+			body.addEventListener("click", onClickBody)
+			refTrail.current = new Trail({ x: 0, y: 0, size: 10, color: colors[refIndexColors.current], maxLighting: 20 })
+			engine.add(refTrail.current)
+			refEngine.current = engine
 
-	// 		let timer = window.setTimeout(() => {
-	// 			window.requestAnimationFrame(() => refEngine.current.update(mousePos))
-	// 		}, 1000)
-	// 		body.addEventListener("mousemove", mouseMove)
+			let timer = window.setTimeout(() => {
+				window.requestAnimationFrame(() => refEngine.current.update(mousePos))
+			}, 1000)
+			body.addEventListener("mousemove", mouseMove)
 
-	// 		return () => {
-	// 			window.clearTimeout(timer)
-	// 			body.removeEventListener("click", onClickBody)
-	// 			body.removeEventListener("mousemove", mouseMove)
-	// 		}
-	// 	}
-	// }, [refCanvas])
+			return () => {
+				window.clearTimeout(timer)
+				body.removeEventListener("click", onClickBody)
+				body.removeEventListener("mousemove", mouseMove)
+			}
+		}
+	}, [refCanvas])
 
 	return (
 		<div className={show ? classes.containerTheme : classes.containerThemeHide}>
-			{/* <canvas ref={refCanvas} className={classes.canvas} /> */}
+			<canvas ref={refCanvas} className={classes.canvas} />
 			<div className="snow">
 				<div className="snow__layer"></div>
 				<div className="snow__layer"></div>
