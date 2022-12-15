@@ -11,9 +11,9 @@ import Trail from "./canvas/trail"
 import React, { useEffect, useRef } from "react"
 import Engine from "./canvas/engine"
 import Light from "./canvas/light"
+import { addBody, removeBody } from "./lights"
 const colors = ["#f06292", "#ba68c8", "#4dd0e1", "#81c784", "#ffb74d", "#eeeeee"]
 const maxTree = random(4, 10)
-const maxLight = 15
 export const ChristmasTheme = () => {
 	const classes = useStyles()
 	const { show } = useEventTheme()
@@ -63,9 +63,10 @@ export const ChristmasTheme = () => {
 				window.requestAnimationFrame(() => refEngine.current.update(mousePos))
 			}, 1000)
 			body.addEventListener("mousemove", mouseMove)
-
+			addBody()
 			return () => {
 				window.clearTimeout(timer)
+				removeBody()
 				body.removeEventListener("click", onClickBody)
 				body.removeEventListener("mousemove", mouseMove)
 			}

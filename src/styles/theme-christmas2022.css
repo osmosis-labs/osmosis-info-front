@@ -74,3 +74,26 @@
 		transform: translateX(50px);
 	}
 }
+
+.light {
+	position: absolute;
+	border-radius: 50%;
+	transform: translate(-50%, -50%);
+	animation: light 2s linear infinite, drop 1s linear 0.5s forwards;
+}
+.lightDie {
+	transition: opacity 0.5s;
+	opacity: 0;
+}
+
+@keyframes light {
+	0% {
+		filter: drop-shadow(0 0 2px #fefae0) brightness(1);
+	}
+	50% {
+		filter: drop-shadow(0 0 5px #fefae0) brightness(1.5);
+	}
+	100% {
+		filter: drop-shadow(0 0 2px #fefae0) brightness(1);
+	}
+}
