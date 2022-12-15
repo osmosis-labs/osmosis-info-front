@@ -7,21 +7,38 @@ import bgSnow from "./assets/bg-snow2.webp"
 import { Tree } from "./tree"
 import { isMobile } from "react-device-detect"
 import { random } from "../../helpers/helpers"
-import Trail from "./trail"
+import Trail from "./canvas/trail"
 import React, { useEffect, useRef } from "react"
-import Engine from "./engine"
-
+import Engine from "./canvas/engine"
+import Light from "./canvas/light"
+const colors = ["#f06292", "#ba68c8", "#4dd0e1", "#81c784", "#ffb74d", "#eeeeee"]
 const maxTree = random(4, 10)
+const maxLight = 15
 export const ChristmasTheme = () => {
 	const classes = useStyles()
 	const { show } = useEventTheme()
 	const refCanvas = useRef(null)
 	const refEngine = useRef(null)
+	const refLights = useRef([])
+	const refTrail = useRef(null)
+	const refIndexColors = useRef(0)
 	const mousePos = useRef({ x: 0, y: 0 })
 
 	const onClickBody = (e) => {
 		let x = e.clientX
 		let y = e.clientY
+		refTrail.current.updateColor
+		if (refLights.current.length > maxLight) {
+			const removed = refLights.current.shift()
+			removed.updateColor("#EEEEEEAA")
+			refEngine.current.remove(removed)
+		}
+		const newLight = new Light({ x, y, color: colors[refIndexColors.current], size: 10, maxLighting: 20 })
+		refLights.current.push(newLight)
+		refEngine.current.add(newLight)
+		refIndexColors.current++
+		if (refIndexColors.current > colors.length - 1) refIndexColors.current = 0
+		refTrail.current.updateColor(colors[refIndexColors.current])
 	}
 
 	const mouseMove = (event) => {
@@ -35,10 +52,11 @@ export const ChristmasTheme = () => {
 		if (refCanvas.current) {
 			let canvas = refCanvas.current
 			let ctx = refCanvas.current.getContext("2d")
-			let engine = new Engine(canvas, ctx)
+			let engine = new Engine({ canvas, ctx, clear: "soft" })
 			let body = document.querySelector("body")
 			body.addEventListener("click", onClickBody)
-			engine.add(new Trail({ x: 0, y: 0, size: 10 }))
+			refTrail.current = new Trail({ x: 0, y: 0, size: 10, color: colors[refIndexColors.current], maxLighting: 20 })
+			engine.add(refTrail.current)
 			refEngine.current = engine
 
 			let timer = window.setTimeout(() => {
@@ -115,7 +133,7 @@ const useStyles = makeStyles((theme) => {
 			right: 0,
 			width: "100vw",
 			height: "100vh",
-			zIndex: 99999,
+			zIndex: 999,
 		},
 		christmasContainer: {
 			position: "absolute",

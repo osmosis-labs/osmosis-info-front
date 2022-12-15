@@ -13,6 +13,7 @@ import WarningIcon from "@mui/icons-material/Warning"
 import { useBalance } from "../../hooks/data/dashboard.hook"
 import { useKeplr } from "../../contexts/KeplrProvider"
 import SelectMenu from "./selectDashboard/select_menu"
+import { Snow } from "../../features/christmas-2022/snow"
 
 const useStyles = makeStyles((theme) => {
 	return {

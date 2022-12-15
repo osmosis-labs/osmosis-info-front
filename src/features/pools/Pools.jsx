@@ -10,6 +10,7 @@ import { useWatchlistPools } from "../../contexts/WatchlistPoolsProvider"
 import { getInclude } from "../../helpers/helpers"
 import { usePools } from "../../hooks/data/pools.hook"
 import { useScrollTop } from "../../hooks/scroll.hook"
+import { Snow } from "../christmas-2022/snow"
 import PoolsTable from "./poolsTable/poolsTable"
 
 const useStyles = makeStyles((theme) => {
@@ -19,6 +20,10 @@ const useStyles = makeStyles((theme) => {
 			gridAutoRows: "auto",
 			rowGap: theme.spacing(2),
 			margin: `${theme.spacing(2)}px 0`,
+		},
+		paper: {
+			position: "relative",
+			minHeight: "200px",
 		},
 		containerLoader: {
 			overflowX: "hidden",
@@ -84,6 +89,7 @@ const Pools = () => {
 				)}
 			</Paper>
 			<p className={classes.subTitle}>All pools</p>
+			<Snow x={"10%"} y={0} type={"snowHorizontal2"} />
 			<Paper className={classes.containerLoader}>
 				<PoolsTable
 					data={pools}

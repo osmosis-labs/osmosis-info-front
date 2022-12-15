@@ -18,6 +18,7 @@ import { usePools } from "../../hooks/data/pools.hook"
 import ContainerChartSkeleton from "./container_chart_skeleton"
 import { useDebug } from "../../contexts/debug.provider"
 import { useScrollTop } from "../../hooks/scroll.hook"
+import { Snow } from "../christmas-2022/snow"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -159,7 +160,7 @@ const Overview = () => {
 		})
 		setDataTokens(data)
 	}, [tokens])
-	
+
 	const onClickPool = (pool) => {
 		history.push(`/pool/${pool.id}`)
 	}
@@ -194,6 +195,7 @@ const Overview = () => {
 				<p className={classes.title}>Osmosis - Overview</p>
 				<div className={classes.charts}>
 					<Paper className={classes.chart}>
+						<Snow x={0} y={0} type={"snowHorizontal"} />
 						{isLoadingLiquidity ? (
 							<ContainerChartSkeleton />
 						) : (
@@ -239,6 +241,7 @@ const Overview = () => {
 				</Paper>
 				<p className={classes.subTitle}>Your pool watchlist</p>
 				<Paper className={classes.containerWatchlist}>
+					<Snow x={"calc(100% - 80px)"} y={0} type={"snowCorner"} />
 					{watchlistPools.length > 0 ? (
 						<PoolsTable
 							data={poolsOnWatchlist}
@@ -263,6 +266,7 @@ const Overview = () => {
 				</Paper>
 				<p className={classes.subTitle}>Top pools</p>
 				<Paper className={classes.containerLoading}>
+					<Snow x={"50%"} y={0} type={"snowHorizontal3"} />
 					<PoolsTable
 						data={dataPools}
 						onClickPool={onClickPool}
