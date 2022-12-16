@@ -2,7 +2,7 @@ import { random } from "../../helpers/helpers";
 
 
 export class Flake {
-    static timeAlive = 200000
+    static timeAlive = 2000
     constructor({ x, y, width = 40, height = 40, e, vx = 5, vy = 5 }) {
         // draw element
         this.element = document.createElement("div");
