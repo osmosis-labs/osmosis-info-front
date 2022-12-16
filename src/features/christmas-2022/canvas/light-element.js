@@ -38,13 +38,13 @@ export default class LightElement {
 
         ctx.beginPath();
 
-        ctx.fillStyle = gradient;
+        // ctx.fillStyle = gradient;
         ctx.shadowBlur = this.lighting;
         ctx.shadowColor = this.colorBlur;
         ctx.moveTo(this.pos.x, this.pos.y);
         ctx.lineTo(this.pos.x, this.pos.y);
 
-        ctx.arc(this.pos.x, this.pos.y, this.size, 0, Math.PI * 2, true);
+        // ctx.arc(this.pos.x, this.pos.y, this.size, 0, Math.PI * 2, true);
         ctx.fill();
         ctx.closePath();
     }

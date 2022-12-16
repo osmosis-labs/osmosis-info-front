@@ -5,13 +5,11 @@ import bgTop from "./assets/bg-top.webp"
 import bgBottom from "./assets/bg-bottom.webp"
 import bgSnow from "./assets/bg-snow2.webp"
 import { Tree } from "./tree"
-import { isMobile } from "react-device-detect"
 import { random } from "../../helpers/helpers"
 import Trail from "./canvas/trail"
 import React, { useEffect, useRef } from "react"
 import Engine from "./canvas/engine"
-import Light from "./canvas/light"
-import { addBody, removeBody } from "./lights"
+import { addBody, removeBody } from "./flakes"
 const colors = ["#f06292", "#ba68c8", "#4dd0e1", "#81c784", "#ffb74d", "#eeeeee"]
 const maxTree = random(4, 10)
 export const ChristmasTheme = () => {
@@ -76,6 +74,7 @@ export const ChristmasTheme = () => {
 	return (
 		<div className={show ? classes.containerTheme : classes.containerThemeHide}>
 			<canvas ref={refCanvas} className={classes.canvas} />
+			<p className={classes.mery}>Mery Christmas !</p>
 			<div className="snow">
 				<div className="snow__layer"></div>
 				<div className="snow__layer"></div>
@@ -124,6 +123,16 @@ const useStyles = makeStyles((theme) => {
 			width: "100vw",
 			height: "100vh",
 			opacity: 1,
+		},
+		mery: {
+			fontFamily: "'Corinthia', cursive !important",
+			position: "fixed",
+			pointerEvents: "none",
+			transform: "translate(-50%, -50%)",
+			top: "20%",
+			left: "50%",
+			fontSize: "2rem",
+			opacity: "0.8",
 		},
 		canvas: {
 			position: "fixed",

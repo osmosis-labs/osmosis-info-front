@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Corinthia:wght@700&display=swap");
 .snow {
 	position: relative;
 }
@@ -96,4 +97,49 @@
 	100% {
 		filter: drop-shadow(0 0 2px #fefae0) brightness(1);
 	}
+}
+
+@keyframes flake {
+	0% {
+		transform: rotate(0deg);
+	}
+	30% {
+		transform: rotate(10deg);
+	}
+
+	70% {
+		transform: rotate(0deg);
+		opacity: 1;
+	}
+	100% {
+		transform: rotate(30deg);
+		opacity: 0;
+	}
+}
+
+.flake1 {
+	background: url("../features/christmas-2022/assets/flake1.png");
+}
+.flake2 {
+	background: url("../features/christmas-2022/assets/flake2.png");
+}
+.flake3 {
+	background: url("../features/christmas-2022/assets/flake3.png");
+}
+.flake4 {
+	background: url("../features/christmas-2022/assets/flake4.png");
+}
+.flake5 {
+	background: url("../features/christmas-2022/assets/flake5.png");
+}
+.flake6 {
+	background: url("../features/christmas-2022/assets/flake6.png");
+}
+
+.flake {
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	animation: flake;
+	z-index: 10000;
 }
