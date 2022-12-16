@@ -71,6 +71,11 @@ export const ChristmasTheme = () => {
 		}
 	}, [refCanvas])
 
+	useEffect(() => {
+		if (show) addBody()
+		else removeBody()
+	}, [show])
+
 	return (
 		<div className={show ? classes.containerTheme : classes.containerThemeHide}>
 			<canvas ref={refCanvas} className={classes.canvas} />
