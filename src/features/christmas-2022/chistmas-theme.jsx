@@ -10,6 +10,8 @@ import Trail from "./canvas/trail"
 import React, { useEffect, useRef } from "react"
 import Engine from "./canvas/engine"
 import { addBody, removeBody } from "./flakes"
+import { addBody as addBodyBall, removeBody as removeBodyBall } from "./ball"
+import { isMobile } from "react-device-detect"
 const colors = ["#f06292", "#ba68c8", "#4dd0e1", "#81c784", "#ffb74d", "#eeeeee"]
 const maxTree = random(4, 10)
 export const ChristmasTheme = () => {
@@ -47,34 +49,49 @@ export const ChristmasTheme = () => {
 	}
 
 	useEffect(() => {
-		if (refCanvas.current) {
-			let canvas = refCanvas.current
-			let ctx = refCanvas.current.getContext("2d")
-			let engine = new Engine({ canvas, ctx, clear: "soft" })
-			let body = document.querySelector("body")
-			body.addEventListener("click", onClickBody)
-			refTrail.current = new Trail({ x: 0, y: 0, size: 10, color: colors[refIndexColors.current], maxLighting: 20 })
-			engine.add(refTrail.current)
-			refEngine.current = engine
+		if (!isMobile) {
+			if (refCanvas.current) {
+				let canvas = refCanvas.current
+				let ctx = refCanvas.current.getContext("2d")
+				let engine = new Engine({ canvas, ctx, clear: "soft" })
+				let body = document.querySelector("body")
+				refTrail.current = new Trail({ x: 0, y: 0, size: 10, color: colors[refIndexColors.current], maxLighting: 20 })
+				engine.add(refTrail.current)
+				refEngine.current = engine
 
-			let timer = window.setTimeout(() => {
-				window.requestAnimationFrame(() => refEngine.current.update(mousePos))
-			}, 1000)
-			body.addEventListener("mousemove", mouseMove)
-			addBody()
-			return () => {
-				window.clearTimeout(timer)
-				removeBody()
-				body.removeEventListener("click", onClickBody)
-				body.removeEventListener("mousemove", mouseMove)
+				let timer = window.setTimeout(() => {
+					window.requestAnimationFrame(() => refEngine.current.update(mousePos))
+				}, 1000)
+				body.addEventListener("mousemove", mouseMove)
+				if (random(1, 2) === 1) {
+					addBodyBall()
+				} else {
+					addBody()
+				}
+				return () => {
+					window.clearTimeout(timer)
+					body.removeEventListener("mousemove", mouseMove)
+					removeBodyBall()
+					removeBody()
+				}
 			}
 		}
-	}, [refCanvas])
+	}, [refCanvas, isMobile])
 
 	useEffect(() => {
-		if (show) addBody()
-		else removeBody()
-	}, [show])
+		if (!isMobile) {
+			if (show) {
+				if (random(1, 2) === 1) {
+					addBodyBall()
+				} else {
+					addBody()
+				}
+			} else {
+				removeBody()
+				removeBodyBall()
+			}
+		}
+	}, [show, isMobile])
 
 	return (
 		<div className={show ? classes.containerTheme : classes.containerThemeHide}>
@@ -138,6 +155,11 @@ const useStyles = makeStyles((theme) => {
 			left: "50%",
 			fontSize: "2rem",
 			opacity: "0.8",
+			zIndex: "10",
+			textAlign: "center",
+			[theme.breakpoints.down("xs")]: {
+				top: "30%",
+			},
 		},
 		canvas: {
 			position: "fixed",
