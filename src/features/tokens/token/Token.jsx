@@ -32,6 +32,8 @@ import TokenInfo from "./token_info"
 import { useScrollTop } from "../../../hooks/scroll.hook"
 import PoolsTable from "../../pools/poolsTable/poolsTable"
 import { usePools } from "../../../hooks/data/pools.hook"
+import { useEventTheme } from "../../../contexts/event-theme.provider"
+import imgTheme from "../../../features/christmas-2022/assets/xmas2022-info.png"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -126,6 +128,14 @@ const useStyles = makeStyles((theme) => {
 			position: "relative",
 			overflow: "hidden",
 		},
+		imgTheme: {
+			height: "130px",
+			position: "absolute",
+			top: "-130px",
+			[theme.breakpoints.down("xs")]: {
+				display: "none",
+			},
+		},
 	}
 })
 
@@ -134,6 +144,7 @@ const Token = () => {
 	const history = useHistory()
 	const { showToast } = useToast()
 	const { isLoadingDebug } = useDebug()
+	const { show } = useEventTheme()
 	useScrollTop()
 
 	const { symbol } = useParams()
@@ -316,6 +327,7 @@ const Token = () => {
 						priceDecimals={priceDecimals}
 					/>
 					<Paper className={classes.right}>
+						{show && <img className={classes.imgTheme} src={imgTheme} />}
 						<div className={classes.containerHideShow}>
 							<ContainerCharts
 								token={token}

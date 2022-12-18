@@ -33,10 +33,8 @@ export class Flake {
         this.element.style.left = this.pos.x + "px";
     }
 
-
-
-    move = (timestamp) => {
-        requestAnimationFrame((timestamp) => {
+    move = () => {
+        requestAnimationFrame(() => {
             this.velocity.x -= this.velocity.x * this.spread
             this.velocity.x += Math.random() > 0.5 ? Math.random() : -Math.random()
             this.velocity.y = Math.min(this.velocity.y + this.gravity, this.gravityMax)
@@ -44,7 +42,7 @@ export class Flake {
             this.pos.x += this.velocity.x
             this.pos.y += this.velocity.y
             this.draw()
-            this.move(timestamp);
+            this.move();
         });
     }
 };

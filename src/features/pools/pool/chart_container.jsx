@@ -10,7 +10,8 @@ import { useDebug } from "../../../contexts/debug.provider"
 import { getInclude } from "../../../helpers/helpers"
 import { useHistoricalPool, useLiquidityPool, useVolumePool } from "../../../hooks/data/pools.hook"
 import ChartContainerSkeleton from "./chat_container_skeleton"
-
+import { useEventTheme } from "../../../contexts/event-theme.provider"
+import imgTheme from "../../../features/christmas-2022/assets/xmas2022-info.png"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootChartContainer: {
@@ -19,6 +20,7 @@ const useStyles = makeStyles((theme) => {
 			width: "100%",
 			display: "flex",
 			flexDirection: "column",
+			position: "relative",
 		},
 		chartContainer: {
 			position: "relative",
@@ -58,6 +60,15 @@ const useStyles = makeStyles((theme) => {
 				width: "100%",
 			},
 		},
+		imgTheme: {
+			height: "130px",
+			position: "absolute",
+			top: "-130px",
+			left: "60px",
+			[theme.breakpoints.down("xs")]: {
+				display: "none",
+			},
+		},
 	}
 })
 
@@ -67,6 +78,7 @@ const ChartContainer = ({ currency, selectedTokens, poolId, isLoadingPool }) => 
 	const dataClick = useRef({ time: { day: 1, month: 1, year: 1 }, value: 0, clickedTwice: true })
 	const [typeChart, setTypeChart] = useState("price") // price, volume, liquidity
 	const { isLoadingDebug } = useDebug()
+	const { show } = useEventTheme()
 
 	const [rangePrice, setRangePrice] = useState("7d") // 7d, 1m, 1y, all
 	const [rangeVolume, setRangeVolume] = useState("d") // d, w, m
@@ -106,7 +118,7 @@ const ChartContainer = ({ currency, selectedTokens, poolId, isLoadingPool }) => 
 
 	const isLoadingLiquidity = isLdgLiquidity || isFetchingLiquidity
 
-	const isLoadingCharts = isLoadingHistorical || isLoadingVolume || isLoadingLiquidity || isLoadingPool 
+	const isLoadingCharts = isLoadingHistorical || isLoadingVolume || isLoadingLiquidity || isLoadingPool
 
 	const currentVolume = volume[rangeVolume]
 	const currentLiquidity = liquidity[rangeLiquidity]
@@ -194,13 +206,16 @@ const ChartContainer = ({ currency, selectedTokens, poolId, isLoadingPool }) => 
 	}
 
 	if (isLoadingCharts || isLoadingDebug) {
-		return <Paper className={classes.rootChartContainer}>
-			<ChartContainerSkeleton />
-		</Paper>
+		return (
+			<Paper className={classes.rootChartContainer}>
+				<ChartContainerSkeleton />
+			</Paper>
+		)
 	}
 
 	return (
 		<Paper className={classes.rootChartContainer}>
+			{show && <img className={classes.imgTheme} src={imgTheme} />}
 			<ContainerLoader
 				className={classes.chartContainer}
 				classChildren={classes.rootChartContainer}

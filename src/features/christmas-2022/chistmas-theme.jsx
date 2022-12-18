@@ -10,8 +10,8 @@ import Trail from "./canvas/trail"
 import React, { useEffect, useRef } from "react"
 import Engine from "./canvas/engine"
 import { addBody, removeBody } from "./flakes"
-import { addBody as addBodyBall, removeBody as removeBodyBall } from "./ball"
 import { isMobile } from "react-device-detect"
+import { EngineBalls } from "./ball"
 const colors = ["#f06292", "#ba68c8", "#4dd0e1", "#81c784", "#ffb74d", "#eeeeee"]
 const maxTree = random(4, 10)
 export const ChristmasTheme = () => {
@@ -20,6 +20,7 @@ export const ChristmasTheme = () => {
 	const refCanvas = useRef(null)
 	const refEngine = useRef(null)
 	const refLights = useRef([])
+	const refEngineBall = useRef(null)
 	const refTrail = useRef(null)
 	const refIndexColors = useRef(0)
 	const mousePos = useRef({ x: 0, y: 0 })
@@ -59,19 +60,21 @@ export const ChristmasTheme = () => {
 				engine.add(refTrail.current)
 				refEngine.current = engine
 
+				refEngineBall.current = new EngineBalls()
 				let timer = window.setTimeout(() => {
 					window.requestAnimationFrame(() => refEngine.current.update(mousePos))
 				}, 1000)
 				body.addEventListener("mousemove", mouseMove)
 				if (random(1, 2) === 1) {
-					addBodyBall()
+					refEngineBall.current.addBody()
 				} else {
-					addBody()
+					refEngineBall.current.addBody()
+					// addBody()
 				}
 				return () => {
 					window.clearTimeout(timer)
 					body.removeEventListener("mousemove", mouseMove)
-					removeBodyBall()
+					refEngineBall.current.removeBody()
 					removeBody()
 				}
 			}
@@ -82,16 +85,19 @@ export const ChristmasTheme = () => {
 		if (!isMobile) {
 			if (show) {
 				if (random(1, 2) === 1) {
-					addBodyBall()
+					refEngineBall.current.addBody()
 				} else {
-					addBody()
+					refEngineBall.current.addBody()
+					// addBody()
 				}
 			} else {
 				removeBody()
-				removeBodyBall()
+				refEngineBall.current.removeBody()
 			}
 		}
 	}, [show, isMobile])
+
+	console.log("chistmas-theme.jsx (l:96): rendered:")
 
 	return (
 		<div className={show ? classes.containerTheme : classes.containerThemeHide}>

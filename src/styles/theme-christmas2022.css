@@ -145,23 +145,10 @@
 }
 
 @keyframes ball {
-	0% {
-		transform: rotate(0deg);
-	}
-	20%,
 	60% {
-		transform: rotate(180deg);
-	}
-
-	40%,
-	80% {
-		transform: rotate(360deg);
-	}
-	90% {
 		opacity: 1;
 	}
 	100% {
-		transform: rotate(180deg);
 		opacity: 0;
 	}
 }
@@ -179,10 +166,16 @@
 	background: url("../features/christmas-2022/assets/ball4.png");
 }
 
-.ball {
+.ballAlive {
+	display: bloc;
+	position: fixed;
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
 	animation: ball;
 	z-index: 500;
+}
+
+.ballDead {
+	display: none;
 }
