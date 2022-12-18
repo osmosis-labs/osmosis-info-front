@@ -68,8 +68,7 @@ export const ChristmasTheme = () => {
 				if (random(1, 2) === 1) {
 					refEngineBall.current.addBody()
 				} else {
-					refEngineBall.current.addBody()
-					// addBody()
+					addBody()
 				}
 				return () => {
 					window.clearTimeout(timer)
@@ -87,8 +86,7 @@ export const ChristmasTheme = () => {
 				if (random(1, 2) === 1) {
 					refEngineBall.current.addBody()
 				} else {
-					refEngineBall.current.addBody()
-					// addBody()
+					addBody()
 				}
 			} else {
 				removeBody()
@@ -96,8 +94,6 @@ export const ChristmasTheme = () => {
 			}
 		}
 	}, [show, isMobile])
-
-	console.log("chistmas-theme.jsx (l:96): rendered:")
 
 	return (
 		<div className={show ? classes.containerTheme : classes.containerThemeHide}>
@@ -157,7 +153,7 @@ const useStyles = makeStyles((theme) => {
 			position: "fixed",
 			pointerEvents: "none",
 			transform: "translate(-50%, -50%)",
-			top: "20%",
+			top: "25%",
 			left: "50%",
 			fontSize: "2rem",
 			opacity: "0.8",
