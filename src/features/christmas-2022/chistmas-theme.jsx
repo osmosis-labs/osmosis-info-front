@@ -42,39 +42,38 @@ export const ChristmasTheme = () => {
 			// refTrail.current = new Trail({ x: 0, y: 0, size: 10, color: colors[refIndexColors.current], maxLighting: 20 })
 			// engine.add(refTrail.current)
 			// refEngine.current = engine
-
-			refEngineBall.current = new EngineBalls()
-			// let timer = window.setTimeout(() => {
-			// 	window.requestAnimationFrame(() => refEngine.current.update(mousePos))
-			// }, 1000)
-			// body.addEventListener("mousemove", mouseMove)
-			if (random(1, 2) === 1) {
-				refEngineBall.current.addBody()
-			} else {
-				addBody()
-			}
-			return () => {
-				// window.clearTimeout(timer)
-				// body.removeEventListener("mousemove", mouseMove)
-				refEngineBall.current.removeBody()
-				removeBody()
-			}
+			// refEngineBall.current = new EngineBalls()
+			// // let timer = window.setTimeout(() => {
+			// // 	window.requestAnimationFrame(() => refEngine.current.update(mousePos))
+			// // }, 1000)
+			// // body.addEventListener("mousemove", mouseMove)
+			// if (random(1, 2) === 1) {
+			// 	refEngineBall.current.addBody()
+			// } else {
+			// 	addBody()
+			// }
+			// return () => {
+			// 	// window.clearTimeout(timer)
+			// 	// body.removeEventListener("mousemove", mouseMove)
+			// 	refEngineBall.current.removeBody()
+			// 	removeBody()
+			// }
 			// }
 		}
 	}, [isMobile])
 
 	useEffect(() => {
 		if (!isMobile) {
-			if (show) {
-				if (random(1, 2) === 1) {
-					refEngineBall.current.addBody()
-				} else {
-					addBody()
-				}
-			} else {
-				removeBody()
-				refEngineBall.current.removeBody()
-			}
+			// if (show) {
+			// 	if (random(1, 2) === 1) {
+			// 		refEngineBall.current.addBody()
+			// 	} else {
+			// 		addBody()
+			// 	}
+			// } else {
+			// 	removeBody()
+			// 	refEngineBall.current.removeBody()
+			// }
 		}
 	}, [show, isMobile])
 
