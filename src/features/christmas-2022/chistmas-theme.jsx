@@ -13,7 +13,7 @@ import { addBody, removeBody } from "./flakes"
 import { isMobile } from "react-device-detect"
 import { EngineBalls } from "./ball"
 const colors = ["#f06292", "#ba68c8", "#4dd0e1", "#81c784", "#ffb74d", "#eeeeee"]
-const maxTree = random(4, 10)
+const maxTree = random(4, 8)
 export const ChristmasTheme = () => {
 	const classes = useStyles()
 	const { show } = useEventTheme()
@@ -24,23 +24,6 @@ export const ChristmasTheme = () => {
 	const refTrail = useRef(null)
 	const refIndexColors = useRef(0)
 	const mousePos = useRef({ x: 0, y: 0 })
-
-	const onClickBody = (e) => {
-		let x = e.clientX
-		let y = e.clientY
-		refTrail.current.updateColor
-		// if (refLights.current.length > maxLight) {
-		// 	const removed = refLights.current.shift()
-		// 	removed.updateColor("#EEEEEEAA")
-		// 	refEngine.current.remove(removed)
-		// }
-		// const newLight = new Light({ x, y, color: colors[refIndexColors.current], size: 10, maxLighting: 20 })
-		// refLights.current.push(newLight)
-		// refEngine.current.add(newLight)
-		refIndexColors.current++
-		if (refIndexColors.current > colors.length - 1) refIndexColors.current = 0
-		refTrail.current.updateColor(colors[refIndexColors.current])
-	}
 
 	const mouseMove = (event) => {
 		mousePos.current = {

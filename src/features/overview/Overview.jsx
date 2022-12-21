@@ -210,6 +210,7 @@ const Overview = () => {
 						)}
 					</Paper>
 					<Paper className={classes.chart}>
+						<Snow x={"50%"} y={0} type={"snowHorizontal3"} />
 						{isLoadingVolume ? (
 							<ContainerChartSkeleton />
 						) : (

@@ -4,7 +4,7 @@ import LightElement from "./light-element"
 export default class Trail extends LightElement {
     constructor({ x = 0, y = 0, size = 10, color = "#4dd0e1", maxLighting = 20 }) {
         super({ x, y, color, size, maxLighting })
-        this.maxParticle = 10
+        this.maxParticle = 5
         this.particlesLife = 10
         this.particles = []
         //❅
