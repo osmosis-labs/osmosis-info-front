@@ -50,30 +50,30 @@ export const ChristmasTheme = () => {
 			// if (random(1, 2) === 1) {
 			// 	refEngineBall.current.addBody()
 			// } else {
-			// 	addBody()
+			addBody()
 			// }
-			// return () => {
-			// 	// window.clearTimeout(timer)
-			// 	// body.removeEventListener("mousemove", mouseMove)
-			// 	refEngineBall.current.removeBody()
-			// 	removeBody()
-			// }
+			return () => {
+				// 	// window.clearTimeout(timer)
+				// 	// body.removeEventListener("mousemove", mouseMove)
+				// 	refEngineBall.current.removeBody()
+				removeBody()
+			}
 			// }
 		}
 	}, [isMobile])
 
 	useEffect(() => {
 		if (!isMobile) {
-			// if (show) {
-			// 	if (random(1, 2) === 1) {
-			// 		refEngineBall.current.addBody()
-			// 	} else {
-			// 		addBody()
-			// 	}
-			// } else {
-			// 	removeBody()
-			// 	refEngineBall.current.removeBody()
-			// }
+			if (show) {
+				// if (random(1, 2) === 1) {
+				// 	refEngineBall.current.addBody()
+				// } else {
+				addBody()
+				// }
+			} else {
+				removeBody()
+				// refEngineBall.current.removeBody()
+			}
 		}
 	}, [show, isMobile])
 
