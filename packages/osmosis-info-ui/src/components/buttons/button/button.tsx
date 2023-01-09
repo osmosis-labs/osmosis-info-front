@@ -4,7 +4,7 @@ import React from "react";
  * Buttons are used to catch user's actions.
  */
 
-export interface ButtonProps {
+export interface ButtonProps extends React.HTMLAttributes<HTMLDivElement> {
 	onClick?: React.MouseEventHandler<HTMLDivElement>;
 	/** Classname passed to the button.*/
 	className?: string;
@@ -25,6 +25,7 @@ export const Button = ({
 	variant = "primary",
 	size = "medium",
 	disabled,
+	...rest
 }: ButtonProps) => {
 	let classNameDefaut = ` ${className} rounded-xl w-fit transition-colors cursor-pointer h-fit whitespace-nowrap max-w-full overflow-hidden text-ellipsis	`;
 
@@ -43,9 +44,8 @@ export const Button = ({
 		else if (variant === "warning")
 			classNameDefaut += `${classNameDefaut} bg-gradient-to-r from-rust-800 to-rust-500 transition-all duration-default bg-size-x-200 bg-pos-0 hover:bg-pos-100`;
 	}
-
 	return (
-		<div onClick={onClick} className={classNameDefaut}>
+		<div onClick={onClick} className={classNameDefaut} {...rest}>
 			{children}
 		</div>
 	);
