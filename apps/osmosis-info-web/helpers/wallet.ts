@@ -1,6 +1,4 @@
 import { Keplr } from "@keplr-wallet/types";
-import { KeplrWalletConnectV1 } from "@keplr-wallet/wc-client";
-import WalletConnect from "@walletconnect/client";
 
 export interface UserWallet {
 	name: string;
