@@ -3,11 +3,13 @@ import { Dropdown, IconButton, ItemDropdown, Popover, SettingsSvg } from "@latou
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../stores";
 import { SUPPORTED_LANGUAGES } from "../../stores/app/settings-store/language";
+import { useTranslation } from "react-multi-lang";
 
 export const SettingsPopover = observer(() => {
 	const [anchorElPopover, setAnchorElPopover] = useState<null | HTMLElement>(null);
 	const { settingsStore } = useStore();
 	const language = settingsStore.getSettingById("language")?.state.value;
+	const t = useTranslation();
 
 	const onClickOpen = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorElPopover(event.currentTarget);
@@ -34,9 +36,9 @@ export const SettingsPopover = observer(() => {
 				}}
 			>
 				<div className="p-4">
-					<p className="mb-4 text-xl">Paramètres</p>
+					<p className="mb-4 text-xl">{t("settings.title")}</p>
 					<div className="flex items-center">
-						<p className="mr-4">Langue:</p>
+						<p className="mr-4">{t("settings.language")}</p>
 						<Dropdown<string>
 							onChange={onChangeLanguage}
 							value={language}

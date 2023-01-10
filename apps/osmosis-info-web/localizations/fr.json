@@ -17,12 +17,22 @@
     },
     "settings": {
         "title": "Paramètres",
-        "langue": "Langue"
+        "language": "Langue"
     },
     "menu": {
         "overview": "Vue d'ensemble",
         "pools": "Bassins",
         "tokens": "Jetons",
         "dashboard": "Tableau de bord"
+    },
+    "connectionButton": {
+        "connection": "Connexion",
+        "disconnection": "Déconnexion",
+        "title": "Connexion portefeuille",
+        "titleKeplr": "Portefeuille Keplr",
+        "infoKeplr": "Extension Navigateur Keplr",
+        "titleWalletConnect": "Portefeuille WalletConnect ",
+        "infoWalletConnect": "Mobile Keplr",
+        "scan": "Scanner le QR Code."
     }
 }

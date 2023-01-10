@@ -9,9 +9,11 @@ import { CHAIN_ID, getKeplr, UserWallet } from "../../helpers/wallet";
 import Image from "next/image";
 import { useStore } from "../../stores";
 import { CloseSvg } from "@latouche/osmosis-info-ui";
+import { useTranslation } from "react-multi-lang";
 
 export const ConnectButton = observer(() => {
 	const { userStore } = useStore();
+	const t = useTranslation();
 	const [uri, setUri] = useState<string>("");
 	const [openChoice, setOpenChoice] = useState<boolean>(false);
 
@@ -91,7 +93,7 @@ export const ConnectButton = observer(() => {
 			>
 				<div className="p-2">
 					<div className="flex justify-between my-2">
-						Connect Wallet{" "}
+						{t("connectionButton.title")}{" "}
 						<CloseSvg
 							onClick={() => setOpenChoice(false)}
 							className="hover:stroke-white-full stroke-main-400 cursor-pointer transition-colors duration-default"
@@ -103,8 +105,8 @@ export const ConnectButton = observer(() => {
 					>
 						<Image alt="Keplr" src="/images/keplr.svg" width="30" height="30" />
 						<div className="mx-3">
-							<p className="text-xl">Kelpr Wallet</p>
-							<p className="text-sm text-white-mid">Keplr Browser Extension</p>
+							<p className="text-xl">{t("connectionButton.titleKeplr")}</p>
+							<p className="text-sm text-white-mid">{t("connectionButton.infoKeplr")}</p>
 						</div>
 					</div>
 					<div
@@ -113,8 +115,8 @@ export const ConnectButton = observer(() => {
 					>
 						<Image alt="Keplr" src="/images/walletconnect.svg" width="30" height="30" />
 						<div className="mx-3">
-							<p className="text-xl">WalletConnect</p>
-							<p className="text-sm text-white-mid">Keplr Mobile</p>
+							<p className="text-xl">{t("connectionButton.titleWalletConnect")}</p>
+							<p className="text-sm text-white-mid">{t("connectionButton.infoWalletConnect")}</p>
 						</div>
 					</div>
 				</div>
@@ -128,7 +130,7 @@ export const ConnectButton = observer(() => {
 			>
 				<div className="p-4">
 					<div className="flex justify-between my-2 mb-2 text-xl">
-						Scan QR Code{" "}
+						{t("connectionButton.scan")}{" "}
 						<CloseSvg
 							onClick={() => setUri("")}
 							className="hover:stroke-white-full stroke-main-400 cursor-pointer transition-colors duration-default"
@@ -147,12 +149,14 @@ export const ConnectButton = observer(() => {
 						setOpenChoice(true);
 					}}
 				>
-					Se connecter
+					{t("connectionButton.connection")}
 				</Button>
 			) : (
 				<HoverButton
 					variant="secondary"
-					hoverContent={<div className="flex items-center justify-center h-full w-full">Déconnexion</div>}
+					hoverContent={
+						<div className="flex items-center justify-center h-full w-full">{t("connectionButton.disconnection")}</div>
+					}
 					size="small"
 					className="!py-1 !px-1"
 					onClick={onClickHoveredButton}

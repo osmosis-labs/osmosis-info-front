@@ -17,12 +17,22 @@
     },
     "settings": {
         "title": "Settings",
-        "langue": "Language"
+        "language": "Language"
     },
     "menu": {
         "overview": "Overview",
         "pools": "Pools",
         "tokens": "Tokens",
         "dashboard": "Dashboard"
+    },
+    "connectionButton": {
+        "connection": "Connect wallet",
+        "disconnection": "Disconnect",
+        "title": "Connect Wallet",
+        "titleKeplr": "Keplr Wallet",
+        "infoKeplr": "Keplr Browser Extension",
+        "titleWalletConnect": "WalletConnect Wallet",
+        "infoWalletConnect": "Keplr Mobile",
+        "scan": "Scan QR Code"
     }
 }
