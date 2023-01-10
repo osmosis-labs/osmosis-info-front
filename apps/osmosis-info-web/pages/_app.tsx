@@ -16,7 +16,6 @@ import { DEFAULT_LANGUAGE } from "../stores/app/settings-store/language";
 import { setDefaultLanguage, setTranslations } from "react-multi-lang";
 import dayjsLocaleEn from "../localizations/dayjs-locale-en.js";
 import dayjsLocaleFr from "../localizations/dayjs-locale-fr.js";
-
 dayjs.extend(utc);
 dayjs.extend(updateLocale);
 setDefaultLanguage(DEFAULT_LANGUAGE.value);

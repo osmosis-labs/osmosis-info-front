@@ -14,6 +14,7 @@ import {
 	EnglishSvg,
 	BottomSvg,
 } from "./";
+import { CloseSvg } from "./close-svg";
 
 export default {
 	title: "Assets/Icons",
@@ -96,3 +97,7 @@ English.args = argsSize;
 export const Bottom: ComponentStory<typeof BottomSvg> = (args) => <BottomSvg {...args} />;
 Bottom.args = argsFill;
 Bottom.argTypes = argsTypeFill;
+
+export const Close: ComponentStory<typeof CloseSvg> = (args) => <CloseSvg {...args} />;
+Close.args = argsStroke;
+Close.argTypes = argsTypeStroke;

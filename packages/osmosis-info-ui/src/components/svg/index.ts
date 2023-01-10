@@ -9,3 +9,4 @@ export * from "./tokens-svg";
 export * from "./french-svg";
 export * from "./english-svg";
 export * from "./bottom-svg";
+export * from "./close-svg";

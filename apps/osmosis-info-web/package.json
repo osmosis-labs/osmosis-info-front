@@ -20,10 +20,13 @@
         "start": "next start"
     },
     "dependencies": {
+        "@keplr-wallet/types": "^0.11.32",
+        "@keplr-wallet/wc-client": "^0.11.32",
         "@latouche/osmosis-info-ui": "*",
         "@types/node": "18.11.9",
         "@types/react": "18.0.25",
         "@types/react-dom": "18.0.9",
+        "@walletconnect/client": "^1.8.0",
         "dayjs": "^1.11.7",
         "eslint": "^8.28.0",
         "eslint-config-next": "13.0.4",
@@ -31,6 +34,7 @@
         "mobx-react-lite": "^3.4.0",
         "mobx-utils": "^6.0.5",
         "next": "13.0.6",
+        "qrcode.react": "^3.1.0",
         "react": "18.2.0",
         "react-dom": "18.2.0",
         "react-multi-lang": "^2.2.0",

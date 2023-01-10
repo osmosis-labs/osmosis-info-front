@@ -6,10 +6,10 @@ import BottomMenu from "../menu/bottom-menu";
 import SideMenu from "../menu/side-menu";
 import { setLanguage, useTranslation } from "react-multi-lang";
 
-import TopMenu from "../menu/top-menu";
 import { MainLayoutProps } from "./types";
 import { Item } from "../menu/item/types";
 import { DashboardSvg, OverviewSvg, PoolSvg, TokensSvg } from "@latouche/osmosis-info-ui";
+import { TopMenu } from "../menu/top-menu";
 
 const MainLayout: FunctionComponent<PropsWithChildren<MainLayoutProps>> = observer(({ children, className }) => {
 	const isMobile = useIsMobile();
