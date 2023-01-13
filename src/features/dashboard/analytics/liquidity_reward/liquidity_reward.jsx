@@ -92,7 +92,6 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "center",
 		},
 		chartSkeleton: { margin: "10px" },
-
 	}
 })
 const LiquidityReward = () => {
@@ -216,7 +215,7 @@ const LiquidityReward = () => {
 			if (item.time && typeof item.time === "string") {
 				date = new Date(item.time)
 			} else {
-				if (item.time.month === 1) {
+				if (item.time.month === 0) {
 					date = new Date(item.time.year - 1, 11, item.time.day)
 				} else {
 					date = new Date(item.time.year, item.time.month - 1, item.time.day)
@@ -273,7 +272,7 @@ const LiquidityReward = () => {
 				</ButtonCSV>
 			</div>
 			<Paper className={classes.paper}>
-				{data.length|| isLoading > 0 ? (
+				{data.length || isLoading > 0 ? (
 					<>
 						<div className={classes.chartContainer}>
 							{isLoading ? (

@@ -183,7 +183,7 @@ const StackingRewards = () => {
 			if (item.time && typeof item.time === "string") {
 				date = new Date(item.time)
 			} else {
-				if (item.time.month === 1) {
+				if (item.time.month === 0) {
 					date = new Date(item.time.year - 1, 11, item.time.day)
 				} else {
 					date = new Date(item.time.year, item.time.month - 1, item.time.day)
