@@ -6,7 +6,7 @@ export const useAssets = () => {
 	const request = useRequest()
 
 	const getter = async ({ queryKey }) => {
-		const [_, {}] = queryKey
+		const [_, { }] = queryKey
 		const response = await request({
 			url: `https://raw.githubusercontent.com/osmosis-labs/assetlists/main/osmosis-1/osmosis-1.assetlist.json`,
 			method: "GET",
@@ -33,7 +33,7 @@ export const getAsset = (assets, token) => {
 	let asset = null
 	if (token.denom) {
 		asset = assets[token.denom]
-	}else if (token.symbol) {
+	} else if (token.symbol) {
 		asset = assets[token.symbol]
 	}
 	return asset
