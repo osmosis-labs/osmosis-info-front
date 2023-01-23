@@ -54,7 +54,6 @@ export const ConnectButton = observer(() => {
 			},
 		});
 		if (wc.connected) {
-			console.log("top-menu.tsx -> 62: wc.", wc.accounts);
 			await wc.killSession();
 		}
 		wc.createSession();

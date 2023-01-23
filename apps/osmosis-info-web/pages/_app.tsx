@@ -25,7 +25,7 @@ dayjs.updateLocale("fr", dayjsLocaleFr);
 
 const App = ({ Component, pageProps }: AppProps) => {
 	return (
-		<StoreProvider>
+		<StoreProvider initialState={pageProps.initialState}>
 			<>
 				<Head>
 					<title>Osmosis Info</title>

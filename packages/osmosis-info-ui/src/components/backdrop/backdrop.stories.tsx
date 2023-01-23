@@ -40,5 +40,4 @@ Template.args = {};
 
 export const Default = Template.bind({});
 Default.args = {};
-console.log("backdrop.stories.tsx -> 43: here");
 Default.storyName = "Backdrop";
