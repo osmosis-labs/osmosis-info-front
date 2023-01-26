@@ -110,7 +110,7 @@ const PopoverPools = ({ routes, open, event, onClose, id }) => {
 						})
 						return (
 							<div key={index} className={classes.row}>
-								<span className={classes.id}>{route.poolId}</span>
+								<span className={classes.id}>{route.pool_id}</span>
 								<div className={classes.contentRow}>
 									<div className={classes.imagesContainer}>
 										{images.map((image, index) => {
