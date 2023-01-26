@@ -13,7 +13,7 @@ export const formatAssets = (data) => {
 			denomUnits: asset.denom_units,
 		}
 
-		res[asset.symbol] = currentAsset
+		res[asset.symbol.toUpperCase()] = currentAsset
 		if (asset.symbol.includes(".axl")) {
 			let name = asset.symbol.split(".")[0]
 			res[name] = currentAsset
