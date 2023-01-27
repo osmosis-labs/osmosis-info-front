@@ -16,7 +16,6 @@ export const useAssets = () => {
 
 	const { data, isLoading, isFetching } = useQuery(["assets", {}], getter)
 	const assets = data ? data : {}
-
 	return { data: assets, isLoading, isFetching }
 }
 
