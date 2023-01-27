@@ -25,7 +25,7 @@ export const useMCapTokens = () => {
 	const request = useRequest()
 
 	const getter = async ({ queryKey }) => {
-		const [_, {}] = queryKey
+		const [_, { }] = queryKey
 		const response = await request({
 			url: `${API_URL}/tokens/v2/mcap`,
 			method: "GET",
@@ -44,17 +44,19 @@ export const useTokens = () => {
 	const { settings } = useSettings()
 
 	const { data: mcap, isFetching: isFetchingMCap, isLoading: isLoadingMCap } = useMCapTokens()
-
+	const { data: assets, isFetching: isFetchingAssets, isLoading: isLoadingAssets } = useAssets()
 	const getter = async ({ queryKey }) => {
-		const [_, {}] = queryKey
+		const [_, { }] = queryKey
 		const response = await request({
 			url: `${API_URL}/tokens/v2/all`,
 			method: "GET",
 		})
-		return formatTokens(response.data, mcap)
+		return formatTokens(response.data, mcap, assets)
 	}
 
-	const { data, isLoading, isFetching } = useQuery(["tokens", { mcap }], getter, {})
+	const { data, isLoading, isFetching } = useQuery(["tokens", { mcap, assets }], getter, {
+		enabled: !!assets["OSMO"]
+	})
 	if (data) {
 		if (settings.type === "app") {
 			data.current = data.main
@@ -64,13 +66,14 @@ export const useTokens = () => {
 	}
 	const tokens = data ? data : defaultTokens
 
-	return { data: tokens, isLoading: isLoading || isLoadingMCap, isFetching: isFetching || isFetchingMCap }
+	return { data: tokens, isLoading: isLoading || isLoadingMCap || isLoadingAssets, isFetching: isFetching || isFetchingMCap || isFetchingAssets }
 }
 
 export const useToken = ({ symbol }) => {
 	const request = useRequest()
 
 	const { data: mcap, isFetching: isFetchingMCap, isLoading: isLoadingMCap } = useMCapTokens()
+	const { data: assets, isFetching: isFetchingAssets, isLoading: isLoadingAssets } = useAssets()
 
 	const getter = async ({ queryKey }) => {
 		const [_, { symbol }] = queryKey
@@ -78,16 +81,16 @@ export const useToken = ({ symbol }) => {
 			url: `${API_URL}/tokens/v2/${symbol}`,
 			method: "GET",
 		})
-		return formatToken(response.data[0], mcap)
+		return formatToken(response.data[0], mcap, assets)
 	}
 
-	const { data, isLoading, isFetching } = useQuery(["token", { symbol, mcap }], getter, {
-		enabled: !!symbol,
+	const { data, isLoading, isFetching } = useQuery(["token", { symbol, mcap, assets }], getter, {
+		enabled: !!assets["OSMO"]
 	})
 
 	let token = data ? data : defaultToken
 
-	return { data: token, isLoading, isFetching }
+	return { data: token, isLoading: isLoading || isLoadingMCap || isLoadingAssets, isFetching: isFetching || isFetchingMCap || isFetchingAssets }
 }
 
 export const useTrxToken = ({ symbol, limit = 10 }) => {
