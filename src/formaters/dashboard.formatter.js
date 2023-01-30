@@ -323,7 +323,6 @@ export const formatTrades = (data, assets) => {
 		if (item.symbol_out) {
 			images.push(getImageFromAsset(assets, { symbol: item.symbol_out }))
 		}
-
 		let pools = {
 			images,
 			name: `${item.symbol_in}/${item.symbol_out}`,
@@ -335,8 +334,12 @@ export const formatTrades = (data, assets) => {
 			{
 				type: types[0],
 				pools: trx.pools.routes.reduce((pr, cr, ci) => {
-					if (ci === 0) return cr.poolId
-					else return pr + `, ${cr.poolId}`
+					if (cr.poolId) {
+						if (ci === 0) return cr.poolId
+						else return pr + `, ${cr.poolId}`
+					}
+					if (ci === 0) return cr.pool_id
+					else return pr + `, ${cr.pool_id}`
 				}, ""),
 				sender: trx.address.value,
 				tokenIn: {
@@ -410,6 +413,7 @@ export const formatTrx = (data, { chainId, address }) => {
 	trx.types = types
 
 	trx.chainId = chainId
+
 
 	return trx
 }
