@@ -30,11 +30,12 @@ export const formatMetrics = (data) => {
 }
 
 export const defaultTop = []
-export const formatTop = (data, main) => {
+export const formatTop = (data, main, assets) => {
 	let res = []
 	data.forEach((token) => {
+		const currentAsset = assets[token.symbol.toUpperCase()]
 		if (main) {
-			if (token.main) {
+			if (currentAsset.main) {
 				res.push({ ...token, symbolDisplay: formatTokenName(token.symbol) })
 			}
 		} else {
