@@ -10,6 +10,7 @@ export const defaultMCap = []
 
 export const defaultTokens = { all: [], main: [], frontier: [], current: [] }
 export const formatTokens = (data, mcap, assets) => {
+	console.log("tokens.formatter.js -> 13: data", data)
 	let res = { all: [], main: [], frontier: [], current: [] }
 	data.sort((a, b) => {
 		if (a.liquidity > b.liquidity) return -1
@@ -19,7 +20,7 @@ export const formatTokens = (data, mcap, assets) => {
 
 	data.forEach((row, index) => {
 		const currentAsset = assets[row.symbol.toUpperCase()]
-
+		let isOsmo = row.symbol === "OSMO"
 		let token = {
 			id: index + 1,
 			denom: row.denom,
@@ -34,6 +35,7 @@ export const formatTokens = (data, mcap, assets) => {
 			price24hChange: row.price_24h_change,
 			mcap: 0,
 		}
+
 		let mcapToken = mcap.find((mc) => {
 			return mc.symbol == token.symbol
 		})
@@ -45,9 +47,12 @@ export const formatTokens = (data, mcap, assets) => {
 		}
 		res.frontier.push(token)
 		res.all.push(token)
-		if (!currentAsset) {
-			console.log("%ctokens.formatter.js -> 23 YELLOW: TOKEN NOT IN ASSETS LIST", 'background: #fff176; color:#212121', token)
+		if (isOsmo) {
+			console.log("%ctokens.formatter.js -> 39 BLUE: token", 'background: #2196f3; color:#FFFFFF', token)
 		}
+		// if (!currentAsset) {
+		// 	console.log("%ctokens.formatter.js -> 23 YELLOW: TOKEN NOT IN ASSETS LIST", 'background: #fff176; color:#212121', token)
+		// }
 	})
 	return res
 }

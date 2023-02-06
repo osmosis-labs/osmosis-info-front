@@ -111,6 +111,13 @@ const InfoBar = () => {
 		return () => clearInterval(timer)
 	}, [])
 
+	// useEffect(() => {
+	// 	// Need to don't show loader
+	// 	if (time > 5) {
+	// 		reload()
+	// 	}
+	// }, [time])
+
 	const reload = () => {
 		queryClient.invalidateQueries()
 		setTime((t) => 0)

@@ -48,14 +48,15 @@ export const useTokens = () => {
 	const getter = async ({ queryKey }) => {
 		const [_, { }] = queryKey
 		const response = await request({
-			url: `${API_URL}/tokens/v2/all`,
+			url: `${API_URL}/stream/token/v1/all`,
 			method: "GET",
 		})
 		return formatTokens(response.data, mcap, assets)
 	}
 
 	const { data, isLoading, isFetching } = useQuery(["tokens", { mcap, assets }], getter, {
-		enabled: !!assets["OSMO"]
+		enabled: !!assets["OSMO"],
+		refetchInterval: 5 * 1000
 	})
 	if (data) {
 		if (settings.type === "app") {
@@ -66,7 +67,7 @@ export const useTokens = () => {
 	}
 	const tokens = data ? data : defaultTokens
 
-	return { data: tokens, isLoading: isLoading || isLoadingMCap || isLoadingAssets, isFetching: isFetching || isFetchingMCap || isFetchingAssets }
+	return { data: tokens, isLoading: isLoading || isLoadingMCap || isLoadingAssets, isFetching: isLoading || isLoadingMCap || isLoadingAssets }
 }
 
 export const useToken = ({ symbol }) => {
