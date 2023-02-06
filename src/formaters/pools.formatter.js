@@ -29,7 +29,7 @@ export const formatTokensPool = (data) => {
 
 export const defaultPools = { all: [], main: [], frontier: [], current: [] }
 
-export const formatPools = (dataPools, dataAPR, allTokens) => {
+export const formatPools = (dataPools, dataAPR, allTokens, assets) => {
 	let res = { all: [], main: [], frontier: [], current: [] }
 	Object.keys(dataPools).forEach((key) => {
 		let row = dataPools[key]
@@ -86,7 +86,8 @@ export const formatPools = (dataPools, dataAPR, allTokens) => {
 		let main = true
 		let index = 0
 		while (main && index < row.length) {
-			if (!row[index].main) {
+			const currentAsset = assets[row[index].symbol.toUpperCase()]
+			if (currentAsset && !currentAsset.main) {
 				main = false
 			}
 			index++

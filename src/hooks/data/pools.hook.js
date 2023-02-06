@@ -76,6 +76,7 @@ export const usePoolApr = () => {
 export const usePools = ({ lowLiquidity = false }) => {
 	const { data: poolApr } = usePoolApr()
 	const { settings } = useSettings()
+	const { data: assets, isFetching: isFetchingAssets, isLoading: isLoadingAssets } = useAssets()
 	const {
 		data: { all: allTokens },
 	} = useTokens()
@@ -87,11 +88,11 @@ export const usePools = ({ lowLiquidity = false }) => {
 			url: `${API_URL}/pools/v2/all?low_liquidity=${lowLiquidity}`,
 			method: "GET",
 		})
-		return formatPools(response.data, poolApr, allTokens)
+		return formatPools(response.data, poolApr, allTokens, assets)
 	}
 
 	const { data, isLoading, isFetching } = useQuery(["pool", { lowLiquidity }], getter, {
-		enabled: poolApr.length > 0 && allTokens.length > 0,
+		enabled: poolApr.length > 0 && allTokens.length > 0 && !!assets["OSMO"],
 	})
 	if (data) {
 		if (settings.type === "app") {
@@ -101,7 +102,7 @@ export const usePools = ({ lowLiquidity = false }) => {
 		}
 	}
 	const pools = data ? data : defaultPools
-	return { data: pools, isLoading, isFetching }
+	return { data: pools, isLoading: isLoading && isLoadingAssets, isFetching: isFetching && isFetchingAssets }
 }
 
 export const usePoolTrx = ({ poolId, limit = 10 }) => {

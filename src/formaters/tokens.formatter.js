@@ -9,9 +9,8 @@ dayjs.extend(utc)
 export const defaultMCap = []
 
 export const defaultTokens = { all: [], main: [], frontier: [], current: [] }
-export const formatTokens = (data, mcap) => {
+export const formatTokens = (data, mcap, assets) => {
 	let res = { all: [], main: [], frontier: [], current: [] }
-
 	data.sort((a, b) => {
 		if (a.liquidity > b.liquidity) return -1
 		if (a.liquidity < b.liquidity) return 1
@@ -19,6 +18,8 @@ export const formatTokens = (data, mcap) => {
 	})
 
 	data.forEach((row, index) => {
+		const currentAsset = assets[row.symbol.toUpperCase()]
+
 		let token = {
 			id: index + 1,
 			denom: row.denom,
@@ -29,7 +30,7 @@ export const formatTokens = (data, mcap) => {
 			volume24h: row.volume_24h,
 			volume24hChange: row.volume_24h_change,
 			name: row.name,
-			main: row.main,
+			main: currentAsset && currentAsset.main,
 			price24hChange: row.price_24h_change,
 			mcap: 0,
 		}
@@ -44,6 +45,9 @@ export const formatTokens = (data, mcap) => {
 		}
 		res.frontier.push(token)
 		res.all.push(token)
+		if (!currentAsset) {
+			console.log("%ctokens.formatter.js -> 23 YELLOW: TOKEN NOT IN ASSETS LIST", 'background: #fff176; color:#212121', token)
+		}
 	})
 	return res
 }
@@ -62,7 +66,8 @@ export const defaultToken = {
 	price24hChange: "",
 	mcap: 0,
 }
-export const formatToken = (data, mcap) => {
+export const formatToken = (data, mcap, assets) => {
+	const currentAsset = assets[data.symbol.toUpperCase()]
 	let token = { ...defaultToken }
 	token.price = data.price
 	token.denom = data.denom
@@ -74,12 +79,15 @@ export const formatToken = (data, mcap) => {
 	token.volume24hChange = data.volume_24h_change
 	token.name = data.name
 	token.price24hChange = data.price_24h_change
-	token.main = data.main
+	token.main = currentAsset && currentAsset.main
 	let mcapToken = mcap.find((mc) => {
 		return mc.symbol == token.symbol
 	})
 	if (mcapToken) {
 		token.mcap = mcapToken.market_cap
+	}
+	if (!currentAsset) {
+		console.log("%ctokens.formatter.js -> 90 YELLOW: TOKEN NOT IN ASSETS LIST", 'background: #fff176; color:#212121', token)
 	}
 	return token
 }
