@@ -15,12 +15,12 @@ const Tokens = observer(() => {
 		tokensStore: { isLoadingTokens, getTokens, errorTokens, tokens },
 	} = useStore();
 
-	useEffect(() => {
-		getTokens();
-		window.setTimeout(() => {
-			getTokens();
-		}, 1000);
-	}, [getTokens]);
+	// useEffect(() => {
+	// 	getTokens();
+	// 	window.setTimeout(() => {
+	// 		getTokens();
+	// 	}, 1000);
+	// }, [getTokens]);
 
 	useEffect(() => {
 		if (errorTokens) {

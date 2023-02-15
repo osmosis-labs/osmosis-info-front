@@ -16,7 +16,6 @@ export class RootStore {
 	public readonly tokensStore: TokensStore;
 
 	constructor() {
-		console.log("root-store.ts -> 19: constur");
 		this.menuStore = new MenuStore();
 		this.settingsStore = new SettingsStore(new Storage("settings"), [new LanguageSetting(DEFAULT_LANGUAGE.value)]);
 		this.userStore = new UserStore();

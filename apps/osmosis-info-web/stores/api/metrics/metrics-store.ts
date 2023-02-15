@@ -34,6 +34,6 @@ export class MetricsStore extends Request<Metrics, AxiosResponse<MetricsResponse
 	}
 
 	public getMetrics = async () => {
-		this.sendRequest(axios({ url: `${API_URL}/overview/v1/metrics` }));
+		this.sendRequest(() => axios({ url: `${API_URL}/overview/v1/metrics` }));
 	};
 }

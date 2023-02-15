@@ -173,6 +173,6 @@ export class TokenStore extends Request<Token[], PromiseRequest> {
 	}
 
 	public getToken = () => {
-		this.sendRequest(axios({ url: `${API_URL}/tokens/v2/${this._symbol}` }));
+		this.sendRequest(() => axios({ url: `${API_URL}/tokens/v2/${this._symbol}` }));
 	};
 }

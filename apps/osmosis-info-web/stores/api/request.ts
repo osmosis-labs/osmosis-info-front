@@ -28,13 +28,23 @@ export abstract class Request<D, T> {
 	abstract format(promiseResult: T): void;
 
 	@action
-	protected async sendRequest(request: Promise<T>) {
+	protected async sendRequest(request: () => Promise<T>) {
+		// console.log(
+		// 	"request.ts -> 32:",
+		// 	this.constructor.name,
+		// 	"-> Loading:",
+		// 	this._isLoading,
+		// 	"cache:",
+		// 	Date.now() - this._lastCall,
+		// 	"Is sent:",
+		// 	!(Date.now() - this._lastCall <= this._delayCache)
+		// );
 		if (this._isLoading) return;
 		if (Date.now() - this._lastCall <= this._delayCache) return;
 		this._lastCall = Date.now();
 		this._isLoading = true;
 		try {
-			const result: T = await request; //axios({ ...options });
+			const result: T = await request(); //axios({ ...options });
 			this.format(result);
 			this._isLoading = false;
 		} catch (error) {

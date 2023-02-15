@@ -1,10 +1,12 @@
 import { action, makeObservable, observable } from "mobx";
 import { Request } from "../request";
+import { autorun } from "mobx";
 import { Token, TokensResponseList, MCapResponse } from "./tokens";
-const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 import axios, { AxiosResponse } from "axios";
 import { TokenStore } from "./token-store";
 import { InitialState } from "../../root-store";
+
+const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 
 type PromiseRequest = [
 	AxiosResponse<TokensResponseList, TokensResponseList>,
@@ -13,11 +15,17 @@ type PromiseRequest = [
 
 export class TokensStore extends Request<Token[], PromiseRequest> {
 	@observable private _tokens: TokenStore[];
+	private _interval: NodeJS.Timeout | null = null;
+	private _intervalTime: number;
 
 	constructor() {
-		super({ delayCache: 5 * 60 * 100, defaultData: [] });
+		super({ delayCache: 15 * 1000, defaultData: [] });
 		this._tokens = [];
+		this._intervalTime = 5 * 1000;
 		makeObservable(this);
+		autorun(() => {
+			this.play();
+		});
 	}
 
 	@action
@@ -26,6 +34,17 @@ export class TokensStore extends Request<Token[], PromiseRequest> {
 			this.formatTokens(tokensState.tokens, tokensState.marketCap);
 		}
 	}
+
+	@action
+	play = () => {
+		this._interval = setInterval(this.getTokens, this._intervalTime);
+	};
+
+	@action
+	pause = () => {
+		clearInterval(this._interval!);
+		this._interval = null;
+	};
 
 	formatTokens(tokensResponses: TokensResponseList, mCapResponse: MCapResponse): Token[] {
 		const tokensFormatted: Token[] = [];
@@ -109,6 +128,12 @@ export class TokensStore extends Request<Token[], PromiseRequest> {
 		this.formatTokens(responseToken, responseMcap);
 	}
 
+	public getTokens = () => {
+		this.sendRequest(() =>
+			Promise.all([axios({ url: `${API_URL}/tokens/v2/all` }), axios({ url: `${API_URL}/tokens/v2/mcap` })])
+		);
+	};
+
 	public getToken(symbol: string): TokenStore | undefined {
 		return this._tokens.find((tokenStore) => tokenStore.symbol === symbol);
 	}
@@ -124,10 +149,4 @@ export class TokensStore extends Request<Token[], PromiseRequest> {
 	public get isLoadingTokens(): boolean {
 		return this._isLoading;
 	}
-
-	public getTokens = () => {
-		this.sendRequest(
-			Promise.all([axios({ url: `${API_URL}/tokens/v2/all` }), axios({ url: `${API_URL}/tokens/v2/mcap` })])
-		);
-	};
 }
