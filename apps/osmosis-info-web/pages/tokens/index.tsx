@@ -12,15 +12,8 @@ const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 const Tokens = observer(() => {
 	const t = useTranslation();
 	const {
-		tokensStore: { isLoadingTokens, getTokens, errorTokens, tokens },
+		tokensStore: { isLoadingTokens, errorTokens, tokens },
 	} = useStore();
-
-	// useEffect(() => {
-	// 	getTokens();
-	// 	window.setTimeout(() => {
-	// 		getTokens();
-	// 	}, 1000);
-	// }, [getTokens]);
 
 	useEffect(() => {
 		if (errorTokens) {
