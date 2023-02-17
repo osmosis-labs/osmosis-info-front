@@ -17,6 +17,7 @@ export const formatAssets = (data) => {
 			}
 
 			res[asset.symbol.toUpperCase()] = currentAsset
+			res[asset.display.toUpperCase()] = currentAsset
 			if (asset.symbol.includes(".axl")) {
 				let name = asset.symbol.split(".")[0]
 				res[name] = currentAsset
