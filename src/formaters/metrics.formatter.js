@@ -35,7 +35,7 @@ export const formatTop = (data, main, assets) => {
 	data.forEach((token) => {
 		const currentAsset = assets[token.symbol.toUpperCase()]
 		if (main) {
-			if (currentAsset.main) {
+			if (currentAsset && currentAsset.main) {
 				res.push({ ...token, symbolDisplay: formatTokenName(token.symbol) })
 			}
 		} else {

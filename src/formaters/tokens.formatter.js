@@ -19,7 +19,6 @@ export const formatTokens = (data, mcap, assets) => {
 
 	data.forEach((row, index) => {
 		const currentAsset = assets[row.symbol.toUpperCase()]
-
 		let token = {
 			id: index + 1,
 			denom: row.denom,
