@@ -34,7 +34,6 @@ export const formatTop = (data, main, assets) => {
 	let res = []
 	data.forEach((token) => {
 		const currentAsset = assets[token.symbol.toUpperCase()]
-		console.log("%cmetrics.formatter.js -> 37 BLUE: assets, currentAsset", 'background: #2196f3; color:#FFFFFF', assets, currentAsset)
 		if (main) {
 			if (currentAsset && currentAsset.main) {
 				res.push({ ...token, symbolDisplay: formatTokenName(token.symbol) })
