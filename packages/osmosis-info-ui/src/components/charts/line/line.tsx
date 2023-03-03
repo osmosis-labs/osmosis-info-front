@@ -8,11 +8,9 @@ import { localPoint } from "@visx/event";
 import { LinearGradient } from "@visx/gradient";
 import { max, extent, bisector } from "d3-array";
 import { AxisRight, AxisBottom } from "@visx/axis";
-import { WithTooltipProvidedProps } from "@visx/tooltip/lib/enhancers/withTooltip";
-import { withTooltip, Tooltip, TooltipWithBounds, defaultStyles, useTooltipInPortal, useTooltip } from "@visx/tooltip";
-import { timeParse, timeFormat } from "d3-time-format";
+import { withTooltip, Tooltip, defaultStyles, useTooltipInPortal, useTooltip } from "@visx/tooltip";
+import { timeFormat } from "d3-time-format";
 import { ParentSize } from "@visx/responsive";
-import { Zoom } from "@visx/zoom";
 // TO DO
 // Responsive
 // Animation
@@ -39,17 +37,17 @@ const getDate = (d: AppleStock) => new Date(d.date);
 const getStockValue = (d: AppleStock) => d.close;
 const bisectDate = bisector<AppleStock, Date>((d) => new Date(d.date)).left;
 const hover = (d: AppleStock) => {
-	// console.log("%cline.tsx -> 22 ORANGE:HOVER d", "background: #607d8b; color:#FFFFFF", d);
+	console.log("%cline.tsx -> 22 ORANGE:HOVER d", "background: #607d8b; color:#FFFFFF", d);
 };
 const click = (d: AppleStock) => {
-	// console.log("%cline.tsx -> 25 ORANGE: CLICK d", "background: #607d8b; color:#FFFFFF", d);
+	console.log("%cline.tsx -> 25 ORANGE: CLICK d", "background: #607d8b; color:#FFFFFF", d);
 };
 
-const parseDate = timeParse("%Y-%m-%d");
+// const parseDate = timeParse("%Y-%m-%d");
 const format = timeFormat("%b %d");
-const formatDate = (date: string) => {
-	return format(parseDate(date) as Date);
-};
+// const formatDate = (date: string) => {
+// 	return format(parseDate(date) as Date);
+// };
 
 export type LineProps = {
 	width?: number;

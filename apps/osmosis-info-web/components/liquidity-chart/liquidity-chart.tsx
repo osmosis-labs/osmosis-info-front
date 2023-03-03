@@ -1,13 +1,13 @@
 import React from "react";
 import { Line } from "@latouche/osmosis-info-ui";
-import { appleStock } from "@visx/mock-data/";
+// import { appleStock } from "@visx/mock-data/";
 
 export interface DataLiquidity {
 	price: number;
 	time: string;
 }
 export const LiquidityChart = () => {
-	const data: DataLiquidity[] = appleStock.slice(800).map((stock) => ({ price: stock.close, time: stock.date }));
+	// const data: DataLiquidity[] = appleStock.slice(800).map((stock) => ({ price: stock.close, time: stock.date }));
 
 	return (
 		<div>
