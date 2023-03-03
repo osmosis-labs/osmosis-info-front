@@ -11,6 +11,7 @@
 		color: #ffffff;
 	}
 }
+
 .dialogTransitionOpen {
 	transition-property: opacity, z-index;
 	transition-duration: 300ms, 0ms;
@@ -33,4 +34,41 @@
 	transition-property: opacity, top, left;
 	transition-duration: 300ms, 0ms, 0ms;
 	transition-delay: 0ms, 300ms, 300ms;
+}
+
+
+
+.animation-line {
+	animation-name: line;
+	animation-timing-function: linear;
+	animation-duration: 500ms;
+	animation-fill-mode: forwards;
+
+}
+
+@keyframes line {
+	to {
+		stroke-dashoffset: 0;
+
+	}
+}
+
+.animation-area {
+	animation-name: area;
+	animation-timing-function: linear;
+	animation-duration: 500ms;
+	animation-delay: 200ms;
+	animation-fill-mode: forwards;
+	opacity: 0%;
+
+}
+
+@keyframes area {
+	0% {
+		opacity: 0%;
+	}
+
+	100% {
+		opacity: 100%;
+	}
 }

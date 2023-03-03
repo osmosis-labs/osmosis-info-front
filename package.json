@@ -32,6 +32,7 @@
   "scripts": {
     "build:packages": "yarn lerna run build --scope @latouche/osmosis-info-ui",
     "build:app": "yarn lerna run build --scope @latouche/osmosis-info-web",
+    "install:packages": "yarn install --scope @latouche/osmosis-info-ui",
     "dev:app": "yarn lerna run dev --scope @latouche/osmosis-info-web",
     "dev:packages": "yarn lerna run dev --scope @latouche/osmosis-info-ui",
     "dev:css": "yarn lerna run dev:css --scope @latouche/osmosis-info-ui",
@@ -39,7 +40,7 @@
     "start:app": "yarn lerna run start --scope @latouche/osmosis-info-web",
     "publish": "yarn lerna run publish",
     "clean": "yarn lerna run clean",
-    "cleanDev": "yarn lerna clean -y && yarn build:packages && yarn dev",
+    "cleanDev": "yarn lerna clean -y && yarn install:packages && yarn dev",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "prepare": "husky install"

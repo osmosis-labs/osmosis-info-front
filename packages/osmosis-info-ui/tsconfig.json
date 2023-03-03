@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "module": "esnext",
     "lib": [
       "dom",
       "esnext"
@@ -17,6 +16,8 @@
     "noUnusedParameters": true,
     "moduleResolution": "node",
     "jsx": "react",
+    "target": "ESNext",
+    "module": "ES6",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,

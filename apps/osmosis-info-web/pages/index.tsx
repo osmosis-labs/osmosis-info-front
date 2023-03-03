@@ -4,6 +4,8 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../stores";
 import Link from "next/link";
 import axios from "axios";
+import { LiquidityChart } from "../components/liquidity-chart/liquidity-chart";
+
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 
 const Overview = observer(() => {
@@ -38,6 +40,10 @@ const Overview = observer(() => {
 			<Link href={`/tokens`} prefetch={false}>
 				Go to tokens
 			</Link>
+
+			<div>
+				<LiquidityChart />
+			</div>
 		</div>
 	);
 });

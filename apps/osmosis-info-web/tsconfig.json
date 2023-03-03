@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "target": "es5",
     "lib": [
       "dom",
       "dom.iterable",
@@ -13,6 +12,7 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
+    "target": "ES6",
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -20,12 +20,13 @@
     "jsx": "preserve",
     "incremental": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "localizations/dayjs-locale-fr.js"
   ],
   "exclude": [
     "node_modules",

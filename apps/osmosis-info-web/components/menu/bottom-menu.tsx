@@ -9,13 +9,14 @@ export interface BottomMenuProps {
 
 function BottomMenu({ items }: BottomMenuProps) {
 	const isMobile = useIsMobile();
-	let className =
+	const className =
 		"w-full grid grid-cols-4 bg-main-900 bg-opacity-50 h-bottomMenu fixed bottom-0 left-0 transition-all backdrop-blur-[2px] z-10 border-t-[1px] border-main-800";
-	if (isMobile === null || !isMobile) {
-		className += " h-0";
-	}
+
+	const classNameHide =
+		"w-full grid grid-cols-4 bg-main-900 bg-opacity-50 fixed bottom-0 left-0 transition-all backdrop-blur-[2px] z-10 border-t-[1px] border-main-800 h-0";
+
 	return (
-		<div className={className}>
+		<div className={isMobile === null || !isMobile ? classNameHide : className}>
 			{items.map((item) => {
 				return (
 					<ItemMobile

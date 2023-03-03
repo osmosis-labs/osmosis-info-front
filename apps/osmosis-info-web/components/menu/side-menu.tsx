@@ -16,18 +16,14 @@ const SideMenu = ({ items }: SideMenuProps) => {
 		menuStore: { open },
 	} = useStore();
 
-	let className = "";
-	const defaultclassName =
-		"bg-main-800 transition-all fixed left-0 h-screen overflow-x-hidden border-r-[1px] border-main-700 px-2 top-0";
-	if (isMobile || isMobile === null) {
-		className = `${defaultclassName} px-0 w-0 border-r-0`;
-	}
-	if (isMobile !== null && !isMobile) {
-		if (open) className = `${defaultclassName} w-sideMenuOpen`;
-		else className = `${defaultclassName} w-sideMenuClose`;
-	}
+	const defaultclassName = "bg-main-800 transition-all fixed left-0 h-screen overflow-x-hidden border-main-700 top-0";
+
+	const classNameShowOpen = `${defaultclassName} border-r-[1px] px-2 w-sideMenuOpen`;
+	const classNameShowClose = `${defaultclassName}  border-r-[1px] px-2 w-sideMenuClose `;
+	const classNameHide = `${defaultclassName} px-0 w-0 border-r-0`;
+
 	return (
-		<div className={className}>
+		<div className={isMobile || isMobile === null ? classNameHide : open ? classNameShowOpen : classNameShowClose}>
 			<ItemMenuTitle />
 			{items.map((item) => {
 				return (

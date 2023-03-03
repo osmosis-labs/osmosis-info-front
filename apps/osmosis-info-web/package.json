@@ -6,6 +6,7 @@
     "homepage": "https://github.com/osmosis-labs/osmosis-info#readme",
     "private": "true",
     "license": "Apache-2.0",
+    "type": "module",
     "bugs": {
         "url": "https://github.com/osmosis-labs/osmosis-info/issues"
     },
