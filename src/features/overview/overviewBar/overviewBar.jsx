@@ -91,7 +91,10 @@ const OverviewBar = () => {
 		<Paper className={classes.rootOverviewBar}>
 			<div className={classes.item}>
 				<span className={classes.itemLabel}>Volume (-24h):</span>
-				<span className={getClasses(volume24hChange)}>${formaterNumber(volume24h)}</span>
+				<span className={getClasses(volume24hChange)}>
+					{" "}
+					${formaterNumber(Math.abs((volume24h * volume24hChange) / 100))}
+				</span>
 
 				<span className={`${getClasses(volume24hChange, "percent")}`}>
 					({getArrow(volume24hChange)}
