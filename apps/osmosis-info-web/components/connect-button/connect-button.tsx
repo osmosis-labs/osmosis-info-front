@@ -3,13 +3,13 @@ import { observer } from "mobx-react-lite";
 import { KeplrWalletConnectV1 } from "@keplr-wallet/wc-client";
 import WalletConnect from "@walletconnect/client";
 import QRCode from "qrcode.react";
-import { Button, Dialog, HoverButton } from "@latouche/osmosis-info-ui";
+
 import { CHAIN_ID, getKeplr, UserWallet } from "../../helpers/wallet";
 
 import Image from "next/image";
 import { useStore } from "../../stores";
-import { CloseSvg } from "@latouche/osmosis-info-ui";
 import { useTranslation } from "react-multi-lang";
+import { Button, Dialog, HoverButton, CloseSvg } from "@latouche/osmosis-info-ui";
 
 export const ConnectButton = observer(() => {
 	const { userStore } = useStore();

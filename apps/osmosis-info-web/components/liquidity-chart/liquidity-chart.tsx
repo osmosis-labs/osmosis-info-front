@@ -11,8 +11,7 @@ export const LiquidityChart = () => {
 
 	return (
 		<div>
-			<p>Hello</p>
-			<div className="max-h-[500px] max-w-[800px]  h-[500px]">
+			<div className="max-h-[500px] max-w-[800px] h-[500px]">
 				<Line maxHeight={500} />
 			</div>
 		</div>

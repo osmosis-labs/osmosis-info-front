@@ -8,9 +8,11 @@ import { localPoint } from "@visx/event";
 import { LinearGradient } from "@visx/gradient";
 import { max, extent, bisector } from "d3-array";
 import { AxisRight, AxisBottom } from "@visx/axis";
-import { withTooltip, Tooltip, defaultStyles, useTooltipInPortal, useTooltip } from "@visx/tooltip";
+import { withTooltip, Tooltip, defaultStyles, useTooltip } from "@visx/tooltip";
 import { timeFormat } from "d3-time-format";
 import { ParentSize } from "@visx/responsive";
+import { useGesture } from "@use-gesture/react";
+import { Point } from "@visx/zoom/lib/types";
 // TO DO
 // Responsive
 // Animation
@@ -43,11 +45,7 @@ const click = (d: AppleStock) => {
 	console.log("%cline.tsx -> 25 ORANGE: CLICK d", "background: #607d8b; color:#FFFFFF", d);
 };
 
-// const parseDate = timeParse("%Y-%m-%d");
 const format = timeFormat("%b %d");
-// const formatDate = (date: string) => {
-// 	return format(parseDate(date) as Date);
-// };
 
 export type LineProps = {
 	width?: number;
@@ -66,8 +64,18 @@ const ChartLine = withTooltip(
 		const [limits, setLimits] = useState({ start: 0, end: 0 });
 		const refLineChart = useRef<SVGGElement | null>(null);
 		const [pathLength, setPathLength] = useState(0);
+		const [startPoint, setStartPoint] = useState<Point | undefined>(undefined);
+		const refSVG = useRef<SVGSVGElement | null>(null);
+		const [isDragging, setIsDragging] = useState(false);
+		const [removePath, setRemovePath] = useState(false);
 		useEffect(() => {
 			setLimits({ start: 0, end: data.length });
+			const timer = window.setTimeout(() => {
+				setRemovePath(true);
+			}, 500);
+			return () => {
+				window.clearTimeout(timer);
+			};
 		}, []);
 
 		const updatePathLength = useCallback(() => {
@@ -79,7 +87,12 @@ const ChartLine = withTooltip(
 				}
 			}
 		}, []);
-
+		// const { containerRef } = useTooltipInPortal({
+		// 	// use TooltipWithBounds
+		// 	detectBounds: true,
+		// 	// when tooltip containers are scrolled, this will correctly update the Tooltip position
+		// 	scroll: true,
+		// });
 		useEffect(() => {
 			updatePathLength();
 			// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -93,12 +106,7 @@ const ChartLine = withTooltip(
 		const [dataLast, setDataLast] = useState<{ x: number; y: number; data: number } | null>(null);
 
 		const { tooltipData, tooltipLeft, tooltipTop, showTooltip, hideTooltip } = useTooltip<AppleStock>();
-		const { containerRef } = useTooltipInPortal({
-			// use TooltipWithBounds
-			detectBounds: true,
-			// when tooltip containers are scrolled, this will correctly update the Tooltip position
-			scroll: true,
-		});
+
 		const setNextLimits = useCallback(
 			(start: number, end: number) => {
 				// Check start and end limits (to don't go out) and set them
@@ -111,16 +119,15 @@ const ChartLine = withTooltip(
 				if (end > limits.start) newLimit.end = end;
 
 				setLimits(newLimit);
-				updatePathLength();
+				// updatePathLength();
 			},
-			[limits.end, limits.start, updatePathLength]
+			[limits.end, limits.start]
 		);
 
 		const onDrag = useCallback(
-			(event: MouseEvent) => {
-				const diff = event.clientX - refDrag.current.x;
-				const toRight = diff > 0;
-				let paddingDrag = 5;
+			(dx: number) => {
+				const toRight = dx > 0;
+				let paddingDrag = Math.abs(dx / 3);
 				if (toRight) {
 					if (limits.start > 0) {
 						if (limits.start - paddingDrag < 0) {
@@ -140,38 +147,9 @@ const ChartLine = withTooltip(
 			[limits.end, limits.start, setNextLimits]
 		);
 
-		const onMouseDown = (event: React.MouseEvent<SVGElement>) => {
-			event.preventDefault();
-			refDrag.current = { dragging: true, x: event.clientX, y: event.clientY };
-		};
-
-		const onMouseUp = useCallback(() => {
-			refDrag.current = { dragging: false, x: 0, y: 0 };
-		}, []);
-
-		const onMouseLeave = useCallback(() => {
-			refDrag.current = { dragging: false, x: 0, y: 0 };
-		}, []);
-		const onMouseMove = useCallback(
-			(event: MouseEvent) => {
-				if (refDrag.current.dragging) {
-					onDrag(event);
-				}
-			},
-			[onDrag]
-		);
-
 		useEffect(() => {
 			setAnimate(true);
-			document.addEventListener("mousemove", onMouseMove);
-			document.addEventListener("mouseleave", onMouseLeave);
-			document.addEventListener("mouseup", onMouseUp);
-			return () => {
-				document.removeEventListener("mousemove", onMouseMove);
-				document.removeEventListener("mouseleave", onMouseLeave);
-				document.removeEventListener("mouseup", onMouseUp);
-			};
-		}, [onMouseMove, onMouseLeave, onMouseUp]);
+		}, []);
 
 		// scales
 		const dateScale = useMemo(() => {
@@ -212,6 +190,7 @@ const ChartLine = withTooltip(
 				if (d1 && getDate(d1)) {
 					d = x0.valueOf() - getDate(d0).valueOf() > getDate(d1).valueOf() - x0.valueOf() ? d1 : d0;
 				}
+				if (x < 0 || x > innerWidth) return;
 				showTooltip({
 					tooltipData: d,
 					tooltipLeft: x,
@@ -219,7 +198,7 @@ const ChartLine = withTooltip(
 				});
 				hover(d);
 			},
-			[showTooltip, dataValueScale, dateScale]
+			[dateScale, innerWidth, showTooltip, dataValueScale]
 		);
 		const onClickSvg = (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
 			const { x } = localPoint(event) || { x: 0 };
@@ -234,42 +213,90 @@ const ChartLine = withTooltip(
 			click(d);
 		};
 
-		const onWheel = (event: React.WheelEvent<SVGElement>) => {
-			// get current point of mouse position
-			const { x } = localPoint(event) || { x: 0 };
-			const x0 = dateScale.invert(x);
-			const index = bisectDate(data, x0, 1);
+		const handleWheel = useCallback(
+			(event: React.WheelEvent | WheelEvent) => {
+				event.preventDefault();
+				const { x } = localPoint(event) || { x: 0 };
+				const x0 = dateScale.invert(x);
+				const index = bisectDate(data, x0, 1);
 
-			// get step (10% of rest)
-			const stepPercentage = 10;
-			const stepStart = (index - limits.start) / stepPercentage;
-			const stepEnd = (limits.end - index) / stepPercentage;
+				// get step (10% of rest)
+				const stepPercentage = 10;
+				const stepStart = (index - limits.start) / stepPercentage;
+				const stepEnd = (limits.end - index) / stepPercentage;
 
-			// get direction of scroll
-			const { deltaY } = event;
-			const zoomIn = deltaY < 0;
+				// get direction of scroll
+				const { deltaY } = event;
+				const zoomIn = deltaY < 0;
 
-			let newStart = Math.round(limits.start + stepStart);
-			let newEnd = Math.round(limits.end - stepEnd);
-			if (!zoomIn) {
-				newStart = Math.round(limits.start - stepStart);
-				newEnd = Math.round(limits.end + stepEnd);
-			}
+				let newStart = Math.round(limits.start + stepStart);
+				let newEnd = Math.round(limits.end - stepEnd);
+				if (!zoomIn) {
+					newStart = Math.round(limits.start - stepStart);
+					newEnd = Math.round(limits.end + stepEnd);
+				}
 
-			// set new limits
-			setNextLimits(newStart, newEnd);
-		};
+				// set new limits
+				setNextLimits(newStart, newEnd);
+			},
+			[dateScale, limits.end, limits.start, setNextLimits]
+		);
+
+		const dragEnd = useCallback(() => {
+			setStartPoint(undefined);
+			setIsDragging(false);
+		}, []);
+
+		const dragStart = useCallback(
+			(event: React.MouseEvent | React.TouchEvent | MouseEvent | TouchEvent | React.PointerEvent) => {
+				setIsDragging(true);
+				setStartPoint(localPoint(event) || undefined);
+			},
+			[]
+		);
+
+		const dragMove = useCallback(
+			(event: React.MouseEvent | React.TouchEvent | MouseEvent | TouchEvent | React.PointerEvent) => {
+				if (!isDragging || !startPoint) return;
+
+				const currentPoint = localPoint(event) || undefined;
+				const dx = currentPoint ? -(startPoint.x - currentPoint.x) : -startPoint.x;
+				const dy = currentPoint ? -(startPoint.y - currentPoint.y) : -startPoint.y;
+				onDrag(dx);
+				setStartPoint(currentPoint);
+
+				refDrag.current = { dragging: true, x: dx, y: dy };
+			},
+			[isDragging, startPoint, onDrag]
+		);
+
+		useGesture(
+			{
+				onDragStart: ({ event }) => {
+					if (!(event instanceof KeyboardEvent)) dragStart(event);
+				},
+				onDrag: ({ event, pinching, cancel }) => {
+					if (pinching) {
+						cancel();
+						dragEnd();
+					} else if (!(event instanceof KeyboardEvent)) {
+						dragMove(event);
+					}
+				},
+				onDragEnd: dragEnd,
+				onWheel: ({ event, active }) => {
+					// currently onWheelEnd emits one final wheel event which causes 2x scale
+					// updates for the last tick. ensuring that the gesture is active avoids this
+					if (!active) return;
+					handleWheel(event);
+				},
+			},
+			{ target: refSVG, eventOptions: { passive: false }, drag: { filterTaps: true } }
+		);
 
 		return (
-			<div className="border-solid border-2 border-main-200">
-				<svg
-					width={width}
-					height={height}
-					ref={containerRef}
-					className="relative"
-					onWheel={onWheel}
-					onMouseDown={onMouseDown}
-				>
+			<div className="border-solid border-2 border-main-200 overflow-hidden">
+				<svg width={width} height={height} ref={refSVG} className="relative">
 					<defs>
 						<clipPath id="clipPath">
 							<rect x={margin.left} y={margin.top} width={innerWidth} height={innerHeight} />
@@ -290,8 +317,6 @@ const ChartLine = withTooltip(
 							x={(d) => dateScale(getDate(d)) ?? 0}
 							y={(d) => dataValueScale(getStockValue(d)) ?? 0}
 							yScale={dataValueScale}
-							strokeWidth={2}
-							stroke="url(#area-gradient)"
 							fill="url(#area-gradient)"
 							curve={curveMonotoneX}
 							className={animate ? "animation-area" : ""}
@@ -302,10 +327,14 @@ const ChartLine = withTooltip(
 							y={(d: AppleStock) => dataValueScale(getStockValue(d)) ?? 0}
 							strokeWidth={2}
 							stroke="#f6e1b8"
-							style={{
-								strokeDasharray: 4 * pathLength,
-								strokeDashoffset: 4 * pathLength,
-							}}
+							style={
+								!removePath
+									? {
+											strokeDasharray: 4 * pathLength,
+											strokeDashoffset: 4 * pathLength,
+									  }
+									: {}
+							}
 							className={animate ? "animation-line" : ""}
 							curve={curveMonotoneX}
 						/>

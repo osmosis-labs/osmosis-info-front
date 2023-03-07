@@ -38,6 +38,7 @@
     "@visx/responsive": "^2.17.0",
     "d3-array": "^3.2.2",
     "d3-time-format": "^4.1.0",
+    "@use-gesture/react": "^10.2.24",
     "react": "^18.2.0"
   },
   "devDependencies": {
