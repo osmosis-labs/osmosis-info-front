@@ -32,12 +32,22 @@ const ChartLiquidity = ({ data, crossMove, onMouseLeave }) => {
 	const resizeObserver = useRef(null)
 	const matchXS = useMediaQuery((theme) => theme.breakpoints.down("xs"))
 
+	const setPeriode = (data, chartRef) => {
+		if (data.length > 0) {
+			chartRef.current.timeScale().setVisibleRange({
+				from: data[data.length - 290].time,
+				to: data[data.length - 1].time,
+			})
+		}
+	}
+
 	useEffect(() => {
 		resizeObserver.current = new ResizeObserver((entries, b) => {
 			const { width, height } = entries[0].contentRect
 			chartRef.current.applyOptions({ width, height })
 			setTimeout(() => {
-				chartRef.current.timeScale().fitContent()
+				// chartRef.current.timeScale().fitContent()
+				setPeriode(data, chartRef)
 			}, 0)
 		})
 		resizeObserver.current.observe(containerRef.current, {
@@ -47,7 +57,6 @@ const ChartLiquidity = ({ data, crossMove, onMouseLeave }) => {
 			resizeObserver.current.disconnect()
 		}
 	}, [matchXS])
-
 
 	useEffect(() => {
 		// Initialization
@@ -106,7 +115,7 @@ const ChartLiquidity = ({ data, crossMove, onMouseLeave }) => {
 		}
 
 		const hover = (event) => {
-			let item = {time: event.time, value: event.seriesPrices.get(serieRef.current)}
+			let item = { time: event.time, value: event.seriesPrices.get(serieRef.current) }
 			crossMove(item)
 		}
 		chartRef.current.subscribeCrosshairMove(hover)
@@ -118,7 +127,7 @@ const ChartLiquidity = ({ data, crossMove, onMouseLeave }) => {
 	useEffect(() => {
 		// When data is updated
 		serieRef.current.setData(data)
-		chartRef.current.timeScale().fitContent()
+		setPeriode(data, chartRef)
 	}, [data])
 
 	return (
