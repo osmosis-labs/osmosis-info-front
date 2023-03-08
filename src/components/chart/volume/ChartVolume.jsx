@@ -32,12 +32,22 @@ const ChartVolume = ({ data, crossMove, onMouseLeave, onClick, range }) => {
 	const resizeObserver = useRef(null)
 	const matchXS = useMediaQuery((theme) => theme.breakpoints.down("xs"))
 
+	const setPeriode = (data, chartRef) => {
+		if (data.length > 0) {
+			chartRef.current.timeScale().setVisibleRange({
+				from: data[data.length - 290].time,
+				to: data[data.length - 1].time,
+			})
+		}
+	}
+
 	useEffect(() => {
 		resizeObserver.current = new ResizeObserver((entries, b) => {
 			const { width, height } = entries[0].contentRect
 			chartRef.current.applyOptions({ width, height })
 			setTimeout(() => {
-				chartRef.current.timeScale().fitContent()
+				// chartRef.current.timeScale().fitContent()
+				setPeriode(data, chartRef)
 			}, 0)
 		})
 		resizeObserver.current.observe(containerRef.current, {
@@ -118,9 +128,9 @@ const ChartVolume = ({ data, crossMove, onMouseLeave, onClick, range }) => {
 		// When data is updated
 		if (data.length > 0) {
 			let maxLimit = 250_000_000 // range -> d
-			if(range === "w"){
+			if (range === "w") {
 				maxLimit = 1_000_000_000 // range -> w
-			}else if(range === "m"){
+			} else if (range === "m") {
 				maxLimit = 3_500_000_000 // range -> m
 			}
 			let min = data.reduce((pr, cv) => {
@@ -153,7 +163,8 @@ const ChartVolume = ({ data, crossMove, onMouseLeave, onClick, range }) => {
 			})
 
 			serieRef.current.setData(data)
-			chartRef.current.timeScale().fitContent()
+			// chartRef.current.timeScale().fitContent()
+			setPeriode(data, chartRef)
 		}
 	}, [data, range])
 
