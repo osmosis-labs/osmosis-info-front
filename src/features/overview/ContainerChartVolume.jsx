@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { getInclude} from "../../helpers/helpers"
+import { getInclude } from "../../helpers/helpers"
 import ButtonsVolume from "../../components/chart/volume/ButtonsVolume"
 import ChartVolume from "../../components/chart/volume/ChartVolume"
 import InfoVolume from "../../components/chart/volume/InfoVolume"
@@ -66,6 +66,10 @@ const ContainerChartVolume = ({ dataDay, dataWeek, dataMonth, title }) => {
 	const classes = useStyles()
 
 	const [currentData, setCurrantData] = useState([])
+	const [defaultView, setDefaultView] = useState({
+		from: null,
+		to: null,
+	})
 
 	const [currentItem, setCurrentItem] = useState({ price: 0, date: "-" })
 
@@ -74,17 +78,35 @@ const ContainerChartVolume = ({ dataDay, dataWeek, dataMonth, title }) => {
 	const dataClick = useRef({ time: { day: 1, month: 1, year: 1 }, value: 0, clickedTwice: true })
 
 	useEffect(() => {
-		if (dataDay.length > 0) changeRange("d")
+		if (dataDay.length > 0) {
+			changeRange("d")
+			setDefaultView({
+				from: dataDay[dataDay.length - 290].time,
+				to: dataDay[dataDay.length - 1].time,
+			})
+		}
 	}, [dataDay])
 
 	const changeRange = (value) => {
 		let data = []
 		if (value === "d") {
 			data = [...dataDay]
+			setDefaultView({
+				from: data[data.length - 290].time,
+				to: data[data.length - 1].time,
+			})
 		} else if (value === "w") {
 			data = [...dataWeek]
+			setDefaultView({
+				from: data[data.length - 41].time,
+				to: data[data.length - 1].time,
+			})
 		} else if (value === "m") {
 			data = [...dataMonth]
+			setDefaultView({
+				from: data[data.length - 10].time,
+				to: data[data.length - 1].time,
+			})
 		}
 		setCurrantData(data)
 		setCurrentItem({ ...data[data.length - 1] })
@@ -134,7 +156,14 @@ const ContainerChartVolume = ({ dataDay, dataWeek, dataMonth, title }) => {
 					<ButtonsVolume onChangeRange={changeRange} range={range} data={currentData} />
 				</div>
 			</div>
-			<ChartVolume data={currentData} range={range} crossMove={onMove} onMouseLeave={onLeave} onClick={onClick} />
+			<ChartVolume
+				data={currentData}
+				range={range}
+				crossMove={onMove}
+				onMouseLeave={onLeave}
+				onClick={onClick}
+				defaultView={defaultView}
+			/>
 		</div>
 	)
 }

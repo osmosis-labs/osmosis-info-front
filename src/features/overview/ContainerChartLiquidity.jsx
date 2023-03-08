@@ -65,6 +65,11 @@ const useStyles = makeStyles((theme) => {
 const ContainerChartLiquidity = ({ dataDay, dataWeek, dataMonth, title }) => {
 	const classes = useStyles()
 
+	const [defaultView, setDefaultView] = useState({
+		from: null,
+		to: null,
+	})
+
 	const [currentData, setCurrantData] = useState([])
 
 	const [currentItem, setCurrentItem] = useState({ price: 0, date: "-" })
@@ -75,7 +80,13 @@ const ContainerChartLiquidity = ({ dataDay, dataWeek, dataMonth, title }) => {
 	const [currency, setCurrency] = useState({ value: "$", before: true })
 
 	useEffect(() => {
-		if (dataDay.length > 0) changeRange("d")
+		if (dataDay.length > 0) {
+			changeRange("d")
+			setDefaultView({
+				from: dataDay[dataDay.length - 290].time,
+				to: dataDay[dataDay.length - 1].time,
+			})
+		}
 	}, [dataDay])
 
 	const changeRange = (value) => {
@@ -90,10 +101,23 @@ const ContainerChartLiquidity = ({ dataDay, dataWeek, dataMonth, title }) => {
 		}
 		if (value === "d") {
 			data = dataDay.map((item) => ({ time: item.time, value: item[key] }))
+			setDefaultView({
+				from: data[data.length - 290].time,
+				to: data[data.length - 1].time,
+			})
 		} else if (value === "w") {
 			data = dataWeek.map((item) => ({ time: item.time, value: item[key] }))
+
+			setDefaultView({
+				from: data[data.length - 41].time,
+				to: data[data.length - 1].time,
+			})
 		} else if (value === "m") {
 			data = dataMonth.map((item) => ({ time: item.time, value: item[key] }))
+			setDefaultView({
+				from: data[data.length - 10].time,
+				to: data[data.length - 1].time,
+			})
 		}
 		setCurrantData(data)
 		setCurrentItem({ ...data[data.length - 1] })
@@ -147,7 +171,7 @@ const ContainerChartLiquidity = ({ dataDay, dataWeek, dataMonth, title }) => {
 					<ButtonsLiquidity onChangeRange={changeRange} range={range} />
 				</div>
 			</div>
-			<ChartLiquidity data={currentData} crossMove={onMove} onMouseLeave={onLeave} />
+			<ChartLiquidity data={currentData} crossMove={onMove} onMouseLeave={onLeave} defaultView={defaultView} />
 		</div>
 	)
 }

@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => {
 	}
 })
 
-const ChartLiquidity = ({ data, crossMove, onMouseLeave }) => {
+const ChartLiquidity = ({ data, crossMove, onMouseLeave, defaultView }) => {
 	const classes = useStyles()
 	const chartRef = useRef(null)
 	const containerRef = useRef(null)
@@ -34,10 +34,7 @@ const ChartLiquidity = ({ data, crossMove, onMouseLeave }) => {
 
 	const setPeriode = (data, chartRef) => {
 		if (data.length > 0) {
-			chartRef.current.timeScale().setVisibleRange({
-				from: data[data.length - 290].time,
-				to: data[data.length - 1].time,
-			})
+			if (defaultView.from) chartRef.current.timeScale().setVisibleRange(defaultView)
 		}
 	}
 
