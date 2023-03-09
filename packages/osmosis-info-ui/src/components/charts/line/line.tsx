@@ -13,10 +13,7 @@ import { timeFormat } from "d3-time-format";
 import { ParentSize } from "@visx/responsive";
 import { useGesture } from "@use-gesture/react";
 import { Point } from "@visx/zoom/lib/types";
-// TO DO
-// Responsive
-// Animation
-// Refactoring
+
 const data = appleStock.slice(800);
 export const background = "#fff";
 export const background2 = "#ff00ff";
@@ -31,8 +28,6 @@ const tooltipStyles = {
 	boxShadow: "0 0 10px rgba(33,33,33,0.2)",
 	padding: "4px 6px",
 };
-
-console.log("%cline.tsx -> 31 BLUE: tooltipStyles", "background: #2196f3; color:#FFFFFF", tooltipStyles);
 
 // accessors
 const getDate = (d: AppleStock) => new Date(d.date);
@@ -55,48 +50,57 @@ export type LineProps = {
 };
 
 //To do
-// -Set the zoom step according to the remaining elements
-// -Fix stroke of line (when it's zooomed)
 // -Check up on mobile (drag, animation, zoom...)
+// Responsive
+// Animation path line
+// Last tooltip data position
+// Refactoring
 
 const ChartLine = withTooltip(
 	({ width = 800, height = 500, margin = { top: 30, right: 40, bottom: 40, left: 4 } }: LineProps) => {
 		const [limits, setLimits] = useState({ start: 0, end: 0 });
-		const refLineChart = useRef<SVGGElement | null>(null);
-		const [pathLength, setPathLength] = useState(0);
+		const displaySVG = width > 0;
+		const refPathLine = useRef<SVGPathElement | null>(null);
 		const [startPoint, setStartPoint] = useState<Point | undefined>(undefined);
 		const refSVG = useRef<SVGSVGElement | null>(null);
 		const [isDragging, setIsDragging] = useState(false);
-		const [removePath, setRemovePath] = useState(false);
+		const [isLoaded, setIsLoaded] = useState(false);
+
 		useEffect(() => {
 			setLimits({ start: 0, end: data.length });
-			const timer = window.setTimeout(() => {
-				setRemovePath(true);
-			}, 500);
-			return () => {
-				window.clearTimeout(timer);
-			};
 		}, []);
 
-		const updatePathLength = useCallback(() => {
-			if (refLineChart && refLineChart.current) {
-				if (refLineChart.current.children.length > 1) {
-					const pathElement = refLineChart.current.children[1] as SVGPathElement;
-					const pathLength = pathElement.getTotalLength();
-					setPathLength(pathLength);
-				}
+		useEffect(() => {
+			if (width > 0) {
+				setIsLoaded(true);
 			}
-		}, []);
+		}, [width]);
+
+		useEffect(() => {
+			if (isLoaded && refPathLine.current) {
+				const path = refPathLine.current;
+				const pathLength = path.getTotalLength();
+				path.style.strokeDasharray = `${pathLength}`;
+				path.style.strokeDashoffset = `${pathLength} `;
+				path.classList.remove("wait-animation-line");
+				path.classList.add("animation-line");
+				const timer = window.setTimeout(() => {
+					path.style.strokeDasharray = ``;
+					path.style.strokeDashoffset = ` `;
+				}, 1000);
+				return () => {
+					window.clearTimeout(timer);
+				};
+			}
+			return;
+		}, [refPathLine, isLoaded]);
+
 		// const { containerRef } = useTooltipInPortal({
 		// 	// use TooltipWithBounds
 		// 	detectBounds: true,
 		// 	// when tooltip containers are scrolled, this will correctly update the Tooltip position
 		// 	scroll: true,
 		// });
-		useEffect(() => {
-			updatePathLength();
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-		}, [updatePathLength, refLineChart.current]);
 
 		const innerWidth = width - margin.left - margin.right;
 		const innerHeight = height - margin.top - margin.bottom;
@@ -107,49 +111,9 @@ const ChartLine = withTooltip(
 
 		const { tooltipData, tooltipLeft, tooltipTop, showTooltip, hideTooltip } = useTooltip<AppleStock>();
 
-		const setNextLimits = useCallback(
-			(start: number, end: number) => {
-				// Check start and end limits (to don't go out) and set them
-				const newLimit = { start: limits.start, end: limits.end };
-				//check limits
-				if (start < 0) start = 0;
-				if (end > data.length) end = data.length;
-
-				if (start < limits.end) newLimit.start = start;
-				if (end > limits.start) newLimit.end = end;
-
-				setLimits(newLimit);
-				// updatePathLength();
-			},
-			[limits.end, limits.start]
-		);
-
-		const onDrag = useCallback(
-			(dx: number) => {
-				const toRight = dx > 0;
-				let paddingDrag = Math.abs(dx / 3);
-				if (toRight) {
-					if (limits.start > 0) {
-						if (limits.start - paddingDrag < 0) {
-							paddingDrag = paddingDrag - limits.start;
-						}
-						setNextLimits(limits.start - paddingDrag, limits.end - paddingDrag);
-					}
-				} else {
-					if (limits.end <= data.length) {
-						if (limits.end + paddingDrag > data.length) {
-							paddingDrag = data.length - limits.end;
-						}
-						setNextLimits(limits.start + paddingDrag, limits.end + paddingDrag);
-					}
-				}
-			},
-			[limits.end, limits.start, setNextLimits]
-		);
-
 		useEffect(() => {
-			setAnimate(true);
-		}, []);
+			if (displaySVG) setAnimate(true);
+		}, [displaySVG]);
 
 		// scales
 		const dateScale = useMemo(() => {
@@ -174,10 +138,12 @@ const ChartLine = withTooltip(
 
 		useEffect(() => {
 			if (data && data.length > 0) {
-				const last = data[data.length - 1];
-				setDataLast({ x: dateScale(new Date(last.date)), y: dataValueScale(last.close), data: last.close });
+				const last = data[limits.end - 1];
+				if (last) {
+					setDataLast({ x: dateScale(new Date(last.date)), y: dataValueScale(last.close), data: last.close });
+				}
 			}
-		}, [dataValueScale, dateScale]);
+		}, [dataValueScale, dateScale, limits.end]);
 
 		const handleTooltip = useCallback(
 			(event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
@@ -200,7 +166,7 @@ const ChartLine = withTooltip(
 			},
 			[dateScale, innerWidth, showTooltip, dataValueScale]
 		);
-		const onClickSvg = (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
+		const onClickSvg = (event: MouseEvent) => {
 			const { x } = localPoint(event) || { x: 0 };
 			const x0 = dateScale.invert(x);
 			const index = bisectDate(data, x0, 1);
@@ -212,6 +178,46 @@ const ChartLine = withTooltip(
 			}
 			click(d);
 		};
+
+		const setNextLimits = useCallback(
+			(start: number, end: number) => {
+				// Check start and end limits (to don't go out) and set them
+				const newLimit = { start: limits.start, end: limits.end };
+				//check limits
+				if (start < 0) start = 0;
+				if (end > data.length) end = data.length;
+
+				if (start < limits.end) newLimit.start = start;
+				if (end > limits.start) newLimit.end = end;
+
+				setLimits(newLimit);
+				// updatePathLength();
+			},
+			[limits.end, limits.start]
+		);
+
+		const onDrag = useCallback(
+			(dx: number) => {
+				const toRight = dx > 0;
+				let paddingDrag = Math.round(Math.abs(dx / 3));
+				if (toRight) {
+					if (limits.start > 0) {
+						if (limits.start - paddingDrag < 0) {
+							paddingDrag = paddingDrag - limits.start;
+						}
+						setNextLimits(limits.start - paddingDrag, limits.end - paddingDrag);
+					}
+				} else {
+					if (limits.end <= data.length) {
+						if (limits.end + paddingDrag > data.length) {
+							paddingDrag = data.length - limits.end;
+						}
+						setNextLimits(limits.start + paddingDrag, limits.end + paddingDrag);
+					}
+				}
+			},
+			[limits.end, limits.start, setNextLimits]
+		);
 
 		const handleWheel = useCallback(
 			(event: React.WheelEvent | WheelEvent) => {
@@ -270,6 +276,10 @@ const ChartLine = withTooltip(
 			[isDragging, startPoint, onDrag]
 		);
 
+		const doubleClick = () => {
+			setLimits({ start: 0, end: data.length });
+		};
+
 		useGesture(
 			{
 				onDragStart: ({ event }) => {
@@ -285,10 +295,15 @@ const ChartLine = withTooltip(
 				},
 				onDragEnd: dragEnd,
 				onWheel: ({ event, active }) => {
-					// currently onWheelEnd emits one final wheel event which causes 2x scale
-					// updates for the last tick. ensuring that the gesture is active avoids this
 					if (!active) return;
 					handleWheel(event);
+				},
+				onClick: (state) => {
+					if (state.event.detail == 2) {
+						doubleClick();
+					} else {
+						onClickSvg(state.event);
+					}
 				},
 			},
 			{ target: refSVG, eventOptions: { passive: false }, drag: { filterTaps: true } }
@@ -299,7 +314,7 @@ const ChartLine = withTooltip(
 				<svg width={width} height={height} ref={refSVG} className="relative">
 					<defs>
 						<clipPath id="clipPath">
-							<rect x={margin.left} y={margin.top} width={innerWidth} height={innerHeight} />
+							{displaySVG && <rect x={margin.left} y={margin.top} width={innerWidth} height={innerHeight} />}
 						</clipPath>
 					</defs>
 					<g
@@ -308,42 +323,50 @@ const ChartLine = withTooltip(
 						width={innerWidth}
 						height={innerHeight}
 						style={{ clipPath: "url(#clipPath)" }}
-						ref={refLineChart}
 					>
 						<LinearGradient id="area-gradient" from={"#f6e1b8"} to={"#140F34"} toOpacity={0.1} />
 
-						<AreaClosed<AppleStock>
-							data={data}
-							x={(d) => dateScale(getDate(d)) ?? 0}
-							y={(d) => dataValueScale(getStockValue(d)) ?? 0}
-							yScale={dataValueScale}
-							fill="url(#area-gradient)"
-							curve={curveMonotoneX}
-							className={animate ? "animation-area" : ""}
-						/>
-						<LinePath<AppleStock>
-							data={data}
-							x={(d: AppleStock) => dateScale(getDate(d)) ?? 0}
-							y={(d: AppleStock) => dataValueScale(getStockValue(d)) ?? 0}
-							strokeWidth={2}
-							stroke="#f6e1b8"
-							style={
-								!removePath
-									? {
-											strokeDasharray: 4 * pathLength,
-											strokeDashoffset: 4 * pathLength,
-									  }
-									: {}
-							}
-							className={animate ? "animation-line" : ""}
-							curve={curveMonotoneX}
-						/>
+						{isLoaded && (
+							<AreaClosed<AppleStock>
+								data={data}
+								x={(d) => dateScale(getDate(d)) ?? 0}
+								y={(d) => dataValueScale(getStockValue(d)) ?? 0}
+								yScale={dataValueScale}
+								fill="url(#area-gradient)"
+								curve={curveMonotoneX}
+								className={animate ? "animation-area" : ""}
+							/>
+						)}
+
+						{isLoaded && (
+							<LinePath<AppleStock>
+								data={data}
+								x={(d: AppleStock) => dateScale(getDate(d)) ?? 0}
+								y={(d: AppleStock) => dataValueScale(getStockValue(d)) ?? 0}
+							>
+								{({ path }) => {
+									const d = path(data) || "";
+									return (
+										animate && (
+											<path
+												ref={refPathLine}
+												d={d}
+												fill="none"
+												strokeWidth={2}
+												stroke="#f6e1b8"
+												className="wait-animation-line"
+											/>
+										)
+									);
+								}}
+							</LinePath>
+						)}
 					</g>
 
 					<AxisRight
 						scale={dataValueScale}
 						stroke={"#f6e1b8"}
-						left={width - margin.right + 1}
+						left={innerWidth + margin.left}
 						top={-1}
 						tickStroke={"#f6e1b8"}
 						tickLabelProps={() => {
@@ -360,7 +383,7 @@ const ChartLine = withTooltip(
 						scale={dateScale}
 						tickStroke={"#f6e1b8"}
 						stroke={"#f6e1b8"}
-						top={height - margin.bottom}
+						top={height - margin.bottom - 1}
 						tickLabelProps={() => {
 							return {
 								fill: "#f6e1b8",
@@ -369,21 +392,22 @@ const ChartLine = withTooltip(
 							};
 						}}
 					/>
-					<Bar
-						onClick={onClickSvg}
-						x={margin.left}
-						y={margin.top}
-						width={innerWidth}
-						height={innerHeight}
-						fill="transparent"
-						rx={14}
-						onTouchStart={handleTooltip}
-						onTouchMove={handleTooltip}
-						onMouseMove={handleTooltip}
-						onMouseLeave={() => {
-							hideTooltip();
-						}}
-					/>
+					{displaySVG && (
+						<Bar
+							x={margin.left}
+							y={margin.top}
+							width={innerWidth}
+							height={innerHeight}
+							fill="transparent"
+							rx={14}
+							onTouchStart={handleTooltip}
+							onTouchMove={handleTooltip}
+							onMouseMove={handleTooltip}
+							onMouseLeave={() => {
+								hideTooltip();
+							}}
+						/>
+					)}
 					{tooltipData && (
 						<g>
 							<LineVisx
@@ -432,7 +456,7 @@ const ChartLine = withTooltip(
 				{dataLast && (
 					<Tooltip
 						top={dataLast.y}
-						left={innerWidth}
+						left={innerWidth + 1}
 						style={{
 							position: "absolute",
 							textAlign: "center",
@@ -444,7 +468,7 @@ const ChartLine = withTooltip(
 						}}
 					>
 						<div className="relative">
-							<span className="content-[''] block h-[2px] w-[6px] bg-[#f6e1b8] absolute top-[50%] left-[-4px] translate-x-[-100%] translate-y-[-50%]"></span>
+							<span className="content-[''] block h-[2px] w-[6px] bg-[#f6e1b8] absolute top-[50%] left-[-3px] translate-x-[-100%] translate-y-[-50%]"></span>
 							{Math.round(dataLast.data)}
 						</div>
 					</Tooltip>

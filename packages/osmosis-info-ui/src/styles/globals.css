@@ -41,15 +41,17 @@
 .animation-line {
 	animation-name: line;
 	animation-timing-function: linear;
-	animation-duration: 500ms;
+	animation-duration: 1000ms;
 	animation-fill-mode: forwards;
+}
 
+.wait-animation-line {
+	opacity: 0;
 }
 
 @keyframes line {
 	to {
 		stroke-dashoffset: 0;
-
 	}
 }
 
