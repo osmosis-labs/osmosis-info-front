@@ -139,44 +139,44 @@ const ChartVolume = ({ data, crossMove, onMouseLeave, onClick, defaultView, rang
 	useEffect(() => {
 		// When data is updated
 		if (data.length > 0) {
-			let maxLimit = 250_000_000 // range -> d
-			if (range === "w") {
-				maxLimit = 1_000_000_000 // range -> w
-			} else if (range === "m") {
-				maxLimit = 3_500_000_000 // range -> m
-			}
-			let min = data.reduce((pr, cv) => {
-				if (pr < cv.value) {
-					return pr
-				} else {
-					return cv.value
-				}
-			}, data[0].value)
+			// let maxLimit = 250_000_000 // range -> d
+			// if (range === "w") {
+			// 	maxLimit = 1_000_000_000 // range -> w
+			// } else if (range === "m") {
+			// 	maxLimit = 3_500_000_000 // range -> m
+			// }
+			// let min = data.reduce((pr, cv) => {
+			// 	if (pr < cv.value) {
+			// 		return pr
+			// 	} else {
+			// 		return cv.value
+			// 	}
+			// }, data[0].value)
 
-			let max = data.reduce((pr, cv) => {
-				if (pr > cv.value) {
-					return pr
-				} else {
-					if (cv.value > maxLimit) {
-						return maxLimit
-					} else {
-						return cv.value
-					}
-				}
-			}, data[0].value)
+			// let max = data.reduce((pr, cv) => {
+			// 	if (pr > cv.value) {
+			// 		return pr
+			// 	} else {
+			// 		if (cv.value > maxLimit) {
+			// 			return maxLimit
+			// 		} else {
+			// 			return cv.value
+			// 		}
+			// 	}
+			// }, data[0].value)
 
-			if (defaultView.from) {
-				const maxRange = getMaxInRange(defaultView, data)
-				if (maxRange < max) max = maxRange
-			}
-			serieRef.current.applyOptions({
-				autoscaleInfoProvider: () => ({
-					priceRange: {
-						minValue: min,
-						maxValue: max,
-					},
-				}),
-			})
+			// if (defaultView.from) {
+			// 	const maxRange = getMaxInRange(defaultView, data)
+			// 	if (maxRange < max) max = maxRange
+			// }
+			// serieRef.current.applyOptions({
+			// 	autoscaleInfoProvider: () => ({
+			// 		priceRange: {
+			// 			minValue: min,
+			// 			maxValue: max,
+			// 		},
+			// 	}),
+			// })
 
 			serieRef.current.setData(data)
 			// chartRef.current.timeScale().fitContent()
