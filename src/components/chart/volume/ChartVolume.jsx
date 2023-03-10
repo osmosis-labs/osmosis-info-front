@@ -2,7 +2,7 @@ import { makeStyles, useMediaQuery } from "@material-ui/core"
 import { useEffect } from "react"
 import { useRef } from "react"
 import { createChart } from "lightweight-charts"
-import { formaterNumber } from "../../../helpers/helpers"
+import { formaterNumber, timeToDate } from "../../../helpers/helpers"
 import { ResizeObserver } from "resize-observer"
 
 const useStyles = makeStyles((theme) => {
@@ -121,6 +121,21 @@ const ChartVolume = ({ data, crossMove, onMouseLeave, onClick, defaultView, rang
 		}
 	}, [crossMove])
 
+	const getMaxInRange = (rangeView, data) => {
+		// Get data between rangeView
+		const fromDate = timeToDate(rangeView.from)
+		const toDate = timeToDate(rangeView.to)
+		const dataBetween = data.filter((item) => {
+			const currentDate = timeToDate(item.time)
+			return currentDate >= fromDate && currentDate <= toDate
+		})
+
+		return dataBetween.reduce((acc, item) => {
+			if (acc < item.value) return item.value
+			else return acc
+		}, dataBetween[0].value)
+	}
+
 	useEffect(() => {
 		// When data is updated
 		if (data.length > 0) {
@@ -150,6 +165,10 @@ const ChartVolume = ({ data, crossMove, onMouseLeave, onClick, defaultView, rang
 				}
 			}, data[0].value)
 
+			if (defaultView.from) {
+				const maxRange = getMaxInRange(defaultView, data)
+				if (maxRange < max) max = maxRange
+			}
 			serieRef.current.applyOptions({
 				autoscaleInfoProvider: () => ({
 					priceRange: {
