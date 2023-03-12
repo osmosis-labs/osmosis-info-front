@@ -16,13 +16,13 @@ const useStyles = makeStyles((theme) => {
 		errorChart: {
 			margin: "auto",
 		},
-		container:{
+		container: {
 			height: "100%",
 			width: "100%",
 			display: "flex",
 			alignItems: "center",
 			justifyContent: "center",
-		}
+		},
 	}
 })
 
@@ -57,6 +57,7 @@ const Charts = ({
 				onMouseLeave={onMouseLeave}
 				onClick={onClick}
 				key={"ChartVolume" + rangeVolume}
+				defaultView={{ from: dataVolume[0].time, to: dataVolume[dataVolume.length - 1].time }}
 			/>
 		)
 	} else {
@@ -66,12 +67,18 @@ const Charts = ({
 				crossMove={crossMove}
 				onMouseLeave={onMouseLeave}
 				key={"ChartLiquidity" + rangeLiquidity}
+				defaultView={{ from: dataLiquidity[0].time, to: dataLiquidity[dataLiquidity.length - 1].time }}
 			/>
 		)
 	}
 
 	return (
-		<CSSTransitionGroup transitionName="fade" className={classes.container} transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+		<CSSTransitionGroup
+			transitionName="fade"
+			className={classes.container}
+			transitionEnterTimeout={300}
+			transitionLeaveTimeout={300}
+		>
 			{chartRender}
 		</CSSTransitionGroup>
 	)
