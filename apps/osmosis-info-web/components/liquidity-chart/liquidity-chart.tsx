@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { LineTime } from "@latouche/osmosis-info-ui";
 import { appleStock } from "@visx/mock-data/";
 import { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
@@ -12,10 +12,11 @@ export interface DataLiquidity {
 
 const getXAxisData = (d: AppleStock) => new Date(d.date);
 const getYAxisData = (d: AppleStock) => d.close;
+
 const bisectIndexDate = bisector<AppleStock, Date>((d: AppleStock) => new Date(d.date)).left;
 
 export const LiquidityChart = () => {
-	const data = appleStock.slice(800);
+	const data = useMemo(() => appleStock.slice(800), []);
 	const [currentData, setCurrentData] = useState<AppleStock | null>(null);
 
 	const onHover = useCallback((d: AppleStock) => {

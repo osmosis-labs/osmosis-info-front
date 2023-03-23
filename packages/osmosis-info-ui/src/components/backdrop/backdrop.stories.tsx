@@ -3,7 +3,6 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { Backdrop } from "./backdrop";
 import { Paper } from "../paper/paper";
 import { Button } from "../buttons/button/button";
-
 export default {
 	title: "Components/Surfaces/Backdrop",
 	component: Backdrop,

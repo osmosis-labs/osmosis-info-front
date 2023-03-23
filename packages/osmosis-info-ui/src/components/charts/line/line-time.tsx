@@ -13,30 +13,36 @@ import {
 	AnimationOptions,
 	defaulLineTimeBottomAxisOptions,
 	defaulLineTimeRightAxisOptions,
-	defaultClassTooltipFixDash,
 	defaultLineTimeCircleCursorOptions,
 	defaultLineTimeLineCursorOptions,
 	defaultLineTimeMargin,
 	defaultOptionsAnimation,
-	defaultOptionsGradient,
+	defaultLineTimeGradientOptions,
 	defaultOptionsLine,
-	defaultTimeTooltipStyle,
-	defaultTooltipsStyle,
 	getXScale,
 	getYScale,
-	GradientOptions,
-	LineOptions,
+	LineTimeGradientOptions,
 	LineTimeAxisOptions,
 	LineTimeCircleCursorOptions,
 	LineTimeLineCursorOptions,
+	LineTimeOptions,
 	Margin,
+	LineTimeTooltipFixed,
+	LineTimeTooltip,
+	defaultLineTimeTooltipFixed,
+	defaultLineTimeTooltipCursor,
+	defaultLineTimeTooltipBottom,
 } from "./line-time-config";
+import { bisector } from "d3-array";
 
 const format = timeFormat("%b %d");
 
 /*
 TO DO somes tests
 TO DO Check on mobile
+TO DO add personnalization of Formatters
+TO DO add documentation
+TO DO use composition pattern to improve performance (ex for axies)
 */
 export type LineTimeProps<D> = {
 	width?: number;
@@ -49,34 +55,38 @@ export type LineTimeProps<D> = {
 	getXAxisData: (d: D) => Date;
 	getYAxisData: (d: D) => number;
 	bisectDate: (array: ArrayLike<D>, x: Date, lo?: number | undefined, hi?: number | undefined) => number;
-	useGradient?: boolean;
-	gradientOptions?: GradientOptions;
+	lineTimeGradientOptions?: LineTimeGradientOptions;
 	animationOptions?: AnimationOptions;
-	lineOptions?: LineOptions;
+	lineTimeOptions?: LineTimeOptions;
 	lineTimeRightAxisOptions?: LineTimeAxisOptions;
 	lineTimeBottomAxisOptions?: LineTimeAxisOptions;
 	lineTimeLineCursorOptions?: LineTimeLineCursorOptions;
 	lineTimeCircleCursorOptions?: LineTimeCircleCursorOptions;
+	lineTimeTooltipFixed?: LineTimeTooltipFixed;
+	lineTimeTooltipCursor?: LineTimeTooltip;
+	lineTimeTooltipBottom?: LineTimeTooltip;
 };
 
 function ChartLine<D>({
 	width = 800,
 	height = 500,
 	margin = defaultLineTimeMargin,
-	useGradient = true,
 	data,
 	onClick,
 	onHover,
 	getXAxisData,
 	getYAxisData,
-	bisectDate,
-	gradientOptions = defaultOptionsGradient,
+	lineTimeGradientOptions = defaultLineTimeGradientOptions,
 	animationOptions = defaultOptionsAnimation,
-	lineOptions = defaultOptionsLine,
+	lineTimeOptions = defaultOptionsLine,
 	lineTimeRightAxisOptions = defaulLineTimeRightAxisOptions,
 	lineTimeBottomAxisOptions = defaulLineTimeBottomAxisOptions,
 	lineTimeLineCursorOptions = defaultLineTimeLineCursorOptions,
 	lineTimeCircleCursorOptions = defaultLineTimeCircleCursorOptions,
+
+	lineTimeTooltipFixed = defaultLineTimeTooltipFixed,
+	lineTimeTooltipCursor = defaultLineTimeTooltipCursor,
+	lineTimeTooltipBottom = defaultLineTimeTooltipBottom,
 }: LineTimeProps<D>) {
 	const [limits, setLimits] = useState({ start: 0, end: 0 });
 	const displaySVG = width > 0;
@@ -129,6 +139,8 @@ function ChartLine<D>({
 	const [dataLast, setDataLast] = useState<{ x: number; y: number; data: number } | null>(null);
 
 	const { tooltipData, tooltipLeft, tooltipTop, showTooltip, hideTooltip } = useTooltip<D>();
+
+	const bisectDate = useCallback(bisector((d: D) => getXAxisData(d)).left, [getXAxisData]);
 
 	useEffect(() => {
 		if (displaySVG) setAnimate(true);
@@ -341,14 +353,14 @@ function ChartLine<D>({
 					height={innerHeight}
 					style={{ clipPath: "url(#clipPath)" }}
 				>
-					{useGradient ? (
+					{lineTimeGradientOptions.display && (
 						<LinearGradient
 							id="area-gradient"
-							from={gradientOptions.from}
-							to={gradientOptions.to}
-							toOpacity={gradientOptions.opacity}
+							from={lineTimeGradientOptions.from}
+							to={lineTimeGradientOptions.to}
+							toOpacity={lineTimeGradientOptions.opacity}
 						/>
-					) : null}
+					)}
 
 					{isLoaded && (
 						<AreaClosed<D>
@@ -375,9 +387,9 @@ function ChartLine<D>({
 										<path
 											ref={refPathLine}
 											d={d}
-											fill={lineOptions.fill}
-											strokeWidth={lineOptions.strokeWidth}
-											stroke={lineOptions.stroke}
+											fill={lineTimeOptions.fill}
+											strokeWidth={lineTimeOptions.strokeWidth}
+											stroke={lineTimeOptions.stroke}
 											className={animationOptions.waitingLineClass}
 										/>
 									)
@@ -387,23 +399,29 @@ function ChartLine<D>({
 					)}
 				</g>
 
-				<AxisRight
-					scale={yScale}
-					left={innerWidth + margin.left}
-					top={-1}
-					stroke={lineTimeRightAxisOptions.stroke}
-					tickStroke={lineTimeRightAxisOptions.tickStroke}
-					tickLabelProps={lineTimeRightAxisOptions.label}
-					axisClassName={animate ? animationOptions.animationRightAxisClass : ""}
-				/>
-				<AxisBottom
-					scale={xScale}
-					top={height - margin.bottom - 1}
-					stroke={lineTimeBottomAxisOptions.stroke}
-					tickStroke={lineTimeBottomAxisOptions.tickStroke}
-					tickLabelProps={lineTimeBottomAxisOptions.label}
-					axisClassName={animate ? animationOptions.animationBottomAxisClass : ""}
-				/>
+				{lineTimeRightAxisOptions.display && (
+					<AxisRight
+						scale={yScale}
+						left={innerWidth + margin.left}
+						strokeWidth={lineTimeRightAxisOptions.strokeWitdh}
+						top={-1}
+						stroke={lineTimeRightAxisOptions.stroke}
+						tickStroke={lineTimeRightAxisOptions.tickStroke}
+						tickLabelProps={lineTimeRightAxisOptions.label}
+						axisClassName={animate ? animationOptions.animationRightAxisClass : ""}
+					/>
+				)}
+				{lineTimeBottomAxisOptions.display && (
+					<AxisBottom
+						scale={xScale}
+						strokeWidth={lineTimeBottomAxisOptions.strokeWitdh}
+						top={height - margin.bottom - 1}
+						stroke={lineTimeBottomAxisOptions.stroke}
+						tickStroke={lineTimeBottomAxisOptions.tickStroke}
+						tickLabelProps={lineTimeBottomAxisOptions.label}
+						axisClassName={animate ? animationOptions.animationBottomAxisClass : ""}
+					/>
+				)}
 				{displaySVG && (
 					<Bar
 						x={margin.left}
@@ -437,37 +455,36 @@ function ChartLine<D>({
 							r={lineTimeCircleCursorOptions.r}
 							stroke={lineTimeCircleCursorOptions.stroke}
 							strokeWidth={lineTimeCircleCursorOptions.strokeWidth}
+							strokeDasharray={lineTimeCircleCursorOptions.strokeDasharray}
+							fill={lineTimeCircleCursorOptions.fill}
 						/>
 					</g>
 				)}
 			</svg>
-			{tooltipData && (
+			{tooltipData && lineTimeTooltipCursor.display && (
 				<Tooltip
 					top={tooltipTop ? tooltipTop - 12 : 0}
 					left={tooltipLeft ? tooltipLeft + 12 : 0}
-					style={defaultTooltipsStyle}
+					style={lineTimeTooltipCursor.style}
 				>
 					{`$${getYAxisData(tooltipData)}`}
 				</Tooltip>
 			)}
 
-			{tooltipData && (
+			{tooltipData && lineTimeTooltipBottom.display && (
 				<Tooltip
 					top={height - margin.bottom}
 					left={tooltipLeft ? tooltipLeft - 8 : 0}
-					style={{
-						...defaultTooltipsStyle,
-						translate: "-50%",
-					}}
+					style={lineTimeTooltipBottom.style}
 				>
 					{format(new Date(getXAxisData(tooltipData) ?? ""))}
 				</Tooltip>
 			)}
 
-			{dataLast && (
-				<Tooltip top={dataLast.y} left={innerWidth + 1} style={defaultTimeTooltipStyle}>
+			{dataLast && lineTimeTooltipFixed.display && (
+				<Tooltip top={dataLast.y} left={innerWidth + 1} style={lineTimeTooltipFixed.style}>
 					<div className="relative">
-						<span className={defaultClassTooltipFixDash}></span>
+						<span style={lineTimeTooltipFixed.styleDash}></span>
 						{Math.round(dataLast.data)}
 					</div>
 				</Tooltip>
@@ -476,7 +493,7 @@ function ChartLine<D>({
 	);
 }
 
-const LineTimeGeneric = function <T>({ maxHeight = 500, ...rest }: LineTimeProps<T> & { maxHeight?: number }) {
+export const LineTime = function <T>({ maxHeight = 500, ...rest }: LineTimeProps<T> & { maxHeight?: number }) {
 	return (
 		<ParentSize>
 			{(parent) => {
@@ -486,11 +503,3 @@ const LineTimeGeneric = function <T>({ maxHeight = 500, ...rest }: LineTimeProps
 		</ParentSize>
 	);
 };
-
-export const LineTime = React.memo(LineTimeGeneric, <T,>(prevProps: LineTimeProps<T>, nextProps: LineTimeProps<T>) => {
-	const propsToIgnore: (keyof LineTimeProps<T>)[] = ["onClick", "onHover"];
-	const propsToCheck = Object.keys(prevProps).filter(
-		(prop) => !propsToIgnore.includes(prop as keyof LineTimeProps<T>)
-	) as (keyof LineTimeProps<T>)[];
-	return propsToCheck.some((prop) => prevProps[prop] !== nextProps[prop]);
-}) as typeof LineTimeGeneric;

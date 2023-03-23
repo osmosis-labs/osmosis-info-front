@@ -2,7 +2,7 @@ import { AxisScale, TickLabelProps } from "@visx/axis";
 import { ScaleInput, scaleLinear, scaleTime } from "@visx/scale";
 import { max, extent } from "d3-array";
 
-export const defaultTooltipsStyle: React.CSSProperties = {
+export const defaultLineTimeTooltipStyle: React.CSSProperties = {
 	background: "#140F34",
 	border: "1px solid #f6e1b8",
 	color: "#f6e1b8",
@@ -15,7 +15,7 @@ export const defaultTooltipsStyle: React.CSSProperties = {
 	position: "absolute",
 };
 
-export const defaultTimeTooltipStyle: React.CSSProperties = {
+export const defaultLineTimeTooltipFixStyle: React.CSSProperties = {
 	textAlign: "center",
 	fontSize: 12,
 	background: "#f6e1b8",
@@ -25,19 +25,56 @@ export const defaultTimeTooltipStyle: React.CSSProperties = {
 	translate: "0 -100%",
 };
 
-export const defaultClassTooltipFixDash =
-	"content-[''] block h-[2px] w-[6px] bg-[#f6e1b8] absolute top-[50%] left-[-3px] translate-x-[-100%] translate-y-[-50%]";
+export const defaultLineTimeTooltipStyleFixDash: React.CSSProperties = {
+	content: "' '",
+	position: "absolute",
+	display: "block",
+	top: "50%",
+	left: "-3px",
+	background: "#f6e1b8",
+	width: "6px",
+	height: "2px",
+	transform: "translate(-100%, -50%)",
+};
 
-export type GradientOptions = {
+export type LineTimeTooltipFixed = {
+	display: boolean;
+	style: React.CSSProperties;
+	styleDash: React.CSSProperties;
+};
+
+export const defaultLineTimeTooltipFixed: LineTimeTooltipFixed = {
+	display: true,
+	style: defaultLineTimeTooltipFixStyle,
+	styleDash: defaultLineTimeTooltipStyleFixDash,
+};
+
+export type LineTimeTooltip = {
+	display: boolean;
+	style: React.CSSProperties;
+};
+
+export const defaultLineTimeTooltipBottom: LineTimeTooltip = {
+	display: true,
+	style: { ...defaultLineTimeTooltipStyle, translate: "-50%" },
+};
+export const defaultLineTimeTooltipCursor: LineTimeTooltip = {
+	display: true,
+	style: defaultLineTimeTooltipStyle,
+};
+
+export type LineTimeGradientOptions = {
 	from: string;
 	to: string;
 	opacity: number;
+	display: boolean;
 };
 
-export const defaultOptionsGradient: GradientOptions = {
+export const defaultLineTimeGradientOptions: LineTimeGradientOptions = {
 	from: "#f6e1b8",
 	to: "#140F34",
 	opacity: 1,
+	display: true,
 };
 
 export type AnimationOptions = {
@@ -58,13 +95,13 @@ export const defaultOptionsAnimation: AnimationOptions = {
 	animationRightAxisClass: "animation-area",
 };
 
-export type LineOptions = {
+export type LineTimeOptions = {
 	fill: string;
 	stroke: string;
 	strokeWidth: number;
 };
 
-export const defaultOptionsLine: LineOptions = {
+export const defaultOptionsLine: LineTimeOptions = {
 	fill: "none",
 	strokeWidth: 2,
 	stroke: "#f6e1b8",
@@ -106,14 +143,18 @@ export const defaultLineTimeMargin = { top: 30, right: 40, bottom: 40, left: 4 }
 export type LineTimeAxisOptions = {
 	stroke?: string;
 	tickStroke?: string;
+	strokeWitdh?: number;
 	className?: string;
+	display?: boolean;
 	label: TickLabelProps<ScaleInput<AxisScale>>;
 };
 
 export const defaulLineTimeRightAxisOptions: LineTimeAxisOptions = {
 	stroke: "#f6e1b8",
 	tickStroke: "#f6e1b8",
+	strokeWitdh: 1,
 	className: "",
+	display: true,
 	label: () => {
 		return {
 			fill: "#f6e1b8",
@@ -126,7 +167,9 @@ export const defaulLineTimeRightAxisOptions: LineTimeAxisOptions = {
 export const defaulLineTimeBottomAxisOptions: LineTimeAxisOptions = {
 	stroke: "#f6e1b8",
 	tickStroke: "#f6e1b8",
+	strokeWitdh: 1,
 	className: "",
+	display: true,
 	label: () => {
 		return {
 			fill: "#f6e1b8",
@@ -154,10 +197,12 @@ export type LineTimeCircleCursorOptions = {
 	stroke?: string;
 	strokeWidth?: number;
 	strokeDasharray?: string;
+	fill: string;
 	r?: number;
 };
 
 export const defaultLineTimeCircleCursorOptions: LineTimeCircleCursorOptions = {
+	fill: "#f6e1b8",
 	stroke: "#f6e1b8",
 	strokeWidth: 2,
 	strokeDasharray: "5,2",
