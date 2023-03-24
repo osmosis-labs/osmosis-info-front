@@ -2,8 +2,23 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { useWalletManager } from "cosmodal"
 import { useDebug } from "./debug.provider"
 const KeplrContext = createContext()
-const AUTO_CONNECT_WALLET_KEY = "auto_connect_wallet"
 const CHAIN_ID = "osmosis-1"
+const KEY_ADDRESS = "osmosis-info-address"
+const KEY_NAME = "osmosis-info-name"
+
+const saveLogin = (name, address) => {
+	localStorage.setItem(KEY_ADDRESS, address);
+	localStorage.setItem(KEY_NAME, name);
+}
+
+const removeLogin = () => {
+	localStorage.removeItem(KEY_ADDRESS);
+	localStorage.removeItem(KEY_NAME);
+}
+
+const getLogin = () => {
+	return { name: localStorage.getItem(KEY_NAME), address: localStorage.getItem(KEY_ADDRESS) }
+}
 
 export const useKeplr = () => useContext(KeplrContext)
 export const KeplrProvider = ({ children }) => {
@@ -16,6 +31,8 @@ export const KeplrProvider = ({ children }) => {
 	const [address, setAddress] = useState(defaultAddress)
 	const [name, setName] = useState("")
 
+
+
 	useEffect(() => {
 		document.addEventListener("readystatechange", documentStateChange)
 		return () => document.removeEventListener("readystatechange", documentStateChange)
@@ -26,15 +43,19 @@ export const KeplrProvider = ({ children }) => {
 		return () => window.removeEventListener("keplr_keystorechange", keplrChangeKey)
 	}, [])
 
-	useEffect(() => {
-		if (connectionType) {
-			localStorage.setItem(AUTO_CONNECT_WALLET_KEY, connectionType)
-		}
-	}, [connectionType])
 
-	const documentStateChange = (event) => {
+	const documentStateChange = async (event) => {
 		if (event.target && event.target.readyState === "complete") {
-			if (window.keplr) setKeplrStatus("installed")
+			if (window.keplr) {
+				setKeplrStatus("installed")
+				const data = getLogin()
+				if (data.name && data.address) {
+					setAddress(data.address)
+					setName(data.name)
+
+				}
+
+			}
 		}
 	}
 
@@ -52,12 +73,14 @@ export const KeplrProvider = ({ children }) => {
 		const key = await wallet.getKey(CHAIN_ID)
 		setAddress(key.bech32Address)
 		setName(key.name)
+		saveLogin(key.name, key.bech32Address)
 	}
 	const disconnect = () => {
 		setAddress("")
 		setName("")
 		clearLastUsedWallet()
 		setDefaultConnectionType(undefined)
+		removeLogin()
 		localStorage.removeItem("walletconnect")
 	}
 
