@@ -200,54 +200,34 @@ Default.args = {
 Default.argTypes = {
 	//Disable default controle
 	lineTimeBottomAxisOptions: {
-		table: {
-			disable: true,
-		},
+		control: false,
 	},
 	margin: {
-		table: {
-			disable: true,
-		},
+		control: false,
 	},
 	lineTimeGradientOptions: {
-		table: {
-			disable: true,
-		},
+		control: false,
 	},
 	useGradient: {
-		table: {
-			disable: true,
-		},
+		control: false,
 	},
 	lineTimeOptions: {
-		table: {
-			disable: true,
-		},
+		control: false,
 	},
 	lineTimeLineCursorOptions: {
-		table: {
-			disable: true,
-		},
+		control: false,
 	},
 	lineTimeCircleCursorOptions: {
-		table: {
-			disable: true,
-		},
+		control: false,
 	},
 	lineTimeTooltipFixed: {
-		table: {
-			disable: true,
-		},
+		control: false,
 	},
 	lineTimeTooltipCursor: {
-		table: {
-			disable: true,
-		},
+		control: false,
 	},
 	lineTimeTooltipBottom: {
-		table: {
-			disable: true,
-		},
+		control: false,
 	},
 
 	// Create actions
@@ -484,9 +464,7 @@ Default.argTypes = {
 	},
 
 	lineTimeRightAxisOptions: {
-		table: {
-			disable: true,
-		},
+		control: false,
 	},
 
 	lineTimeLineCursorOptionsDisplay: {

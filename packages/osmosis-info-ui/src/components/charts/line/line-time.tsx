@@ -44,26 +44,53 @@ TO DO add personnalization of Formatters
 TO DO add documentation
 TO DO use composition pattern to improve performance (ex for axies)
 */
+
+/**
+ * The LineTime component is a React component that renders a time-based line chart using the ChartLine component.
+ * It is designed to be used with data that has a time-based X-axis and numeric Y-axis.
+ * The component dynamically adjusts its height based on the height of its parent element and a maximum height prop that can be passed in.
+ */
+
 export type LineTimeProps<D> = {
+	/** width: (optional) The width of the chart. Defaults to the width of the parent container. */
 	width?: number;
+	/** height: (optional) The height of the chart. Defaults to the height of the parent container. */
 	height?: number;
+	/** maxHeight: (optional) The maximum height that the chart can be. Defaults to 500 pixels.*/
 	maxHeight?: number;
+	/** margin: (optional) The margins around the chart. Defaults to { top: 20, right: 30, bottom: 30, left: 40 }.*/
 	margin?: Margin;
+	/** data: (required) The array of data objects to be displayed in the chart.*/
 	data: D[];
+	/** onClick: (optional) A callback function that will be called when a data point is clicked. It will be passed the clicked data object as its only argument.*/
 	onClick?: (d: D) => void;
+	/** onHover: (optional) A callback function that will be called when the mouse hovers over a data point. It will be passed the hovered data object as its only argument.*/
 	onHover?: (d: D) => void;
+	/** getXAxisData: (required) A function that takes a data object as its argument and returns the corresponding x-axis value as a Date object.*/
 	getXAxisData: (d: D) => Date;
+	/** getYAxisData: (required) A function that takes a data object as its argument and returns the corresponding y-axis value as a number.*/
 	getYAxisData: (d: D) => number;
+	/** bisectDate: (required) A function that takes an array of data objects and a Date object as its arguments, and returns the index of the data object in the array that is closest to the given Date object. This function is used to determine which data point to display in the chart cursor and tooltip.*/
 	bisectDate: (array: ArrayLike<D>, x: Date, lo?: number | undefined, hi?: number | undefined) => number;
+	/** lineTimeGradientOptions: (optional) An object that specifies the options for the gradient that is used to fill the area under the chart line.*/
 	lineTimeGradientOptions?: LineTimeGradientOptions;
+	/** animationOptions: (optional) An object that specifies the options for the animation that is used to transition the chart between states.*/
 	animationOptions?: AnimationOptions;
+	/** lineTimeOptions: (optional) An object that specifies the options for the chart line.*/
 	lineTimeOptions?: LineTimeOptions;
+	/** lineTimeRightAxisOptions: (optional) An object that specifies the options for the right y-axis of the chart.*/
 	lineTimeRightAxisOptions?: LineTimeAxisOptions;
+	/** lineTimeBottomAxisOptions: (optional) An object that specifies the options for the bottom x-axis of the chart.*/
 	lineTimeBottomAxisOptions?: LineTimeAxisOptions;
+	/** lineTimeLineCursorOptions: (optional) An object that specifies the options for the line cursor that is displayed when the mouse hovers over the chart.*/
 	lineTimeLineCursorOptions?: LineTimeLineCursorOptions;
+	/** lineTimeCircleCursorOptions: (optional) An object that specifies the options for the circle cursor that is displayed when the mouse hovers over the chart.*/
 	lineTimeCircleCursorOptions?: LineTimeCircleCursorOptions;
+	/** lineTimeTooltipFixed: (optional) An object that specifies the fixed content for the tooltip that is displayed when the mouse hovers over the chart.*/
 	lineTimeTooltipFixed?: LineTimeTooltipFixed;
+	/** lineTimeTooltipCursor: (optional) An object that specifies the content for the tooltip that is displayed when the mouse hovers over a data point with the cursor tooltip enabled.*/
 	lineTimeTooltipCursor?: LineTimeTooltip;
+	/** lineTimeTooltipBottom: (optional) An object that specifies the content for the tooltip that is displayed when the mouse hovers over a data point with the bottom tooltip enabled.*/
 	lineTimeTooltipBottom?: LineTimeTooltip;
 };
 
