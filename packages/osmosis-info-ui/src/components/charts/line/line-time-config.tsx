@@ -43,11 +43,11 @@ export const defaultLineTimeTooltipStyleFixDash: React.CSSProperties = {
  */
 export type LineTimeTooltipFixed = {
 	/** display: (required) A boolean value that determines whether the fixed tooltip should be displayed or not. */
-	display: boolean;
+	display?: boolean;
 	/** style: (optional) An object that specifies the CSS styles to be applied to the fixed tooltip. */
-	style: React.CSSProperties;
+	style?: React.CSSProperties;
 	/** styleDash: (optional) An object that specifies the CSS styles to be applied to the dashed line that connects the fixed tooltip to the x-axis of the chart. */
-	styleDash: React.CSSProperties;
+	styleDash?: React.CSSProperties;
 };
 
 export const defaultLineTimeTooltipFixed: LineTimeTooltipFixed = {
@@ -61,9 +61,9 @@ export const defaultLineTimeTooltipFixed: LineTimeTooltipFixed = {
  */
 export type LineTimeTooltip = {
 	/** Whether to display the tooltip. */
-	display: boolean;
+	display?: boolean;
 	/** The style of the tooltip. */
-	style: React.CSSProperties;
+	style?: React.CSSProperties;
 };
 
 export const defaultLineTimeTooltipBottom: LineTimeTooltip = {

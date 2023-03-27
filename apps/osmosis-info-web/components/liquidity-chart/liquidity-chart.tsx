@@ -38,7 +38,7 @@ export const LiquidityChart = () => {
 		<div>
 			<HeaderChart data={currentData} />
 			<p>Date scale </p>
-			<div className="max-h-[500px] max-w-[800px] h-[500px]">
+			<div className="max-h-[500px] max-w-[800px] h-[500px] overflow-x-hidden">
 				<LineTime<AppleStock>
 					maxHeight={500}
 					data={data}

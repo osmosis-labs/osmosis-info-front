@@ -33,6 +33,7 @@ import {
 	defaultLineTimeTooltipBottom,
 } from "./line-time-config";
 import { bisector } from "d3-array";
+import { Vector2 } from "@use-gesture/react/dist/declarations/src";
 
 /*
 TO DO somes tests
@@ -164,6 +165,17 @@ function ChartLine<D>({
 		animationOptions.animationLineClass,
 		animationOptions.timeRemoveDashed,
 	]);
+
+	useEffect(() => {
+		// Because safari doesn't work like other navigator we need to remove some events
+		const prevent = (e: any) => e.preventDefault();
+		document.addEventListener("gesturestart", prevent);
+		document.addEventListener("gesturechange", prevent);
+		return () => {
+			document.removeEventListener("gesturestart", prevent);
+			document.removeEventListener("gesturechange", prevent);
+		};
+	}, []);
 
 	const innerWidth = width - margin.left - margin.right;
 	const innerHeight = height - margin.top - margin.bottom;
@@ -310,6 +322,32 @@ function ChartLine<D>({
 		[bisectDate, data, xScale, limits.end, limits.start, setNextLimits]
 	);
 
+	const handlePinch = useCallback(
+		(event: MouseEvent | TouchEvent | PointerEvent, zoomIn: boolean) => {
+			event.preventDefault();
+
+			const { x } = localPoint(event) || { x: 0 };
+			const x0 = xScale.invert(x);
+			const index = bisectDate(data, x0, 1);
+
+			// get step (10% of rest)
+			const stepPercentage = 10;
+			const stepStart = (index - limits.start) / stepPercentage;
+			const stepEnd = (limits.end - index) / stepPercentage;
+
+			let newStart = Math.round(limits.start + stepStart);
+			let newEnd = Math.round(limits.end - stepEnd);
+			if (!zoomIn) {
+				newStart = Math.round(limits.start - stepStart);
+				newEnd = Math.round(limits.end + stepEnd);
+			}
+
+			// set new limits
+			setNextLimits(newStart, newEnd);
+		},
+		[bisectDate, data, xScale, limits.end, limits.start, setNextLimits]
+	);
+
 	const dragEnd = useCallback(() => {
 		setStartPoint(undefined);
 		setIsDragging(false);
@@ -326,13 +364,11 @@ function ChartLine<D>({
 	const dragMove = useCallback(
 		(event: React.MouseEvent | React.TouchEvent | MouseEvent | TouchEvent | React.PointerEvent) => {
 			if (!isDragging || !startPoint) return;
-
 			const currentPoint = localPoint(event) || undefined;
 			const dx = currentPoint ? -(startPoint.x - currentPoint.x) : -startPoint.x;
 			const dy = currentPoint ? -(startPoint.y - currentPoint.y) : -startPoint.y;
 			onDrag(dx);
 			setStartPoint(currentPoint);
-
 			refDrag.current = { dragging: true, x: dx, y: dy };
 		},
 		[isDragging, startPoint, onDrag]
@@ -350,9 +386,17 @@ function ChartLine<D>({
 			onDrag: ({ event, pinching, cancel }) => {
 				if (pinching) {
 					cancel();
-					dragEnd();
 				} else if (!(event instanceof KeyboardEvent)) {
 					dragMove(event);
+				}
+			},
+			onPinch: ({ event, direction }) => {
+				const [val1, val2] = direction;
+				const absVal1 = Math.abs(val1);
+				const absVal2 = Math.abs(val2);
+				const zoomIn = absVal1 >= absVal2 ? val1 >= 0 : val2 >= 0;
+				if (!(event instanceof KeyboardEvent)) {
+					handlePinch(event, zoomIn);
 				}
 			},
 			onDragEnd: dragEnd,
@@ -370,9 +414,8 @@ function ChartLine<D>({
 		},
 		{ target: refSVG, eventOptions: { passive: false }, drag: { filterTaps: true } }
 	);
-
 	return (
-		<div className="relative">
+		<div className="relative touch-none ">
 			<svg width={width} height={height} ref={refSVG}>
 				<defs>
 					<clipPath id="clipPath">
