@@ -65,6 +65,9 @@ export const KeplrProvider = ({ children }) => {
 		const key = await wallet.getKey(CHAIN_ID)
 		setAddress(key.bech32Address)
 		setName(key.name)
+		saveLogin(key.name, key.bech32Address)
+
+
 	}
 
 	const connect = async () => {
