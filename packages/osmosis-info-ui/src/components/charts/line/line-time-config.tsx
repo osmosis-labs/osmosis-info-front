@@ -1,5 +1,6 @@
 import { AxisScale, TickLabelProps } from "@visx/axis";
 import { ScaleInput, scaleLinear, scaleTime } from "@visx/scale";
+import { timeFormat } from "d3-time-format";
 import { max, extent } from "d3-array";
 
 export const defaultLineTimeTooltipStyle: React.CSSProperties = {

@@ -1,6 +1,7 @@
 import React from "react";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { LineTime } from "./line-time";
+import { timeFormat } from "d3-time-format";
 
 import { appleStock } from "@visx/mock-data/";
 import { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
@@ -14,6 +15,9 @@ export default {
 const getXAxisData = (d: AppleStock) => new Date(d.date);
 const getYAxisData = (d: AppleStock) => d.close;
 const bisectIndexDate = bisector<AppleStock, Date>((d: AppleStock) => new Date(d.date)).left;
+const formatX = (d: AppleStock) => timeFormat("%b %d")(getXAxisData(d));
+
+const formatY = (d: AppleStock) => `$${getYAxisData(d)}`;
 
 const Template: ComponentStory<any> = (args: any) => {
 	const data = appleStock.slice(800);
@@ -94,6 +98,8 @@ const Template: ComponentStory<any> = (args: any) => {
 					opacity: args.lineTimeGradientOptionsOpacity,
 					display: args.lineTimeGradientOptionsDisplay,
 				}}
+				formatX={formatX}
+				formatY={formatY}
 			/>
 		</div>
 	);

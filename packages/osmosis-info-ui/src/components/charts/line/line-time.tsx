@@ -3,9 +3,8 @@ import { AreaClosed, LinePath, Line as LineVisx, Bar } from "@visx/shape";
 import { curveMonotoneX } from "@visx/curve";
 import { localPoint } from "@visx/event";
 import { LinearGradient } from "@visx/gradient";
-import { AxisRight, AxisBottom } from "@visx/axis";
+import { AxisRight, AxisBottom, TickFormatter, AxisLeft, AxisScale, AxisScaleOutput } from "@visx/axis";
 import { Tooltip, useTooltip } from "@visx/tooltip";
-import { timeFormat } from "d3-time-format";
 import { ParentSize } from "@visx/responsive";
 import { useGesture } from "@use-gesture/react";
 import { Point } from "@visx/zoom/lib/types";
@@ -35,13 +34,10 @@ import {
 } from "./line-time-config";
 import { bisector } from "d3-array";
 
-const format = timeFormat("%b %d");
-
 /*
 TO DO somes tests
 TO DO Check on mobile
 TO DO add personnalization of Formatters
-TO DO add documentation
 TO DO use composition pattern to improve performance (ex for axies)
 */
 
@@ -50,7 +46,6 @@ TO DO use composition pattern to improve performance (ex for axies)
  * It is designed to be used with data that has a time-based X-axis and numeric Y-axis.
  * The component dynamically adjusts its height based on the height of its parent element and a maximum height prop that can be passed in.
  */
-
 export type LineTimeProps<D> = {
 	/** width: (optional) The width of the chart. Defaults to the width of the parent container. */
 	width?: number;
@@ -70,6 +65,10 @@ export type LineTimeProps<D> = {
 	getXAxisData: (d: D) => Date;
 	/** getYAxisData: (required) A function that takes a data object as its argument and returns the corresponding y-axis value as a number.*/
 	getYAxisData: (d: D) => number;
+	/** formatX: (required) A function that takes a data object as its argument and returns a formatted string for x axie*/
+	formatX: (d: D) => string;
+	/** formatY: (required) A function that takes a data object as its argument and returns a formatted string for y axie*/
+	formatY: (d: D) => string;
 	/** bisectDate: (required) A function that takes an array of data objects and a Date object as its arguments, and returns the index of the data object in the array that is closest to the given Date object. This function is used to determine which data point to display in the chart cursor and tooltip.*/
 	bisectDate: (array: ArrayLike<D>, x: Date, lo?: number | undefined, hi?: number | undefined) => number;
 	/** lineTimeGradientOptions: (optional) An object that specifies the options for the gradient that is used to fill the area under the chart line.*/
@@ -92,6 +91,10 @@ export type LineTimeProps<D> = {
 	lineTimeTooltipCursor?: LineTimeTooltip;
 	/** lineTimeTooltipBottom: (optional) An object that specifies the content for the tooltip that is displayed when the mouse hovers over a data point with the bottom tooltip enabled.*/
 	lineTimeTooltipBottom?: LineTimeTooltip;
+	/**tickFormatX: (optional) A function that takes an argument of any type and returns a formatted string for the tick labels on the x-axis. This function is used to format the x-axis tick labels.*/
+	tickFormatX?: TickFormatter<any>;
+	/** tickFormatY: (optional) A function that takes an argument of any type and returns a formatted string for the tick labels on the y-axis. This function is used to format the y-axis tick labels. */
+	tickFormatY?: TickFormatter<any>;
 };
 
 function ChartLine<D>({
@@ -103,6 +106,10 @@ function ChartLine<D>({
 	onHover,
 	getXAxisData,
 	getYAxisData,
+	formatX,
+	formatY,
+	tickFormatX,
+	tickFormatY,
 	lineTimeGradientOptions = defaultLineTimeGradientOptions,
 	animationOptions = defaultOptionsAnimation,
 	lineTimeOptions = defaultOptionsLine,
@@ -174,13 +181,12 @@ function ChartLine<D>({
 	}, [displaySVG]);
 
 	// scales
-	const defaultScaleX = useMemo(() => {
+	const xScale = useMemo(() => {
 		let zoomedStock = data;
 		zoomedStock = data.slice(limits.start, limits.end);
 		return getXScale<D>({ innerWidth, margin, data: zoomedStock, getXAxisData });
 	}, [data, limits.start, limits.end, margin, innerWidth, getXAxisData]);
 
-	const xScale = /*scaleX??*/ defaultScaleX;
 	const yScale = useMemo(() => {
 		return getYScale<D>({ innerHeight, margin, data, getYAxisData });
 	}, [innerHeight, margin, data, getYAxisData]);
@@ -436,10 +442,11 @@ function ChartLine<D>({
 						tickStroke={lineTimeRightAxisOptions.tickStroke}
 						tickLabelProps={lineTimeRightAxisOptions.label}
 						axisClassName={animate ? animationOptions.animationRightAxisClass : ""}
+						tickFormat={tickFormatY}
 					/>
 				)}
 				{lineTimeBottomAxisOptions.display && (
-					<AxisBottom
+					<AxisBottom<AxisScale>
 						scale={xScale}
 						strokeWidth={lineTimeBottomAxisOptions.strokeWitdh}
 						top={height - margin.bottom - 1}
@@ -447,6 +454,7 @@ function ChartLine<D>({
 						tickStroke={lineTimeBottomAxisOptions.tickStroke}
 						tickLabelProps={lineTimeBottomAxisOptions.label}
 						axisClassName={animate ? animationOptions.animationBottomAxisClass : ""}
+						tickFormat={tickFormatX}
 					/>
 				)}
 				{displaySVG && (
@@ -494,7 +502,7 @@ function ChartLine<D>({
 					left={tooltipLeft ? tooltipLeft + 12 : 0}
 					style={lineTimeTooltipCursor.style}
 				>
-					{`$${getYAxisData(tooltipData)}`}
+					{formatY(tooltipData)}
 				</Tooltip>
 			)}
 
@@ -504,7 +512,7 @@ function ChartLine<D>({
 					left={tooltipLeft ? tooltipLeft - 8 : 0}
 					style={lineTimeTooltipBottom.style}
 				>
-					{format(new Date(getXAxisData(tooltipData) ?? ""))}
+					{formatX(tooltipData)}
 				</Tooltip>
 			)}
 

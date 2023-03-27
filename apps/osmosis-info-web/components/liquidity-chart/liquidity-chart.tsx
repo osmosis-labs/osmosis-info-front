@@ -4,6 +4,7 @@ import { appleStock } from "@visx/mock-data/";
 import { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
 import { HeaderChart } from "./header-chart";
 import { bisector } from "d3-array";
+import { timeFormat } from "d3-time-format";
 
 export interface DataLiquidity {
 	price: number;
@@ -14,6 +15,10 @@ const getXAxisData = (d: AppleStock) => new Date(d.date);
 const getYAxisData = (d: AppleStock) => d.close;
 
 const bisectIndexDate = bisector<AppleStock, Date>((d: AppleStock) => new Date(d.date)).left;
+
+export const formatX = (d: AppleStock) => timeFormat("%b %d")(getXAxisData(d));
+
+export const formatY = (d: AppleStock) => `$${getYAxisData(d)}`;
 
 export const LiquidityChart = () => {
 	const data = useMemo(() => appleStock.slice(800), []);
@@ -42,6 +47,8 @@ export const LiquidityChart = () => {
 					getXAxisData={getXAxisData}
 					getYAxisData={getYAxisData}
 					bisectDate={bisectIndexDate}
+					formatX={formatX}
+					formatY={formatY}
 				/>
 			</div>
 		</div>
