@@ -28,15 +28,13 @@ const useStyles = makeStyles((theme) => {
 			flexDirection: "row",
 			justifyContent: "space-between",
 			alignItems: "center",
+			flexWrap: "wrap",
 			[theme.breakpoints.down("xs")]: {
 				flexDirection: "column",
 				alignItems: "flex-start",
 			},
 		},
 		headerInfo: {
-			padding: "0 0 0 2px",
-			display: "flex",
-			flexDirection: "column",
 		},
 		currentTitle: {},
 		currentInfo: {
@@ -49,6 +47,7 @@ const useStyles = makeStyles((theme) => {
 			fontSize: "12px",
 		},
 		headerActions: {
+			flex:"1",
 			alignSelf: "flex-end",
 			display: "flex",
 			alignItems: "flex-end",
@@ -165,7 +164,9 @@ const ContainerChartLiquidity = ({ dataDay, dataWeek, dataMonth, title }) => {
 	return (
 		<div className={classes.chartContainer}>
 			<div className={classes.header}>
+				<div className={classes.headerInfo}>
 				<InfoLiquidity title={title} range={range} data={currentItem} currency={currency} />
+				</div>
 				<div className={classes.headerActions}>
 					<ButtonsLiquidityType onChangeRange={changeRangeType} range={rangeType} />
 					<ButtonsLiquidity onChangeRange={changeRange} range={range} />
