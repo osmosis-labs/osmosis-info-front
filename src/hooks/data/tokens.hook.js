@@ -34,9 +34,10 @@ export const useMCapTokens = () => {
 	}
 
 	const { data, isLoading, isFetching } = useQuery(["mcap-tokens", {}], getter, {})
-	const tokens = data ? data : defaultMCap
+	let mcaps = defaultMCap
+	if (data && Array.isArray(data)) mcaps = data
 
-	return { data: tokens, isLoading, isFetching }
+	return { data: mcaps, isLoading, isFetching }
 }
 
 export const useTokens = () => {
