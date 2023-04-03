@@ -3,7 +3,7 @@ import { AreaClosed, LinePath, Line as LineVisx, Bar } from "@visx/shape";
 import { curveMonotoneX } from "@visx/curve";
 import { localPoint } from "@visx/event";
 import { LinearGradient } from "@visx/gradient";
-import { AxisRight, AxisBottom, TickFormatter, AxisLeft, AxisScale, AxisScaleOutput } from "@visx/axis";
+import { AxisRight, AxisBottom, TickFormatter, AxisScale } from "@visx/axis";
 import { Tooltip, useTooltip } from "@visx/tooltip";
 import { ParentSize } from "@visx/responsive";
 import { useGesture } from "@use-gesture/react";
@@ -33,12 +33,8 @@ import {
 	defaultLineTimeTooltipBottom,
 } from "./line-time-config";
 import { bisector } from "d3-array";
-import { Vector2 } from "@use-gesture/react/dist/declarations/src";
 
 /*
-TO DO somes tests
-TO DO Check on mobile
-TO DO add personnalization of Formatters
 TO DO use composition pattern to improve performance (ex for axies)
 */
 
@@ -52,8 +48,6 @@ export type LineTimeProps<D> = {
 	width?: number;
 	/** height: (optional) The height of the chart. Defaults to the height of the parent container. */
 	height?: number;
-	/** maxHeight: (optional) The maximum height that the chart can be. Defaults to 500 pixels.*/
-	maxHeight?: number;
 	/** margin: (optional) The margins around the chart. Defaults to { top: 20, right: 30, bottom: 30, left: 40 }.*/
 	margin?: Margin;
 	/** data: (required) The array of data objects to be displayed in the chart.*/
@@ -415,7 +409,7 @@ function ChartLine<D>({
 		{ target: refSVG, eventOptions: { passive: false }, drag: { filterTaps: true } }
 	);
 	return (
-		<div className="relative touch-none ">
+		<div className="relative touch-none">
 			<svg width={width} height={height} ref={refSVG}>
 				<defs>
 					<clipPath id="clipPath">

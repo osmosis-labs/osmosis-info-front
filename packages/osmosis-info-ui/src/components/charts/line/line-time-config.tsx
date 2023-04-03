@@ -228,7 +228,7 @@ export function getXScale<D>({ innerWidth, margin, data, getXAxisData }: GetXSca
 	});
 }
 
-export const defaultLineTimeMargin = { top: 30, right: 40, bottom: 40, left: 4 };
+export const defaultLineTimeMargin = { top: 30, right: 70, bottom: 60, left: 4 };
 
 /**
  * Specifies the options for the x or y axis of the LineTime chart.

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { LineTime } from "@latouche/osmosis-info-ui";
+import { BarTime, LineTime } from "@latouche/osmosis-info-ui";
 import { appleStock } from "@visx/mock-data/";
 import { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
 import { HeaderChart } from "./header-chart";
@@ -16,9 +16,10 @@ const getYAxisData = (d: AppleStock) => d.close;
 
 const bisectIndexDate = bisector<AppleStock, Date>((d: AppleStock) => new Date(d.date)).left;
 
-export const formatX = (d: AppleStock) => timeFormat("%b %d")(getXAxisData(d));
+const formatX = (d: AppleStock) => timeFormat("%b %d %y")(getXAxisData(d));
 
-export const formatY = (d: AppleStock) => `$${getYAxisData(d)}`;
+const formatY = (d: AppleStock) => `$${Math.round(getYAxisData(d))}`;
+const getXAxisDataBar = (d: AppleStock) => formatX(d);
 
 export const LiquidityChart = () => {
 	const data = useMemo(() => appleStock.slice(800), []);
@@ -38,18 +39,28 @@ export const LiquidityChart = () => {
 		<div>
 			<HeaderChart data={currentData} />
 			<p>Date scale </p>
-			<div className="max-h-[500px] max-w-[800px] h-[500px] overflow-x-hidden">
-				<LineTime<AppleStock>
-					maxHeight={500}
-					data={data}
-					onHover={onHover}
-					onClick={onHover}
-					getXAxisData={getXAxisData}
-					getYAxisData={getYAxisData}
-					bisectDate={bisectIndexDate}
-					formatX={formatX}
-					formatY={formatY}
-				/>
+			<div className="flex w-full">
+				<div className="max-h-[500px] max-w-[100%] w-full h-[500px] overflow-hidden">
+					<LineTime<AppleStock>
+						maxHeight={500}
+						data={data}
+						onHover={onHover}
+						onClick={onHover}
+						getXAxisData={getXAxisData}
+						getYAxisData={getYAxisData}
+						bisectDate={bisectIndexDate}
+						formatX={formatX}
+						formatY={formatY}
+					/>
+				</div>
+				<div className="max-h-[500px] max-w-[100%] w-full h-[500px] overflow-x-hidden">
+					<BarTime<AppleStock>
+						maxHeight={500}
+						data={data.slice(0, 100)}
+						getXAxisData={getXAxisDataBar}
+						getYAxisData={getYAxisData}
+					/>
+				</div>
 			</div>
 		</div>
 	);

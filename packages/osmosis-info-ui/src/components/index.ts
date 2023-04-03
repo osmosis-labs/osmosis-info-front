@@ -10,3 +10,4 @@ export * from "./portal/portal";
 export * from "./dropdown/dropdown";
 export * from "./dropdown/dropdown-item";
 export * from "./charts/line/line-time";
+export * from "./charts/bar/bar-time";
