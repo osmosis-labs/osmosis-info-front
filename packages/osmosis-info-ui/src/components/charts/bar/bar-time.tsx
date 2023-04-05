@@ -9,6 +9,7 @@ import { localPoint } from "@visx/event";
 import { useTooltip } from "@visx/tooltip";
 import { useGesture } from "@use-gesture/react";
 import { bisect } from "d3-array";
+import { zoomInIndex } from "./bar-time-utils";
 
 export type BarTimeProps<D> = {
 	data: Array<D>;
@@ -56,7 +57,7 @@ function BarChart<D>({
 	const innerHeight = height - margin.top - margin.bottom;
 
 	useEffect(() => {
-		setLimits({ start: 0, end: data.length });
+		setLimits({ start: 0, end: data.length - 1 });
 	}, [data]);
 
 	useEffect(() => {
@@ -72,7 +73,7 @@ function BarChart<D>({
 
 	const xScale = useMemo(() => {
 		let zoomedStock = data;
-		zoomedStock = data.slice(limits.start, limits.end);
+		zoomedStock = data.slice(limits.start, limits.end + 1);
 		return getXScale<D>({ innerWidth, margin, data: zoomedStock, getXAxisData });
 	}, [data, limits.start, limits.end, margin, innerWidth, getXAxisData]);
 
@@ -107,19 +108,22 @@ function BarChart<D>({
 				| PointerEvent
 		) => {
 			const { x } = localPoint(event) || { x: 0 };
-			const index = xScale.domain().findIndex((d) => x >= xScale(d)! && x <= xScale(d)! + xScale.bandwidth());
-			if (index < 0 || index >= data.length) {
-				return Math.floor(x / xScale.step());
+			let index = xScale.domain().findIndex((d) => {
+				return x >= xScale(d)! && x <= xScale(d)! + xScale.bandwidth();
+			});
+			if (index < 0 || index > data.length) {
+				index = Math.floor(x / xScale.step());
 			}
-			return index;
+			// need to recalculate with limit to get index of data and not index of data diplayed (ex: if display data between 10 and 20, index 1 => 11 for data)
+			return limits.start + index;
 		},
-		[data.length, xScale]
+		[data.length, limits.start, xScale]
 	);
 
 	const handleTooltip = useCallback(
 		(event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
 			const { x } = localPoint(event) || { x: 0 };
-			const index = Math.floor(x / xScale.step());
+			const index = findIndex(event);
 			const d = data[index];
 
 			if (x < 0 || x > innerWidth) return;
@@ -130,7 +134,7 @@ function BarChart<D>({
 			});
 			// if (onHover && d) onHover(d as D);
 		},
-		[xScale, data, innerWidth, showTooltip, yScale, getYAxisData]
+		[data, innerWidth, showTooltip, yScale, getYAxisData, findIndex]
 	);
 
 	const onClickSvg = (event: MouseEvent) => {
@@ -149,7 +153,7 @@ function BarChart<D>({
 
 			//check limits
 			if (start < 0) start = 0;
-			if (end > data.length) end = data.length;
+			if (end >= data.length) end = data.length - 1;
 
 			if (start < limits.end) newLimit.start = start;
 			if (end > limits.start) newLimit.end = end;
@@ -159,75 +163,15 @@ function BarChart<D>({
 		[data.length, limits.end, limits.start]
 	);
 
-	const calculNextLimits = useCallback(
-		(limits: { start: number; end: number }, data: any[], index: number, zoomIn: boolean) => {
-			console.log(`╔════════════════════════════════════`);
-
-			// Increment the zoom according to the number of elements
-			const items = limits.end - limits.start;
-			const zoomIncrement = Math.max(2, Math.floor(items * 0.1)); // percentage of items to zoom and increment minumum by 2
-			console.log(`╠══> index: ${index}, start: ${limits.start}, end: ${limits.end}, items: ${items} `);
-
-			// Get ratio in function of position of index
-			const ratioLeft = (index - limits.start) / items;
-			const ratioRight = (limits.end - index) / items;
-			console.log(`╠══> ratioLeft: ${ratioLeft}, ratioRight: ${ratioRight}`);
-
-			const stepStart = Math.round(ratioLeft * zoomIncrement);
-			const stepEnd = Math.round(ratioRight * zoomIncrement);
-
-			let newStart = Math.round(limits.start + stepStart);
-			let newEnd = Math.round(limits.end - stepEnd);
-			if (!zoomIn) {
-				newStart = Math.round(limits.start - stepStart);
-				newEnd = Math.round(limits.end + stepEnd);
-			}
-			console.log(`╠══> 1 - stepStart: ${stepStart}, stepEnd: ${stepEnd}`);
-
-			if (newStart < 0) newStart = 0;
-			if (newEnd > data.length) newEnd = data.length;
-			if (newStart > newEnd) newStart = limits.start;
-			if (newEnd < newStart) newEnd = limits.end;
-
-			console.log(`╠══> newStart: ${newStart}, newEnd: ${newEnd}`);
-			console.log(`╚════════════════════════════════════`);
-			return { start: newStart, end: newEnd };
-		},
-		[]
-	);
-
 	const onZoom = useCallback(
 		(event: React.WheelEvent | WheelEvent | MouseEvent | TouchEvent | PointerEvent, zoomIn: boolean) => {
 			event.preventDefault();
 			if (data.length < 2) return;
 			const index = findIndex(event);
-
-			/* 
-			
-			// 
-			*/
-
-			/**
-			 * TO DO:
-			 * - Create a function that zoom or dezoom on the index. This fonction takes limits as object, data as array, index as number and zoomIn as boolean.
-			 * - Increment the zoom according to the number of elements
-			 * - Change direction of zoom:
-			 * 		if zoomIn is true:
-			 * 			zoom in : add to limits.start, reduce limits.end.
-			 * 		else:
-			 * 			zoom out: reduce limits.start, add to limits.end.
-			 * - If a limit approaches its boundary, then put it at its boundary and the rest add it to the other limit
-			 * - Check if the following limits are within the limits:
-			 * 		- start <= 0
-			 * 		- end >= data.length
-			 *  	- start > end
-			 */
-
-			const nextLimits = calculNextLimits(limits, data, index, zoomIn);
-
+			const nextLimits = zoomInIndex({ start: limits.start, end: limits.end }, data, index, zoomIn);
 			setLimits(nextLimits);
 		},
-		[calculNextLimits, data, findIndex, limits]
+		[data, findIndex, limits.start, limits.end]
 	);
 
 	const onDrag = useCallback(
@@ -242,9 +186,9 @@ function BarChart<D>({
 					setNextLimits(limits.start - paddingDrag, limits.end - paddingDrag);
 				}
 			} else {
-				if (limits.end <= data.length) {
-					if (limits.end + paddingDrag > data.length) {
-						paddingDrag = data.length - limits.end;
+				if (limits.end < data.length) {
+					if (limits.end + paddingDrag >= data.length) {
+						paddingDrag = data.length - 1 - limits.end;
 					}
 					setNextLimits(limits.start + paddingDrag, limits.end + paddingDrag);
 				}
@@ -280,7 +224,7 @@ function BarChart<D>({
 	);
 
 	const doubleClick = () => {
-		setLimits({ start: 0, end: data.length });
+		setLimits({ start: 0, end: data.length - 1 });
 	};
 
 	useGesture(

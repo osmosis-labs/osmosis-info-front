@@ -43,7 +43,9 @@
     "cleanDev": "yarn lerna clean -y && yarn install:packages && yarn dev",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test:packages": "yarn lerna run test --scope @latouche/osmosis-info-ui",
+    "test:watch:packages": "yarn lerna run test:watch --scope @latouche/osmosis-info-ui"
   },
   "devDependencies": {
     "@babel/core": "^7.20.5",
