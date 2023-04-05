@@ -1,9 +1,6 @@
-export const zoomInIndex = (
-	limits: { start: number; end: number },
-	data: any[],
-	index: number,
-	zoomIn: boolean
-): { start: number; end: number } => {
+import { Limits } from "./bar-time-config";
+
+export const zoomInIndex = (limits: Limits, data: any[], index: number, zoomIn: boolean): Limits => {
 	const { start, end } = limits;
 	const nbItems = end - start;
 
@@ -68,5 +65,32 @@ export const zoomInIndex = (
 	// check borns
 	if (newStart < 0) newStart = 0;
 	if (newEnd >= data.length) newEnd = data.length - 1;
+	return { start: newStart, end: newEnd };
+};
+
+export const drag = (limits: Limits, data: any[], deltaX: number): Limits => {
+	const { start, end } = limits;
+	const toRight = deltaX > 0;
+	let stepDrag = Math.round(Math.abs(deltaX / 3));
+	let newStart = start,
+		newEnd = end;
+
+	if (toRight) {
+		if (start > 0) {
+			if (start - stepDrag < 0) {
+				stepDrag = start;
+			}
+			newStart = start - stepDrag;
+			newEnd = end - stepDrag;
+		}
+	} else {
+		if (end < data.length) {
+			if (end + stepDrag >= data.length) {
+				stepDrag = data.length - 1 - end;
+			}
+			newStart = start + stepDrag;
+			newEnd = end + stepDrag;
+		}
+	}
 	return { start: newStart, end: newEnd };
 };

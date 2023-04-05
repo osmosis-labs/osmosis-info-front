@@ -9,7 +9,7 @@ import { localPoint } from "@visx/event";
 import { useTooltip } from "@visx/tooltip";
 import { useGesture } from "@use-gesture/react";
 import { bisect } from "d3-array";
-import { zoomInIndex } from "./bar-time-utils";
+import { drag, zoomInIndex } from "./bar-time-utils";
 
 export type BarTimeProps<D> = {
 	data: Array<D>;
@@ -176,25 +176,10 @@ function BarChart<D>({
 
 	const onDrag = useCallback(
 		(dx: number) => {
-			const toRight = dx > 0;
-			let paddingDrag = Math.round(Math.abs(dx / 3));
-			if (toRight) {
-				if (limits.start > 0) {
-					if (limits.start - paddingDrag < 0) {
-						paddingDrag = paddingDrag - limits.start;
-					}
-					setNextLimits(limits.start - paddingDrag, limits.end - paddingDrag);
-				}
-			} else {
-				if (limits.end < data.length) {
-					if (limits.end + paddingDrag >= data.length) {
-						paddingDrag = data.length - 1 - limits.end;
-					}
-					setNextLimits(limits.start + paddingDrag, limits.end + paddingDrag);
-				}
-			}
+			const nextLimits = drag({ start: limits.start, end: limits.end }, data, dx);
+			setLimits(nextLimits);
 		},
-		[data.length, limits.end, limits.start, setNextLimits]
+		[data, limits.start, limits.end]
 	);
 
 	const dragEnd = useCallback(() => {

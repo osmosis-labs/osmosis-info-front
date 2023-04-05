@@ -10,6 +10,11 @@ export const defaultBarTimeMargin = {
 };
 
 /**
+ * type for limits who determine the data to display
+ */
+export type Limits = { start: number; end: number };
+
+/**
  * Interface for arguments to the getYScale function.
  */
 export interface GetYScaleArgs<D> {

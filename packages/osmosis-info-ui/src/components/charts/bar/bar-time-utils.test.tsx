@@ -1,4 +1,4 @@
-import { zoomInIndex } from "./bar-time-utils";
+import { drag, zoomInIndex } from "./bar-time-utils";
 
 describe("zoomInIndex", () => {
 	describe("Check type and props returned", () => {
@@ -174,6 +174,54 @@ describe("zoomInIndex", () => {
 
 			expect(result.start).toEqual(58);
 			expect(result.end).toEqual(60);
+		});
+	});
+});
+
+describe("drag", () => {
+	describe("Check type and props returned", () => {
+		it("should return an object of type limit", () => {
+			const limits = { start: 0, end: 10 };
+			const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+			const deltaX = 1;
+
+			const result = drag(limits, data, deltaX);
+
+			expect(typeof result).toBe("object");
+			expect(result).toHaveProperty("start");
+			expect(result).toHaveProperty("end");
+			expect(typeof result.start).toBe("number");
+			expect(typeof result.end).toBe("number");
+			expect(isNaN(result.start)).toBe(false);
+			expect(isNaN(result.end)).toBe(false);
+		});
+	});
+	describe("Check limit in data borns", () => {
+		const tests = [
+			{ deltaX: 1, limits: { start: 0, end: 100 }, data: new Array(100) },
+			{ deltaX: -1, limits: { start: 0, end: 100 }, data: new Array(100) },
+			{ deltaX: 1, limits: { start: 0, end: 10 }, data: new Array(100) },
+			{ deltaX: -1, limits: { start: 0, end: 10 }, data: new Array(100) },
+			{ deltaX: 1, limits: { start: 90, end: 100 }, data: new Array(100) },
+			{ deltaX: -1, limits: { start: 90, end: 100 }, data: new Array(100) },
+			{ deltaX: 20, limits: { start: 1, end: 13 }, data: new Array(100) },
+			{ deltaX: -20, limits: { start: 87, end: 99 }, data: new Array(100) },
+		];
+
+		tests.forEach(({ deltaX, limits, data }) => {
+			it(`should return limits in dataBorns (deltaX: ${deltaX}, data size: ${data.length}, limits: ${limits.start}, ${limits.end})`, () => {
+				const result = drag(limits, data, deltaX);
+
+				// start > 0
+				expect(result.start).toBeGreaterThanOrEqual(0);
+				// start < data.length
+				expect(result.start).toBeLessThanOrEqual(data.length);
+
+				// end < data.length
+				expect(result.end).toBeLessThanOrEqual(data.length);
+				// end > 0
+				expect(result.end).toBeGreaterThanOrEqual(0);
+			});
 		});
 	});
 });
