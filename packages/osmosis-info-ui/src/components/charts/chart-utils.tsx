@@ -1,4 +1,4 @@
-import { Limits } from "./bar-time-config";
+import { Limits } from "./bar/bar-time-config";
 
 export const zoomInIndex = (limits: Limits, data: any[], index: number, zoomIn: boolean): Limits => {
 	const { start, end } = limits;

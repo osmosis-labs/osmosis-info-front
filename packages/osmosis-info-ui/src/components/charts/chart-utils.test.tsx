@@ -1,4 +1,4 @@
-import { drag, zoomInIndex } from "./bar-time-utils";
+import { drag, zoomInIndex } from "./chart-utils";
 
 describe("zoomInIndex", () => {
 	describe("Check type and props returned", () => {

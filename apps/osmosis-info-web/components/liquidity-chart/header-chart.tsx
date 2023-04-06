@@ -7,14 +7,14 @@ interface HeaderChartProps {
 export const HeaderChart: React.FC<HeaderChartProps> = ({ data }) => {
 	return (
 		<div>
-			{/* {data ? (
+			{data ? (
 				<div>
 					<h2>Apple Stock Price on {data.date}</h2>
 					<p>Close: {data.close}</p>
 				</div>
 			) : (
 				<p>No data to display.</p>
-			)} */}
+			)}
 		</div>
 	);
 };

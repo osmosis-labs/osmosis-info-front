@@ -1,15 +1,32 @@
 import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { ParentSize } from "@visx/responsive";
 import { Margin } from "../line/line-time-config";
-import { defaultBarTimeMargin, getXScale, getYScale } from "./bar-time-config";
-import { Bar } from "@visx/shape";
-import { AxisBottom, AxisRight } from "@visx/axis";
+import {
+	AnimationOptions,
+	BarTimeAxisOptions,
+	BarTimeCircleCursorOptions,
+	BarTimeLineCursorOptions,
+	BarTimeTooltip,
+	BarTimeTooltipFixed,
+	defaulBarTimeBottomAxisOptions,
+	defaulBarTimeRightAxisOptions,
+	defaultBarTimeCircleCursorOptions,
+	defaultBarTimeLineCursorOptions,
+	defaultBarTimeMargin,
+	defaultBarTimeTooltipBottom,
+	defaultBarTimeTooltipCursor,
+	defaultBarTimeTooltipFixed,
+	defaultOptionsAnimation,
+	getXScale,
+	getYScale,
+} from "./bar-time-config";
+import { Bar, Line } from "@visx/shape";
+import { AxisBottom, AxisRight, TickFormatter } from "@visx/axis";
 import { Point } from "@visx/zoom/lib/types";
 import { localPoint } from "@visx/event";
-import { useTooltip } from "@visx/tooltip";
 import { useGesture } from "@use-gesture/react";
-import { bisect } from "d3-array";
-import { drag, zoomInIndex } from "./bar-time-utils";
+import { drag, zoomInIndex } from "../chart-utils";
+import { Tooltip, useTooltip } from "@visx/tooltip";
 
 export type BarTimeProps<D> = {
 	data: Array<D>;
@@ -23,6 +40,42 @@ export type BarTimeProps<D> = {
 	getXAxisData: (d: D) => string;
 	/** getYAxisData: (required) A function that takes a data object as its argument and returns the corresponding y-axis value as a number.*/
 	getYAxisData: (d: D) => number;
+	/** onClick: (optional) A callback function that will be called when a data point is clicked. It will be passed the clicked data object as its only argument.*/
+	onClick?: (d: D) => void;
+	/** onHover: (optional) A callback function that will be called when the mouse hovers over a data point. It will be passed the hovered data object as its only argument.*/
+	onHover?: (d: D) => void;
+	/** formatX: (required) A function that takes a data object as its argument and returns a formatted string for x axie*/
+	formatX: (d: D) => string;
+	/** formatY: (required) A function that takes a data object as its argument and returns a formatted string for y axie*/
+	formatY: (d: D) => string;
+
+	/** animationOptions: (optional) An object that specifies the options for the animation that is used to transition the chart between states.*/
+	animationOptions?: AnimationOptions;
+
+	/** barTimeTooltipFixed: (optional) An object that specifies the fixed content for the tooltip that is displayed when the mouse hovers over the chart.*/
+	barTimeTooltipFixed?: BarTimeTooltipFixed;
+	/** barTimeTooltipCursor: (optional) An object that specifies the content for the tooltip that is displayed when the mouse hovers over a data point with the cursor tooltip enabled.*/
+	barTimeTooltipCursor?: BarTimeTooltip;
+	/** barTimeTooltipBottom: (optional) An object that specifies the content for the tooltip that is displayed when the mouse hovers over a data point with the bottom tooltip enabled.*/
+	barTimeTooltipBottom?: BarTimeTooltip;
+
+	/** barTimeRightAxisOptions: (optional) An object that specifies the options for the right y-axis of the chart.*/
+	barTimeRightAxisOptions?: BarTimeAxisOptions;
+	/** barTimeBottomAxisOptions: (optional) An object that specifies the options for the bottom x-axis of the chart.*/
+	barTimeBottomAxisOptions?: BarTimeAxisOptions;
+
+	/** barTimeLineCursorOptions: (optional) An object that specifies the options for the bar cursor that is displayed when the mouse hovers over the chart.*/
+	barTimeLineCursorOptions?: BarTimeLineCursorOptions;
+	/** barTimeCircleCursorOptions: (optional) An object that specifies the options for the circle cursor that is displayed when the mouse hovers over the chart.*/
+	barTimeCircleCursorOptions?: BarTimeCircleCursorOptions;
+
+	/**tickFormatX: (optional) A function that takes an argument of any type and returns a formatted string for the tick labels on the x-axis. This function is used to format the x-axis tick labels.*/
+	tickFormatX?: TickFormatter<any>;
+	/** tickFormatY: (optional) A function that takes an argument of any type and returns a formatted string for the tick labels on the y-axis. This function is used to format the y-axis tick labels. */
+	tickFormatY?: TickFormatter<any>;
+
+	/** classHoverBar: (optional) class passed to bar when it hover*/
+	classHoverBar?: string;
 };
 
 const getTextWidth = (text: string, font: string): number => {
@@ -43,18 +96,47 @@ function BarChart<D>({
 	width = 800,
 	height = 500,
 	margin = defaultBarTimeMargin,
+
 	getXAxisData,
 	getYAxisData,
+
+	onClick,
+	onHover,
+
+	formatX,
+	formatY,
+
+	tickFormatX,
+	tickFormatY,
+
+	classHoverBar,
+
+	animationOptions = defaultOptionsAnimation,
+
+	barTimeRightAxisOptions = defaulBarTimeRightAxisOptions,
+	barTimeBottomAxisOptions = defaulBarTimeBottomAxisOptions,
+
+	barTimeLineCursorOptions = defaultBarTimeLineCursorOptions,
+	barTimeCircleCursorOptions = defaultBarTimeCircleCursorOptions,
+
+	barTimeTooltipFixed = defaultBarTimeTooltipFixed,
+	barTimeTooltipCursor = defaultBarTimeTooltipCursor,
+	barTimeTooltipBottom = defaultBarTimeTooltipBottom,
 }: BarTimeProps<D>) {
 	const refSVG = useRef<SVGSVGElement | null>(null);
 	const [limits, setLimits] = useState({ start: 0, end: 0 });
 	const [startPoint, setStartPoint] = useState<Point | undefined>(undefined);
 	const [isDragging, setIsDragging] = useState(false);
+	const [dataLast, setDataLast] = useState<{ x: number; y: number; data: number } | null>(null);
+	const [animate, setAnimate] = useState(false);
+	const innerWidth = width - margin.left - margin.right;
+	const innerHeight = height - margin.top - margin.bottom;
 
 	const displaySVG = width > 0;
 
-	const innerWidth = width - margin.left - margin.right;
-	const innerHeight = height - margin.top - margin.bottom;
+	useEffect(() => {
+		if (displaySVG) setAnimate(true);
+	}, [displaySVG]);
 
 	useEffect(() => {
 		setLimits({ start: 0, end: data.length - 1 });
@@ -87,6 +169,19 @@ function BarChart<D>({
 		return Math.floor(innerWidth / width);
 	}, [data, getXAxisData, innerWidth]);
 
+	useEffect(() => {
+		if (data && data.length > 0) {
+			const last = data[limits.end];
+			if (last) {
+				setDataLast({
+					x: xScale(getXAxisData(last)) || 0,
+					y: yScale(getYAxisData(last)),
+					data: getYAxisData(last),
+				});
+			}
+		}
+	}, [data, yScale, xScale, limits.end, getXAxisData, getYAxisData]);
+
 	const { tooltipData, tooltipLeft, tooltipTop, showTooltip, hideTooltip } = useTooltip<D>();
 	const refDrag = useRef<{ dragging: boolean; x: number; y: number }>({ dragging: false, x: 0, y: 0 });
 
@@ -108,14 +203,17 @@ function BarChart<D>({
 				| PointerEvent
 		) => {
 			const { x } = localPoint(event) || { x: 0 };
+
 			let index = xScale.domain().findIndex((d) => {
 				return x >= xScale(d)! && x <= xScale(d)! + xScale.bandwidth();
 			});
-			if (index < 0 || index > data.length) {
-				index = Math.floor(x / xScale.step());
+			if (index < 0 || index >= data.length) {
+				index = Math.floor(x / xScale.step()) - 1;
 			}
 			// need to recalculate with limit to get index of data and not index of data diplayed (ex: if display data between 10 and 20, index 1 => 11 for data)
-			return limits.start + index;
+			const indexLimit = limits.start + index;
+
+			return indexLimit;
 		},
 		[data.length, limits.start, xScale]
 	);
@@ -125,43 +223,30 @@ function BarChart<D>({
 			const { x } = localPoint(event) || { x: 0 };
 			const index = findIndex(event);
 			const d = data[index];
-
-			if (x < 0 || x > innerWidth) return;
+			const barHeight = innerHeight - (yScale(getYAxisData(d)) ?? 0) + margin.top;
+			const barY = innerHeight - barHeight + margin.top;
+			if (x < 0 || x > innerWidth + margin.left) {
+				return;
+			}
 			showTooltip({
 				tooltipData: d,
 				tooltipLeft: x,
-				tooltipTop: yScale(getYAxisData(d)),
+				tooltipTop: barY,
 			});
-			// if (onHover && d) onHover(d as D);
+			if (onHover && d) onHover(d as D);
 		},
-		[data, innerWidth, showTooltip, yScale, getYAxisData, findIndex]
+		[findIndex, data, innerHeight, yScale, getYAxisData, margin.top, margin.left, innerWidth, showTooltip, onHover]
 	);
 
 	const onClickSvg = (event: MouseEvent) => {
-		// if (onClick) {
-		const { x } = localPoint(event) || { x: 0 };
-		const index = Math.round(x / xScale.step());
-		const d = data[index];
-		console.log("bar-time.tsx -> 112: d", d);
-		// onClick(d);
-		// }
+		if (onClick) {
+			const { x } = localPoint(event) || { x: 0 };
+			const index = Math.round(x / xScale.step());
+			const d = data[index];
+			console.log("bar-time.tsx -> 112: d", d);
+			onClick(d);
+		}
 	};
-	const setNextLimits = useCallback(
-		(start: number, end: number) => {
-			// Check start and end limits (to don't go out) and set them
-			const newLimit = { start: limits.start, end: limits.end };
-
-			//check limits
-			if (start < 0) start = 0;
-			if (end >= data.length) end = data.length - 1;
-
-			if (start < limits.end) newLimit.start = start;
-			if (end > limits.start) newLimit.end = end;
-
-			setLimits(newLimit);
-		},
-		[data.length, limits.end, limits.start]
-	);
 
 	const onZoom = useCallback(
 		(event: React.WheelEvent | WheelEvent | MouseEvent | TouchEvent | PointerEvent, zoomIn: boolean) => {
@@ -256,23 +341,24 @@ function BarChart<D>({
 			<svg width={width} height={height} ref={refSVG}>
 				<defs>
 					<clipPath id="clipPathBar">
-						<rect x={margin.left} y={margin.top} width={innerWidth} height={innerHeight} />
+						{displaySVG && <rect x={margin.left} y={margin.top} width={innerWidth} height={innerHeight} />}
 					</clipPath>
 				</defs>
+
 				{displaySVG && (
 					<g
 						x={margin.left}
 						y={margin.top}
 						width={innerWidth}
 						height={innerHeight}
-						// style={{ clipPath: "url(#clipPathBar)" }}
+						style={{ clipPath: "url(#clipPathBar)" }}
 					>
-						{data.map((d) => {
+						{data.map((d, index) => {
 							const x = getXAxisData(d);
 							const y = getYAxisData(d);
 
 							const barWidth = xScale.bandwidth();
-							const barHeight = innerHeight - (yScale(y) ?? 0);
+							const barHeight = innerHeight - (yScale(y) ?? 0) + margin.top;
 							const barX = xScale(x);
 							const barY = innerHeight - barHeight + margin.top;
 							if (!barX) return;
@@ -285,51 +371,112 @@ function BarChart<D>({
 									width={barWidth}
 									height={barHeight}
 									fill={"#aaFaFa"}
+									className={
+										animate
+											? `${classHoverBar} ${animationOptions.animationBarClass}`
+											: `${classHoverBar} ${animationOptions.waitingBarClass}`
+									}
+									style={{ animationDelay: `${index * animationOptions.delayBarTimeTick}ms` }}
+									onTouchStart={handleTooltip}
+									onTouchMove={handleTooltip}
+									onMouseMove={handleTooltip}
+									onMouseLeave={() => {
+										hideTooltip();
+									}}
 								/>
 							);
 						})}
 					</g>
 				)}
-				<Bar
-					x={margin.left}
-					y={margin.top}
-					width={innerWidth}
-					height={innerHeight}
-					fill="transparent"
-					onTouchStart={handleTooltip}
-					onTouchMove={handleTooltip}
-					onMouseMove={handleTooltip}
-					onMouseLeave={() => {
-						hideTooltip();
-					}}
-				/>
-				<AxisRight
-					scale={yScale}
-					left={innerWidth + margin.left}
-					strokeWidth={1}
-					top={-1}
-					tickStroke="#ffffff"
-					stroke="#ffffff"
-					tickLabelProps={() => ({
-						fill: "#ffffff",
-						fontSize: 12,
-						verticalAnchor: "middle",
-					})}
-				/>
-				<AxisBottom
-					numTicks={nbTicksX}
-					top={height - margin.bottom}
-					scale={xScale}
-					tickStroke="#ffffff"
-					stroke="#ffffff"
-					tickLabelProps={() => ({
-						fill: "#ffffff",
-						fontSize: 11,
-						verticalAnchor: "middle",
-						textAnchor: "middle",
-					})}
-				/>
+
+				{displaySVG && (
+					<Bar
+						x={margin.left}
+						y={margin.top}
+						width={innerWidth}
+						height={innerHeight}
+						fill="transparent"
+						style={{ pointerEvents: "none" }}
+					/>
+				)}
+				{barTimeRightAxisOptions.display && (
+					<AxisRight
+						scale={yScale}
+						left={innerWidth + margin.left}
+						strokeWidth={barTimeRightAxisOptions.strokeWitdh}
+						top={-1}
+						stroke={barTimeRightAxisOptions.stroke}
+						tickStroke={barTimeRightAxisOptions.tickStroke}
+						tickLabelProps={barTimeRightAxisOptions.label}
+						tickFormat={tickFormatY}
+						axisClassName={animate ? animationOptions.animationRightAxisClass : ""}
+					/>
+				)}
+				{barTimeBottomAxisOptions.display && (
+					<AxisBottom
+						numTicks={nbTicksX}
+						top={height - margin.bottom}
+						scale={xScale}
+						strokeWidth={barTimeBottomAxisOptions.strokeWitdh}
+						stroke={barTimeBottomAxisOptions.stroke}
+						tickStroke={barTimeBottomAxisOptions.tickStroke}
+						tickLabelProps={barTimeBottomAxisOptions.label}
+						axisClassName={animate ? animationOptions.animationBottomAxisClass : ""}
+						tickFormat={tickFormatX}
+					/>
+				)}
+				{tooltipData && barTimeLineCursorOptions.display && (
+					<g>
+						<Line
+							from={{ x: tooltipLeft, y: margin.top }}
+							to={{ x: tooltipLeft, y: innerHeight + margin.top }}
+							pointerEvents="none"
+							stroke={barTimeLineCursorOptions.stroke}
+							strokeWidth={barTimeLineCursorOptions.strokeWidth}
+							strokeDasharray={barTimeLineCursorOptions.strokeDasharray}
+						/>
+
+						<circle
+							cx={tooltipLeft}
+							cy={tooltipTop ? tooltipTop + 1 : 0}
+							pointerEvents="none"
+							r={barTimeCircleCursorOptions.r}
+							stroke={barTimeCircleCursorOptions.stroke}
+							strokeWidth={barTimeCircleCursorOptions.strokeWidth}
+							strokeDasharray={barTimeCircleCursorOptions.strokeDasharray}
+							fill={barTimeCircleCursorOptions.fill}
+						/>
+					</g>
+				)}
 			</svg>
+			{tooltipData && barTimeTooltipCursor.display && (
+				<Tooltip
+					top={tooltipTop ? tooltipTop : 0}
+					left={tooltipLeft ? tooltipLeft : 0}
+					style={barTimeTooltipCursor.style}
+				>
+					{formatY(tooltipData)}
+				</Tooltip>
+			)}
+
+			{tooltipData && barTimeTooltipBottom.display && (
+				<Tooltip
+					top={height - margin.bottom}
+					left={tooltipLeft ? tooltipLeft - 8 : 0}
+					style={barTimeTooltipBottom.style}
+				>
+					{formatX(tooltipData)}
+				</Tooltip>
+			)}
+
+			{dataLast && barTimeTooltipFixed.display && (
+				<Tooltip top={dataLast.y} left={innerWidth + margin.left} style={barTimeTooltipFixed.style}>
+					<div className="relative">
+						<span style={barTimeTooltipFixed.styleDash}></span>
+						{Math.round(dataLast.data)}
+					</div>
+				</Tooltip>
+			)}
 		</div>
 	);
 }

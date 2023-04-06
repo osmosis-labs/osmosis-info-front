@@ -62,7 +62,6 @@
 	animation-delay: 200ms;
 	animation-fill-mode: forwards;
 	opacity: 0%;
-
 }
 
 @keyframes area {
@@ -72,5 +71,38 @@
 
 	100% {
 		opacity: 100%;
+	}
+}
+
+
+.wait-animation-bar {
+	opacity: 0;
+	transform: scaleY(0);
+}
+
+.animation-bar {
+	transform-origin: bottom;
+	transform: scaleY(0);
+	opacity: 0%;
+
+	animation-name: bar;
+	animation-timing-function: linear;
+	animation-duration: 500ms;
+	animation-delay: 200ms;
+	animation-fill-mode: forwards;
+}
+
+@keyframes bar {
+	0% {
+		opacity: 0%;
+		fill: #72657a;
+		transform: scaleY(0);
+	}
+
+	100% {
+		transform: scaleY(1);
+		opacity: 100%;
+		fill: #28f6af;
+
 	}
 }

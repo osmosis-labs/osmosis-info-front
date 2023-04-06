@@ -15,15 +15,19 @@
 .Toastify__toast-container {
 	z-index: 99999 !important;
 }
+
 .Toastify__toast-theme--colored.Toastify__toast--info {
 	background: linear-gradient(96.42deg, #462adf -0.59%, #8a86ff 100%) !important;
 }
+
 .Toastify__toast-theme--colored.Toastify__toast--success {
 	background: linear-gradient(96.28deg, #899eff 0%, #28f6af 99.28%) !important;
 }
+
 .Toastify__toast-theme--colored.Toastify__toast--warning {
 	background: linear-gradient(96.42deg, #b03a20 -0.59%, #fa825d 100%) !important;
 }
+
 .Toastify__toast-theme--colored.Toastify__toast--error {
 	background: linear-gradient(96.42deg, #b03a20 -0.59%, #fa825d 100%) !important;
 }

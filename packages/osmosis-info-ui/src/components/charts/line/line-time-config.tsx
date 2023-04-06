@@ -1,6 +1,5 @@
 import { AxisScale, TickLabelProps } from "@visx/axis";
 import { ScaleInput, scaleLinear, scaleTime } from "@visx/scale";
-import { timeFormat } from "d3-time-format";
 import { max, extent } from "d3-array";
 
 export const defaultLineTimeTooltipStyle: React.CSSProperties = {
@@ -23,7 +22,7 @@ export const defaultLineTimeTooltipFixStyle: React.CSSProperties = {
 	padding: "2px 4px 0px 4px",
 	color: "#140F34",
 	position: "absolute",
-	translate: "0 -100%",
+	translate: "-5px -100%",
 };
 
 export const defaultLineTimeTooltipStyleFixDash: React.CSSProperties = {

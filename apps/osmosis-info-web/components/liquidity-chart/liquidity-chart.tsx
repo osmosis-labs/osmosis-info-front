@@ -23,6 +23,7 @@ const getXAxisDataBar = (d: AppleStock) => formatX(d);
 
 export const LiquidityChart = () => {
 	const data = useMemo(() => appleStock.slice(800), []);
+	const dataBar = useMemo(() => appleStock.slice(0, 20), []);
 	const [currentData, setCurrentData] = useState<AppleStock | null>(null);
 
 	const onHover = useCallback((d: AppleStock) => {
@@ -56,9 +57,17 @@ export const LiquidityChart = () => {
 				<div className="max-h-[500px] max-w-[100%] w-full h-[500px] overflow-x-hidden">
 					<BarTime<AppleStock>
 						maxHeight={500}
-						data={data.slice(0, 100)}
+						data={dataBar}
 						getXAxisData={getXAxisDataBar}
 						getYAxisData={getYAxisData}
+						onHover={onHover}
+						onClick={onHover}
+						formatX={formatX}
+						formatY={formatY}
+						// barTimeTooltipFixed={{ display: false }}
+						// barTimeTooltipCursor={{ display: false }}
+						// barTimeTooltipBottom={{ display: false }}
+						// barTimeLineCursorOptions={{ display: false }}
 					/>
 				</div>
 			</div>

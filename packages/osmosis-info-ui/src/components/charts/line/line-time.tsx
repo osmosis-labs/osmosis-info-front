@@ -33,6 +33,7 @@ import {
 	defaultLineTimeTooltipBottom,
 } from "./line-time-config";
 import { bisector } from "d3-array";
+import { drag } from "../chart-utils";
 
 /*
 TO DO use composition pattern to improve performance (ex for axies)
@@ -105,11 +106,16 @@ function ChartLine<D>({
 	formatY,
 	tickFormatX,
 	tickFormatY,
+
 	lineTimeGradientOptions = defaultLineTimeGradientOptions,
+
 	animationOptions = defaultOptionsAnimation,
+
 	lineTimeOptions = defaultOptionsLine,
+
 	lineTimeRightAxisOptions = defaulLineTimeRightAxisOptions,
 	lineTimeBottomAxisOptions = defaulLineTimeBottomAxisOptions,
+
 	lineTimeLineCursorOptions = defaultLineTimeLineCursorOptions,
 	lineTimeCircleCursorOptions = defaultLineTimeCircleCursorOptions,
 
@@ -266,25 +272,10 @@ function ChartLine<D>({
 
 	const onDrag = useCallback(
 		(dx: number) => {
-			const toRight = dx > 0;
-			let paddingDrag = Math.round(Math.abs(dx / 3));
-			if (toRight) {
-				if (limits.start > 0) {
-					if (limits.start - paddingDrag < 0) {
-						paddingDrag = paddingDrag - limits.start;
-					}
-					setNextLimits(limits.start - paddingDrag, limits.end - paddingDrag);
-				}
-			} else {
-				if (limits.end <= data.length) {
-					if (limits.end + paddingDrag > data.length) {
-						paddingDrag = data.length - limits.end;
-					}
-					setNextLimits(limits.start + paddingDrag, limits.end + paddingDrag);
-				}
-			}
+			const nextLimits = drag({ start: limits.start, end: limits.end }, data, dx);
+			setLimits(nextLimits);
 		},
-		[data.length, limits.end, limits.start, setNextLimits]
+		[data, limits.end, limits.start]
 	);
 
 	const handleWheel = useCallback(
@@ -485,8 +476,8 @@ function ChartLine<D>({
 				{lineTimeBottomAxisOptions.display && (
 					<AxisBottom<AxisScale>
 						scale={xScale}
-						strokeWidth={lineTimeBottomAxisOptions.strokeWitdh}
 						top={height - margin.bottom - 1}
+						strokeWidth={lineTimeBottomAxisOptions.strokeWitdh}
 						stroke={lineTimeBottomAxisOptions.stroke}
 						tickStroke={lineTimeBottomAxisOptions.tickStroke}
 						tickLabelProps={lineTimeBottomAxisOptions.label}
