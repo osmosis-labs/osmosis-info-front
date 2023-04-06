@@ -15,6 +15,7 @@ export default {
 const getXAxisData = (d: AppleStock) => new Date(d.date);
 const getYAxisData = (d: AppleStock) => d.close;
 const bisectIndexDate = bisector<AppleStock, Date>((d: AppleStock) => new Date(d.date)).left;
+
 const formatX = (d: AppleStock) => timeFormat("%b %d")(getXAxisData(d));
 
 const formatY = (d: AppleStock) => `$${getYAxisData(d)}`;
