@@ -64,16 +64,22 @@ export const usePoolApr = () => {
 
 	const getter = async ({ queryKey }) => {
 		const [_, { }] = queryKey
-		const response = await request({
-			url: `${API_URL}/apr/v2/all`,
-			method: "GET",
-		})
-		return aprError ? { "message": "An error occured" } : response.data
+		try {
+
+			const response = await request({
+				url: `${API_URL}/apr/v2/aldl`,
+				method: "GET",
+			})
+			return aprError ? { "message": "An error occured" } : response.data
+		} catch (e) {
+			console.log("%cpools.hook.js -> 75 ERROR: e", 'background: #FF0000; color:#FFFFFF', e)
+			return { "message": "An error occured" }
+		}
 	}
 
 	const { data, isLoading, isFetching } = useQuery(["poolApr", aprError, {}], getter, {})
-
-	const apr = data ? data : []
+	let apr = []
+	if (data && Array.isArray(data)) apr = data
 
 	return { data: apr, isLoading, isFetching }
 }
@@ -96,8 +102,8 @@ export const usePools = ({ lowLiquidity = false }) => {
 		return formatPools(response.data, poolApr, allTokens, assets)
 	}
 
-	const { data, isLoading, isFetching } = useQuery(["pool", { lowLiquidity }], getter, {
-		enabled: poolApr.length > 0 && allTokens.length > 0 && !!assets["OSMO"],
+	const { data, isLoading, isFetching } = useQuery(["pool", { lowLiquidity }, poolApr,], getter, {
+		enabled: allTokens.length > 0 && !!assets["OSMO"],
 	})
 	if (data) {
 		if (settings.type === "app") {
