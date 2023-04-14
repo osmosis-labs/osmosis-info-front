@@ -18,6 +18,7 @@ import {
 import useRequest from "../request.hook"
 import { useAssets } from "./assets.hook"
 import { useTokens } from "./tokens.hook"
+import { useDebug } from "../../contexts/debug.provider"
 
 const API_URL = process.env.REACT_APP_API_URL
 const CHAIN_API_URL = process.env.REACT_APP_CHAIN_API_URL
@@ -57,16 +58,20 @@ export const usePool = ({ poolId }) => {
 export const usePoolApr = () => {
 	const request = useRequest()
 
+	const {
+		aprError
+	} = useDebug()
+
 	const getter = async ({ queryKey }) => {
 		const [_, { }] = queryKey
 		const response = await request({
 			url: `${API_URL}/apr/v2/all`,
 			method: "GET",
 		})
-		return response.data
+		return aprError ? { "message": "An error occured" } : response.data
 	}
 
-	const { data, isLoading, isFetching } = useQuery(["poolApr", {}], getter, {})
+	const { data, isLoading, isFetching } = useQuery(["poolApr", aprError, {}], getter, {})
 
 	const apr = data ? data : []
 

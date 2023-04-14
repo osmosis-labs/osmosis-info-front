@@ -9,6 +9,8 @@ export const DebugProvider = ({ children, MODE }) => {
 	const [isAccumulated, setIsAccumulated] = useState(true)
 	const [isStakingAccumulated, setIsStakingAccumulated] = useState(true)
 	const [isLoadingDebug, setLoadingDebug] = useState(false)
+	const [aprError, setAprError] = useState(false)
+	const [mcapError, setMcapError] = useState(false)
 
 	const value = {
 		open,
@@ -21,6 +23,10 @@ export const DebugProvider = ({ children, MODE }) => {
 		setIsStakingAccumulated,
 		isLoadingDebug,
 		setLoadingDebug,
+		aprError,
+		setAprError,
+		mcapError,
+		setMcapError,
 	}
 
 	return <DebugContext.Provider value={value}>{children}</DebugContext.Provider>

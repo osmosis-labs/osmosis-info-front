@@ -9,6 +9,7 @@ import { Button, MenuItem, Select } from "@mui/material"
 import { isOsmoAddress } from "../../helpers/helpers"
 import { useEffect, useState } from "react"
 import Switch from "@mui/material/Switch"
+import { useQueryClient } from "react-query"
 const useStyles = makeStyles((theme) => {
 	return {
 		debugDialog: {
@@ -92,14 +93,19 @@ const DebugModal = ({}) => {
 		setIsStakingAccumulated,
 		isLoadingDebug,
 		setLoadingDebug,
+		aprError,
+		setAprError,
+		mcapError,
+		setMcapError,
 	} = useDebug()
 	const { address, setAddress } = useKeplr()
 	const [addressInput, setAddressInput] = useState(address)
-	
-	useEffect(()=>{
-		//set defaultAdress for debug osmo1f49xq0rmah39sk58aaxq6gnqcvupee7jkk4y6a 
+	const queryClient = useQueryClient()
+
+	useEffect(() => {
+		//set defaultAdress for debug osmo1f49xq0rmah39sk58aaxq6gnqcvupee7jkk4y6a
 		setAddress("osmo1f49xq0rmah39sk58aaxq6gnqcvupee7jkk4y6a")
-	},[])
+	}, [])
 
 	const onChangeAddress = (e) => {
 		setAddressInput(e.target.value)
@@ -177,6 +183,33 @@ const DebugModal = ({}) => {
 							checked={isLoadingDebug}
 							onChange={(e) => {
 								setLoadingDebug((l) => e.target.checked)
+							}}
+						/>
+					</div>
+				</div>
+				<div className={classes.row}>
+					<div>
+						<span>Force error APR</span>
+						<Switch
+							label={"Force error APR"}
+							checked={aprError}
+							onChange={(e) => {
+								setAprError((l) => e.target.checked)
+								console.log("debug_modal.jsx (l:198): name:", e.target.checked)
+								queryClient.invalidateQueries()
+							}}
+						/>
+					</div>
+				</div>
+				<div className={classes.row}>
+					<div>
+						<span>Force error Mcap</span>
+						<Switch
+							label={"Force error Mcap"}
+							checked={mcapError}
+							onChange={(e) => {
+								setMcapError((l) => e.target.checked)
+								queryClient.invalidateQueries()
 							}}
 						/>
 					</div>
