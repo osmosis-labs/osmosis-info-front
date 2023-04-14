@@ -67,7 +67,7 @@ export const usePoolApr = () => {
 		try {
 
 			const response = await request({
-				url: `${API_URL}/apr/v2/aldl`,
+				url: `${API_URL}/apr/v2/all`,
 				method: "GET",
 			})
 			return aprError ? { "message": "An error occured" } : response.data
