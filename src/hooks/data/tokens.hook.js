@@ -17,23 +17,26 @@ import {
 } from "../../formaters/tokens.formatter"
 import useRequest from "../request.hook"
 import { useAssets } from "./assets.hook"
+import { useDebug } from "../../contexts/debug.provider"
 
 const API_URL = process.env.REACT_APP_API_URL
 const CHAIN_API_URL = process.env.REACT_APP_CHAIN_API_URL
 
 export const useMCapTokens = () => {
 	const request = useRequest()
-
+	const {
+		mcapError,
+	} = useDebug()
 	const getter = async ({ queryKey }) => {
 		const [_, { }] = queryKey
 		const response = await request({
 			url: `${API_URL}/tokens/v2/mcap`,
 			method: "GET",
 		})
-		return response.data
+		return mcapError ? { "message": "An error occured" } : response.data
 	}
 
-	const { data, isLoading, isFetching } = useQuery(["mcap-tokens", {}], getter, {})
+	const { data, isLoading, isFetching } = useQuery(["mcap-tokens", mcapError, {}], getter, {})
 	let mcaps = defaultMCap
 	if (data && Array.isArray(data)) mcaps = data
 
