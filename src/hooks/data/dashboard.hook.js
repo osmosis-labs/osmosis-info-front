@@ -5,6 +5,7 @@ import {
 	defaultExposure,
 	defaultLiquidity,
 	defaultLiquidityToken,
+	defaultRewardsEstimations,
 	defaultTrades,
 	defaultTrx,
 	defaultTrxs,
@@ -14,6 +15,7 @@ import {
 	formatExposure,
 	formatLiqudity,
 	formatLiqudityToken,
+	formatRewardsEstimations,
 	formatTrades,
 	formatTrx,
 	formatTrxs,
@@ -62,6 +64,28 @@ export const useExposure = ({ address }) => {
 	const exposure = data ? data : defaultExposure
 	return { data: exposure, isLoading, isFetching }
 }
+
+export const useEstimatedReward = ({ address }) => {
+	const request = useRequest()
+
+	const getter = async ({ queryKey }) => {
+		const [_, { address }] = queryKey
+		const response = await request({
+			url: `${CHAIN_API_URL}/lp/v1/rewards/estimation/${address}`,
+			method: "GET",
+		})
+		return formatRewardsEstimations(response.data)
+	}
+
+	const { data, isLoading, isFetching } = useQuery(["rewardsEstimations", { address }], getter, {
+		enabled: !!address,
+	})
+	const rewards = data ? data : defaultRewardsEstimations
+
+	return { data: rewards, isLoading, isFetching }
+}
+
+
 
 export const useChartStaking = ({ address, isAccumulated }) => {
 	const request = useRequest()

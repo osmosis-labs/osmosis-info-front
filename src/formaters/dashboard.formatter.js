@@ -49,6 +49,16 @@ export const formatBalance = (data) => {
 	return balance
 }
 
+export const defaultRewardsEstimations = {
+	daily: 0
+}
+export const formatRewardsEstimations = (data) => {
+	let rewards = { ...defaultRewardsEstimations }
+	if (data && data.total_day_usd) rewards.daily = data.total_day_usd
+	return rewards
+
+}
+
 export const defaultExposure = { totalExposure: 0, valueExposure: 0, pools: [], assets: [] }
 export const formatExposure = (data) => {
 	let exposure = { ...defaultExposure }
