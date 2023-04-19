@@ -5,6 +5,8 @@ import { useStore } from "../stores";
 import Link from "next/link";
 import axios from "axios";
 import { LiquidityChart } from "../components/liquidity-chart/liquidity-chart";
+import { Table } from "@latouche/osmosis-info-ui";
+import { TokenTable } from "../components/token-table/token-table";
 
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 
@@ -42,7 +44,8 @@ const Overview = observer(() => {
 			</Link>
 
 			<div>
-				<LiquidityChart />
+				<TokenTable />
+				{/* <LiquidityChart /> */}
 			</div>
 		</div>
 	);
