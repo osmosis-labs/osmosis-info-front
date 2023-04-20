@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { formateNumberDecimalsAuto, getPercent } from "../../../helpers/helpers"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import BlocLoaderOsmosis from "../../../components/loader/BlocLoaderOsmosis"
-import { useBalance, useExposure } from "../../../hooks/data/dashboard.hook"
+import { useBalance, useEstimatedReward, useExposure } from "../../../hooks/data/dashboard.hook"
 import { formatWorth } from "../../../formaters/dashboard.formatter"
 import { useKeplr } from "../../../contexts/KeplrProvider"
 import { useDebug } from "../../../contexts/debug.provider"
@@ -116,6 +116,9 @@ const Overview = () => {
 	//Balance
 	const { data: balance, isLoading: isLoadingBalance } = useBalance({ address })
 
+	//Rewards
+	const { data: estimatedRewards, isLoading: isLoadingRewards } = useEstimatedReward({ address })
+
 	//Exposure
 	const { data: exposure, isLoading: isLoadingExposure } = useExposure({ address })
 
@@ -173,10 +176,18 @@ const Overview = () => {
 
 					<div className={classes.info}>
 						<p className={classes.titleInfo}>Available liquidity</p>
-						{isLoading  ? (
+						{isLoading ? (
 							<CustomSkeleton height={50} width={100} sx={{ marginTop: "0px" }} />
 						) : (
 							<p className={classes.dataInfoReturn}>${formateNumberDecimalsAuto({ price: osmosStaked })}</p>
+						)}
+					</div>
+					<div className={classes.info}>
+						<p className={classes.titleInfo}>Return 24h estimation</p>
+						{isLoadingRewards ? (
+							<CustomSkeleton height={50} width={100} sx={{ marginTop: "0px" }} />
+						) : (
+							<p className={classes.dataInfoReturn}>~${formateNumberDecimalsAuto({ price: estimatedRewards.daily })}</p>
 						)}
 					</div>
 					<div className={classes.info}>
