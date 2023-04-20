@@ -42,41 +42,6 @@ const data: Data[] = [
 		price: 7.201,
 		image: "https://raw.githubusercontent.com/cosmos/chain-registry/master/cosmoshub/images/atom.png",
 	},
-	{
-		name: "Juno II",
-		price: 7.201,
-		image: "https://raw.githubusercontent.com/cosmos/chain-registry/master/juno/images/juno.png",
-	},
-	{
-		name: "Osmos III",
-		price: 7.201,
-		image: "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
-	},
-	{
-		name: "Cosmos III",
-		price: 7.201,
-		image: "https://raw.githubusercontent.com/cosmos/chain-registry/master/cosmoshub/images/atom.png",
-	},
-	{
-		name: "Juno III",
-		price: 7.201,
-		image: "https://raw.githubusercontent.com/cosmos/chain-registry/master/juno/images/juno.png",
-	},
-	{
-		name: "Osmos IV",
-		price: 7.201,
-		image: "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
-	},
-	{
-		name: "Cosmos IV",
-		price: 7.201,
-		image: "https://raw.githubusercontent.com/cosmos/chain-registry/master/cosmoshub/images/atom.png",
-	},
-	{
-		name: "Juno IV",
-		price: 7.201,
-		image: "https://raw.githubusercontent.com/cosmos/chain-registry/master/juno/images/juno.png",
-	},
 ];
 
 const onClickCell = (params: Params<Data>) => {
@@ -108,7 +73,7 @@ const configs: TableConfiguration[] = [
 				key: "Name",
 				accessor: "name",
 				flex: 1,
-				minWidth: 100,
+				minWidth: 200,
 			},
 			{
 				key: "Image",

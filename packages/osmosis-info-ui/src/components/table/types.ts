@@ -23,6 +23,10 @@ export type ColumnConfigurationWidthFlex = ColumnConfigurationWidthMinWitdh & {
 	flex: number;
 };
 
+export type RowState = {
+	height: number;
+};
+
 export type ColumnState = {
 	key: string;
 	width: number;
@@ -35,6 +39,8 @@ export type TableConfiguration = {
 	defaultOrderBy?: string;
 	defaultSortDirection?: "ASC" | "DESC" | null;
 	density?: Density;
+	rowPerPage?: number;
+	rowHeight?: number;
 	onClickRow?: (params: Params<any>) => void;
 	onClickCell?: (params: Params<any>) => void;
 };
@@ -42,5 +48,6 @@ export type TableConfiguration = {
 export type TableState = {
 	orderBy?: string;
 	sortDirection?: "ASC" | "DESC" | null;
-	density?: Density;
+	density: Density;
+	rowPerPage: number;
 };

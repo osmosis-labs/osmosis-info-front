@@ -10,14 +10,20 @@ type RowProps = {
 };
 
 export function Row({ currentData, data }: RowProps) {
-	const { columnsState, configuration } = useTable();
+	const { columnsState, configuration, rowState } = useTable();
 
 	const onClick = () => {
 		return;
 	};
 
 	return (
-		<div className="flex w-fit min-w-full items-center border-b-2 border-main-600" onClick={onClick}>
+		<div
+			className="flex w-fit min-w-full items-center border-b-2 border-main-600 box-border overflow-hidden"
+			style={{
+				height: `${rowState.height}px`,
+			}}
+			onClick={onClick}
+		>
 			{configuration.columns.map((column: ColumnConfiguration, index: number): React.ReactElement => {
 				const currentState = findInArray(columnsState, column.key);
 				return (
