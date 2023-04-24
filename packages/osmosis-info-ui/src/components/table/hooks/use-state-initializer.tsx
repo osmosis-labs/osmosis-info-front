@@ -1,3 +1,4 @@
+import { DENSITY, DENSITY_FACTORS, ROW_HEIGHT } from "../config";
 import { ColumnState, RowState, TableConfiguration, TableState } from "../types";
 import { calculeSizes } from "../utils/size";
 
@@ -6,12 +7,15 @@ export const useStateInitialize = (
 ): { tableState: TableState; columnsState: ColumnState[]; rowState: RowState } => {
 	const sizeColumns = calculeSizes(null, config.columns);
 	const columnsState: ColumnState[] = [];
+
+	const density = config.density || DENSITY;
 	const tableState: TableState = {
-		density: config.density || "medium",
+		density: density,
 		rowPerPage: config.rowPerPage || 10,
+		densityFactor: DENSITY_FACTORS[density],
 	};
 	const rowState: RowState = {
-		height: config.rowHeight || 53,
+		height: config.rowHeight || ROW_HEIGHT,
 	};
 	config.columns.forEach((column) => {
 		columnsState.push({

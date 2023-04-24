@@ -159,9 +159,6 @@ module.exports = {
         itemMenu: '2fr 1fr',
       },
       padding: {
-        cellMedium: `16px 16px`,
-        cellSmall: `6px 16px`,
-        cellLarge: `26px 16px`,
       }
     },
     plugins: [],

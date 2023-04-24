@@ -1,5 +1,5 @@
 import { Table } from "@latouche/osmosis-info-ui";
-import { Params, TableConfiguration } from "@latouche/osmosis-info-ui/lib/esm/components/table/types";
+import { Params, ParamsRowHeight, TableConfiguration } from "@latouche/osmosis-info-ui/lib/esm/components/table/types";
 import { table } from "console";
 import React from "react";
 type Data = {
@@ -19,7 +19,7 @@ const formatPrice = (price: number, decimals = 2) => {
 const data: Data[] = [
 	{
 		name: "Osmos",
-		price: 7.201,
+		price: 7,
 		image: "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
 	},
 	{
@@ -29,17 +29,17 @@ const data: Data[] = [
 	},
 	{
 		name: "Juno",
-		price: 7.201,
+		price: 9,
 		image: "https://raw.githubusercontent.com/cosmos/chain-registry/master/juno/images/juno.png",
 	},
 	{
 		name: "Osmos II",
-		price: 7.201,
+		price: 10,
 		image: "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
 	},
 	{
 		name: "Cosmos II",
-		price: 7.201,
+		price: 11,
 		image: "https://raw.githubusercontent.com/cosmos/chain-registry/master/cosmoshub/images/atom.png",
 	},
 ];
@@ -64,10 +64,16 @@ const imageRender = (params: Params<Data>) => {
 	return <img src={params.currentData.image} alt={params.currentData.name} className={className} />;
 };
 
+const getRowHeight = ({ currentData, densityFactor }: ParamsRowHeight<Data>) => {
+	return currentData.price % 2 === 0 ? 50 * densityFactor : 60 * densityFactor;
+};
+
 const configs: TableConfiguration[] = [
 	{
 		onClickRow: onClickCell,
 		onClickCell: onClickCell,
+		density: "medium",
+		getRowHeight,
 		columns: [
 			{
 				key: "Name",
@@ -82,8 +88,8 @@ const configs: TableConfiguration[] = [
 				flex: 1,
 			},
 			{
-				key: "NameII",
-				accessor: "name",
+				key: "Price",
+				accessor: "price",
 				minWidth: 100,
 				flex: 1,
 			},

@@ -10,22 +10,34 @@ type RowProps = {
 };
 
 export function Row({ currentData, data }: RowProps) {
-	const { columnsState, configuration, rowState } = useTable();
+	const {
+		columnsState,
+		configuration: { getRowHeight, columns },
+		rowState,
+		tableState: { densityFactor },
+	} = useTable();
 
 	const onClick = () => {
 		return;
 	};
 
+	let height = rowState.height * densityFactor;
+	if (getRowHeight && typeof getRowHeight === "function") {
+		height = getRowHeight({ currentData, data, densityFactor });
+	}
+
 	return (
 		<div
 			className="flex w-fit min-w-full items-center border-b-2 border-main-600 box-border overflow-hidden"
 			style={{
-				height: `${rowState.height}px`,
+				height: `${height}px`,
 			}}
 			onClick={onClick}
 		>
-			{configuration.columns.map((column: ColumnConfiguration, index: number): React.ReactElement => {
+			{columns.map((column: ColumnConfiguration, index: number): React.ReactElement => {
 				const currentState = findInArray(columnsState, column.key);
+				console.log("row.tsx -> 39: currentState", currentState);
+
 				return (
 					<Cell
 						key={`${column.key}-${index}`}

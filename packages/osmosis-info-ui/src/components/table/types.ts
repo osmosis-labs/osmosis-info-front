@@ -1,8 +1,14 @@
-export type Density = "small" | "medium" | "large";
+export type Density = "compact" | "medium" | "confortable";
 
 export type Params<T> = {
 	currentData: T;
 	data: T[];
+};
+
+export type ParamsRowHeight<T> = {
+	currentData: T;
+	data: T[];
+	densityFactor: number;
 };
 
 export type Accessor = string | ((params: Params<any>) => React.ReactNode);
@@ -41,6 +47,7 @@ export type TableConfiguration = {
 	density?: Density;
 	rowPerPage?: number;
 	rowHeight?: number;
+	getRowHeight?: (params: ParamsRowHeight<any>) => number;
 	onClickRow?: (params: Params<any>) => void;
 	onClickCell?: (params: Params<any>) => void;
 };
@@ -48,6 +55,7 @@ export type TableConfiguration = {
 export type TableState = {
 	orderBy?: string;
 	sortDirection?: "ASC" | "DESC" | null;
+	densityFactor: number;
 	density: Density;
 	rowPerPage: number;
 };
