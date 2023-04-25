@@ -11,7 +11,7 @@ export const formatAssets = (data) => {
 				display: asset.display,
 				symbol: asset.symbol,
 				coingeckoId: asset.coingecko_id,
-				image: asset.logo_URIs.png,
+				image: asset.logo_URIs.png ?? asset.logo_URIs.svg,
 				denomUnits: asset.denom_units,
 				main: asset.keywords.includes('osmosis-main')
 			}
