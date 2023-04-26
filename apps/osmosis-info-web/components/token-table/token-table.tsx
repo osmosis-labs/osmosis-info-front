@@ -1,8 +1,10 @@
-import { Table } from "@latouche/osmosis-info-ui";
+import { Button, Table } from "@latouche/osmosis-info-ui";
 import { Params, ParamsRowHeight, TableConfiguration } from "@latouche/osmosis-info-ui/lib/esm/components/table/types";
 import { table } from "console";
 import React from "react";
+import { useState } from "react";
 type Data = {
+	id: number;
 	name: string;
 	image: string;
 	price: number;
@@ -16,33 +18,19 @@ const formatPrice = (price: number, decimals = 2) => {
 	}).format(price);
 };
 
-const data: Data[] = [
-	{
-		name: "Osmos",
-		price: 7,
-		image: "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
-	},
-	{
-		name: "Cosmos",
-		price: 8,
-		image: "https://raw.githubusercontent.com/cosmos/chain-registry/master/cosmoshub/images/atom.png",
-	},
-	{
-		name: "Juno",
-		price: 9,
-		image: "https://raw.githubusercontent.com/cosmos/chain-registry/master/juno/images/juno.png",
-	},
-	{
-		name: "Osmos II",
-		price: 10,
-		image: "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
-	},
-	{
-		name: "Cosmos II",
-		price: 11,
-		image: "https://raw.githubusercontent.com/cosmos/chain-registry/master/cosmoshub/images/atom.png",
-	},
-];
+function getRandomValue<T>(arr: T[]): T {
+	const randomIndex = Math.floor(Math.random() * arr.length);
+	return arr[randomIndex];
+}
+
+const getName = () => getRandomValue(["Osmo", "Cosmo", "Juno", "Jupiter", "Saturn", "Uranus", "Neptune"]);
+const getPrice = () => Math.floor(Math.random() * 100000);
+const getImage = () =>
+	getRandomValue([
+		"https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png",
+		"https://raw.githubusercontent.com/cosmos/chain-registry/master/cosmoshub/images/atom.png",
+		"https://raw.githubusercontent.com/cosmos/chain-registry/master/juno/images/juno.png",
+	]);
 
 const onClickCell = (params: Params<Data>) => {
 	const { data, currentData } = params;
@@ -60,52 +48,78 @@ const onClickRow = (currentData: Data, data: Data[]) => {
 };
 
 const imageRender = (params: Params<Data>) => {
-	const className = params.currentData.price % 2 === 0 ? "h-[24px] bg-main-300 p-8" : "h-[24px] ";
-	return <img src={params.currentData.image} alt={params.currentData.name} className={className} />;
+	return <img src={params.currentData.image} alt={params.currentData.name} className={"h-[24px]"} />;
 };
 
 const getRowHeight = ({ currentData, densityFactor }: ParamsRowHeight<Data>) => {
 	return currentData.price % 2 === 0 ? 50 * densityFactor : 60 * densityFactor;
 };
 
-const configs: TableConfiguration[] = [
-	{
-		onClickRow: onClickCell,
-		onClickCell: onClickCell,
-		density: "medium",
-		getRowHeight,
-		columns: [
-			{
-				key: "Name",
-				accessor: "name",
-				flex: 1,
-				minWidth: 200,
-			},
-			{
-				key: "Image",
-				accessor: imageRender,
-				minWidth: 50,
-				flex: 1,
-			},
-			{
-				key: "Price",
-				accessor: "price",
-				minWidth: 100,
-				flex: 1,
-			},
-		],
-	},
-];
+const config: TableConfiguration = {
+	onClickRow: onClickCell,
+	onClickCell: onClickCell,
+	density: "medium",
+	columns: [
+		{
+			key: "ID",
+			accessor: "id",
+			flex: 1,
+			minWidth: 30,
+		},
+		{
+			key: "Name",
+			accessor: "name",
+			flex: 1,
+			minWidth: 200,
+		},
+		{
+			key: "Image",
+			accessor: imageRender,
+			minWidth: 50,
+			flex: 1,
+		},
+		{
+			key: "Price",
+			accessor: (params: Params<Data>) => formatPrice(params.currentData.price),
+			minWidth: 100,
+			flex: 1,
+		},
+	],
+};
+
 export const TokenTable = () => {
+	const [nbRow, setNbRow] = useState(10);
+
+	const data: Data[] = [];
+	for (let i = 0; i < nbRow; i++) {
+		data.push({
+			id: i,
+			name: getName(),
+			price: getPrice(),
+			image: getImage(),
+		});
+	}
+
+	const addRow = () => {
+		setNbRow(nbRow + 1);
+	};
+	const removeRow = () => {
+		if (nbRow > 0) setNbRow(nbRow - 1);
+	};
+
 	return (
 		<div className="">
-			{configs.map((config: TableConfiguration, index: number) => {
-				return (
-					<div className="my-4" key={index}>
-						<Table config={config} data={data} />
-					</div>
-				);
-			})}
+			<div className="flex">
+				<Button onClick={addRow} size="small">
+					Add row
+				</Button>
+				<Button onClick={removeRow} size="small" className="ml-2">
+					Remove row
+				</Button>
+			</div>
+			<div className="my-4">
+				<Table config={config} data={data} />
+			</div>
 		</div>
 	);
 };
