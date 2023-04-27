@@ -36,8 +36,6 @@ export function Row({ currentData, data }: RowProps) {
 		>
 			{columns.map((column: ColumnConfiguration, index: number): React.ReactElement => {
 				const currentState = findInArray(columnsState, column.key);
-				console.log("row.tsx -> 39: currentState", currentState);
-
 				return (
 					<Cell
 						key={`${column.key}-${index}`}

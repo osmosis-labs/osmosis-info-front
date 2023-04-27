@@ -1,7 +1,7 @@
 import { Button, Table } from "@latouche/osmosis-info-ui";
 import { Params, ParamsRowHeight, TableConfiguration } from "@latouche/osmosis-info-ui/lib/esm/components/table/types";
 import { table } from "console";
-import React from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useState } from "react";
 type Data = {
 	id: number;
@@ -55,50 +55,87 @@ const getRowHeight = ({ currentData, densityFactor }: ParamsRowHeight<Data>) => 
 	return currentData.price % 2 === 0 ? 50 * densityFactor : 60 * densityFactor;
 };
 
-const config: TableConfiguration = {
-	onClickRow: onClickCell,
-	onClickCell: onClickCell,
-	density: "medium",
-	columns: [
-		{
-			key: "ID",
-			accessor: "id",
-			flex: 1,
-			minWidth: 30,
-		},
-		{
-			key: "Name",
-			accessor: "name",
-			flex: 1,
-			minWidth: 200,
-		},
-		{
-			key: "Image",
-			accessor: imageRender,
-			minWidth: 50,
-			flex: 1,
-		},
-		{
-			key: "Price",
-			accessor: (params: Params<Data>) => formatPrice(params.currentData.price),
-			minWidth: 100,
-			flex: 1,
-		},
-	],
-};
+const dataDefault: Data[] = [];
+for (let i = 0; i < 10; i++) {
+	dataDefault.push({
+		id: i,
+		name: "",
+		price: 0,
+		image: "",
+	});
+}
 
 export const TokenTable = () => {
 	const [nbRow, setNbRow] = useState(10);
+	const [data, setData] = useState<Data[]>(dataDefault);
+	const [loading, setLoading] = useState(false);
+	const callBackEnd = useCallback(
+		(next: (currentPage: number) => void, currentPage: number) => {
+			if (loading) return;
+			setLoading(true);
+			setTimeout(() => {
+				setLoading(false);
+				setNbRow(nbRow + 5);
+				next(currentPage + 1);
+			}, 1000);
+		},
+		[loading, nbRow]
+	);
 
-	const data: Data[] = [];
-	for (let i = 0; i < nbRow; i++) {
-		data.push({
-			id: i,
-			name: getName(),
-			price: getPrice(),
-			image: getImage(),
-		});
-	}
+	const config: TableConfiguration = useMemo<TableConfiguration>(
+		() => ({
+			onClickRow: onClickCell,
+			onClickCell: onClickCell,
+			density: "medium",
+			callBackEnd,
+			translations: {
+				footer: {
+					rangeItems: (min, max, length) => `${min} - ${max} sur ${length}`,
+					rowsPerPage: "Lignes par page:",
+				},
+			},
+			columns: [
+				{
+					key: "ID",
+					accessor: "id",
+					flex: 1,
+					minWidth: 30,
+				},
+				{
+					key: "Name",
+					accessor: "name",
+					flex: 1,
+					minWidth: 200,
+				},
+				{
+					key: "Image",
+					accessor: imageRender,
+					minWidth: 50,
+					flex: 1,
+				},
+				{
+					key: "Price",
+					accessor: (params: Params<Data>) => formatPrice(params.currentData.price),
+					minWidth: 100,
+					flex: 1,
+				},
+			],
+		}),
+		[callBackEnd]
+	);
+
+	useEffect(() => {
+		const data: Data[] = [];
+		for (let i = 0; i < nbRow; i++) {
+			data.push({
+				id: i + 1,
+				name: getName(),
+				price: getPrice(),
+				image: getImage(),
+			});
+		}
+		setData(data);
+	}, [nbRow]);
 
 	const addRow = () => {
 		setNbRow(nbRow + 1);

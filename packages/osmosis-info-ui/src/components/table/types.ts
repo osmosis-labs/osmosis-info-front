@@ -40,16 +40,26 @@ export type ColumnState = {
 	sorted: boolean;
 };
 
+export type TableTranslations = {
+	footer?: {
+		rowsPerPage?: string;
+		rangeItems?: (min: number, max: number, length: number) => string;
+	};
+};
+
 export type TableConfiguration = {
 	columns: ColumnConfiguration[];
 	defaultOrderBy?: string;
 	defaultSortDirection?: "ASC" | "DESC" | null;
 	density?: Density;
 	rowPerPage?: number;
+	rowsPerPage?: number[];
 	rowHeight?: number;
 	getRowHeight?: (params: ParamsRowHeight<any>) => number;
 	onClickRow?: (params: Params<any>) => void;
 	onClickCell?: (params: Params<any>) => void;
+	callBackEnd?: (nextPage: (currentPage: number) => void, currentPage: number) => void;
+	translations?: TableTranslations;
 };
 
 export type TableState = {
@@ -58,4 +68,6 @@ export type TableState = {
 	densityFactor: number;
 	density: Density;
 	rowPerPage: number;
+	rowsPerPage: number[];
+	currentPage: number;
 };

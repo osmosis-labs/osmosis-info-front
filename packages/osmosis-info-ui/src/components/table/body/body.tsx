@@ -10,7 +10,7 @@ export const Body = ({ data }: { data: any[] }) => {
 	const refContainer = useRef<HTMLDivElement | null>(null);
 	const {
 		rowState: { height: rowHeight },
-		tableState: { rowPerPage },
+		tableState: { rowPerPage, currentPage },
 	} = useTable();
 
 	const handleResize = (): void => {
@@ -32,12 +32,17 @@ export const Body = ({ data }: { data: any[] }) => {
 
 	useResizeObserver(refContent, handleResize, { delay: 100 });
 
+	const cutRowStart = currentPage * rowPerPage;
+	const cutRowEnd = currentPage * rowPerPage + rowPerPage;
+	const emptyRows = currentPage > 0 ? Math.max(0, (1 + currentPage) * rowPerPage - data.length) : 0;
+
 	return (
-		<div className="flex-1 overflow-hidden" ref={refContainer}>
+		<div className="overflow-hidden" ref={refContainer}>
 			<div className="overflow-auto" style={{ maxHeight: `${rowPerPage * rowHeight}px` }} ref={refContent}>
-				{data.map((currentData, index: number) => {
+				{data.slice(cutRowStart, cutRowEnd).map((currentData, index: number) => {
 					return <Row key={index} currentData={currentData} data={data} />;
 				})}
+				{emptyRows > 0 && <div style={{ height: `${emptyRows * rowHeight}px` }} />}
 			</div>
 		</div>
 	);

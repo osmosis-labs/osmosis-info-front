@@ -4,6 +4,7 @@ import { TableRoot } from "./table-root";
 import { TableProvider } from "./context/table-context";
 import { useStateInitialize } from "./hooks/use-state-initializer";
 import { Body } from "./body/body";
+import { Footer } from "./footer/footer";
 
 export type TableProps = {
 	config: TableConfiguration;
@@ -21,9 +22,9 @@ export const Table = React.memo(function ({ data, config }: TableProps) {
 			configuration={config}
 		>
 			<TableRoot>
-				<div className="h-[53px] border-2 border-main-300 flex items-center p-2">Header</div>
+				<div className="h-[53px] border-2 border-main-300 flex items-center p-2 box-border">Header</div>
 				<Body data={data} />
-				<div className="h-[53px] border-2 border-main-300 flex items-center p-2">Footer</div>
+				<Footer data={data} />
 			</TableRoot>
 		</TableProvider>
 	);

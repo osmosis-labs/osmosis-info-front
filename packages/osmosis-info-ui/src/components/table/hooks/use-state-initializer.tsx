@@ -1,4 +1,4 @@
-import { DENSITY, DENSITY_FACTORS, ROW_HEIGHT } from "../config";
+import { DENSITY, DENSITY_FACTORS, ROWS_PER_PAGE, ROW_HEIGHT, ROW_PER_PAGE } from "../config";
 import { ColumnState, RowState, TableConfiguration, TableState } from "../types";
 import { calculeSizes } from "../utils/size";
 
@@ -11,7 +11,9 @@ export const useStateInitialize = (
 	const density = config.density || DENSITY;
 	const tableState: TableState = {
 		density: density,
-		rowPerPage: config.rowPerPage || 10,
+		currentPage: 0,
+		rowPerPage: config.rowPerPage || ROW_PER_PAGE,
+		rowsPerPage: config.rowsPerPage || ROWS_PER_PAGE,
 		densityFactor: DENSITY_FACTORS[density],
 	};
 	const rowState: RowState = {
