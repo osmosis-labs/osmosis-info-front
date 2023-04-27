@@ -66,6 +66,21 @@ export const Popover = ({
 
 			if (popoverPosition.y === "bottom") y = y - rectPaper.height;
 			else if (popoverPosition.y === "center") y = y - rectPaper.height / 2;
+
+			const distanceToViewportLeft = x;
+			const distanceToViewportRight = window.innerWidth - (x + rectPaper.width);
+			const distanceToViewportTop = y;
+			const distanceToViewportBottom = window.innerHeight - (y + rectPaper.height);
+			if (distanceToViewportLeft < 0) {
+				x -= distanceToViewportLeft;
+			} else if (distanceToViewportRight < 0) {
+				x += distanceToViewportRight;
+			}
+			if (distanceToViewportTop < 0) {
+				y -= distanceToViewportTop;
+			} else if (distanceToViewportBottom < 0) {
+				y += distanceToViewportBottom;
+			}
 		}
 	}
 	const classNameDefault = `${classNamePaper} fixed bg-main-800 rounded-xl`;
