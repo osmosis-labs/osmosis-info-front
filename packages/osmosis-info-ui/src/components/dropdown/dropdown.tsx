@@ -27,13 +27,24 @@ export interface DropdownProps<T> {
 	onChange?: (item: ItemDropdown<T>) => void;
 	/** Value was selected */
 	value: T;
-	/** Vairant determine if we use icon or not */
+	/** Variant determine if we use icon or not */
 	variant?: "icon" | "default";
+	/** Outlinded determine if is outlinded or not (default value: true) */
+	outlinded?: boolean;
 	/** Used to reduce the size of the dropdown.*/
 	size?: "small" | "medium";
 }
 
-export function Dropdown<T>({ className, items, disabled, onChange, value, variant, size }: DropdownProps<T>) {
+export function Dropdown<T>({
+	className,
+	items,
+	disabled,
+	onChange,
+	value,
+	variant,
+	size,
+	outlinded = true,
+}: DropdownProps<T>) {
 	const [anchorElPopover, setAnchorElPopover] = useState<null | HTMLElement>(null);
 
 	const onClickOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -61,7 +72,8 @@ export function Dropdown<T>({ className, items, disabled, onChange, value, varia
 	const classNameIcon = `		ml-2 duration-default`;
 	const classNameIconLeft = `	mr-2 rounded-full flex items-center justify-center`;
 
-	let classNameDropdown = `${className} ${classNameDefault} ${classNameOutlined}`;
+	let classNameDropdown = `${className} ${classNameDefault} `;
+	if (outlinded) classNameDropdown = `${classNameDropdown} ${classNameOutlined}`;
 	if (variant === "icon") classNameDropdown = `${classNameDropdown} ${classNameWithIcon}`;
 	if (size === "small") classNameDropdown = `${classNameDropdown} ${classNameSmall}`;
 	else classNameDropdown = `${classNameDropdown} ${classNameMedium}`;

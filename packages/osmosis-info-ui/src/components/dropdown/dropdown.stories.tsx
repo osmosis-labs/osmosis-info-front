@@ -35,6 +35,10 @@ const Template: ComponentStory<typeof Dropdown> = (_args) => {
 					<Dropdown<string> value={value} onChange={onChange} items={items} size="small" />
 				</div>
 				<div className="grid grid-rows-2 items-center justify-items-center">
+					<p>Not outlined</p>
+					<Dropdown<string> value={value} onChange={onChange} items={items} size="small" outlinded={false} />
+				</div>
+				<div className="grid grid-rows-2 items-center justify-items-center">
 					<p>Default Icon</p>
 					<Dropdown<string> value={value} onChange={onChange} items={itemsIcons} variant="icon" />
 				</div>
