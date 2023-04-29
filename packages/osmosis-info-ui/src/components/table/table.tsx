@@ -22,7 +22,9 @@ export const Table = React.memo(function ({ data, config }: TableProps) {
 			configuration={config}
 		>
 			<TableRoot>
-				<div className="h-[53px] border-2 border-main-300 flex items-center p-2 box-border">Header</div>
+				<div className="h-[53px] flex items-center p-2 box-border border-[1px] border-main-700 rounded-t-md">
+					Header
+				</div>
 				<Body data={data} />
 				<Footer data={data} />
 			</TableRoot>

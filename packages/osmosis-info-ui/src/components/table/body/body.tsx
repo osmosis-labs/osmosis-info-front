@@ -5,12 +5,14 @@ import useResizeObserver from "../../../hooks/use-windows-resize";
 import { useTable } from "../context/table-context";
 
 export const Body = ({ data }: { data: any[] }) => {
-	const { columnsState, updateColumnsState, configuration } = useTable();
 	const refContent = useRef<HTMLDivElement | null>(null);
 	const refContainer = useRef<HTMLDivElement | null>(null);
 	const {
 		rowState: { height: rowHeight },
 		tableState: { rowPerPage, currentPage },
+		columnsState,
+		updateColumnsState,
+		configuration: { columns, autoHeight },
 	} = useTable();
 
 	const handleResize = (): void => {
@@ -20,7 +22,7 @@ export const Body = ({ data }: { data: any[] }) => {
 
 			let currentWidth = refContent.current.getClientRects()[0].width;
 			if (hasScrollbar) currentWidth -= diff;
-			const sizeColumns = calculeSizes(currentWidth || null, configuration.columns);
+			const sizeColumns = calculeSizes(currentWidth || null, columns);
 
 			columnsState.forEach((c, index) => {
 				const width = sizeColumns[c.key] || 100;
@@ -34,15 +36,15 @@ export const Body = ({ data }: { data: any[] }) => {
 
 	const cutRowStart = currentPage * rowPerPage;
 	const cutRowEnd = currentPage * rowPerPage + rowPerPage;
-	const emptyRows = currentPage > 0 ? Math.max(0, (1 + currentPage) * rowPerPage - data.length) : 0;
+	const emptyRows = Math.max(0, (1 + currentPage) * rowPerPage - data.length);
 
 	return (
-		<div className="overflow-hidden" ref={refContainer}>
+		<div className="overflow-hidden border-l-[1px] border-r-[1px] border-main-700" ref={refContainer}>
 			<div className="overflow-auto" style={{ maxHeight: `${rowPerPage * rowHeight}px` }} ref={refContent}>
 				{data.slice(cutRowStart, cutRowEnd).map((currentData, index: number) => {
 					return <Row key={index} currentData={currentData} data={data} />;
 				})}
-				{emptyRows > 0 && <div style={{ height: `${emptyRows * rowHeight}px` }} />}
+				{emptyRows > 0 && !autoHeight && <div style={{ height: `${emptyRows * rowHeight}px` }} />}
 			</div>
 		</div>
 	);

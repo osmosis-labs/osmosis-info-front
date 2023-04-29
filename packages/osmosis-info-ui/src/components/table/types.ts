@@ -55,6 +55,7 @@ export type TableConfiguration = {
 	rowPerPage?: number;
 	rowsPerPage?: number[];
 	rowHeight?: number;
+	autoHeight?: boolean;
 	getRowHeight?: (params: ParamsRowHeight<any>) => number;
 	onClickRow?: (params: Params<any>) => void;
 	onClickCell?: (params: Params<any>) => void;

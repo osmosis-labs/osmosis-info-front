@@ -88,6 +88,7 @@ export const TokenTable = () => {
 			onClickCell: onClickCell,
 			density: "medium",
 			callBackEnd,
+			autoHeight: false,
 			translations: {
 				footer: {
 					rangeItems: (min, max, length) => `${min} - ${max} sur ${length}`,
