@@ -22,7 +22,6 @@ export const formatAssets = (data) => {
 				let name = asset.symbol.split(".")[0]
 				res[name] = currentAsset
 			}
-
 			currentAsset.denomUnits.forEach((denomUnit, index) => {
 				res[denomUnit.denom] = currentAsset
 			})

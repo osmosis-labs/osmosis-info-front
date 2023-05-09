@@ -32,7 +32,8 @@ export const getAsset = (assets, token) => {
 	let asset = null
 	if (token.denom) {
 		asset = assets[token.denom]
-	} else if (token.symbol) {
+	}
+	if (token.symbol && !asset) {
 		asset = assets[token.symbol.toUpperCase()]
 	}
 	return asset

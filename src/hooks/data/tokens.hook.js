@@ -183,7 +183,7 @@ export const useHistoricalToken = ({ symbol, tf }) => {
 		enabled: !!symbol && !!tf,
 	})
 
-	const tokens = data ? data : defaultHistoricalToken
-
+	let tokens = defaultHistoricalToken
+	if (data && Array.isArray(data)) tokens = data
 	return { data: tokens, isLoading, isFetching }
 }

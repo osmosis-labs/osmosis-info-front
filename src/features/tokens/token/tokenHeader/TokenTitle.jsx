@@ -78,6 +78,8 @@ const TokenTitle = ({ token }) => {
 		return index >= 0
 	}
 
+	const image = getImageFromAsset(assets, token)
+
 	return (
 		<div className={classes.tokenName}>
 			<div className={classes.images}>
@@ -86,7 +88,7 @@ const TokenTitle = ({ token }) => {
 					className={`${classes.image} ${classes.tokenImage}`}
 					assets={true}
 					pathAssets=""
-					src={getImageFromAsset(assets, token)}
+					src={image}
 					srcFallback="../assets/default.png"
 					alt={`${token.symbol}`}
 				/>

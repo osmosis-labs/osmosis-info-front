@@ -258,11 +258,23 @@ const Token = () => {
 
 	useEffect(() => {
 		// needed to update price of token
-		if (tkn.symbol && historical.length > 0) {
-			priceDecimals.current = detectBestDecimalsDisplay(historical[0].close)
-			setToken((t) => ({ ...tkn, price: historical[historical.length - 1].close }))
+		if (tkn.symbol) {
+			setToken((t) => ({ ...tkn }))
+			if (historical.length > 0) {
+				priceDecimals.current = detectBestDecimalsDisplay(historical[0].close)
+				setToken((t) => ({ ...tkn, price: historical[historical.length - 1].close }))
+			}
 		}
 	}, [tkn, historical])
+
+	useEffect(() => {
+		if (tkn.symbol && !isLoadingHistorical && historical.length === 0) {
+			showToast({
+				severity: "warning",
+				text: "Oops! It looks like we don't have any data to display a chart.",
+			})
+		}
+	}, [historical, isLoadingHistorical])
 
 	const onOpenExpertChart = () => {
 		setOpenExpertChart(true)
