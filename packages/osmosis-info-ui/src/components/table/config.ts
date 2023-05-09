@@ -13,3 +13,14 @@ export const ROW_PER_PAGE = 10;
 export const ROWS_PER_PAGE = [5, 10, 25, 50];
 
 export const ALIGMENT = "left" as Alignment;
+
+export const SORTABLE = false;
+
+export const SORT = (a: any, b: any) => {
+	if (typeof a === "string" && typeof b === "string") return SORT_STRING(a, b);
+	else if (typeof a === "number" && typeof b === "number") return SORT_NUMBER(a, b);
+	return 0;
+};
+
+export const SORT_NUMBER = (a: number, b: number) => a - b;
+export const SORT_STRING = (a: string, b: string) => a.localeCompare(b);

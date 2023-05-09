@@ -15,6 +15,7 @@ import {
 	BottomSvg,
 } from "./";
 import { CloseSvg } from "./close-svg";
+import { ArrowTopSVG } from "./arrow-top-svg";
 
 export default {
 	title: "Assets/Icons",
@@ -101,3 +102,7 @@ Bottom.argTypes = argsTypeFill;
 export const Close: ComponentStory<typeof CloseSvg> = (args) => <CloseSvg {...args} />;
 Close.args = argsStroke;
 Close.argTypes = argsTypeStroke;
+
+export const ArrowTop: ComponentStory<typeof ArrowTopSVG> = (args) => <ArrowTopSVG {...args} />;
+ArrowTop.args = argsFill;
+ArrowTop.argTypes = argsTypeFill;

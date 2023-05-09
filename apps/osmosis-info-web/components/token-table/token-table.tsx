@@ -89,6 +89,8 @@ export const TokenTable = () => {
 			density: "medium",
 			callBackEnd,
 			autoHeight: false,
+			defaultOrderBy: "id",
+			defaultOrderDirection: "DESC",
 			translations: {
 				footer: {
 					rangeItems: (min, max, length) => `${min} - ${max} sur ${length}`,
@@ -97,26 +99,33 @@ export const TokenTable = () => {
 			},
 			columns: [
 				{
-					key: "ID",
-					accessor: "id",
+					display: "ID",
+					key: "id",
 					flex: 1,
 					minWidth: 30,
+					sortable: true,
+					onSort: (a: any, b: any) => {
+						return b - a;
+					},
 				},
 				{
-					key: "Name",
-					accessor: "name",
+					display: "Name",
+					key: "name",
 					flex: 1,
 					minWidth: 200,
 					align: "center",
+					sortable: true,
 				},
 				{
-					key: "Image",
+					display: "Image",
+					key: "image",
 					accessor: imageRender,
 					minWidth: 50,
 					flex: 1,
 				},
 				{
-					key: "Price",
+					display: "Price",
+					key: "price",
 					accessor: (params: Params<Data>) => formatPrice(params.currentData.price),
 					minWidth: 100,
 					flex: 1,

@@ -16,12 +16,27 @@ export type ParamsRowHeight<T> = {
 export type Accessor = string | ((params: Params<any>) => React.ReactNode);
 
 export type ColumnConfiguration = {
+	display: string;
 	key: string;
-	accessor: Accessor;
+	accessor?: Accessor;
 	flex?: number;
 	maxWidth?: number;
 	minWidth?: number;
 	align?: Alignment;
+	onSort?: (a: any, b: any) => number;
+	sortable?: boolean;
+};
+
+export type ColumnState = {
+	key: string;
+	display: string;
+	accessor: Accessor;
+	width: number;
+	orderDirection: OrderDirection;
+	sorted: boolean;
+	align: Alignment;
+	onSort?: (a: any, b: any) => number;
+	sortable: boolean;
 };
 
 export type ColumnConfigurationWidthMinWitdh = ColumnConfiguration & {
@@ -35,14 +50,7 @@ export type ColumnConfigurationWidthFlex = ColumnConfigurationWidthMinWitdh & {
 export type RowState = {
 	height: number;
 };
-
-export type ColumnState = {
-	key: string;
-	width: number;
-	order: "ASC" | "DESC" | null;
-	sorted: boolean;
-	align: Alignment;
-};
+export type OrderDirection = "ASC" | "DESC" | null;
 
 export type TableTranslations = {
 	footer?: {
@@ -54,7 +62,7 @@ export type TableTranslations = {
 export type TableConfiguration = {
 	columns: ColumnConfiguration[];
 	defaultOrderBy?: string;
-	defaultSortDirection?: "ASC" | "DESC" | null;
+	defaultOrderDirection?: OrderDirection;
 	density?: Density;
 	rowPerPage?: number;
 	rowsPerPage?: number[];
@@ -69,7 +77,7 @@ export type TableConfiguration = {
 
 export type TableState = {
 	orderBy?: string;
-	sortDirection?: "ASC" | "DESC" | null;
+	orderDirection?: OrderDirection;
 	densityFactor: number;
 	density: Density;
 	rowPerPage: number;

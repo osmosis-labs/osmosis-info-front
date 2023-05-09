@@ -1,14 +1,14 @@
 import React from "react";
-import { ColumnConfiguration } from "../types";
+import { ColumnState } from "../types";
 
 type CellProps<D extends Record<string, any>> = {
 	currentData: D;
 	data: D[];
-	configuration: ColumnConfiguration;
+	state: ColumnState;
 	width: number;
 };
-export function Cell<D extends Record<string, any>>({ currentData, data, configuration, width }: CellProps<D>) {
-	const { accessor } = configuration;
+export function Cell<D extends Record<string, any>>({ currentData, data, state, width }: CellProps<D>) {
+	const { accessor, align } = state;
 	const onClick = () => {
 		return;
 	};
@@ -18,14 +18,21 @@ export function Cell<D extends Record<string, any>>({ currentData, data, configu
 	} else if (accessor instanceof Function) {
 		elt = accessor({ currentData, data });
 	}
-	const currentClassName = `px-2`;
+	const currentClassName = `px-2 `;
 	const style: React.CSSProperties = {};
 
 	style.maxWidth = `${width}px`;
 	style.minWidth = `${width}px`;
+
+	let classNameContent = "w-full truncate";
+	if (align === "right") {
+		classNameContent += " text-right";
+	} else if (align === "center") {
+		classNameContent += "  text-center";
+	}
 	return (
 		<div onClick={onClick} className={currentClassName} style={style}>
-			<div className="w-full truncate">{elt}</div>
+			<div className={classNameContent}>{elt}</div>
 		</div>
 	);
 }

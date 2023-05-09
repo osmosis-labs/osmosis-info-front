@@ -1,8 +1,7 @@
 import React from "react";
-import { ColumnConfiguration } from "../types";
+import { ColumnState } from "../types";
 import { Cell } from "../cell/cell";
 import { useTable } from "../context/table-context";
-import { findInArray } from "../utils/utils";
 
 type RowProps = {
 	currentData: any;
@@ -12,7 +11,7 @@ type RowProps = {
 export function Row({ currentData, data }: RowProps) {
 	const {
 		columnsState,
-		configuration: { getRowHeight, columns },
+		configuration: { getRowHeight },
 		rowState,
 		tableState: { densityFactor },
 	} = useTable();
@@ -34,15 +33,14 @@ export function Row({ currentData, data }: RowProps) {
 			}}
 			onClick={onClick}
 		>
-			{columns.map((column: ColumnConfiguration, index: number): React.ReactElement => {
-				const currentState = findInArray(columnsState, column.key);
+			{columnsState.map((column: ColumnState, index: number): React.ReactElement => {
 				return (
 					<Cell
 						key={`${column.key}-${index}`}
 						currentData={currentData}
 						data={data}
-						configuration={column}
-						width={currentState.width}
+						state={column}
+						width={column?.width ?? 0}
 					/>
 				);
 			})}
