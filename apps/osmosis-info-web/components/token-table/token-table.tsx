@@ -107,6 +107,7 @@ export const TokenTable = () => {
 					accessor: "name",
 					flex: 1,
 					minWidth: 200,
+					align: "center",
 				},
 				{
 					key: "Image",
@@ -119,6 +120,7 @@ export const TokenTable = () => {
 					accessor: (params: Params<Data>) => formatPrice(params.currentData.price),
 					minWidth: 100,
 					flex: 1,
+					align: "right",
 				},
 			],
 		}),

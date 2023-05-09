@@ -1,5 +1,7 @@
 export type Density = "compact" | "medium" | "confortable";
 
+export type Alignment = "left" | "center" | "right";
+
 export type Params<T> = {
 	currentData: T;
 	data: T[];
@@ -19,6 +21,7 @@ export type ColumnConfiguration = {
 	flex?: number;
 	maxWidth?: number;
 	minWidth?: number;
+	align?: Alignment;
 };
 
 export type ColumnConfigurationWidthMinWitdh = ColumnConfiguration & {
@@ -38,6 +41,7 @@ export type ColumnState = {
 	width: number;
 	order: "ASC" | "DESC" | null;
 	sorted: boolean;
+	align: Alignment;
 };
 
 export type TableTranslations = {

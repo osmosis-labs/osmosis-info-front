@@ -1,4 +1,4 @@
-import { DENSITY, DENSITY_FACTORS, ROWS_PER_PAGE, ROW_HEIGHT, ROW_PER_PAGE } from "../config";
+import { ALIGMENT, DENSITY, DENSITY_FACTORS, ROWS_PER_PAGE, ROW_HEIGHT, ROW_PER_PAGE } from "../config";
 import { ColumnState, RowState, TableConfiguration, TableState } from "../types";
 import { calculeSizes } from "../utils/size";
 
@@ -25,6 +25,7 @@ export const useStateInitialize = (
 			key: column.key,
 			sorted: false,
 			width: sizeColumns[column.key],
+			align: column.align || ALIGMENT,
 		});
 	});
 	return { tableState, columnsState, rowState };
