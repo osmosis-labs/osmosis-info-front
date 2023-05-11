@@ -33,6 +33,11 @@ module.exports = {
         disabled: "rgba(0, 0, 0, 0.38)",
         faint: "rgba(0, 0, 0, 0.12)",
       },
+      default: {
+        400: "#9F96B7",
+        500: "#8E83AA",
+        600: "#867BA3",
+      },
       main: {
         100: "#E4E1FB",
         200: "#CEC8F3",
