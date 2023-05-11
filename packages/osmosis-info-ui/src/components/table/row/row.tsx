@@ -2,6 +2,7 @@ import React from "react";
 import { ColumnState } from "../types";
 import { Cell } from "../cell/cell";
 import { useTable } from "../context/table-context";
+import { DENSITY_FACTORS } from "../config";
 
 type RowProps = {
 	currentData: any;
@@ -13,16 +14,18 @@ export function Row({ currentData, data }: RowProps) {
 		columnsState,
 		configuration: { getRowHeight },
 		rowState,
-		tableState: { densityFactor },
+		tableState: { density },
 	} = useTable();
 
 	const onClick = () => {
 		return;
 	};
 
+	const densityFactor = DENSITY_FACTORS[density];
+
 	let height = rowState.height * densityFactor;
 	if (getRowHeight && typeof getRowHeight === "function") {
-		height = getRowHeight({ currentData, data, densityFactor });
+		height = getRowHeight({ currentData, data, densityFactor: densityFactor });
 	}
 
 	return (
@@ -33,8 +36,8 @@ export function Row({ currentData, data }: RowProps) {
 			}}
 			onClick={onClick}
 		>
-			{columnsState.map((column: ColumnState, index: number): React.ReactElement => {
-				return (
+			{columnsState.map((column: ColumnState, index: number): React.ReactElement | null => {
+				return column.hide ? null : (
 					<Cell
 						key={`${column.key}-${index}`}
 						currentData={currentData}

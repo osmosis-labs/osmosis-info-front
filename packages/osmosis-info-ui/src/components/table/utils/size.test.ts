@@ -13,16 +13,19 @@ describe("Table size", () => {
 		const columns: ColumnConfiguration[] = [
 			{
 				key: "a",
+				display: "a",
 				accessor: "",
 				minWidth,
 			},
 			{
 				key: "b",
+				display: "b",
 				accessor: "",
 				minWidth,
 			},
 			{
 				key: "c",
+				display: "c",
 				accessor: "",
 				minWidth,
 			},
@@ -38,16 +41,19 @@ describe("Table size", () => {
 		const columns: ColumnConfiguration[] = [
 			{
 				key: "a",
+				display: "a",
 				accessor: "",
 				minWidth,
 			},
 			{
 				key: "b",
+				display: "b",
 				accessor: "",
 				minWidth,
 			},
 			{
 				key: "c",
+				display: "c",
 				accessor: "",
 				minWidth,
 			},
@@ -64,16 +70,19 @@ describe("Table size", () => {
 		const columns: ColumnConfiguration[] = [
 			{
 				key: "a",
+				display: "a",
 				accessor: "",
 				maxWidth,
 			},
 			{
 				key: "b",
+				display: "b",
 				accessor: "",
 				maxWidth,
 			},
 			{
 				key: "c",
+				display: "c",
 				accessor: "",
 				maxWidth,
 			},
@@ -90,18 +99,21 @@ describe("Table size", () => {
 				columns: [
 					{
 						key: "a",
+						display: "a",
 						accessor: "",
 						maxWidth: 50,
 						minWidth: 50,
 					},
 					{
 						key: "b",
+						display: "b",
 						accessor: "",
 						maxWidth: 50,
 						minWidth: 50,
 					},
 					{
 						key: "c",
+						display: "c",
 						accessor: "",
 						maxWidth: 50,
 						minWidth: 50,
@@ -114,16 +126,19 @@ describe("Table size", () => {
 				columns: [
 					{
 						key: "a",
+						display: "a",
 						accessor: "",
 						flex: 1,
 					},
 					{
 						key: "b",
+						display: "b",
 						accessor: "",
 						flex: 1,
 					},
 					{
 						key: "c",
+						display: "c",
 						accessor: "",
 						flex: 1,
 					},
@@ -135,16 +150,19 @@ describe("Table size", () => {
 				columns: [
 					{
 						key: "a",
+						display: "a",
 						accessor: "",
 						flex: 2,
 					},
 					{
 						key: "b",
+						display: "b",
 						accessor: "",
 						flex: 1,
 					},
 					{
 						key: "c",
+						display: "c",
 						accessor: "",
 						flex: 1,
 					},
@@ -156,17 +174,20 @@ describe("Table size", () => {
 				columns: [
 					{
 						key: "a",
+						display: "a",
 						accessor: "",
 						flex: 2,
 						maxWidth: 100,
 					},
 					{
 						key: "b",
+						display: "b",
 						accessor: "",
 						flex: 1,
 					},
 					{
 						key: "c",
+						display: "c",
 						accessor: "",
 						flex: 1,
 					},

@@ -40,8 +40,6 @@ export const Switch = ({ onChange, className, disabled, value, name }: SwitchPro
 		if (!disabled) classNameDefault += " bg-default-500 hover:bg-default-400";
 	}
 
-	if (name === "id") console.log("%cswitch.tsx -> 43 PINK: value", "background: #e91e63; color:#FFFFFF", name, value);
-
 	return (
 		<div onClick={onClick} className={classNameDefault}>
 			<span className={classPin} />

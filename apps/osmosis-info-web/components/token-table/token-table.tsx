@@ -102,7 +102,7 @@ export const TokenTable = () => {
 					display: "ID",
 					key: "id",
 					flex: 1,
-					minWidth: 30,
+					minWidth: 300,
 					sortable: true,
 					onSort: (a: any, b: any) => {
 						return b - a;
@@ -120,14 +120,14 @@ export const TokenTable = () => {
 					display: "Image",
 					key: "image",
 					accessor: imageRender,
-					minWidth: 50,
+					minWidth: 200,
 					flex: 1,
 				},
 				{
 					display: "Price",
 					key: "price",
 					accessor: (params: Params<Data>) => formatPrice(params.currentData.price),
-					minWidth: 100,
+					minWidth: 300,
 					flex: 1,
 					align: "right",
 				},

@@ -3,6 +3,7 @@ import { ColumnState } from "../types";
 import { ArrowTopSVG } from "../../svg/arrow-top-svg";
 import { useTable } from "../context/table-context";
 import { OrderDirection } from "../types";
+import { DENSITY_FACTORS, HEADER_HEIGHT } from "../config";
 
 type CellHeaderProps = {
 	column: ColumnState;
@@ -14,10 +15,15 @@ export const CellHeader = ({ column, index }: CellHeaderProps) => {
 
 	const { updateColumnsState, columnsState, tableState, updateTableState } = useTable();
 
+	const densityFactor = DENSITY_FACTORS[tableState.density];
+
+	const height = HEADER_HEIGHT * densityFactor;
+
 	const style: React.CSSProperties = {};
 
 	style.maxWidth = `${width}px`;
 	style.minWidth = `${width}px`;
+	style.height = `${height}px`;
 
 	let className =
 		"p-2 flex w-full items-center [&>svg]:hover:opacity-100 [&>svg]:transition-all [&>svg]:duration-default ";
@@ -42,12 +48,11 @@ export const CellHeader = ({ column, index }: CellHeaderProps) => {
 	}
 
 	if (sortable) {
-		className += " cursor-pointer hover:opacity-100 transition-all duration-default";
+		className += " cursor-pointer hover:opacity-100 transition-opacity transition-colors duration-default";
 	}
 
 	const onSortClick = useCallback(() => {
 		if (sortable) {
-			console.log("cell-header.tsx -> 27: sort");
 			const columnUpdated = { ...column };
 			let columns: ColumnState[] = [];
 			let direction: OrderDirection = "ASC";

@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import { ColumnState, RowState, TableConfiguration, TableState } from "../types";
+import { calculeSizes } from "../utils/size";
+import { findInArray } from "../utils/utils";
 
 export type TableContexte = {
 	tableState: TableState;
@@ -9,6 +11,8 @@ export type TableContexte = {
 	updateColumnsState: (newColumnsState: ColumnState[]) => void;
 	updateTableState: (state: TableState) => void;
 	updateRowState: (state: RowState) => void;
+	width: number;
+	updateWidth: (width: number) => void;
 };
 
 const defaultTableContext: TableContexte = {
@@ -19,6 +23,8 @@ const defaultTableContext: TableContexte = {
 	updateColumnsState: () => null,
 	updateTableState: () => null,
 	updateRowState: () => null,
+	width: 0,
+	updateWidth: () => null,
 };
 
 const TableContext = createContext<TableContexte>(defaultTableContext);
@@ -43,8 +49,22 @@ export const TableProvider = ({
 	const [columnsState, setColumnsState] = useState<ColumnState[]>(initialColumnsState);
 	const [tableState, updateTableState] = useState<TableState>(initialTableState);
 	const [rowState, updateRowState] = useState<RowState>(initialRowState);
+	const [width, updateWidth] = useState(0);
 
 	const updateColumnsState = (newColumnsState: ColumnState[]) => {
+		if (width > 0) {
+			const sizeColumns = calculeSizes(
+				width,
+				configuration.columns.filter((column) => {
+					const currentState = findInArray(newColumnsState, column.key);
+					return currentState && !currentState.hide;
+				})
+			);
+
+			newColumnsState.forEach((column) => {
+				column.width = sizeColumns[column.key];
+			});
+		}
 		setColumnsState([...newColumnsState]);
 	};
 	return (
@@ -56,6 +76,8 @@ export const TableProvider = ({
 				updateTableState,
 				rowState,
 				updateRowState,
+				width,
+				updateWidth,
 				configuration,
 			}}
 		>

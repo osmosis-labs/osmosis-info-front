@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from "react";
+import React, { useRef, useMemo, UIEvent } from "react";
 import { Row } from "../row/row";
 import { calculeSizes } from "../utils/size";
 import useResizeObserver from "../../../hooks/use-windows-resize";
@@ -6,16 +6,18 @@ import { useTable } from "../context/table-context";
 import { findInArray } from "../utils/utils";
 import { ColumnState } from "../types";
 
-export const Body = ({ data }: { data: any[] }) => {
+export const Body = ({ data, onScroll }: { data: any[]; onScroll: (e: UIEvent<HTMLDivElement>) => void }) => {
 	const refContent = useRef<HTMLDivElement | null>(null);
 	const refContainer = useRef<HTMLDivElement | null>(null);
 	const {
 		rowState: { height: rowHeight },
-		tableState: { rowPerPage, currentPage, orderBy, orderDirection },
+		tableState,
 		columnsState,
 		updateColumnsState,
+		updateWidth,
 		configuration: { columns, autoHeight },
 	} = useTable();
+	const { rowPerPage, currentPage, orderBy, orderDirection } = tableState;
 
 	const handleResize = (): void => {
 		if (refContent && refContent.current && refContainer && refContainer.current) {
@@ -24,12 +26,19 @@ export const Body = ({ data }: { data: any[] }) => {
 
 			let currentWidth = refContent.current.getClientRects()[0].width;
 			if (hasScrollbar) currentWidth -= diff;
-			const sizeColumns = calculeSizes(currentWidth || null, columns);
+			const sizeColumns = calculeSizes(
+				currentWidth || null,
+				columns.filter((column) => {
+					const currentState = findInArray(columnsState, column.key);
+					return currentState && !currentState.hide;
+				})
+			);
 
 			columnsState.forEach((c, index) => {
 				const width = sizeColumns[c.key] || 100;
 				columnsState[index].width = width;
 			});
+			updateWidth(currentWidth);
 			updateColumnsState([...columnsState]);
 		}
 	};
@@ -62,8 +71,13 @@ export const Body = ({ data }: { data: any[] }) => {
 	}, [columnsState, data, orderBy, orderDirection]);
 
 	return (
-		<div className="overflow-hidden border-l-[1px] border-r-[1px] border-main-700" ref={refContainer}>
-			<div className="overflow-auto" style={{ maxHeight: `${rowPerPage * rowHeight}px` }} ref={refContent}>
+		<div className="border-l-[1px] border-r-[1px] border-main-700" ref={refContainer}>
+			<div
+				className="overflow-auto"
+				style={{ maxHeight: `${rowPerPage * rowHeight}px` }}
+				ref={refContent}
+				onScroll={onScroll}
+			>
 				{displayData.slice(cutRowStart, cutRowEnd).map((currentData, index: number) => {
 					return <Row key={index} currentData={currentData} data={data} />;
 				})}

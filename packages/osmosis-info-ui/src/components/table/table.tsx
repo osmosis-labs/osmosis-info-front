@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, UIEvent } from "react";
 import { TableConfiguration } from "./types";
 import { TableRoot } from "./table-root";
 import { TableProvider } from "./context/table-context";
@@ -14,6 +14,15 @@ export type TableProps = {
 
 export const Table = React.memo(function ({ data, config }: TableProps) {
 	const { tableState, columnsState, rowState } = useStateInitialize(config);
+	const refHeader = useRef<HTMLDivElement>(null);
+
+	const onScroll = (event: UIEvent<HTMLDivElement>) => {
+		const scrollLeft = event.currentTarget.scrollLeft;
+
+		if (refHeader.current) {
+			refHeader.current.style.transform = `translateX(${-scrollLeft}px)`;
+		}
+	};
 
 	return (
 		<TableProvider
@@ -23,8 +32,8 @@ export const Table = React.memo(function ({ data, config }: TableProps) {
 			configuration={config}
 		>
 			<TableRoot>
-				<Header />
-				<Body data={data} />
+				<Header ref={refHeader} />
+				<Body data={data} onScroll={onScroll} />
 				<Footer data={data} />
 			</TableRoot>
 		</TableProvider>
