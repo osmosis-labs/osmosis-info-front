@@ -69,7 +69,7 @@ const InfoPrice = ({ title, data, range, currency = { before: true, value: "$" }
 
 	const formatDateForDisplay = (date, range) => {
 		if (range && range === 1440 && isToDay(date)) {
-			return "Last 24 hours"
+			return "Now"
 		}
 		return formatDateHours(date)
 	}
