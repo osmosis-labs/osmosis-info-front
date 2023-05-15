@@ -72,7 +72,7 @@ const InfoLiquidity = ({ title, data, range, currency = { value: "$", before: tr
 			let dates = getDates(date, range)
 			return `${formatDate(dates[0])} - ${formatDate(dates[1])}`
 		} else if (range && range === "d" && isToDay(date)) {
-			return "Last 24 hours"
+			return "Now"
 		}
 		return formatDate(date)
 	}
