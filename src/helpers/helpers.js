@@ -231,3 +231,10 @@ export const timeToDateUTC = (time) => {
 			return new Date(Date.UTC(time))
 	}
 }
+
+export const isToDay = (date) => {
+	const today = new Date()
+	return date.getDate() == today.getDate() &&
+		date.getMonth() == today.getMonth() &&
+		date.getFullYear() == today.getFullYear()
+}

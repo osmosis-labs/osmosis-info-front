@@ -1,6 +1,16 @@
 import { makeStyles } from "@material-ui/core"
 import { useCallback, useEffect, useState } from "react"
-import { formatDate, formateNumberDecimals, formateNumberPrice, formateNumberPriceDecimals, getDates, isValidDate, timeToDate, twoNumber } from "../../../helpers/helpers"
+import {
+	formatDate,
+	formateNumberDecimals,
+	formateNumberPrice,
+	formateNumberPriceDecimals,
+	getDates,
+	isToDay,
+	isValidDate,
+	timeToDate,
+	twoNumber,
+} from "../../../helpers/helpers"
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -61,6 +71,8 @@ const InfoLiquidity = ({ title, data, range, currency = { value: "$", before: tr
 		if (range && range !== "d") {
 			let dates = getDates(date, range)
 			return `${formatDate(dates[0])} - ${formatDate(dates[1])}`
+		} else if (range && range === "d" && isToDay(date)) {
+			return "Last 24 hours"
 		}
 		return formatDate(date)
 	}
