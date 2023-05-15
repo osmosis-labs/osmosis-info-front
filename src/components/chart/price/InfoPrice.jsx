@@ -6,6 +6,7 @@ import {
 	formateNumberDecimalsAuto,
 	formateNumberPrice,
 	getDates,
+	isToDay,
 	isValidDate,
 	timeToDate,
 	twoNumber,
@@ -49,7 +50,7 @@ const InfoPrice = ({ title, data, range, currency = { before: true, value: "$" }
 		}
 	}
 
-	const setInfo = (item) => {
+	const setInfo = (item, range) => {
 		let value = `${formatPriceForDisplay(item.value)}`
 		if (currency.before) {
 			value = `${currency.value}${value}`
@@ -58,15 +59,18 @@ const InfoPrice = ({ title, data, range, currency = { before: true, value: "$" }
 		}
 		setCurrentInfo({
 			value,
-			date: formatDateForDisplay(item.date),
+			date: formatDateForDisplay(item.date, range),
 		})
 	}
 
 	const formatPriceForDisplay = (price) => {
-		return formateNumberDecimalsAuto({price})
+		return formateNumberDecimalsAuto({ price })
 	}
 
-	const formatDateForDisplay = (date) => {
+	const formatDateForDisplay = (date, range) => {
+		if (range && range === 1440 && isToDay(date)) {
+			return "Last 24 hours"
+		}
 		return formatDateHours(date)
 	}
 
