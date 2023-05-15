@@ -2,25 +2,22 @@ import React, { forwardRef } from "react";
 import { useTable } from "../context/table-context";
 import { CellHeader } from "./cell-header";
 import { DENSITY_FACTORS, HEADER_HEIGHT, HEADER_SETTINGS_HEIGHT } from "../config";
-import { HeaderSettings } from "./header-settings";
+import { HeaderSettings } from "./settings/header-settings";
 
 /*
 - Display columns name with specified width
 - Add popin for options
-    - Density
-    - Columns to display
     - Filter
     - Export
-	- default settings
-- Add options with filtering whith icons
+	- reset to default settings
+	- Add options to order columns
 - Add checkbox for selecting all rows
 - Add resizing options
-- Add options to order columns
 - Add saving options
 
 */
 
-export const Header = forwardRef<HTMLDivElement>((props, ref) => {
+export const Header = forwardRef<HTMLDivElement>((_, ref) => {
 	const {
 		columnsState,
 		tableState: { density, displaySettings },
