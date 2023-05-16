@@ -1,13 +1,10 @@
 import {
-	ALIGMENT,
 	DEFAULT_COLUMN_CONFIGURATION,
 	DEFAULT_TABLE_CONFIGURATION,
-	DENSITY,
-	ROWS_PER_PAGE,
+	Filter,
 	ROW_HEIGHT,
-	ROW_PER_PAGE,
 	SORT,
-	SORTABLE,
+	onFilter,
 } from "../config";
 import { ColumnState, RowState, TableConfiguration, TableState } from "../types";
 import { calculeSizes } from "../utils/size";
@@ -21,14 +18,14 @@ export const useStateInitialize = (
 	);
 	const columnsState: ColumnState[] = [];
 
-	const density = config.density || DENSITY;
+	const density = config.density || DEFAULT_TABLE_CONFIGURATION.density;
 
 	const tableState: TableState = {
 		density: density,
 		currentPage: 0,
 		displaySettings: config.displaySettings ?? DEFAULT_TABLE_CONFIGURATION.displaySettings,
-		rowPerPage: config.rowPerPage ?? ROW_PER_PAGE,
-		rowsPerPage: config.rowsPerPage ?? ROWS_PER_PAGE,
+		rowPerPage: config.rowPerPage ?? DEFAULT_TABLE_CONFIGURATION.rowPerPage,
+		rowsPerPage: config.rowsPerPage ?? DEFAULT_TABLE_CONFIGURATION.rowsPerPage,
 		orderBy: config.defaultOrderBy,
 		orderDirection: config.defaultOrderDirection,
 		width: 0,
@@ -38,6 +35,7 @@ export const useStateInitialize = (
 	};
 
 	config.columns.forEach((column) => {
+		const filterable = column.filterable || DEFAULT_COLUMN_CONFIGURATION.filterable;
 		columnsState.push({
 			key: column.key,
 			display: column.display,
@@ -46,9 +44,12 @@ export const useStateInitialize = (
 			sorted: config.defaultOrderBy === column.key,
 			orderDirection: config.defaultOrderBy === column.key ? config.defaultOrderDirection ?? null : null,
 			width: sizeColumns[column.key],
-			align: column.align || ALIGMENT,
+			align: column.align || DEFAULT_COLUMN_CONFIGURATION.alignment,
 			onSort: column.onSort ?? SORT,
-			sortable: column.sortable || SORTABLE,
+			sortable: column.sortable || DEFAULT_COLUMN_CONFIGURATION.sortable,
+			filterable,
+			filters: filterable ? column.filters ?? [] : [],
+			onFilter: filterable ? column.onFilter ?? onFilter : undefined,
 		});
 	});
 	return { tableState, columnsState, rowState };

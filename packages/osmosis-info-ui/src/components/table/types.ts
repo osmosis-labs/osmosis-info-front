@@ -1,3 +1,5 @@
+import { Filter } from "./config";
+
 export type Density = "compact" | "medium" | "confortable";
 
 export type Alignment = "left" | "center" | "right";
@@ -7,6 +9,10 @@ export type Params<T> = {
 	data: T[];
 };
 
+export type ParamsFilter<T> = {
+	data: T[];
+	filter: Filter;
+};
 export type ParamsRowHeight<T> = {
 	currentData: T;
 	data: T[];
@@ -25,6 +31,9 @@ export type ColumnConfiguration = {
 	minWidth?: number;
 	align?: Alignment;
 	onSort?: (a: any, b: any) => number;
+	filterable?: boolean;
+	filters?: Filter[];
+	onFilter?: (argFilter: ParamsFilter<any>) => boolean;
 	sortable?: boolean;
 };
 
@@ -39,6 +48,9 @@ export type ColumnState = {
 	align: Alignment;
 	onSort?: (a: any, b: any) => number;
 	sortable: boolean;
+	filterable: boolean;
+	onFilter?: (argFilter: ParamsFilter<any>) => boolean;
+	filters: Filter[];
 };
 
 export type TableConfiguration = {

@@ -1,5 +1,11 @@
 import { Button, Table } from "@latouche/osmosis-info-ui";
-import { Params, ParamsRowHeight, TableConfiguration } from "@latouche/osmosis-info-ui/lib/esm/components/table/types";
+import { filtersString } from "@latouche/osmosis-info-ui/lib/esm/components/table/config";
+import {
+	Params,
+	ParamsFilter,
+	ParamsRowHeight,
+	TableConfiguration,
+} from "@latouche/osmosis-info-ui/lib/esm/components/table/types";
 import { table } from "console";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useState } from "react";
@@ -107,6 +113,12 @@ export const TokenTable = () => {
 					onSort: (a: any, b: any) => {
 						return b - a;
 					},
+					filterable: true,
+					filters: [{ display: "random", value: "Random" }],
+					onFilter: (params: ParamsFilter<Data>) => {
+						console.log("token-table.tsx -> 119: filter", params);
+						return true;
+					},
 				},
 				{
 					display: "Name",
@@ -115,6 +127,8 @@ export const TokenTable = () => {
 					minWidth: 200,
 					align: "center",
 					sortable: true,
+					filterable: true,
+					filters: filtersString,
 				},
 				{
 					display: "Image",

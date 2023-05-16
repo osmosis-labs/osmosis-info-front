@@ -7,6 +7,7 @@ import { Button } from "../../../buttons/button/button";
 import { IconButton } from "../../../buttons/icon-button/icon-button";
 import { DensitySettings } from "./density-settings";
 import { ColumnsSettings } from "./columns-settings";
+import { FiltersSettings } from "./filters-settings";
 
 export const HeaderSettings = () => {
 	const { tableState } = useTable();
@@ -47,6 +48,7 @@ export const HeaderSettings = () => {
 					</div>
 					<DensitySettings />
 					<ColumnsSettings />
+					<FiltersSettings />
 					<div className="flex items-center justify-center mt-2">
 						<Button onClick={onCloseDialog} size="small">
 							Validate
