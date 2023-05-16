@@ -20,9 +20,15 @@ export const Backdrop = ({ children, className, open, onClick }: BackdropProps) 
 	const classNameDefault = `fixed inset-0 overflow-hidden`;
 	const classNameOpen = `${classNameDefault} ${className} z-50 opacity-100 dialogTransitionOpen`;
 	const classNameClose = `${classNameDefault} ${className} -z-50 opacity-0 dialogTransitionClose`;
+
+	const onClickBackdrop = (event: React.MouseEvent<HTMLDivElement>) => {
+		if (event.target === event.currentTarget) {
+			if (onClick) onClick(event);
+		}
+	};
 	return (
 		<Portal>
-			<div onClick={onClick} className={open ? classNameOpen : classNameClose}>
+			<div onClick={onClickBackdrop} className={open ? classNameOpen : classNameClose}>
 				{children}
 			</div>
 		</Portal>
