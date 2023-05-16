@@ -21,18 +21,70 @@ export const SORT_STRING = (a: string, b: string) => a.localeCompare(b);
 
 export type Filter = { display: string; value: string };
 
-export const onFilterStringChange = (params: ParamsFilter<any>) => true;
-export const onFilterNumberChange = (params: ParamsFilter<any>) => true;
-export const onFilter = (params: ParamsFilter<any>) => true;
+export const filterContains = (params: ParamsFilter<any>) => {
+	return params.data[params.key].toLowerCase().includes(params.value.toLowerCase());
+};
+
+export const filterStartWith = (params: ParamsFilter<any>) => {
+	return params.data[params.key].toLowerCase().startsWith(params.value.toLowerCase());
+};
+
+export const filterEndWith = (params: ParamsFilter<any>) => {
+	return params.data[params.key].toLowerCase().endsWith(params.value.toLowerCase());
+};
+
+export const filterEqualsString = (params: ParamsFilter<any>) => {
+	return params.data[params.key].toLowerCase() === params.value.toLowerCase();
+};
+
+export const filterLower = (params: ParamsFilter<any>) => {
+	return params.data[params.key] < params.value;
+};
+
+export const filterHigher = (params: ParamsFilter<any>) => {
+	return params.data[params.key] > params.value;
+};
+
+export const filterEqualsNumber = (params: ParamsFilter<any>) => {
+	return params.data[params.key] == params.value;
+};
+
+export const onFilterStringChange = (params: ParamsFilter<any>) => {
+	if (params.filter.value === "contains") {
+		return filterContains(params);
+	} else if (params.filter.value === "startWith") {
+		return filterStartWith(params);
+	} else if (params.filter.value === "endWith") {
+		return filterEndWith(params);
+	} else if (params.filter.value === "equals") {
+		return filterEqualsString(params);
+	}
+	return true;
+};
+export const onFilterNumberChange = (params: ParamsFilter<any>) => {
+	if (params.filter.value === "lower") {
+		return filterLower(params);
+	} else if (params.filter.value === "higher") {
+		return filterHigher(params);
+	} else if (params.filter.value === "equals") {
+		return filterEqualsNumber(params);
+	}
+	return true;
+};
+export const onFilter = (params: ParamsFilter<any>) => {
+	if (typeof params.data[params.key] === "string") return onFilterStringChange(params);
+	else if (typeof params.data[params.key] === "number") return onFilterNumberChange(params);
+	return true;
+};
 export const filtersString: Filter[] = [
 	{ display: "Contains", value: "contains" },
-	{ display: "Start width", value: "startWidth" },
-	{ display: "End width", value: "endWidth" },
+	{ display: "Start with", value: "startWith" },
+	{ display: "End with", value: "endWith" },
 	{ display: "Equals", value: "equals" },
 ];
 export const filtersNumber: Filter[] = [
-	{ display: "lower", value: "Lower" },
-	{ display: "higher", value: "Higher" },
+	{ display: "Lower", value: "lower" },
+	{ display: "Higher", value: "higher" },
 	{ display: "Equals", value: "equals" },
 ];
 

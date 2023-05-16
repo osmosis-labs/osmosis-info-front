@@ -10,8 +10,10 @@ export type Params<T> = {
 };
 
 export type ParamsFilter<T> = {
-	data: T[];
+	data: T;
 	filter: Filter;
+	value: any;
+	key: string;
 };
 export type ParamsRowHeight<T> = {
 	currentData: T;
@@ -79,6 +81,9 @@ export type TableState = {
 	currentPage: number;
 	width: number;
 	displaySettings: boolean;
+	filter?: Filter;
+	filterColumn?: string;
+	filterValue?: any;
 };
 
 export type ColumnConfigurationWidthMinWitdh = ColumnConfiguration & {

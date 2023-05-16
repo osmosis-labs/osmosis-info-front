@@ -28,7 +28,7 @@ export const HeaderSettings = () => {
 
 	return (
 		<div
-			className="border-r-[1px] border-l-[1px] border-t-[1px] border-primary-700 rounded-t-md font-light text-xs cursor-pointer flex items-center justify-end px-2 pt-3 pb-1 "
+			className="border-r-[1px] border-l-[1px] border-t-[1px] border-surface rounded-t-md font-light text-xs cursor-pointer flex items-center justify-end px-2 pt-3 pb-1 "
 			style={{
 				height: `${heightSettings}px`,
 			}}
@@ -44,12 +44,12 @@ export const HeaderSettings = () => {
 				<div className="mx-2 mb-2">
 					<div className="flex items-center justify-between">
 						<p className=" my-2">Table settings</p>
-						<IconButton onClick={onCloseDialog} Icon={CloseSvg} variant="flat" className="stroke-primary-500 !pr-0" />
+						<IconButton onClick={onCloseDialog} Icon={CloseSvg} variant="flat" className="stroke-default-500  !pr-0" />
 					</div>
 					<DensitySettings />
 					<ColumnsSettings />
 					<FiltersSettings />
-					<div className="flex items-center justify-center mt-2">
+					<div className="flex items-center justify-center mt-4">
 						<Button onClick={onCloseDialog} size="small">
 							Validate
 						</Button>

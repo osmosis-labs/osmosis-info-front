@@ -11,7 +11,7 @@ type CellHeaderProps = {
 };
 
 export const CellHeader = ({ column, index }: CellHeaderProps) => {
-	const { key, width, align, sortable, sorted, orderDirection } = column;
+	const { key, width, align, sortable, sorted, orderDirection, display } = column;
 
 	const { updateColumnsState, columnsState, tableState, updateTableState } = useTable();
 
@@ -28,7 +28,7 @@ export const CellHeader = ({ column, index }: CellHeaderProps) => {
 	let className =
 		"p-2 flex w-full items-center [&>svg]:hover:opacity-100 [&>svg]:transition-all [&>svg]:duration-default ";
 
-	let classNameIcon = "p-1 fill-primary-400";
+	let classNameIcon = "p-1 fill-default-500";
 	if (align === "right") {
 		className += " flex-row-reverse";
 	} else if (align === "center") {
@@ -88,7 +88,7 @@ export const CellHeader = ({ column, index }: CellHeaderProps) => {
 
 	return (
 		<div className={className} style={style} onClick={onSortClick}>
-			{key}
+			{display}
 			{sortable && <ArrowTopSVG className={classNameIcon} />}
 		</div>
 	);

@@ -17,7 +17,7 @@ export const Body = ({ data, onScroll }: { data: any[]; onScroll: (e: UIEvent<HT
 		updateWidth,
 		configuration: { columns, autoHeight },
 	} = useTable();
-	const { rowPerPage, currentPage, orderBy, orderDirection } = tableState;
+	const { rowPerPage, currentPage, orderBy, orderDirection, filter, filterColumn, filterValue } = tableState;
 
 	const handleResize = (): void => {
 		if (refContent && refContent.current && refContainer && refContainer.current) {
@@ -50,8 +50,20 @@ export const Body = ({ data, onScroll }: { data: any[]; onScroll: (e: UIEvent<HT
 	const emptyRows = Math.max(0, (1 + currentPage) * rowPerPage - data.length);
 
 	const displayData = useMemo(() => {
-		const res = [...data];
-
+		let res = [...data];
+		if (filter !== undefined && filterColumn !== undefined && filterValue !== undefined && filterValue.length > 0) {
+			const currentColumn = findInArray(columnsState, filterColumn);
+			if (currentColumn && currentColumn.filterable && currentColumn.onFilter) {
+				if (currentColumn.onFilter) {
+					res = res.filter((data: any) => {
+						if (currentColumn.onFilter) {
+							return currentColumn.onFilter({ data, filter, value: filterValue, key: currentColumn.key });
+						}
+						return false;
+					});
+				}
+			}
+		}
 		const currentColumn = findInArray<ColumnState>(columnsState, orderBy || "");
 
 		if (currentColumn) {
@@ -68,10 +80,10 @@ export const Body = ({ data, onScroll }: { data: any[]; onScroll: (e: UIEvent<HT
 			});
 		}
 		return res;
-	}, [columnsState, data, orderBy, orderDirection]);
+	}, [columnsState, data, orderBy, orderDirection, filter, filterColumn, filterValue]);
 
 	return (
-		<div className="border-l-[1px] border-r-[1px] border-primary-700" ref={refContainer}>
+		<div className="border-l-[1px] border-r-[1px] border-surface" ref={refContainer}>
 			<div
 				className="overflow-auto"
 				style={{ maxHeight: `${rowPerPage * rowHeight}px` }}

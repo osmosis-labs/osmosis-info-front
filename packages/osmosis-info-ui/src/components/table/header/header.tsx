@@ -37,7 +37,7 @@ export const Header = forwardRef<HTMLDivElement>((_, ref) => {
 		>
 			{displaySettings && <HeaderSettings />}
 			<div
-				className="border-l-[1px]  border-r-[1px] border-b-[1px] border-primary-700 overflow-hidden"
+				className="border-l-[1px]  border-r-[1px] border-b-[1px] border-surface overflow-hidden"
 				style={{
 					height: `${height}px`,
 				}}

@@ -44,7 +44,7 @@ export const Footer = ({ data }: { data: any[] }) => {
 	};
 
 	return (
-		<div className="h-[53px] flex items-center justify-center  box-border border-[1px] border-primary-700 rounded-b-md ">
+		<div className="h-[53px] flex items-center justify-center  box-border border-[1px] border-surface rounded-b-md ">
 			<span className="ml-2 flex-1">
 				<span className="xs:hidden">{translations?.footer?.rowsPerPage ?? "Rows per page:"}</span>
 				<Dropdown<number> items={items} value={rowPerPage} onChange={onChange} size="small" outlinded={false} />

@@ -59,7 +59,7 @@ const DragableColumns = ({
 					onChangeHideColumn(!value, i);
 				};
 				let className =
-					"absolute w-full flex items-center h-[40px] bg-primary-700 border-[1px] border-primary-300 rounded-md my-1 duration-default";
+					"absolute w-full flex items-center h-[40px] bg-card border-[1px] border-modal rounded-md my-1 duration-default";
 				if (active) className += " !transition-none";
 
 				return (
