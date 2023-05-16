@@ -43,12 +43,12 @@ export const IconButton = ({
     px-4 py-3 rounded-xl h-fit w-fit cursor-pointer transition-colors 
     ${className}`;
 
-	const fillAnime = `[&>svg]:hover:fill-white-full [&>svg]:fill-primary-200 `;
-	const fill = `[&>svg]:fill-primary-200 [&>svg]:transition-colors`;
-	const strokeAnime = `[&>svg]:hover:stroke-white-full [&>svg]:stroke-primary-200 `;
-	const stroke = `[&>svg]:stroke-primary-200 [&>svg]:transition-colors`;
+	const fillAnime = `[&>svg]:hover:fill-default-400 [&>svg]:fill-default-500 `;
+	const fill = `[&>svg]:fill-default-500 [&>svg]:transition-colors`;
+	const strokeAnime = `[&>svg]:hover:stroke-default-400 [&>svg]:stroke-default-500 `;
+	const stroke = `[&>svg]:stroke-default-500 [&>svg]:transition-colors`;
 	if (variant === "default") {
-		classIconButton = `bg-primary-700 hover:bg-primary-200 ${classIconButton}`;
+		classIconButton = `bg-primary-200 hover:bg-primary-300 ${classIconButton}`;
 	}
 	if (fillAnimation) {
 		classIconButton = `${fill} ${classIconButton}`;
