@@ -39,7 +39,7 @@ const Tokens = observer(() => {
 const Token = observer(({ tokenStore }: { tokenStore: TokenStore }) => {
 	return (
 		<Link href={`/tokens/${tokenStore.symbol}`} prefetch={false}>
-			<Paper className="p-2 m-2 bg-main-600 w-fit min-w-[260px] rounded-sm cursor-pointer hover:bg-main-700 transition-colors duration-default">
+			<Paper className="p-2 m-2 bg-primary-600 w-fit min-w-[260px] rounded-sm cursor-pointer hover:bg-primary-700 transition-colors duration-default">
 				<p>id: {tokenStore.id}</p>
 				<p>symbol: {tokenStore.symbol}</p>
 				<p>price: {tokenStore.price}</p>

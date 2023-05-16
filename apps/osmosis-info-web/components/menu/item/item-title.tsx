@@ -32,7 +32,7 @@ export function ItemMenuTitle() {
 					onClick={onClick}
 					width={40}
 					height={40}
-					className="my-2 ml-2 pr-2 cursor-pointer fill-main-400 hover:fill-wosmongton-100 duration-300"
+					className="my-2 ml-2 pr-2 cursor-pointer fill-default-500 hover:fill-default-400 duration-default"
 				/>
 				<OsmosisSvg className="my-2 ml-3 pr-2 cursor-pointer" width={40} onClick={goToOsmosis} />
 				<p className="text-xl ml-2 cursor-pointer" onClick={goTo}>
@@ -42,7 +42,7 @@ export function ItemMenuTitle() {
 			<LeftSvg
 				onClick={onClick}
 				strokeWidth={2}
-				className="my-2 ml-2 pr-2 cursor-pointer stroke-main-400 scale-150 duration-300 hover:stroke-wosmongton-100 hover:-translate-x-2"
+				className="my-2 ml-2 pr-2 cursor-pointer stroke-default-500 scale-150 duration-default hover:stroke-default-400 hover:-translate-x-2"
 			/>
 		</div>
 	);

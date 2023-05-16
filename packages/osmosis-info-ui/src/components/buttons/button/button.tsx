@@ -34,13 +34,13 @@ export const Button = ({
 
 	if (variant === "secondary") {
 		if (disabled) {
-			classNameDefaut += `${classNameDefaut} border-2 border-main-600 text-main-600 cursor-not-allowed py-3.5`;
+			classNameDefaut += `${classNameDefaut} border-2 border-primary-200  opacity-50 cursor-not-allowed py-3.5`;
 		} else {
-			classNameDefaut += `${classNameDefaut} border-2 border-wosmongton-400 hover:border-wosmongton-200 transition-all py-3.5`;
+			classNameDefaut += `${classNameDefaut} border-2 border-primary-400 hover:border-primary-200 transition-all py-3.5`;
 		}
 	} else {
-		if (disabled) classNameDefaut += `${classNameDefaut} bg-main-500 cursor-not-allowed text-main-100`;
-		else if (variant === "primary") classNameDefaut += `${classNameDefaut} bg-wosmongton-700 hover:bg-wosmongton-400`;
+		if (disabled) classNameDefaut += `${classNameDefaut} opacity-50 bg-primary-200 cursor-not-allowed `;
+		else if (variant === "primary") classNameDefaut += `${classNameDefaut} bg-primary-200 hover:bg-primary-400`;
 		else if (variant === "warning")
 			classNameDefaut += `${classNameDefaut} bg-gradient-to-r from-rust-800 to-rust-500 transition-all duration-default bg-size-x-200 bg-pos-0 hover:bg-pos-100`;
 	}

@@ -28,7 +28,7 @@ export const CellHeader = ({ column, index }: CellHeaderProps) => {
 	let className =
 		"p-2 flex w-full items-center [&>svg]:hover:opacity-100 [&>svg]:transition-all [&>svg]:duration-default ";
 
-	let classNameIcon = "p-1 fill-main-400";
+	let classNameIcon = "p-1 fill-primary-400";
 	if (align === "right") {
 		className += " flex-row-reverse";
 	} else if (align === "center") {

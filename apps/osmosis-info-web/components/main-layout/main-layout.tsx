@@ -66,7 +66,7 @@ const MainLayout: FunctionComponent<PropsWithChildren<MainLayoutProps>> = observ
 	}
 
 	return (
-		<div className="bg-main-900 flex">
+		<div className="bg-background flex">
 			<TopMenu />
 			<BottomMenu items={items} />
 			<SideMenu items={items} />

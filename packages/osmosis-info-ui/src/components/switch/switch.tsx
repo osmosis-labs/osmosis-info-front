@@ -29,8 +29,8 @@ export const Switch = ({ onChange, className, disabled, value, name }: SwitchPro
 		classNameDefault += " transition-colors cursor-pointer";
 		classPin += " bg-white-full";
 	} else {
-		classNameDefault += " opacity-[0.38] bg-main-600";
-		classPin += " bg-main-500";
+		classNameDefault += " opacity-[0.38] bg-primary-600";
+		classPin += " bg-primary-500";
 	}
 
 	if (value) {

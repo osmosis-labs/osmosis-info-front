@@ -4,7 +4,7 @@ export type TableRootProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const TableRoot = (props: TableRootProps) => {
 	return (
-		<div className="w-full border-main-500">
+		<div className="w-full border-primary-500">
 			<div className="overflow-auto max-w-full">{props.children}</div>
 		</div>
 	);

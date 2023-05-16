@@ -95,11 +95,11 @@ export const ConnectButton = observer(() => {
 						{t("connectionButton.title")}{" "}
 						<CloseSvg
 							onClick={() => setOpenChoice(false)}
-							className="hover:stroke-white-full stroke-main-400 cursor-pointer transition-colors duration-default"
+							className="hover:stroke-white-full stroke-primary-400 cursor-pointer transition-colors duration-default"
 						/>
 					</div>
 					<div
-						className="p-3 my-3 bg-main-900 rounded-2xl flex cursor-pointer hover:bg-main-700 transition-colors duration-default"
+						className="p-3 my-3 bg-background rounded-2xl flex cursor-pointer hover:bg-primary-700 transition-colors duration-default"
 						onClick={onChoiceKeplr}
 					>
 						<Image alt="Keplr" src="/images/keplr.svg" width="30" height="30" />
@@ -109,7 +109,7 @@ export const ConnectButton = observer(() => {
 						</div>
 					</div>
 					<div
-						className="p-3 mt-3 bg-main-900 rounded-2xl flex cursor-pointer hover:bg-main-700 transition-colors duration-default"
+						className="p-3 mt-3 bg-background rounded-2xl flex cursor-pointer hover:bg-primary-700 transition-colors duration-default"
 						onClick={onChoiceConnectWallet}
 					>
 						<Image alt="Keplr" src="/images/walletconnect.svg" width="30" height="30" />
@@ -132,7 +132,7 @@ export const ConnectButton = observer(() => {
 						{t("connectionButton.scan")}{" "}
 						<CloseSvg
 							onClick={() => setUri("")}
-							className="hover:stroke-white-full stroke-main-400 cursor-pointer transition-colors duration-default"
+							className="hover:stroke-white-full stroke-primary-400 cursor-pointer transition-colors duration-default"
 						/>
 					</div>
 					<div className="mt-4 p-3 bg-white-full rounded-sm" onClick={() => setUri("")}>

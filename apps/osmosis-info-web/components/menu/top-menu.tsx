@@ -13,7 +13,7 @@ export const TopMenu = observer(() => {
 
 	let childrenClassName = "";
 	const defaultChildrenClassName =
-		"bg-main-900 bg-opacity-50 h-topMenu fixed right-0 transition-all backdrop-blur-[2px] z-10 border-b-[1px] border-main-800";
+		"bg-background bg-opacity-50 h-topMenu fixed right-0 transition-all backdrop-blur-[2px] z-10 border-b-[1px] border-primary-800";
 	if (isMobile !== null && !isMobile) {
 		if (open) childrenClassName = `${defaultChildrenClassName} w-childrenOpen`;
 		else childrenClassName = `${defaultChildrenClassName} w-childrenClose`;

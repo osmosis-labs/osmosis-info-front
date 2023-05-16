@@ -14,8 +14,8 @@ export default function ItemMenu({ name, path, Icon, selectionTest }: Item) {
 	let className = "";
 	const defaultclassName =
 		"flex items-center overflow-x-hidden rounded my-2 cursor-pointer transition-colors duration-default  ";
-	if (active) className = `${defaultclassName} bg-main-500 fill-white-full `;
-	else className = `${defaultclassName} fill-main-500 hover:bg-main-700 hover:fill-main-400`;
+	if (active) className = `${defaultclassName} bg-modal fill-white-full `;
+	else className = `${defaultclassName} fill-default-500 hover:bg-modal hover:fill-default-600`;
 
 	return (
 		<div className={className} onClick={goTo}>

@@ -20,7 +20,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = ({ className, variant = "default", disabled, label, error, onClear, ...rest }: InputProps) => {
-	let defaultClass = ` ${className} rounded-lg border-[1px] bg-main-500`;
+	let defaultClass = ` ${className} rounded-lg border-[1px] bg-primary-500`;
 
 	if (variant === "outlined") defaultClass += `${defaultClass}  border-frontier-200 `;
 	if (error) defaultClass += `${defaultClass}  border-error-main `;

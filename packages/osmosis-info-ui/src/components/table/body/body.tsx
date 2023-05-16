@@ -71,7 +71,7 @@ export const Body = ({ data, onScroll }: { data: any[]; onScroll: (e: UIEvent<HT
 	}, [columnsState, data, orderBy, orderDirection]);
 
 	return (
-		<div className="border-l-[1px] border-r-[1px] border-main-700" ref={refContainer}>
+		<div className="border-l-[1px] border-r-[1px] border-primary-700" ref={refContainer}>
 			<div
 				className="overflow-auto"
 				style={{ maxHeight: `${rowPerPage * rowHeight}px` }}
