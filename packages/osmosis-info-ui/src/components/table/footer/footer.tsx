@@ -4,11 +4,12 @@ import { IconButton } from "../../buttons/icon-button/icon-button";
 import { LeftSvg } from "../../svg";
 import { Dropdown, ItemDropdown } from "../../dropdown/dropdown";
 
-export const Footer = ({ data }: { data: any[] }) => {
+export const Footer = () => {
 	const {
 		tableState,
 		updateTableState,
 		configuration: { callBackEnd, translations },
+		data,
 	} = useTable();
 
 	const { rowPerPage, currentPage, rowsPerPage } = tableState;

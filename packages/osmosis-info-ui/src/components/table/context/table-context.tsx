@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useMemo, useState } from "react";
 import { ColumnState, RowState, TableConfiguration, TableState } from "../types";
 import { calculeSizes } from "../utils/size";
 import { findInArray } from "../utils/utils";
@@ -13,6 +13,8 @@ export type TableContexte = {
 	updateRowState: (state: RowState) => void;
 	width: number;
 	updateWidth: (width: number) => void;
+	data: any[];
+	displayData: any[];
 };
 
 const defaultTableContext: TableContexte = {
@@ -25,6 +27,8 @@ const defaultTableContext: TableContexte = {
 	updateRowState: () => null,
 	width: 0,
 	updateWidth: () => null,
+	data: [],
+	displayData: [],
 };
 
 const TableContext = createContext<TableContexte>(defaultTableContext);
@@ -37,6 +41,7 @@ export type TableProviderProps = {
 	initialColumnsState: ColumnState[];
 	configuration: TableConfiguration;
 	children: React.ReactNode;
+	data: any[];
 };
 
 export const TableProvider = ({
@@ -45,11 +50,13 @@ export const TableProvider = ({
 	initialRowState,
 	initialColumnsState,
 	configuration,
+	data,
 }: TableProviderProps) => {
 	const [columnsState, setColumnsState] = useState<ColumnState[]>(initialColumnsState);
 	const [tableState, updateTableState] = useState<TableState>(initialTableState);
 	const [rowState, updateRowState] = useState<RowState>(initialRowState);
 	const [width, updateWidth] = useState(0);
+	const { orderBy, orderDirection, filter, filterColumn, filterValue } = tableState;
 
 	const updateColumnsState = (newColumnsState: ColumnState[]) => {
 		if (width > 0) {
@@ -67,6 +74,39 @@ export const TableProvider = ({
 		}
 		setColumnsState([...newColumnsState]);
 	};
+
+	const displayData = useMemo(() => {
+		let res = [...data];
+		if (filter !== undefined && filterColumn !== undefined && filterValue !== undefined && filterValue.length > 0) {
+			const currentColumn = findInArray(columnsState, filterColumn);
+			if (currentColumn && currentColumn.filterable && currentColumn.onFilter) {
+				if (currentColumn.onFilter) {
+					res = res.filter((data: any) => {
+						if (currentColumn.onFilter) {
+							return currentColumn.onFilter({ data, filter, value: filterValue, key: currentColumn.key });
+						}
+						return false;
+					});
+				}
+			}
+		}
+		const currentColumn = findInArray<ColumnState>(columnsState, orderBy || "");
+
+		if (currentColumn) {
+			res.sort((a, b) => {
+				let res = 0;
+				if (currentColumn.onSort && orderBy) {
+					if (orderDirection === "ASC") {
+						res = currentColumn.onSort(a[orderBy], b[orderBy]);
+					} else {
+						res = -currentColumn.onSort(a[orderBy], b[orderBy]);
+					}
+				}
+				return res;
+			});
+		}
+		return res;
+	}, [columnsState, data, orderBy, orderDirection, filter, filterColumn, filterValue]);
 	return (
 		<TableContext.Provider
 			value={{
@@ -79,6 +119,8 @@ export const TableProvider = ({
 				width,
 				updateWidth,
 				configuration,
+				data,
+				displayData,
 			}}
 		>
 			{children}

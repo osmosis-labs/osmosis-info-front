@@ -30,11 +30,12 @@ export const Table = React.memo(function ({ data, config }: TableProps) {
 			initialColumnsState={columnsState}
 			initialRowState={rowState}
 			configuration={config}
+			data={data}
 		>
 			<TableRoot>
 				<Header ref={refHeader} />
-				<Body data={data} onScroll={onScroll} />
-				<Footer data={data} />
+				<Body onScroll={onScroll} />
+				<Footer />
 			</TableRoot>
 		</TableProvider>
 	);

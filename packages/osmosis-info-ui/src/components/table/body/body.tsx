@@ -6,7 +6,7 @@ import { useTable } from "../context/table-context";
 import { findInArray } from "../utils/utils";
 import { ColumnState } from "../types";
 
-export const Body = ({ data, onScroll }: { data: any[]; onScroll: (e: UIEvent<HTMLDivElement>) => void }) => {
+export const Body = ({ onScroll }: { onScroll: (e: UIEvent<HTMLDivElement>) => void }) => {
 	const refContent = useRef<HTMLDivElement | null>(null);
 	const refContainer = useRef<HTMLDivElement | null>(null);
 	const {
@@ -16,8 +16,10 @@ export const Body = ({ data, onScroll }: { data: any[]; onScroll: (e: UIEvent<HT
 		updateColumnsState,
 		updateWidth,
 		configuration: { columns, autoHeight },
+		displayData,
+		data,
 	} = useTable();
-	const { rowPerPage, currentPage, orderBy, orderDirection, filter, filterColumn, filterValue } = tableState;
+	const { rowPerPage, currentPage } = tableState;
 
 	const handleResize = (): void => {
 		if (refContent && refContent.current && refContainer && refContainer.current) {
@@ -48,39 +50,6 @@ export const Body = ({ data, onScroll }: { data: any[]; onScroll: (e: UIEvent<HT
 	const cutRowStart = currentPage * rowPerPage;
 	const cutRowEnd = currentPage * rowPerPage + rowPerPage;
 	const emptyRows = Math.max(0, (1 + currentPage) * rowPerPage - data.length);
-
-	const displayData = useMemo(() => {
-		let res = [...data];
-		if (filter !== undefined && filterColumn !== undefined && filterValue !== undefined && filterValue.length > 0) {
-			const currentColumn = findInArray(columnsState, filterColumn);
-			if (currentColumn && currentColumn.filterable && currentColumn.onFilter) {
-				if (currentColumn.onFilter) {
-					res = res.filter((data: any) => {
-						if (currentColumn.onFilter) {
-							return currentColumn.onFilter({ data, filter, value: filterValue, key: currentColumn.key });
-						}
-						return false;
-					});
-				}
-			}
-		}
-		const currentColumn = findInArray<ColumnState>(columnsState, orderBy || "");
-
-		if (currentColumn) {
-			res.sort((a, b) => {
-				let res = 0;
-				if (currentColumn.onSort && orderBy) {
-					if (orderDirection === "ASC") {
-						res = currentColumn.onSort(a[orderBy], b[orderBy]);
-					} else {
-						res = -currentColumn.onSort(a[orderBy], b[orderBy]);
-					}
-				}
-				return res;
-			});
-		}
-		return res;
-	}, [columnsState, data, orderBy, orderDirection, filter, filterColumn, filterValue]);
 
 	return (
 		<div className="border-l-[1px] border-r-[1px] border-surface" ref={refContainer}>

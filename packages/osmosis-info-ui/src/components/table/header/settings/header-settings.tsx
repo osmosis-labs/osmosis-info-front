@@ -8,6 +8,7 @@ import { IconButton } from "../../../buttons/icon-button/icon-button";
 import { DensitySettings } from "./density-settings";
 import { ColumnsSettings } from "./columns-settings";
 import { FiltersSettings } from "./filters-settings";
+import { CSVSettings } from "./csv-settings";
 
 export const HeaderSettings = () => {
 	const { tableState } = useTable();
@@ -46,7 +47,11 @@ export const HeaderSettings = () => {
 						<p className=" my-2">Table settings</p>
 						<IconButton onClick={onCloseDialog} Icon={CloseSvg} variant="flat" className="stroke-default-500  !pr-0" />
 					</div>
-					<DensitySettings />
+
+					<div className="flex items-center justify-between">
+						<DensitySettings />
+						<CSVSettings />
+					</div>
 					<ColumnsSettings />
 					<FiltersSettings />
 					<div className="flex items-center justify-center mt-4">
