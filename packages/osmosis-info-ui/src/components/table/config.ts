@@ -94,6 +94,7 @@ type DefaultColumnConfiguration = {
 	alignment: Alignment;
 	sortable: boolean;
 	sort: (a: any, b: any) => number;
+	minWidth: number;
 };
 
 export const DEFAULT_COLUMN_CONFIGURATION: DefaultColumnConfiguration = {
@@ -102,12 +103,14 @@ export const DEFAULT_COLUMN_CONFIGURATION: DefaultColumnConfiguration = {
 	alignment: "left" as Alignment,
 	sortable: true,
 	sort: SORT,
+	minWidth: 100,
 };
 
 type DefaultTableConfiguration = {
 	displaySettings: boolean;
 	rowPerPage: number;
 	rowsPerPage: number[];
+	resizing: boolean;
 	density: Density;
 };
 
@@ -116,4 +119,5 @@ export const DEFAULT_TABLE_CONFIGURATION: DefaultTableConfiguration = {
 	rowPerPage: 10,
 	rowsPerPage: [5, 10, 25, 50],
 	density: "medium",
+	resizing: false,
 };

@@ -97,6 +97,7 @@ export const TokenTable = () => {
 			autoHeight: false,
 			defaultOrderBy: "id",
 			defaultOrderDirection: "DESC",
+			resizing: true,
 			translations: {
 				footer: {
 					rangeItems: (min, max, length) => `${min} - ${max} sur ${length}`,

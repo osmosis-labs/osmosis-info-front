@@ -9,6 +9,7 @@ import { DensitySettings } from "./density-settings";
 import { ColumnsSettings } from "./columns-settings";
 import { FiltersSettings } from "./filters-settings";
 import { CSVSettings } from "./csv-settings";
+import { ColumnsResizing } from "./columns-resizing";
 
 export const HeaderSettings = () => {
 	const { tableState } = useTable();
@@ -17,7 +18,7 @@ export const HeaderSettings = () => {
 	const densityFactor = DENSITY_FACTORS[density];
 	const heightSettings = displaySettings ? HEADER_SETTINGS_HEIGHT * densityFactor : 0;
 
-	const [openDialog, setOpenDialog] = useState(true);
+	const [openDialog, setOpenDialog] = useState(false);
 
 	const onClickSettings = () => {
 		setOpenDialog(true);
@@ -54,6 +55,7 @@ export const HeaderSettings = () => {
 					</div>
 					<ColumnsSettings />
 					<FiltersSettings />
+					<ColumnsResizing />
 					<div className="flex items-center justify-center mt-4">
 						<Button onClick={onCloseDialog} size="small">
 							Validate

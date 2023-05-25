@@ -1,21 +1,10 @@
-import {
-	DEFAULT_COLUMN_CONFIGURATION,
-	DEFAULT_TABLE_CONFIGURATION,
-	Filter,
-	ROW_HEIGHT,
-	SORT,
-	onFilter,
-} from "../config";
+import { DEFAULT_COLUMN_CONFIGURATION, DEFAULT_TABLE_CONFIGURATION, ROW_HEIGHT, SORT, onFilter } from "../config";
 import { ColumnState, RowState, TableConfiguration, TableState } from "../types";
-import { calculeSizes } from "../utils/size";
+import { ColumnSize, calculeSizes } from "../utils/size";
 
 export const useStateInitialize = (
 	config: TableConfiguration
 ): { tableState: TableState; columnsState: ColumnState[]; rowState: RowState } => {
-	const sizeColumns = calculeSizes(
-		null,
-		config.columns.filter((c) => !(c.hide ?? DEFAULT_COLUMN_CONFIGURATION.hide))
-	);
 	const columnsState: ColumnState[] = [];
 
 	const density = config.density || DEFAULT_TABLE_CONFIGURATION.density;
@@ -29,21 +18,37 @@ export const useStateInitialize = (
 		orderBy: config.defaultOrderBy,
 		orderDirection: config.defaultOrderDirection,
 		width: 0,
+		resizing: config.resizing ?? DEFAULT_TABLE_CONFIGURATION.resizing,
 	};
 	const rowState: RowState = {
 		height: config.rowHeight ?? ROW_HEIGHT,
 	};
 
+	const sizeColumns = calculeSizes({
+		totalWidth: null,
+		columnsSize: config.columns
+			.filter((c) => !(c.hide ?? DEFAULT_COLUMN_CONFIGURATION.hide))
+			.map((c) => ({
+				minWidth: c.minWidth,
+				flex: c.flex,
+				maxWidth: c.maxWidth,
+				key: c.key,
+			})) as ColumnSize[],
+	});
+
 	config.columns.forEach((column) => {
 		const filterable = column.filterable || DEFAULT_COLUMN_CONFIGURATION.filterable;
 		columnsState.push({
 			key: column.key,
+			minWidth: column.minWidth ?? DEFAULT_COLUMN_CONFIGURATION.minWidth,
+			width: sizeColumns[column.key],
+			flex: column.flex,
+			maxWidth: column.maxWidth,
 			display: column.display,
 			hide: column.hide ?? DEFAULT_COLUMN_CONFIGURATION.hide,
 			accessor: column.accessor ?? column.key,
 			sorted: config.defaultOrderBy === column.key,
 			orderDirection: config.defaultOrderBy === column.key ? config.defaultOrderDirection ?? null : null,
-			width: sizeColumns[column.key],
 			align: column.align || DEFAULT_COLUMN_CONFIGURATION.alignment,
 			onSort: column.onSort ?? SORT,
 			sortable: column.sortable || DEFAULT_COLUMN_CONFIGURATION.sortable,
@@ -52,5 +57,6 @@ export const useStateInitialize = (
 			onFilter: filterable ? column.onFilter ?? onFilter : undefined,
 		});
 	});
+
 	return { tableState, columnsState, rowState };
 };

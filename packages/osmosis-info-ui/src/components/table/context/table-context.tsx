@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, { Dispatch, createContext, useContext, useMemo, useState, useEffect, useCallback } from "react";
 import { ColumnState, RowState, TableConfiguration, TableState } from "../types";
-import { calculeSizes } from "../utils/size";
+import { ColumnSize, calculeSizes } from "../utils/size";
 import { findInArray } from "../utils/utils";
 
 export type TableContexte = {
@@ -8,7 +8,7 @@ export type TableContexte = {
 	rowState: RowState;
 	columnsState: ColumnState[];
 	configuration: TableConfiguration;
-	updateColumnsState: (newColumnsState: ColumnState[]) => void;
+	updateColumnsState: Dispatch<React.SetStateAction<ColumnState[]>>;
 	updateTableState: (state: TableState) => void;
 	updateRowState: (state: RowState) => void;
 	width: number;
@@ -22,7 +22,7 @@ const defaultTableContext: TableContexte = {
 	rowState: {} as RowState,
 	columnsState: [] as ColumnState[],
 	configuration: {} as TableConfiguration,
-	updateColumnsState: () => null,
+	updateColumnsState: (() => null) as Dispatch<React.SetStateAction<ColumnState[]>>, // Utilisez Dispatch pour le type
 	updateTableState: () => null,
 	updateRowState: () => null,
 	width: 0,
@@ -52,28 +52,38 @@ export const TableProvider = ({
 	configuration,
 	data,
 }: TableProviderProps) => {
-	const [columnsState, setColumnsState] = useState<ColumnState[]>(initialColumnsState);
+	const [columnsState, updateColumnsState] = useState<ColumnState[]>(initialColumnsState);
 	const [tableState, updateTableState] = useState<TableState>(initialTableState);
 	const [rowState, updateRowState] = useState<RowState>(initialRowState);
 	const [width, updateWidth] = useState(0);
 	const { orderBy, orderDirection, filter, filterColumn, filterValue } = tableState;
 
-	const updateColumnsState = (newColumnsState: ColumnState[]) => {
-		if (width > 0) {
-			const sizeColumns = calculeSizes(
-				width,
-				configuration.columns.filter((column) => {
-					const currentState = findInArray(newColumnsState, column.key);
-					return currentState && !currentState.hide;
-				})
-			);
+	// const updateColumnsState = useCallback((newColumnsState: ColumnState[]) => {
+	// 	console.log("table-context.tsx -> 62: update");
+	// 	setColumnsState([...newColumnsState]);
+	// }, []);
 
-			newColumnsState.forEach((column) => {
-				column.width = sizeColumns[column.key];
-			});
-		}
-		setColumnsState([...newColumnsState]);
-	};
+	useEffect(() => {
+		const sizeColumns = calculeSizes({
+			totalWidth: width,
+			columnsSize: columnsState
+				.filter((c) => !c.hide)
+				.map((c) => ({
+					minWidth: c.minWidth,
+					flex: c.flex,
+					maxWidth: c.maxWidth,
+					key: c.key,
+				})) as ColumnSize[],
+		});
+
+		columnsState.forEach((c, index) => {
+			const width = sizeColumns[c.key];
+			columnsState[index].width = width;
+		});
+
+		updateColumnsState([...columnsState]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [width]);
 
 	const displayData = useMemo(() => {
 		let res = [...data];

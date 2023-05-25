@@ -45,6 +45,9 @@ export type ColumnState = {
 	hide: boolean;
 	accessor: Accessor;
 	width: number;
+	flex?: number;
+	minWidth: number;
+	maxWidth?: number;
 	orderDirection: OrderDirection;
 	sorted: boolean;
 	align: Alignment;
@@ -70,6 +73,7 @@ export type TableConfiguration = {
 	onClickCell?: (params: Params<any>) => void;
 	callBackEnd?: (nextPage: (currentPage: number) => void, currentPage: number) => void;
 	translations?: TableTranslations;
+	resizing?: boolean;
 };
 
 export type TableState = {
@@ -84,6 +88,7 @@ export type TableState = {
 	filter?: Filter;
 	filterColumn?: string;
 	filterValue?: any;
+	resizing: boolean;
 };
 
 export type ColumnConfigurationWidthMinWitdh = ColumnConfiguration & {

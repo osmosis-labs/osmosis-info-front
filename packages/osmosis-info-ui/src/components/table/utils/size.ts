@@ -1,36 +1,40 @@
-import { ColumnConfiguration, ColumnConfigurationWidthFlex, ColumnConfigurationWidthMinWitdh } from "../types";
+import { ColumnConfiguration } from "../types";
 
-export const calculeSizes = (totalWidth: number | null, columnsConfigs: ColumnConfiguration[]) => {
+export type ColumnSize = {
+	minWidth: number;
+	flex?: number;
+	maxWidth?: number;
+	key: string;
+};
+
+export type CalculeSizesProps = {
+	totalWidth: number | null;
+	columnsSize: ColumnSize[];
+};
+
+export const calculeSizes = ({ totalWidth, columnsSize }: CalculeSizesProps) => {
 	// To calcule size we use this alogrithm: https://www.w3.org/TR/css-flexbox-1/#resolve-flexible-lengths
 	// We juste have minWith, maxWith, flex
-	const res: Record<ColumnConfigurationWidthMinWitdh["key"], number> = {};
-	const defaultMinWidth = 100;
-	const columnsWithDefaultValues: ColumnConfigurationWidthMinWitdh[] = columnsConfigs.map((c) => {
-		res[c.key] = c.minWidth || defaultMinWidth;
-		if (c.minWidth) return c as ColumnConfigurationWidthMinWitdh;
-		else return { ...c, minWidth: defaultMinWidth };
-	});
+	const res: Record<ColumnSize["key"], number> = {};
+
 	if (!totalWidth) {
+		columnsSize.forEach((columnsSize) => {
+			res[columnsSize.key] = columnsSize.minWidth;
+		});
 		return res;
 	}
 
 	const columns: {
-		all: Record<
-			ColumnConfigurationWidthMinWitdh["key"],
-			{ configuration: ColumnConfigurationWidthMinWitdh; freezed: boolean; size: number }
-		>;
-		flex: Record<
-			ColumnConfigurationWidthFlex["key"],
-			{ configuration: ColumnConfigurationWidthFlex; freezed: boolean; size: number }
-		>;
-		frozenKey: ColumnConfigurationWidthMinWitdh["key"][];
-		toFreeze: (key: ColumnConfigurationWidthMinWitdh["key"]) => void;
-		setSize: (key: ColumnConfigurationWidthMinWitdh["key"], size: number) => void;
+		all: Record<ColumnSize["key"], { columnSize: ColumnSize; freezed: boolean; size: number }>;
+		flex: Record<ColumnSize["key"], { columnSize: ColumnSize; freezed: boolean; size: number }>;
+		frozenKey: ColumnSize["key"][];
+		toFreeze: (key: ColumnSize["key"]) => void;
+		setSize: (key: ColumnSize["key"], size: number) => void;
 	} = {
 		all: {},
 		flex: {},
 		frozenKey: [],
-		toFreeze: (key: ColumnConfigurationWidthMinWitdh["key"]) => {
+		toFreeze: (key: ColumnSize["key"]) => {
 			const column = columns.all[key];
 			if (column && column.freezed !== true) {
 				columns.all[key].freezed = true;
@@ -38,7 +42,7 @@ export const calculeSizes = (totalWidth: number | null, columnsConfigs: ColumnCo
 				columns.frozenKey.push(key);
 			}
 		},
-		setSize: (key: ColumnConfigurationWidthMinWitdh["key"], size: number) => {
+		setSize: (key: ColumnSize["key"], size: number) => {
 			const column = columns.all[key];
 			if (column) {
 				columns.all[key].size = size;
@@ -51,24 +55,24 @@ export const calculeSizes = (totalWidth: number | null, columnsConfigs: ColumnCo
 	let totalFlexUnits = 0;
 
 	// initialize state with default values and freezed values
-	columnsWithDefaultValues.forEach((config: ColumnConfigurationWidthMinWitdh) => {
+	columnsSize.forEach((columnSize: ColumnSize) => {
 		const column = {
-			configuration: config,
+			columnSize: columnSize,
 			freezed: false,
 			size: 0,
 		};
-		column.size = config.minWidth || defaultMinWidth;
-		if (!config.flex) {
+		column.size = columnSize.minWidth;
+		if (!columnSize.flex) {
 			// need to be freezed
 			column.freezed = true;
 			usedSpace += column.size;
-			columns.frozenKey.push(config.key);
+			columns.frozenKey.push(columnSize.key);
 		} else {
-			totalFlexUnits += config.flex;
-			columns.flex[config.key] = { ...column, configuration: config as ColumnConfigurationWidthFlex };
+			totalFlexUnits += columnSize.flex;
+			columns.flex[columnSize.key] = { ...column, columnSize };
 		}
 
-		columns.all[config.key] = column;
+		columns.all[columnSize.key] = column;
 	});
 
 	const remainingFlexFreeSpace = totalWidth - usedSpace;
@@ -76,7 +80,7 @@ export const calculeSizes = (totalWidth: number | null, columnsConfigs: ColumnCo
 	// Loop to define size of flex columns
 	const loopCalculSizeFlexColumns = () => {
 		// if all columns are freezed return, it's finished
-		if (columns.frozenKey.length === columnsConfigs.length) return;
+		if (columns.frozenKey.length === columnsSize.length) return;
 
 		let remainingFreeSpace = remainingFlexFreeSpace;
 
@@ -84,9 +88,9 @@ export const calculeSizes = (totalWidth: number | null, columnsConfigs: ColumnCo
 
 		// Calcul the remaining free space and flex units
 		columns.frozenKey.forEach((key) => {
-			if (columns.all[key].configuration.flex) {
+			if (columns.all[key].columnSize.flex) {
 				remainingFreeSpace -= columns.all[key].size;
-				flexUnits -= columns.all[key].configuration.flex!;
+				flexUnits -= columns.all[key].columnSize.flex!;
 			}
 		});
 
@@ -101,16 +105,16 @@ export const calculeSizes = (totalWidth: number | null, columnsConfigs: ColumnCo
 			if (column.freezed) return;
 			const widthPerFlexUnit = remainingFreeSpace / flexUnits;
 
-			let width = Math.floor(widthPerFlexUnit * column.configuration.flex!);
+			let width = Math.floor(widthPerFlexUnit * column.columnSize.flex!);
 
 			// check size violations
-			if (width < column.configuration.minWidth) {
-				totalViolation += column.configuration.minWidth - width;
-				width = column.configuration.minWidth;
+			if (width < column.columnSize.minWidth) {
+				totalViolation += column.columnSize.minWidth - width;
+				width = column.columnSize.minWidth;
 				violationsLookup.min[key] = true;
-			} else if (column.configuration.maxWidth && width > column.configuration.maxWidth) {
-				totalViolation += column.configuration.maxWidth - width;
-				width = column.configuration.maxWidth;
+			} else if (column.columnSize.maxWidth && width > column.columnSize.maxWidth) {
+				totalViolation += column.columnSize.maxWidth - width;
+				width = column.columnSize.maxWidth;
 				violationsLookup.max[key] = true;
 			}
 
@@ -138,6 +142,7 @@ export const calculeSizes = (totalWidth: number | null, columnsConfigs: ColumnCo
 	};
 
 	loopCalculSizeFlexColumns();
+
 	Object.keys(columns.all).forEach((key) => {
 		res[key] = columns.all[key].size;
 	});

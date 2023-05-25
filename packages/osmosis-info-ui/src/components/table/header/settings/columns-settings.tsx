@@ -37,6 +37,7 @@ const DragableColumns = ({
 		});
 		setSprings(newSprings);
 	}, [columns]);
+
 	const bind = useDrag(({ args: [originalIndex], active, movement: [, y] }) => {
 		const curIndex = order.current.indexOf(originalIndex);
 		const curRow = clamp(Math.round((curIndex * totalHeight + y) / totalHeight), 0, columns.length - 1);
@@ -105,6 +106,7 @@ export const ColumnsSettings = () => {
 	const { updateColumnsState, columnsState } = useTable();
 
 	const onChangeHideColumn = (value: boolean, index: number) => {
+		console.log("%ccolumns-settings.tsx -> 109 PINK: hide", "background: #e91e63; color:#FFFFFF");
 		const columnUpdated = { ...columnsState[index] };
 
 		let columns: ColumnState[] = [];

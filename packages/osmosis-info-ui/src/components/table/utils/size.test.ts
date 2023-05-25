@@ -1,5 +1,5 @@
 import { ColumnConfiguration } from "../types";
-import { calculeSizes } from "./size";
+import { ColumnSize, calculeSizes } from "./size";
 
 type testColumn = {
 	columns: ColumnConfiguration[];
@@ -31,7 +31,15 @@ describe("Table size", () => {
 			},
 		];
 
-		const sizes = calculeSizes(0, columns);
+		const sizes = calculeSizes({
+			totalWidth: 0,
+			columnsSize: columns.map((c) => ({
+				minWidth: c.minWidth,
+				flex: c.flex,
+				maxWidth: c.maxWidth,
+				key: c.key,
+			})) as ColumnSize[],
+		});
 		columns.forEach((c) => {
 			expect(sizes[c.key]).toBe(minWidth);
 		});
@@ -59,13 +67,21 @@ describe("Table size", () => {
 			},
 		];
 
-		const sizes = calculeSizes(500, columns);
+		const sizes = calculeSizes({
+			totalWidth: 500,
+			columnsSize: columns.map((c) => ({
+				minWidth: c.minWidth,
+				flex: c.flex,
+				maxWidth: c.maxWidth,
+				key: c.key,
+			})) as ColumnSize[],
+		});
 		columns.forEach((c) => {
 			expect(sizes[c.key]).toBe(minWidth);
 		});
 	});
 
-	it("should return size of 100 (maxWidth: 150)", () => {
+	it("should return size of 150 (maxWidth: 150)", () => {
 		const maxWidth = 150;
 		const columns: ColumnConfiguration[] = [
 			{
@@ -73,24 +89,35 @@ describe("Table size", () => {
 				display: "a",
 				accessor: "",
 				maxWidth,
+				flex: 1,
 			},
 			{
 				key: "b",
 				display: "b",
 				accessor: "",
 				maxWidth,
+				flex: 1,
 			},
 			{
 				key: "c",
 				display: "c",
 				accessor: "",
 				maxWidth,
+				flex: 1,
 			},
 		];
 
-		const sizes = calculeSizes(500, columns);
+		const sizes = calculeSizes({
+			totalWidth: 500,
+			columnsSize: columns.map((c) => ({
+				minWidth: c.minWidth || 100,
+				flex: c.flex,
+				maxWidth: c.maxWidth,
+				key: c.key,
+			})) as ColumnSize[],
+		});
 		columns.forEach((c) => {
-			expect(sizes[c.key]).toBe(100);
+			expect(sizes[c.key]).toBe(150);
 		});
 	});
 	describe("Multi tests", () => {
@@ -210,7 +237,15 @@ describe("Table size", () => {
 
 		tests.forEach((test, index) => {
 			it(`should return good size, test n°${index + 1} (${columnsToString(test.columns)})`, () => {
-				const sizes = calculeSizes(test.totalWidth, test.columns);
+				const sizes = calculeSizes({
+					totalWidth: test.totalWidth,
+					columnsSize: test.columns.map((c) => ({
+						minWidth: c.minWidth,
+						flex: c.flex,
+						maxWidth: c.maxWidth,
+						key: c.key,
+					})) as ColumnSize[],
+				});
 
 				test.columns.forEach((c, i) => {
 					expect(sizes[c.key]).toBe(test.results[i]);

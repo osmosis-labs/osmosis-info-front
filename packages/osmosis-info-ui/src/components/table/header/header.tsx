@@ -6,15 +6,9 @@ import { HeaderSettings } from "./settings/header-settings";
 
 /*
 - Display columns name with specified width
-- Add popin for options
-    - Filter
-    - Export
-	- reset to default settings
-	- Add options to order columns
-- Add checkbox for selecting all rows
+- reset to default settings
 - Add resizing options
 - Add saving options
-
 */
 
 export const Header = forwardRef<HTMLDivElement>((_, ref) => {

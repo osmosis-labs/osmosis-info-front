@@ -1,6 +1,6 @@
 import React, { useRef, useMemo, UIEvent } from "react";
 import { Row } from "../row/row";
-import { calculeSizes } from "../utils/size";
+import { ColumnSize, calculeSizes } from "../utils/size";
 import useResizeObserver from "../../../hooks/use-windows-resize";
 import { useTable } from "../context/table-context";
 import { findInArray } from "../utils/utils";
@@ -15,33 +15,20 @@ export const Body = ({ onScroll }: { onScroll: (e: UIEvent<HTMLDivElement>) => v
 		columnsState,
 		updateColumnsState,
 		updateWidth,
-		configuration: { columns, autoHeight },
+		configuration: { autoHeight },
 		displayData,
 		data,
 	} = useTable();
 	const { rowPerPage, currentPage } = tableState;
 
 	const handleResize = (): void => {
-		if (refContent && refContent.current && refContainer && refContainer.current) {
+		if (refContent && refContent.current) {
 			const diff = refContent.current.offsetWidth - refContent.current.clientWidth;
 			const hasScrollbar = refContent.current.scrollHeight > refContent.current.clientHeight;
 
 			let currentWidth = refContent.current.getClientRects()[0].width;
 			if (hasScrollbar) currentWidth -= diff;
-			const sizeColumns = calculeSizes(
-				currentWidth || null,
-				columns.filter((column) => {
-					const currentState = findInArray(columnsState, column.key);
-					return currentState && !currentState.hide;
-				})
-			);
-
-			columnsState.forEach((c, index) => {
-				const width = sizeColumns[c.key] || 100;
-				columnsState[index].width = width;
-			});
 			updateWidth(currentWidth);
-			updateColumnsState([...columnsState]);
 		}
 	};
 
