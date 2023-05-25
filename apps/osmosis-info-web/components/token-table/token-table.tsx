@@ -1,14 +1,19 @@
 import { Button, Table } from "@latouche/osmosis-info-ui";
 import { filtersNumber, filtersString } from "@latouche/osmosis-info-ui/lib/esm/components/table/config";
 import {
+	ColumnConfiguration,
+	ColumnState,
 	Params,
-	ParamsFilter,
 	ParamsRowHeight,
 	TableConfiguration,
+	TableState,
 } from "@latouche/osmosis-info-ui/lib/esm/components/table/types";
-import { table } from "console";
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { useState } from "react";
+
+const STORAGE_KEY = process.env.NEXT_PUBLIC_APP_STORAGE_KEY ?? "OSMO_KEY_";
+const KEY_SETTINGS = `${STORAGE_KEY}TOKEN_TABLE`;
+
 type Data = {
 	id: number;
 	name: string;
@@ -75,41 +80,51 @@ export const TokenTable = () => {
 	const [nbRow, setNbRow] = useState(10);
 	const [data, setData] = useState<Data[]>(dataDefault);
 	const [loading, setLoading] = useState(false);
-	const callBackEnd = useCallback(
-		(next: (currentPage: number) => void, currentPage: number) => {
-			if (loading) return;
-			setLoading(true);
-			setTimeout(() => {
-				setLoading(false);
-				setNbRow(nbRow + 5);
-				next(currentPage + 1);
-			}, 1000);
-		},
-		[loading, nbRow]
-	);
 
-	const config: TableConfiguration = useMemo<TableConfiguration>(
-		() => ({
+	const [config, setConfig] = useState<TableConfiguration | null>(null);
+
+	useEffect(() => {
+		const savedSettings = JSON.parse(localStorage.getItem(KEY_SETTINGS) ?? "{}") as Partial<TableConfiguration>;
+
+		const columnsSetting: Record<string, Partial<ColumnConfiguration>> = (savedSettings?.columns ?? []).reduce(
+			(acc, column) => {
+				if (typeof column.key === "string") {
+					acc[column.key] = {
+						minWidth: column.minWidth,
+						flex: column.flex,
+						sortable: column.sortable,
+						// Ajoutez d'autres propriétés de colonne que vous souhaitez inclure dans `columnsSetting`
+					};
+				}
+				return acc;
+			},
+			{} as Record<string, Partial<ColumnConfiguration>>
+		);
+
+		const newConfig: TableConfiguration = {
 			onClickRow: onClickCell,
 			onClickCell: onClickCell,
-			density: "medium",
+			density: savedSettings.density ?? "medium",
 			callBackEnd,
 			autoHeight: false,
-			defaultOrderBy: "id",
-			defaultOrderDirection: "DESC",
-			resizing: true,
+			defaultOrderBy: savedSettings.defaultOrderBy ?? "id",
+			defaultOrderDirection: savedSettings.defaultOrderDirection ?? "ASC",
+			resizing: savedSettings.resizing ?? false,
+			callBackUpdateStates,
+
 			translations: {
 				footer: {
 					rangeItems: (min, max, length) => `${min} - ${max} sur ${length}`,
 					rowsPerPage: "Lignes par page:",
 				},
 			},
+
 			columns: [
 				{
 					display: "ID",
 					key: "id",
 					flex: 1,
-					minWidth: 300,
+					minWidth: columnsSetting.id?.minWidth ?? 300,
 					sortable: true,
 					onSort: (a: any, b: any) => {
 						return b - a;
@@ -143,8 +158,47 @@ export const TokenTable = () => {
 					align: "right",
 				},
 			],
-		}),
-		[callBackEnd]
+		};
+
+		setConfig(newConfig);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	const callBackEnd = useCallback(
+		(next: (currentPage: number) => void, currentPage: number) => {
+			if (loading) return;
+			setLoading(true);
+			setTimeout(() => {
+				setLoading(false);
+				setNbRow(nbRow + 5);
+				next(currentPage + 1);
+			}, 1000);
+		},
+		[loading, nbRow]
+	);
+
+	const callBackUpdateStates = useCallback(
+		({ tableState, columnsState }: { tableState: TableState; columnsState: ColumnState[] }) => {
+			const settingsTable: Partial<TableConfiguration> = {
+				displaySettings: tableState.displaySettings,
+				defaultOrderBy: tableState.orderBy,
+				defaultOrderDirection: tableState.orderDirection,
+				density: tableState.density,
+				rowPerPage: tableState.rowPerPage,
+				rowsPerPage: tableState.rowsPerPage,
+				columns: columnsState.map((c: ColumnState) => ({
+					display: c.display,
+					key: c.key,
+					flex: c.flex,
+					minWidth: c.minWidth,
+					sortable: c?.sortable,
+					filters: c.filters,
+					filterable: c.filterable,
+				})),
+			};
+			localStorage.setItem(KEY_SETTINGS, JSON.stringify(settingsTable));
+		},
+		[]
 	);
 
 	useEffect(() => {
@@ -177,9 +231,7 @@ export const TokenTable = () => {
 					Remove row
 				</Button>
 			</div>
-			<div className="my-4">
-				<Table config={config} data={data} />
-			</div>
+			<div className="my-4">{config && <Table config={config} data={data} />}</div>
 		</div>
 	);
 };

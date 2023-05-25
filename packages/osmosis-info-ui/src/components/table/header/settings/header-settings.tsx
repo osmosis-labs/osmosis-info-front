@@ -12,7 +12,7 @@ import { CSVSettings } from "./csv-settings";
 import { ColumnsResizing } from "./columns-resizing";
 
 export const HeaderSettings = () => {
-	const { tableState } = useTable();
+	const { tableState, configuration } = useTable();
 	const { displaySettings, density } = tableState;
 
 	const densityFactor = DENSITY_FACTORS[density];
@@ -50,12 +50,12 @@ export const HeaderSettings = () => {
 					</div>
 
 					<div className="flex items-center justify-between">
-						<DensitySettings />
-						<CSVSettings />
+						{!configuration.disabledSettings?.density && <DensitySettings />}
+						{!configuration.disabledSettings?.csv && <CSVSettings />}
 					</div>
-					<ColumnsSettings />
-					<FiltersSettings />
-					<ColumnsResizing />
+					{(!configuration.disabledSettings?.orderable || !configuration.disabledSettings?.hide) && <ColumnsSettings />}
+					{!configuration.disabledSettings?.filterable && <FiltersSettings />}
+					{!configuration.disabledSettings?.resizable && <ColumnsResizing />}
 					<div className="flex items-center justify-center mt-4">
 						<Button onClick={onCloseDialog} size="small">
 							Validate

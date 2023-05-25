@@ -1,6 +1,6 @@
 import React, { MutableRefObject, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Switch } from "../../../switch/switch";
-import { ColumnState } from "../../types";
+import { ColumnState, TableConfiguration } from "../../types";
 import { useTable } from "../../context/table-context";
 import { MenuSvg } from "../../../svg";
 import { useDrag } from "@use-gesture/react";
@@ -21,10 +21,12 @@ const DragableColumns = ({
 	columns,
 	onChangeHideColumn,
 	reorder,
+	configuration,
 }: {
 	columns: ColumnState[];
 	onChangeHideColumn: (value: boolean, index: number) => void;
 	reorder: (order: number[]) => void;
+	configuration: TableConfiguration;
 }) => {
 	const order = useRef<number[]>(columns.map((_, index) => index));
 
@@ -39,6 +41,7 @@ const DragableColumns = ({
 	}, [columns]);
 
 	const bind = useDrag(({ args: [originalIndex], active, movement: [, y] }) => {
+		if (configuration.disabledSettings?.orderable) return;
 		const curIndex = order.current.indexOf(originalIndex);
 		const curRow = clamp(Math.round((curIndex * totalHeight + y) / totalHeight), 0, columns.length - 1);
 		const newOrder = swap(order.current, curIndex, curRow);
@@ -74,8 +77,12 @@ const DragableColumns = ({
 							transform: `translateY(${y}px) scale(${scale})`,
 						}}
 					>
-						<MenuSvg className="mx-2 fill-default-500 cursor-grab" height={24} width={24} />
-						<Switch value={!columns[i].hide} onChange={onChange} className="mr-2" name={columns[i].key} />
+						{!configuration.disabledSettings?.orderable && (
+							<MenuSvg className="mx-2 fill-default-500 cursor-grab" height={24} width={24} />
+						)}
+						{!configuration.disabledSettings?.hide && (
+							<Switch value={!columns[i].hide} onChange={onChange} className="mr-2" name={columns[i].key} />
+						)}
 						{columns[i].display}
 					</div>
 				);
@@ -103,7 +110,7 @@ const fn = (order: number[], active = false, originalIndex = 0, curIndex = 0, y 
 };
 
 export const ColumnsSettings = () => {
-	const { updateColumnsState, columnsState } = useTable();
+	const { updateColumnsState, columnsState, configuration } = useTable();
 
 	const onChangeHideColumn = (value: boolean, index: number) => {
 		console.log("%ccolumns-settings.tsx -> 109 PINK: hide", "background: #e91e63; color:#FFFFFF");
@@ -127,7 +134,12 @@ export const ColumnsSettings = () => {
 		<div className="my-2">
 			<p>Columns: </p>
 			<div>
-				<DragableColumns columns={columnsState} onChangeHideColumn={onChangeHideColumn} reorder={reorder} />
+				<DragableColumns
+					columns={columnsState}
+					onChangeHideColumn={onChangeHideColumn}
+					reorder={reorder}
+					configuration={configuration}
+				/>
 			</div>
 		</div>
 	);

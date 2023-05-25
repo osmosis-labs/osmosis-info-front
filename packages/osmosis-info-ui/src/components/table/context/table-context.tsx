@@ -64,6 +64,12 @@ export const TableProvider = ({
 	// }, []);
 
 	useEffect(() => {
+		if (configuration.callBackUpdateStates) {
+			configuration.callBackUpdateStates({ tableState, columnsState });
+		}
+	}, [columnsState, configuration, tableState]);
+
+	useEffect(() => {
 		const sizeColumns = calculeSizes({
 			totalWidth: width,
 			columnsSize: columnsState

@@ -58,8 +58,18 @@ export type ColumnState = {
 	filters: Filter[];
 };
 
+export type TableSettingsDisabled = {
+	density?: boolean;
+	csv?: boolean;
+	hide?: boolean;
+	orderable?: boolean;
+	filterable?: boolean;
+	resizable?: boolean;
+};
+
 export type TableConfiguration = {
 	columns: ColumnConfiguration[];
+	disabledSettings?: TableSettingsDisabled;
 	displaySettings?: boolean;
 	defaultOrderBy?: string;
 	defaultOrderDirection?: OrderDirection;
@@ -72,6 +82,13 @@ export type TableConfiguration = {
 	onClickRow?: (params: Params<any>) => void;
 	onClickCell?: (params: Params<any>) => void;
 	callBackEnd?: (nextPage: (currentPage: number) => void, currentPage: number) => void;
+	callBackUpdateStates?: ({
+		tableState,
+		columnsState,
+	}: {
+		tableState: TableState;
+		columnsState: ColumnState[];
+	}) => void;
 	translations?: TableTranslations;
 	resizing?: boolean;
 };
