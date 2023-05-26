@@ -13,7 +13,7 @@ import { ColumnsResizing } from "./columns-resizing";
 
 export const HeaderSettings = () => {
 	const { tableState, configuration } = useTable();
-	const { displaySettings, density } = tableState;
+	const { displaySettings, density, isLoading } = tableState;
 
 	const densityFactor = DENSITY_FACTORS[density];
 	const heightSettings = displaySettings ? HEADER_SETTINGS_HEIGHT * densityFactor : 0;
@@ -21,6 +21,7 @@ export const HeaderSettings = () => {
 	const [openDialog, setOpenDialog] = useState(false);
 
 	const onClickSettings = () => {
+		if (isLoading) return;
 		setOpenDialog(true);
 	};
 

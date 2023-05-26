@@ -5,6 +5,7 @@ import useResizeObserver from "../../../hooks/use-windows-resize";
 import { useTable } from "../context/table-context";
 import { findInArray } from "../utils/utils";
 import { ColumnState } from "../types";
+import { SkeletonRow } from "../row/row-skeleton";
 
 export const Body = ({ onScroll }: { onScroll: (e: UIEvent<HTMLDivElement>) => void }) => {
 	const refContent = useRef<HTMLDivElement | null>(null);
@@ -19,7 +20,7 @@ export const Body = ({ onScroll }: { onScroll: (e: UIEvent<HTMLDivElement>) => v
 		displayData,
 		data,
 	} = useTable();
-	const { rowPerPage, currentPage } = tableState;
+	const { rowPerPage, currentPage, isLoading } = tableState;
 
 	const handleResize = (): void => {
 		if (refContent && refContent.current) {
@@ -47,7 +48,7 @@ export const Body = ({ onScroll }: { onScroll: (e: UIEvent<HTMLDivElement>) => v
 				onScroll={onScroll}
 			>
 				{displayData.slice(cutRowStart, cutRowEnd).map((currentData, index: number) => {
-					return <Row key={index} currentData={currentData} data={data} />;
+					return isLoading ? <SkeletonRow key={index} /> : <Row key={index} currentData={currentData} data={data} />;
 				})}
 				{emptyRows > 0 && !autoHeight && <div style={{ height: `${emptyRows * rowHeight}px` }} />}
 			</div>

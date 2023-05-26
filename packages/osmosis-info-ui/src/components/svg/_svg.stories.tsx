@@ -16,6 +16,7 @@ import {
 } from "./";
 import { CloseSvg } from "./close-svg";
 import { ArrowTopSVG } from "./arrow-top-svg";
+import { LoadingSVG } from "./loading-svg";
 
 export default {
 	title: "Assets/Icons",
@@ -106,3 +107,7 @@ Close.argTypes = argsTypeStroke;
 export const ArrowTop: ComponentStory<typeof ArrowTopSVG> = (args) => <ArrowTopSVG {...args} />;
 ArrowTop.args = argsFill;
 ArrowTop.argTypes = argsTypeFill;
+
+export const Loading: ComponentStory<typeof LoadingSVG> = (args) => <LoadingSVG {...args} />;
+Loading.args = argsFill;
+Loading.argTypes = argsTypeFill;

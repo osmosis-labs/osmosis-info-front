@@ -10,9 +10,10 @@ import { Header } from "./header/header";
 export type TableProps = {
 	config: TableConfiguration;
 	data: any[];
+	isLoading?: boolean;
 };
 
-export const Table = React.memo(function ({ data, config }: TableProps) {
+export const Table = React.memo(function ({ data, config, isLoading }: TableProps) {
 	const { tableState, columnsState, rowState } = useStateInitialize(config);
 	const refHeader = useRef<HTMLDivElement>(null);
 
@@ -31,6 +32,7 @@ export const Table = React.memo(function ({ data, config }: TableProps) {
 			initialRowState={rowState}
 			configuration={config}
 			data={data}
+			isLoading={isLoading}
 		>
 			<TableRoot>
 				<Header ref={refHeader} />

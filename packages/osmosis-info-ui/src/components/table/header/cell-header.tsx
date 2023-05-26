@@ -15,7 +15,7 @@ export const CellHeader = ({ column, index }: CellHeaderProps) => {
 	const { key, width, align, sortable, sorted, orderDirection, display } = column;
 
 	const { updateColumnsState, columnsState, tableState, updateTableState } = useTable();
-	const { density, resizing } = tableState;
+	const { density, resizing, isLoading } = tableState;
 
 	const densityFactor = DENSITY_FACTORS[density];
 
@@ -58,6 +58,7 @@ export const CellHeader = ({ column, index }: CellHeaderProps) => {
 
 	const onSortClick = useCallback(
 		(event: React.MouseEvent<HTMLSpanElement | SVGSVGElement>) => {
+			if (isLoading) return;
 			if (event.target === event.currentTarget) {
 				if (sortable) {
 					const columnUpdated = { ...column };
@@ -85,6 +86,7 @@ export const CellHeader = ({ column, index }: CellHeaderProps) => {
 		[
 			sortable,
 			column,
+			isLoading,
 			sorted,
 			updateColumnsState,
 			updateTableState,

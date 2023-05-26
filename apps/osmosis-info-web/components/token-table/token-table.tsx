@@ -8,7 +8,7 @@ import {
 	TableConfiguration,
 	TableState,
 } from "@latouche/osmosis-info-ui/lib/esm/components/table/types";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
 
 const STORAGE_KEY = process.env.NEXT_PUBLIC_APP_STORAGE_KEY ?? "OSMO_KEY_";
@@ -165,16 +165,17 @@ export const TokenTable = () => {
 	}, []);
 
 	const callBackEnd = useCallback(
-		(next: (currentPage: number) => void, currentPage: number) => {
+		(next: (currentPage: number) => void, currentPage: number, rowPerPage: number) => {
 			if (loading) return;
 			setLoading(true);
 			setTimeout(() => {
 				setLoading(false);
-				setNbRow(nbRow + 5);
-				next(currentPage + 1);
+				setNbRow((nbRow) => nbRow + 10);
+				const max = (currentPage + 1) * rowPerPage;
+				if (!(max >= data.length)) next(currentPage + 1);
 			}, 1000);
 		},
-		[loading, nbRow]
+		[data.length, nbRow]
 	);
 
 	const callBackUpdateStates = useCallback(
@@ -231,7 +232,8 @@ export const TokenTable = () => {
 					Remove row
 				</Button>
 			</div>
-			<div className="my-4">{config && <Table config={config} data={data} />}</div>
+
+			<div className="my-4">{config && <Table config={config} data={data} isLoading={loading} />}</div>
 		</div>
 	);
 };

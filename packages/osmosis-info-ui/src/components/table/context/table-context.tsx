@@ -42,6 +42,7 @@ export type TableProviderProps = {
 	configuration: TableConfiguration;
 	children: React.ReactNode;
 	data: any[];
+	isLoading?: boolean;
 };
 
 export const TableProvider = ({
@@ -51,6 +52,7 @@ export const TableProvider = ({
 	initialColumnsState,
 	configuration,
 	data,
+	isLoading,
 }: TableProviderProps) => {
 	const [columnsState, updateColumnsState] = useState<ColumnState[]>(initialColumnsState);
 	const [tableState, updateTableState] = useState<TableState>(initialTableState);
@@ -68,6 +70,10 @@ export const TableProvider = ({
 			configuration.callBackUpdateStates({ tableState, columnsState });
 		}
 	}, [columnsState, configuration, tableState]);
+
+	useEffect(() => {
+		updateTableState({ ...tableState, isLoading: isLoading ?? false });
+	}, [isLoading]);
 
 	useEffect(() => {
 		const sizeColumns = calculeSizes({
