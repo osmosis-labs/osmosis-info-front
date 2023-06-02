@@ -52,12 +52,13 @@ export async function getServerSideProps() {
 	const responses = await Promise.all([
 		axios({ url: `${API_URL}/tokens/v2/all` }),
 		axios({ url: `${API_URL}/tokens/v2/mcap` }),
+		axios({ url: `https://raw.githubusercontent.com/osmosis-labs/assetlists/main/osmosis-1/osmosis-1.assetlist.json` }),
 	]);
 
 	return {
 		props: {
 			initialState: {
-				tokensState: { tokens: responses[0].data, marketCap: responses[1].data },
+				tokensState: { tokens: responses[0].data, marketCap: responses[1].data, assetList: responses[2].data },
 			},
 		},
 	};

@@ -4,8 +4,6 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../stores";
 import Link from "next/link";
 import axios from "axios";
-import { LiquidityChart } from "../components/liquidity-chart/liquidity-chart";
-import { Table } from "@latouche/osmosis-info-ui";
 import { TokenTable } from "../components/token-table/token-table";
 
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
@@ -14,8 +12,13 @@ const Overview = observer(() => {
 	const t = useTranslation();
 	const {
 		userStore,
+		tokensStore: { getTokens, tokens },
 		metricsStore: { isLoadingMetrics, getMetrics, errorMetrics, metrics },
 	} = useStore();
+
+	useEffect(() => {
+		getTokens();
+	}, [getTokens]);
 
 	useEffect(() => {
 		getMetrics();
@@ -44,7 +47,7 @@ const Overview = observer(() => {
 			</Link>
 
 			<div>
-				<TokenTable />
+				<TokenTable data={[...tokens]} />
 				{/* <LiquidityChart /> */}
 			</div>
 		</div>
@@ -52,12 +55,18 @@ const Overview = observer(() => {
 });
 
 export async function getServerSideProps() {
-	const responses = await axios({ url: `${API_URL}/overview/v1/metrics` });
+	const responses = await Promise.all([
+		axios({ url: `${API_URL}/overview/v1/metrics` }),
+		axios({ url: `${API_URL}/tokens/v2/all` }),
+		axios({ url: `${API_URL}/tokens/v2/mcap` }),
+		axios({ url: `https://raw.githubusercontent.com/osmosis-labs/assetlists/main/osmosis-1/osmosis-1.assetlist.json` }),
+	]);
 
 	return {
 		props: {
 			initialState: {
-				metricsState: responses.data,
+				metricsState: responses[0].data,
+				tokensState: { tokens: responses[1].data, marketCap: responses[2].data, assetList: responses[3].data },
 			},
 		},
 	};

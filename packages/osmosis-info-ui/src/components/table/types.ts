@@ -273,4 +273,23 @@ export type TableTranslations = {
 		rowsPerPage?: string;
 		rangeItems?: (min: number, max: number, length: number) => string;
 	};
+	header?: {
+		buttonSettings?: string;
+		title?: string;
+		density?: string;
+		densityCompact?: string;
+		densityMedium?: string;
+		densityConfortable?: string;
+		downloadCSV?: string;
+		columns?: string;
+		filter?: string;
+		filterLower?: string;
+		filterHigher?: string;
+		filterEquals?: string;
+		filterContains?: string;
+		filterStartWith?: string;
+		filterEndWith?: string;
+		enableColunmResize?: string;
+		validate?: string;
+	};
 };

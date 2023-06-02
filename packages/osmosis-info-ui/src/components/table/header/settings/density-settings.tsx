@@ -4,12 +4,19 @@ import { Dropdown, ItemDropdown } from "../../../dropdown/dropdown";
 import { useTable } from "../../context/table-context";
 
 export const DensitySettings = () => {
-	const { tableState, updateTableState } = useTable();
+	const {
+		tableState,
+		updateTableState,
+		configuration: { translations },
+	} = useTable();
 
 	const itemsDensity = [
-		{ value: "compact", display: "Compact" } as ItemDropdown<string>,
-		{ value: "medium", display: "Medium" } as ItemDropdown<string>,
-		{ value: "confortable", display: "Confortable" } as ItemDropdown<string>,
+		{ value: "compact", display: translations?.header?.densityCompact ?? "Compact" } as ItemDropdown<string>,
+		{ value: "medium", display: translations?.header?.densityMedium ?? "Medium" } as ItemDropdown<string>,
+		{
+			value: "confortable",
+			display: translations?.header?.densityConfortable ?? "Confortable",
+		} as ItemDropdown<string>,
 	];
 
 	const onChangeDensity = (item: ItemDropdown<string>) => {
@@ -18,7 +25,7 @@ export const DensitySettings = () => {
 
 	return (
 		<div className="flex items-center my-2">
-			<p>Density: </p>
+			<p>{translations?.header?.density ?? "Density: "}</p>
 			<Dropdown<string>
 				value={tableState.density}
 				onChange={onChangeDensity}

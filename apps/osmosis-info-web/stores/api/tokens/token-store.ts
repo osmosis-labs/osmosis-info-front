@@ -42,6 +42,14 @@ export class TokenStore extends Request<Token[], PromiseRequest> {
 		this._denom = denom;
 	}
 
+	@observable private _image = "";
+	get image(): string {
+		return this._image;
+	}
+	set image(image: string) {
+		this._image = image;
+	}
+
 	@observable private _main = false;
 	get main(): boolean {
 		return this._main;
@@ -146,6 +154,7 @@ export class TokenStore extends Request<Token[], PromiseRequest> {
 		this._price7dChange = 0;
 		this._exponent = 0;
 		this._marketCap = 0;
+		this._image = "";
 		makeObservable(this);
 	}
 
@@ -162,6 +171,7 @@ export class TokenStore extends Request<Token[], PromiseRequest> {
 		this._name = responseToken.name;
 		this._price24hChange = responseToken.price_24h_change;
 		this._main = responseToken.main;
+		// this._image = responseToken.image;
 	}
 
 	public get errorToken(): string | undefined {

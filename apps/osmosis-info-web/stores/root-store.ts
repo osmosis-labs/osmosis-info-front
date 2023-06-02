@@ -1,7 +1,7 @@
 import { Storage } from "../helpers/storage";
 import { MetricsResponse } from "./api/metrics/metrics";
 import { MetricsStore } from "./api/metrics/metrics-store";
-import { MCapResponse, TokenResponse, TokensResponse } from "./api/tokens/tokens";
+import { AssetListResponse, MCapResponse, TokenResponse, TokensResponse } from "./api/tokens/tokens";
 import { TokensStore } from "./api/tokens/tokens-store";
 import { MenuStore } from "./app/menu-store";
 import { DEFAULT_LANGUAGE, LanguageSetting } from "./app/settings-store/language";
@@ -32,6 +32,7 @@ export interface InitialState {
 	metricsState?: MetricsResponse;
 	tokenState?: TokenResponse;
 	tokensState?: {
+		assetList: AssetListResponse;
 		tokens: TokensResponse[];
 		marketCap: MCapResponse;
 	};

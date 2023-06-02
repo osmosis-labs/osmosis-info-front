@@ -10,16 +10,12 @@ import {
 } from "@latouche/osmosis-info-ui/lib/esm/components/table/types";
 import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
+import { Token } from "../../stores/api/tokens/tokens";
+import { CellName } from "./cell-name";
+import { Image } from "../image/image";
 
 const STORAGE_KEY = process.env.NEXT_PUBLIC_APP_STORAGE_KEY ?? "OSMO_KEY_";
 const KEY_SETTINGS = `${STORAGE_KEY}TOKEN_TABLE`;
-
-type Data = {
-	id: number;
-	name: string;
-	image: string;
-	price: number;
-};
 
 const formatPrice = (price: number, decimals = 2) => {
 	return new Intl.NumberFormat("en-US", {
@@ -43,7 +39,7 @@ const getImage = () =>
 		"https://raw.githubusercontent.com/cosmos/chain-registry/master/juno/images/juno.png",
 	]);
 
-const onClickCell = (params: Params<Data>) => {
+const onClickCell = (params: Params<Token>) => {
 	const { data, currentData } = params;
 	console.log(
 		"%ctable.tsx -> 114 BLUE: currentData, data",
@@ -54,32 +50,24 @@ const onClickCell = (params: Params<Data>) => {
 	);
 };
 
-const onClickRow = (currentData: Data, data: Data[]) => {
+const onClickRow = (currentData: Token, data: Token[]) => {
 	console.log("%ctable.tsx -> 94 PINK: currentData, data", "background: #e91e63; color:#FFFFFF", currentData, data);
 };
 
-const imageRender = (params: Params<Data>) => {
+const imageRender = (params: Params<Token>) => {
 	return <img src={params.currentData.image} alt={params.currentData.name} className={"h-[24px]"} />;
 };
 
-const getRowHeight = ({ currentData, densityFactor }: ParamsRowHeight<Data>) => {
-	return currentData.price % 2 === 0 ? 50 * densityFactor : 60 * densityFactor;
-};
+const dataDefault: Token[] = [];
 
-const dataDefault: Data[] = [];
-for (let i = 0; i < 10; i++) {
-	dataDefault.push({
-		id: i,
-		name: "",
-		price: 0,
-		image: "",
-	});
-}
+export const TokenTable = ({ data }: { data: Token[] }) => {
+	const [currentData, setCurrentData] = useState<Token[]>([]);
+	const [loading, setLoading] = useState(true);
 
-export const TokenTable = () => {
-	const [nbRow, setNbRow] = useState(10);
-	const [data, setData] = useState<Data[]>(dataDefault);
-	const [loading, setLoading] = useState(false);
+	useEffect(() => {
+		setCurrentData([...data]);
+		if (data.length > 0) setLoading(false);
+	}, [data]);
 
 	const [config, setConfig] = useState<TableConfiguration | null>(null);
 
@@ -105,7 +93,6 @@ export const TokenTable = () => {
 			onClickRow: onClickCell,
 			onClickCell: onClickCell,
 			density: savedSettings.density ?? "medium",
-			callBackEnd,
 			autoHeight: false,
 			defaultOrderBy: savedSettings.defaultOrderBy ?? "id",
 			defaultOrderDirection: savedSettings.defaultOrderDirection ?? "ASC",
@@ -133,50 +120,36 @@ export const TokenTable = () => {
 					filterable: true,
 				},
 				{
-					display: "Name",
-					key: "name",
+					display: "Token",
+					key: "Token",
 					flex: 1,
-					minWidth: 200,
-					align: "center",
+					minWidth: columnsSetting.id?.minWidth ?? 200,
+					accessor: (params: Params<Token>) => <CellName token={params.currentData} />,
 					sortable: true,
 					filterable: true,
 					filters: filtersString,
 				},
-				{
-					display: "Image",
-					key: "image",
-					accessor: imageRender,
-					minWidth: 200,
-					flex: 1,
-				},
-				{
-					display: "Price",
-					key: "price",
-					accessor: (params: Params<Data>) => formatPrice(params.currentData.price),
-					minWidth: 300,
-					flex: 1,
-					align: "right",
-				},
+				// {
+				// 	display: "Image",
+				// 	key: "image",
+				// 	accessor: imageRender,
+				// 	minWidth: 200,
+				// 	flex: 1,
+				// },
+				// {
+				// 	display: "Price",
+				// 	key: "price",
+				// 	accessor: (params: Params<Token>) => formatPrice(params.currentData.price),
+				// 	minWidth: 300,
+				// 	flex: 1,
+				// 	align: "right",
+				// },
 			],
 		};
 
 		setConfig(newConfig);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	const callBackEnd = useCallback(
-		(next: (currentPage: number) => void, currentPage: number, rowPerPage: number) => {
-			if (loading) return;
-			setLoading(true);
-			setTimeout(() => {
-				setLoading(false);
-				setNbRow((nbRow) => nbRow + 10);
-				const max = (currentPage + 1) * rowPerPage;
-				if (!(max >= data.length)) next(currentPage + 1);
-			}, 1000);
-		},
-		[data.length, nbRow]
-	);
 
 	const callBackUpdateStates = useCallback(
 		({ tableState, columnsState }: { tableState: TableState; columnsState: ColumnState[] }) => {
@@ -202,38 +175,9 @@ export const TokenTable = () => {
 		[]
 	);
 
-	useEffect(() => {
-		const data: Data[] = [];
-		for (let i = 0; i < nbRow; i++) {
-			data.push({
-				id: i + 1,
-				name: getName(),
-				price: getPrice(),
-				image: getImage(),
-			});
-		}
-		setData(data);
-	}, [nbRow]);
-
-	const addRow = () => {
-		setNbRow(nbRow + 1);
-	};
-	const removeRow = () => {
-		if (nbRow > 0) setNbRow(nbRow - 1);
-	};
-
 	return (
 		<div className="">
-			<div className="flex">
-				<Button onClick={addRow} size="small">
-					Add row
-				</Button>
-				<Button onClick={removeRow} size="small" className="ml-2">
-					Remove row
-				</Button>
-			</div>
-
-			<div className="my-4">{config && <Table config={config} data={data} isLoading={loading} />}</div>
+			<div className="my-4">{config && <Table config={config} data={currentData} isLoading={loading} />}</div>
 		</div>
 	);
 };

@@ -4,7 +4,11 @@ import { Button } from "../../../buttons/button/button";
 import { ColumnState } from "../../types";
 
 export const CSVSettings = () => {
-	const { displayData, columnsState } = useTable();
+	const {
+		displayData,
+		columnsState,
+		configuration: { translations },
+	} = useTable();
 
 	const onClickCSV = () => {
 		const headers: any[] = [];
@@ -37,7 +41,7 @@ export const CSVSettings = () => {
 
 	return (
 		<Button size="small" onClick={onClickCSV}>
-			Download CSV
+			{translations?.header?.downloadCSV ?? "Download CSV"}
 		</Button>
 	);
 };

@@ -14,6 +14,7 @@ import { ColumnsResizing } from "./columns-resizing";
 export const HeaderSettings = () => {
 	const { tableState, configuration } = useTable();
 	const { displaySettings, density, isLoading } = tableState;
+	const { translations, disabledSettings } = configuration;
 
 	const densityFactor = DENSITY_FACTORS[density];
 	const heightSettings = displaySettings ? HEADER_SETTINGS_HEIGHT * densityFactor : 0;
@@ -40,26 +41,26 @@ export const HeaderSettings = () => {
 				onClick={onClickSettings}
 				className="flex items-center justify-end hover:opacity-100 opacity-60 transition-opacity duration-default"
 			>
-				Settings
+				{translations?.header?.buttonSettings ?? "Settings"}
 				<SettingsSvg className="fill-white-full ml-2" height={18} width={18} />
 			</span>
 			<Dialog open={openDialog} onClose={onCloseDialog} closeOnClickAway={true}>
 				<div className="mx-2 mb-2">
 					<div className="flex items-center justify-between">
-						<p className=" my-2">Table settings</p>
+						<p className=" my-2"> {translations?.header?.title ?? "Settings"}</p>
 						<IconButton onClick={onCloseDialog} Icon={CloseSvg} variant="flat" className="stroke-default-500  !pr-0" />
 					</div>
 
 					<div className="flex items-center justify-between">
-						{!configuration.disabledSettings?.density && <DensitySettings />}
-						{!configuration.disabledSettings?.csv && <CSVSettings />}
+						{!disabledSettings?.density && <DensitySettings />}
+						{!disabledSettings?.csv && <CSVSettings />}
 					</div>
-					{(!configuration.disabledSettings?.orderable || !configuration.disabledSettings?.hide) && <ColumnsSettings />}
-					{!configuration.disabledSettings?.filterable && <FiltersSettings />}
-					{!configuration.disabledSettings?.resizable && <ColumnsResizing />}
+					{(!disabledSettings?.orderable || !disabledSettings?.hide) && <ColumnsSettings />}
+					{!disabledSettings?.filterable && <FiltersSettings />}
+					{!disabledSettings?.resizable && <ColumnsResizing />}
 					<div className="flex items-center justify-center mt-4">
 						<Button onClick={onCloseDialog} size="small">
-							Validate
+							{translations?.header?.validate ?? "Validate"}
 						</Button>
 					</div>
 				</div>
