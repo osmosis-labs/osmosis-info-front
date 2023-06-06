@@ -7,7 +7,8 @@ import Tooltip from "@material-ui/core/Tooltip"
 import { getInclude } from "../../../../helpers/helpers"
 import { getImageFromAsset, useAssets } from "../../../../hooks/data/assets.hook"
 import { useWatchlistTokens } from "../../../../contexts/WatchlistTokensProvider"
-
+import FileCopyIcon from "@mui/icons-material/FileCopy"
+import { useToast } from "../../../../contexts/Toast.provider"
 const useStyles = makeStyles((theme) => {
 	return {
 		image: {
@@ -58,11 +59,19 @@ const useStyles = makeStyles((theme) => {
 		tokenDenom: {
 			paddingLeft: "10px",
 			color: theme.palette.gray.dark,
-			maxWidth: "90vw",
+			maxWidth: "30vw",
 			display: "block",
 			overflow: "hidden",
 			textOverflow: "ellipsis",
+		},
+		denom: {
+			display: "flex",
+			alignItems: "center",
 			marginBottom: theme.spacing(1),
+		},
+		iconHash: {
+			color: theme.palette.primary.light2,
+			fontSize: "14px !important",
 		},
 	}
 })
@@ -71,6 +80,7 @@ const TokenTitle = ({ token }) => {
 	const classes = useStyles()
 	const { watchlistTokens, setWatchlistTokens } = useWatchlistTokens()
 	const { data: assets } = useAssets()
+	const { showToast } = useToast()
 
 	const toggleWatchlist = () => {
 		let tmpWatchListTokens = [...watchlistTokens]
@@ -88,6 +98,22 @@ const TokenTitle = ({ token }) => {
 	}
 
 	const image = getImageFromAsset(assets, token)
+
+	const copyDenom = () => {
+		try {
+			navigator.clipboard.writeText(token.denom)
+			showToast({
+				severity: "success",
+				text: "Denom copied to clipboard",
+			})
+		} catch (e) {
+			console.log("%TokenTitle.jsx -> 66 ERROR: e", "background: #FF0000; color:#FFFFFF", e)
+			showToast({
+				severity: "warning",
+				text: "Cannot copy Denom to clipboard",
+			})
+		}
+	}
 
 	return (
 		<div>
@@ -119,7 +145,12 @@ const TokenTitle = ({ token }) => {
 					</Tooltip>
 				</div>
 			</div>
-			<p className={classes.tokenDenom}>{token.denom}</p>
+			<div className={classes.denom}>
+				<IconButton aria-label="copy" className={classes.iconContainer} onClick={copyDenom}>
+					<FileCopyIcon className={classes.iconHash} />
+				</IconButton>
+				<p className={classes.tokenDenom}>{token.denom}</p>
+			</div>
 		</div>
 	)
 }
