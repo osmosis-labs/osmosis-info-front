@@ -1,14 +1,14 @@
 import React from "react";
 import { useTable } from "../../context/table-context";
 import { Button } from "../../../buttons/button/button";
-import { ColumnState } from "../../types";
+import { ColumnState, TableTranslations } from "../../types";
 
-export const CSVSettings = () => {
-	const {
-		displayData,
-		columnsState,
-		configuration: { translations },
-	} = useTable();
+type CSVSettingsProps = {
+	translations?: TableTranslations;
+};
+
+export const CSVSettings = ({ translations }: CSVSettingsProps) => {
+	const { displayData, columnsState } = useTable();
 
 	const onClickCSV = () => {
 		const headers: any[] = [];

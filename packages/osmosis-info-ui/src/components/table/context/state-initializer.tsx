@@ -2,7 +2,7 @@ import { DEFAULT_COLUMN_CONFIGURATION, DEFAULT_TABLE_CONFIGURATION, ROW_HEIGHT, 
 import { ColumnState, RowState, TableConfiguration, TableState } from "../types";
 import { ColumnSize, calculeSizes } from "../utils/size";
 
-export const useStateInitialize = (
+export const stateInitializer = (
 	config: TableConfiguration
 ): { tableState: TableState; columnsState: ColumnState[]; rowState: RowState } => {
 	const columnsState: ColumnState[] = [];
@@ -18,6 +18,7 @@ export const useStateInitialize = (
 		orderBy: config.defaultOrderBy,
 		orderDirection: config.defaultOrderDirection,
 		width: 0,
+		isLoading: false,
 		resizing: config.resizing ?? DEFAULT_TABLE_CONFIGURATION.resizing,
 	};
 	const rowState: RowState = {

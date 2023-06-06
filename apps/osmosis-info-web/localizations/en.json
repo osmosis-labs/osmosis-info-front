@@ -2,6 +2,37 @@
     "overview": {
         "title": "Overview"
     },
+    "tokensTable": {
+        "columnsId": "ID",
+        "columnsName": "Token",
+        "columnsPrice": "Price",
+        "columnsPrice24": "Price (24h) change",
+        "columnsMarketCap": "Market cap",
+        "columnsVolume": "Volume",
+        "columnsVolume24": "Volume (24h) change",
+        "columnsLiquidity": "Liquidity"
+    },
+    "table": {
+        "buttonSettings": "Settings",
+        "title": "Settings",
+        "density": "Density",
+        "densityCompact": "Compact",
+        "densityMedium": "Medium",
+        "densityConfortable": "Confortable",
+        "downloadCSV": "Download CSV",
+        "columns": "Columns",
+        "filter": "Filters",
+        "filterLower": "Lower",
+        "filterHigher": "Higher",
+        "filterEquals": "Equals",
+        "filterContains": "Contains",
+        "filterStartWith": "Start with",
+        "filterEndWith": "End with",
+        "enableColunmResize": "Enable columns resinzing:",
+        "validate": "Validate",
+        "rowsPerPage": "Rows per page:",
+        "range": "{min} - {max} of {total}"
+    },
     "pools": {
         "title": "Pools"
     },

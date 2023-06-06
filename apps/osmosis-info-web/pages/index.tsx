@@ -32,7 +32,6 @@ const Overview = observer(() => {
 			console.log("%cindex.tsx -> 18 ERROR: errorMetrics", "background: #FF0000; color:#FFFFFF", errorMetrics);
 		}
 	}, [errorMetrics]);
-
 	return (
 		<div>
 			<h1 className="text-2xl">{t("overview.title")}</h1>
@@ -47,7 +46,7 @@ const Overview = observer(() => {
 			</Link>
 
 			<div>
-				<TokenTable data={[...tokens]} />
+				<TokenTable data={[...tokens.filter((token) => token.main)]} />
 				{/* <LiquidityChart /> */}
 			</div>
 		</div>

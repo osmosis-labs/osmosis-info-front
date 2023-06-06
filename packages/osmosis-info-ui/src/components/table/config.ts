@@ -8,7 +8,7 @@ export const DENSITY_FACTORS: Record<Density, number> = {
 
 export const ROW_HEIGHT = 53;
 export const HEADER_SETTINGS_HEIGHT = 30;
-export const HEADER_HEIGHT = 40;
+export const HEADER_HEIGHT = 48;
 
 export const SORT = (a: any, b: any) => {
 	if (typeof a === "string" && typeof b === "string") return SORT_STRING(a, b);

@@ -10,11 +10,16 @@ import { ColumnsSettings } from "./columns-settings";
 import { FiltersSettings } from "./filters-settings";
 import { CSVSettings } from "./csv-settings";
 import { ColumnsResizing } from "./columns-resizing";
+import { TableTranslations } from "../../types";
 
-export const HeaderSettings = () => {
+type HeaderSettingsProps = {
+	translations?: TableTranslations;
+};
+
+export const HeaderSettings = ({ translations }: HeaderSettingsProps) => {
 	const { tableState, configuration } = useTable();
 	const { displaySettings, density, isLoading } = tableState;
-	const { translations, disabledSettings } = configuration;
+	const { disabledSettings } = configuration;
 
 	const densityFactor = DENSITY_FACTORS[density];
 	const heightSettings = displaySettings ? HEADER_SETTINGS_HEIGHT * densityFactor : 0;
@@ -52,12 +57,12 @@ export const HeaderSettings = () => {
 					</div>
 
 					<div className="flex items-center justify-between">
-						{!disabledSettings?.density && <DensitySettings />}
-						{!disabledSettings?.csv && <CSVSettings />}
+						{!disabledSettings?.density && <DensitySettings translations={translations} />}
+						{!disabledSettings?.csv && <CSVSettings translations={translations} />}
 					</div>
-					{(!disabledSettings?.orderable || !disabledSettings?.hide) && <ColumnsSettings />}
-					{!disabledSettings?.filterable && <FiltersSettings />}
-					{!disabledSettings?.resizable && <ColumnsResizing />}
+					{(!disabledSettings?.orderable || !disabledSettings?.hide) && <ColumnsSettings translations={translations} />}
+					{!disabledSettings?.filterable && <FiltersSettings translations={translations} />}
+					{!disabledSettings?.resizable && <ColumnsResizing translations={translations} />}
 					<div className="flex items-center justify-center mt-4">
 						<Button onClick={onCloseDialog} size="small">
 							{translations?.header?.validate ?? "Validate"}

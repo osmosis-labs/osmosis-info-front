@@ -66,6 +66,7 @@ export class TokensStore extends Request<Token[], PromiseRequest> {
 					coingeckoId: asset.coingecko_id,
 					denomUnits: asset.denom_units,
 					logoURIs: asset.logo_URIs,
+					main: false,
 					traces: asset.traces.map((trace) => ({
 						...trace,
 						counterparty: {
@@ -75,6 +76,7 @@ export class TokensStore extends Request<Token[], PromiseRequest> {
 					})),
 				};
 				if (currentAsset.keywords && currentAsset.keywords.length > 0) {
+					currentAsset.main = currentAsset.keywords.includes("osmosis-main");
 					assetMap[currentAsset.symbol.toUpperCase()] = currentAsset;
 					assetMap[currentAsset.display.toUpperCase()] = currentAsset;
 					if (currentAsset.symbol.includes(".axl")) {
@@ -130,8 +132,9 @@ export class TokensStore extends Request<Token[], PromiseRequest> {
 			if (mcapToken) {
 				token.marketCap = mcapToken.market_cap;
 			}
-
 			const currentAsset = getAsset(token);
+			token.main = currentAsset?.main || false;
+
 			if (currentAsset) {
 				token.image = currentAsset.logoURIs.png || currentAsset.logoURIs.svg || "";
 			}
@@ -146,7 +149,6 @@ export class TokensStore extends Request<Token[], PromiseRequest> {
 	@action
 	saveTokens(tokens: Token[]) {
 		// TO DO CHECK IF TOKEN IS ALREADY IN TOKENS
-		console.log("%ctokens-store.ts -> 149 ORANGE: tokens", "background: #FFA500; color:#FFFFFF", tokens);
 		this._lastCall = Date.now();
 		tokens.forEach((token) => {
 			const index = this._tokens.findIndex((t) => {

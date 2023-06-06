@@ -1,13 +1,13 @@
 import React from "react";
 import { useTable } from "../../context/table-context";
 import { Switch } from "../../../switch/switch";
+import { TableTranslations } from "../../types";
+type ColumnsResizingProps = {
+	translations?: TableTranslations;
+};
 
-export const ColumnsResizing = () => {
-	const {
-		tableState,
-		updateTableState,
-		configuration: { translations },
-	} = useTable();
+export const ColumnsResizing = ({ translations }: ColumnsResizingProps) => {
+	const { tableState, updateTableState } = useTable();
 
 	const { resizing } = tableState;
 

@@ -4,12 +4,16 @@ import { IconButton } from "../../buttons/icon-button/icon-button";
 import { LeftSvg } from "../../svg";
 import { Dropdown, ItemDropdown } from "../../dropdown/dropdown";
 import { LoadingSVG } from "../../svg/loading-svg";
+import { TableTranslations } from "../types";
 
-export const Footer = () => {
+type FooterProps = {
+	translations?: TableTranslations;
+};
+export const Footer = ({ translations }: FooterProps) => {
 	const {
 		tableState,
 		updateTableState,
-		configuration: { callBackEnd, translations },
+		configuration: { callBackEnd },
 		data,
 	} = useTable();
 
@@ -47,7 +51,7 @@ export const Footer = () => {
 	};
 
 	return (
-		<div className="h-[53px] flex items-center justify-center  box-border border-[1px] border-surface rounded-b-md ">
+		<div className="h-[53px] flex items-center justify-center  box-border border-[1px] border-surface rounded-b-md select-none">
 			<span className="ml-2 flex-1">
 				<span className="xs:hidden">{translations?.footer?.rowsPerPage ?? "Rows per page:"}</span>
 				<Dropdown<number>

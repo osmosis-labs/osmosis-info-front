@@ -1,12 +1,15 @@
 import React, { ChangeEvent, useEffect, useMemo, useState, useCallback } from "react";
-import { ColumnState, Density } from "../../types";
+import { ColumnState, Density, TableTranslations } from "../../types";
 import { Dropdown, ItemDropdown } from "../../../dropdown/dropdown";
 import { useTable } from "../../context/table-context";
 import { Input } from "../../../input/input";
 import { IconButton } from "../../../buttons/icon-button/icon-button";
 import { CloseSvg } from "../../../svg";
 
-export const FiltersSettings = () => {
+type FiltersSettingsProps = {
+	translations?: TableTranslations;
+};
+export const FiltersSettings = ({ translations }: FiltersSettingsProps) => {
 	const { tableState, updateTableState, columnsState } = useTable();
 
 	const [columnSelected, setColumnSelected] = useState<string>("");
@@ -108,7 +111,7 @@ export const FiltersSettings = () => {
 
 	return (
 		<div className="flex my-2 flex-col">
-			<p>Filter: </p>
+			<p>{translations?.header?.filter ?? "Filters: "}</p>
 			<div className="flex items-center">
 				<IconButton onClick={onClearFilter} Icon={CloseSvg} className="mr-2" strokeAnimation variant="flat" />
 				<Dropdown<string>

@@ -45,6 +45,7 @@ export type Asset = {
 		png?: string;
 		svg?: string;
 	};
+	main: boolean;
 	name: string;
 	symbol: string;
 	traces: {

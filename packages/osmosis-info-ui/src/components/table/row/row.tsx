@@ -12,13 +12,14 @@ type RowProps = {
 export function Row({ currentData, data }: RowProps) {
 	const {
 		columnsState,
-		configuration: { getRowHeight },
+		configuration: { getRowHeight, onClickRow },
 		rowState,
 		tableState: { density },
 	} = useTable();
 
 	const onClick = () => {
-		return;
+		if (!onClickRow || typeof onClickRow !== "function") return;
+		onClickRow({ currentData, data });
 	};
 
 	const densityFactor = DENSITY_FACTORS[density];

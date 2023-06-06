@@ -1,20 +1,21 @@
 import React, { useRef, UIEvent } from "react";
-import { TableConfiguration } from "./types";
+import { TableConfiguration, TableTranslations } from "./types";
 import { TableRoot } from "./table-root";
 import { TableProvider } from "./context/table-context";
-import { useStateInitialize } from "./hooks/use-state-initializer";
 import { Body } from "./body/body";
 import { Footer } from "./footer/footer";
 import { Header } from "./header/header";
+import { stateInitializer } from "./context/state-initializer";
 
 export type TableProps = {
 	config: TableConfiguration;
 	data: any[];
 	isLoading?: boolean;
+	translations?: TableTranslations;
 };
 
-export const Table = React.memo(function ({ data, config, isLoading }: TableProps) {
-	const { tableState, columnsState, rowState } = useStateInitialize(config);
+export const Table = React.memo(function ({ data, config, isLoading, translations }: TableProps) {
+	const { tableState, columnsState, rowState } = stateInitializer(config);
 	const refHeader = useRef<HTMLDivElement>(null);
 
 	const onScroll = (event: UIEvent<HTMLDivElement>) => {
@@ -28,16 +29,16 @@ export const Table = React.memo(function ({ data, config, isLoading }: TableProp
 	return (
 		<TableProvider
 			initialTableState={tableState}
-			initialColumnsState={columnsState}
+			initialColumnsState={[...columnsState]}
 			initialRowState={rowState}
 			configuration={config}
 			data={data}
 			isLoading={isLoading}
 		>
 			<TableRoot>
-				<Header ref={refHeader} />
+				<Header ref={refHeader} translations={translations} />
 				<Body onScroll={onScroll} />
-				<Footer />
+				<Footer translations={translations} />
 			</TableRoot>
 		</TableProvider>
 	);

@@ -3,6 +3,7 @@ import { useTable } from "../context/table-context";
 import { CellHeader } from "./cell-header";
 import { DENSITY_FACTORS, HEADER_HEIGHT, HEADER_SETTINGS_HEIGHT } from "../config";
 import { HeaderSettings } from "./settings/header-settings";
+import { TableTranslations } from "../types";
 
 /*
 - Display columns name with specified width
@@ -11,7 +12,11 @@ import { HeaderSettings } from "./settings/header-settings";
 - Add saving options
 */
 
-export const Header = forwardRef<HTMLDivElement>((_, ref) => {
+type HeaderProps = {
+	translations?: TableTranslations;
+};
+
+export const Header = forwardRef<HTMLDivElement, HeaderProps>(({ translations }: HeaderProps, ref) => {
 	const {
 		columnsState,
 		tableState: { density, displaySettings },
@@ -29,7 +34,7 @@ export const Header = forwardRef<HTMLDivElement>((_, ref) => {
 				height: `${height + heightSettings}px`,
 			}}
 		>
-			{displaySettings && <HeaderSettings />}
+			{displaySettings && <HeaderSettings translations={translations} />}
 			<div
 				className="border-l-[1px]  border-r-[1px] border-b-[1px] border-surface overflow-hidden"
 				style={{
@@ -44,7 +49,9 @@ export const Header = forwardRef<HTMLDivElement>((_, ref) => {
 					}}
 				>
 					{columnsState.map((column, index) => {
-						return column.hide ? null : <CellHeader key={column.key} column={column} index={index} />;
+						return column.hide ? null : (
+							<CellHeader key={column.key} column={column} index={index} translations={translations} />
+						);
 					})}
 				</div>
 			</div>

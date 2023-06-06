@@ -190,7 +190,6 @@ export type TableConfiguration = {
 		tableState: TableState;
 		columnsState: ColumnState[];
 	}) => void;
-	translations?: TableTranslations;
 	resizing?: boolean;
 };
 
@@ -291,5 +290,8 @@ export type TableTranslations = {
 		filterEndWith?: string;
 		enableColunmResize?: string;
 		validate?: string;
+		columnsNames?: {
+			[key: string]: string;
+		};
 	};
 };

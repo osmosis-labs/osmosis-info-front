@@ -23,8 +23,8 @@ module.exports = {
       surface: "#231D4B",
       card: "#2D2755",
       modal: "#3C356D",
-      error: "#EF3456",
-      success: "#EF3456",
+      error: "#C6451C",
+      success: "#29D0B2",
       black: {
         full: "rgba(0, 0, 0, 1)",
         high: "rgba(0, 0, 0, 0.95)",

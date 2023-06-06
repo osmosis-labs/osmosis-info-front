@@ -1,6 +1,6 @@
 import React, { MutableRefObject, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Switch } from "../../../switch/switch";
-import { ColumnState, TableConfiguration } from "../../types";
+import { ColumnState, TableConfiguration, TableTranslations } from "../../types";
 import { useTable } from "../../context/table-context";
 import { MenuSvg } from "../../../svg";
 import { useDrag } from "@use-gesture/react";
@@ -22,11 +22,13 @@ const DragableColumns = ({
 	onChangeHideColumn,
 	reorder,
 	configuration,
+	translations,
 }: {
 	columns: ColumnState[];
 	onChangeHideColumn: (value: boolean, index: number) => void;
 	reorder: (order: number[]) => void;
 	configuration: TableConfiguration;
+	translations: TableTranslations;
 }) => {
 	const order = useRef<number[]>(columns.map((_, index) => index));
 
@@ -83,7 +85,7 @@ const DragableColumns = ({
 						{!configuration.disabledSettings?.hide && (
 							<Switch value={!columns[i].hide} onChange={onChange} className="mr-2" name={columns[i].key} />
 						)}
-						{columns[i].display}
+						{translations?.header?.columnsNames?.[columns[i].key] ?? columns[i].display}
 					</div>
 				);
 			})}
@@ -109,7 +111,11 @@ const fn = (order: number[], active = false, originalIndex = 0, curIndex = 0, y 
 	};
 };
 
-export const ColumnsSettings = () => {
+type ColumnSettingsProps = {
+	translations: TableTranslations;
+};
+
+export const ColumnsSettings = ({ translations }: ColumnSettingsProps) => {
 	const { updateColumnsState, columnsState, configuration } = useTable();
 
 	const onChangeHideColumn = (value: boolean, index: number) => {
@@ -132,13 +138,14 @@ export const ColumnsSettings = () => {
 
 	return (
 		<div className="my-2">
-			<p>Columns: </p>
+			<p>{translations?.header?.columns ?? "Columns: "}</p>
 			<div>
 				<DragableColumns
 					columns={columnsState}
 					onChangeHideColumn={onChangeHideColumn}
 					reorder={reorder}
 					configuration={configuration}
+					translations={translations}
 				/>
 			</div>
 		</div>

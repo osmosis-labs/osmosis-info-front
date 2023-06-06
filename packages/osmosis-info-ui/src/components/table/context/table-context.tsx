@@ -60,11 +60,6 @@ export const TableProvider = ({
 	const [width, updateWidth] = useState(0);
 	const { orderBy, orderDirection, filter, filterColumn, filterValue } = tableState;
 
-	// const updateColumnsState = useCallback((newColumnsState: ColumnState[]) => {
-	// 	console.log("table-context.tsx -> 62: update");
-	// 	setColumnsState([...newColumnsState]);
-	// }, []);
-
 	useEffect(() => {
 		if (configuration.callBackUpdateStates) {
 			configuration.callBackUpdateStates({ tableState, columnsState });
@@ -73,6 +68,7 @@ export const TableProvider = ({
 
 	useEffect(() => {
 		updateTableState({ ...tableState, isLoading: isLoading ?? false });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isLoading]);
 
 	useEffect(() => {
@@ -129,6 +125,7 @@ export const TableProvider = ({
 		}
 		return res;
 	}, [columnsState, data, orderBy, orderDirection, filter, filterColumn, filterValue]);
+
 	return (
 		<TableContext.Provider
 			value={{

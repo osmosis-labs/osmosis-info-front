@@ -2,6 +2,37 @@
     "overview": {
         "title": "Vue d'ensemble"
     },
+    "tokensTable": {
+        "columnsId": "ID",
+        "columnsName": "Jeton",
+        "columnsPrice": "Prix",
+        "columnsPrice24": "Prix (24h) change",
+        "columnsMarketCap": "Capitalisation",
+        "columnsVolume": "Volume",
+        "columnsVolume24": "Volume (24h) change",
+        "columnsLiquidity": "Liquidité"
+    },
+    "table": {
+        "buttonSettings": "Paramètres",
+        "title": "Paramètres",
+        "density": "Densité",
+        "densityCompact": "Compacte",
+        "densityMedium": "Moyen",
+        "densityConfortable": "Confortable",
+        "downloadCSV": "Télécharger CSV",
+        "columns": "Colonnes",
+        "filter": "Filtres",
+        "filterLower": "Inferieur",
+        "filterHigher": "Superieur",
+        "filterEquals": "Égale",
+        "filterContains": "Contient",
+        "filterStartWith": "Commence par",
+        "filterEndWith": "Fini par",
+        "enableColunmResize": "Activé le redimensionnement:",
+        "validate": "Valider",
+        "rowsPerPage": "Lignes par page:",
+        "range": "{min} - {max} sur {total}"
+    },
     "pools": {
         "title": "Bassins"
     },

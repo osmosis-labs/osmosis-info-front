@@ -1,14 +1,14 @@
 import React from "react";
-import { Density } from "../../types";
+import { Density, TableTranslations } from "../../types";
 import { Dropdown, ItemDropdown } from "../../../dropdown/dropdown";
 import { useTable } from "../../context/table-context";
 
-export const DensitySettings = () => {
-	const {
-		tableState,
-		updateTableState,
-		configuration: { translations },
-	} = useTable();
+type DensitySettingsProps = {
+	translations?: TableTranslations;
+};
+
+export const DensitySettings = ({ translations }: DensitySettingsProps) => {
+	const { tableState, updateTableState } = useTable();
 
 	const itemsDensity = [
 		{ value: "compact", display: translations?.header?.densityCompact ?? "Compact" } as ItemDropdown<string>,
