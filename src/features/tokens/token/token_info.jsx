@@ -176,6 +176,7 @@ const useStyles = makeStyles((theme) => {
 			width: "100%",
 			display: "flex",
 		},
+
 		details: {
 			display: "flex",
 			flexDirection: "column",
