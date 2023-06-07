@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => {
 		tokenName: {
 			marginTop: theme.spacing(1),
 			display: "flex",
+			flexWrap: "wrap",
 			margin: `${theme.spacing(1)}px 0`,
 			flexDirection: "row",
 			alignItems: "center",
@@ -60,7 +61,7 @@ const useStyles = makeStyles((theme) => {
 		tokenDenom: {
 			paddingLeft: "0px",
 			color: theme.palette.gray.dark,
-			maxWidth: "220px",
+			maxWidth: "160px",
 			display: "block",
 			overflow: "hidden",
 			textOverflow: "ellipsis",
@@ -73,6 +74,10 @@ const useStyles = makeStyles((theme) => {
 		iconDenom: {
 			color: theme.palette.primary.light2,
 			fontSize: "14px !important",
+		},
+		containerDenom: {
+			display: "flex",
+			alignItems: "center",
 		},
 	}
 })
@@ -117,41 +122,39 @@ const TokenTitle = ({ token }) => {
 	}
 
 	return (
-		<div>
-			<div className={classes.tokenName}>
-				<div className={classes.images}>
-					<Image
-						key={`${token.denom} - tokenImage`}
-						className={`${classes.image} ${classes.tokenImage}`}
-						assets={true}
-						pathAssets=""
-						src={image}
-						srcFallback="../assets/default.png"
-						alt={`${token.symbol}`}
-					/>
-				</div>
-				<div className={classes.titleIcon}>
-					<p className={classes.subTitle}>
-						{`${token.name}`} <em className={classes.symbolName}>({token.symbolDisplay})</em>
-					</p>
-
-					<Tooltip title={isInWatchList() ? "Remove from your watchlist" : "Add to your watchlist"}>
-						<IconButton onClick={toggleWatchlist} aria-label="Switch in your watchList" component="span">
-							{isInWatchList() ? (
-								<StarIcon className={classes.iconStar} />
-							) : (
-								<StarBorderIcon className={classes.iconStar} />
-							)}
-						</IconButton>
-					</Tooltip>
-				</div>
+		<div className={classes.tokenName}>
+			<div className={classes.images}>
+				<Image
+					key={`${token.denom} - tokenImage`}
+					className={`${classes.image} ${classes.tokenImage}`}
+					assets={true}
+					pathAssets=""
+					src={image}
+					srcFallback="../assets/default.png"
+					alt={`${token.symbol}`}
+				/>
 			</div>
-			<Paper className={classes.denom}>
+			<div className={classes.titleIcon}>
+				<p className={classes.subTitle}>
+					{`${token.name}`} <em className={classes.symbolName}>({token.symbolDisplay})</em>
+				</p>
+
+				<Tooltip title={isInWatchList() ? "Remove from your watchlist" : "Add to your watchlist"}>
+					<IconButton onClick={toggleWatchlist} aria-label="Switch in your watchList" component="span">
+						{isInWatchList() ? (
+							<StarIcon className={classes.iconStar} />
+						) : (
+							<StarBorderIcon className={classes.iconStar} />
+						)}
+					</IconButton>
+				</Tooltip>
+			</div>
+			<div className={classes.containerDenom}>
 				<IconButton aria-label="copy" onClick={copyDenom}>
 					<FileCopyIcon className={classes.iconDenom} />
 				</IconButton>
 				<p className={classes.tokenDenom}>{token.denom}</p>
-			</Paper>
+			</div>
 		</div>
 	)
 }
