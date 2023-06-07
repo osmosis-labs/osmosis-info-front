@@ -9,6 +9,7 @@ import { getImageFromAsset, useAssets } from "../../../../hooks/data/assets.hook
 import { useWatchlistTokens } from "../../../../contexts/WatchlistTokensProvider"
 import FileCopyIcon from "@mui/icons-material/FileCopy"
 import { useToast } from "../../../../contexts/Toast.provider"
+import Paper from "../../../../components/paper/Paper"
 const useStyles = makeStyles((theme) => {
 	return {
 		image: {
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme) => {
 			margin: `${theme.spacing(1)}px 0`,
 			flexDirection: "row",
 			alignItems: "center",
+			flexWrap: "wrap",
 		},
 		subTitle: {
 			[theme.breakpoints.down("xs")]: {
@@ -59,7 +61,7 @@ const useStyles = makeStyles((theme) => {
 		tokenDenom: {
 			paddingLeft: "10px",
 			color: theme.palette.gray.dark,
-			maxWidth: "30vw",
+			maxWidth: "100px",
 			display: "block",
 			overflow: "hidden",
 			textOverflow: "ellipsis",
@@ -67,7 +69,6 @@ const useStyles = makeStyles((theme) => {
 		denom: {
 			display: "flex",
 			alignItems: "center",
-			marginBottom: theme.spacing(1),
 		},
 		iconHash: {
 			color: theme.palette.primary.light2,
@@ -116,34 +117,32 @@ const TokenTitle = ({ token }) => {
 	}
 
 	return (
-		<div>
-			<div className={classes.tokenName}>
-				<div className={classes.images}>
-					<Image
-						key={`${token.denom} - tokenImage`}
-						className={`${classes.image} ${classes.tokenImage}`}
-						assets={true}
-						pathAssets=""
-						src={image}
-						srcFallback="../assets/default.png"
-						alt={`${token.symbol}`}
-					/>
-				</div>
-				<div className={classes.titleIcon}>
-					<p className={classes.subTitle}>
-						{`${token.name}`} <em className={classes.symbolName}>({token.symbolDisplay})</em>
-					</p>
+		<div className={classes.tokenName}>
+			<div className={classes.images}>
+				<Image
+					key={`${token.denom} - tokenImage`}
+					className={`${classes.image} ${classes.tokenImage}`}
+					assets={true}
+					pathAssets=""
+					src={image}
+					srcFallback="../assets/default.png"
+					alt={`${token.symbol}`}
+				/>
+			</div>
+			<div className={classes.titleIcon}>
+				<p className={classes.subTitle}>
+					{`${token.name}`} <em className={classes.symbolName}>({token.symbolDisplay})</em>
+				</p>
 
-					<Tooltip title={isInWatchList() ? "Remove from your watchlist" : "Add to your watchlist"}>
-						<IconButton onClick={toggleWatchlist} aria-label="Switch in your watchList" component="span">
-							{isInWatchList() ? (
-								<StarIcon className={classes.iconStar} />
-							) : (
-								<StarBorderIcon className={classes.iconStar} />
-							)}
-						</IconButton>
-					</Tooltip>
-				</div>
+				<Tooltip title={isInWatchList() ? "Remove from your watchlist" : "Add to your watchlist"}>
+					<IconButton onClick={toggleWatchlist} aria-label="Switch in your watchList" component="span">
+						{isInWatchList() ? (
+							<StarIcon className={classes.iconStar} />
+						) : (
+							<StarBorderIcon className={classes.iconStar} />
+						)}
+					</IconButton>
+				</Tooltip>
 			</div>
 			<div className={classes.denom}>
 				<IconButton aria-label="copy" className={classes.iconContainer} onClick={copyDenom}>
