@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => {
 		tokenDenom: {
 			paddingLeft: "0px",
 			color: theme.palette.gray.dark,
-			maxWidth: "160px",
+			maxWidth: "100px",
 			display: "block",
 			overflow: "hidden",
 			textOverflow: "ellipsis",
