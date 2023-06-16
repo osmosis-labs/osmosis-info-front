@@ -1,4 +1,4 @@
-import { Button, Table } from "@latouche/osmosis-info-ui";
+import { Table } from "@latouche/osmosis-info-ui";
 import { filtersNumber, filtersString } from "@latouche/osmosis-info-ui/lib/esm/components/table/config";
 import {
 	ColumnConfiguration,
@@ -9,22 +9,24 @@ import {
 } from "@latouche/osmosis-info-ui/lib/esm/components/table/types";
 import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
-import { Token } from "../../stores/api/tokens/tokens";
-import { CellName } from "./cell-name";
-import { CellChange } from "./cell-change";
-import { formatAutoPrice, formaterNumber } from "../../helpers/format";
+import { formatAutoPrice, formateNumberDecimals, formaterNumber } from "../../helpers/format";
 import { useTranslation } from "react-multi-lang";
 import { useStore } from "../../stores";
 import { useRouter } from "next/router";
+import { CellChange } from "../token-table/cell-change";
+import { CellName } from "./cell-name";
+import { Pool } from "../../stores/api/pools/Pools";
+import { PoolStore } from "../../stores/api/pools/pool-store";
+import { CellTotalReturn } from "./cell-total-return";
 
 const STORAGE_KEY = process.env.NEXT_PUBLIC_APP_STORAGE_KEY ?? "OSMO_KEY_";
-const KEY_SETTINGS = `${STORAGE_KEY}TOKEN_TABLE`;
+const KEY_SETTINGS = `${STORAGE_KEY}POOL_TABLE`;
 
-export const TokenTable = ({ data }: { data: Token[] }) => {
+export const PoolTable = ({ data }: { data: Pool[] }) => {
 	const t = useTranslation();
 	const router = useRouter();
 
-	const [currentData, setCurrentData] = useState<Token[]>([]);
+	const [currentData, setCurrentData] = useState<Pool[]>([]);
 	const [loading, setLoading] = useState(true);
 	const { settingsStore } = useStore();
 	const language = settingsStore.getSettingById("language")?.state.value;
@@ -36,14 +38,14 @@ export const TokenTable = ({ data }: { data: Token[] }) => {
 	const [config, setConfig] = useState<TableConfiguration | null>(null);
 
 	const onClickRow = useCallback(
-		(params: Params<Token>) => {
-			router.push(`/tokens/${params.currentData.symbol}`);
+		(params: Params<Pool>) => {
+			router.push(`/pools/${params.currentData.id}`);
 		},
 		[router]
 	);
 
 	useEffect(() => {
-		const savedSettings = JSON.parse(localStorage.getItem(KEY_SETTINGS) ?? "{}") as Partial<TableConfiguration>;
+		const savedSettings = {} as Partial<TableConfiguration>; //JSON.parse(localStorage.getItem(KEY_SETTINGS) ?? "{}") as Partial<TableConfiguration>;
 
 		const columnsSetting: Record<string, Partial<ColumnConfiguration>> = (savedSettings?.columns ?? []).reduce(
 			(acc, column) => {
@@ -52,7 +54,6 @@ export const TokenTable = ({ data }: { data: Token[] }) => {
 						minWidth: column.minWidth,
 						flex: column.flex,
 						sortable: column.sortable,
-						// Ajoutez d'autres propriétés de colonne que vous souhaitez inclure dans `columnsSetting`
 					};
 				}
 				return acc;
@@ -61,10 +62,9 @@ export const TokenTable = ({ data }: { data: Token[] }) => {
 		);
 
 		const newConfig: TableConfiguration = {
-			onClickRow,
 			density: savedSettings.density ?? "medium",
 			autoHeight: false,
-			defaultOrderBy: savedSettings.defaultOrderBy ?? "id",
+			defaultOrderBy: savedSettings.defaultOrderBy ?? "liquidity",
 			defaultOrderDirection: savedSettings.defaultOrderDirection ?? "ASC",
 			resizing: savedSettings.resizing ?? false,
 			callBackUpdateStates,
@@ -75,7 +75,7 @@ export const TokenTable = ({ data }: { data: Token[] }) => {
 					key: "id",
 					flex: 1,
 					maxWidth: 60,
-					minWidth: columnsSetting.id?.minWidth ?? 50,
+					minWidth: columnsSetting.id?.minWidth ?? 60,
 					sortable: true,
 					onSort: (a: any, b: any) => {
 						return b - a;
@@ -84,20 +84,20 @@ export const TokenTable = ({ data }: { data: Token[] }) => {
 					filterable: true,
 				},
 				{
-					display: "Symbol",
-					key: "symbol",
+					display: "Pool",
+					key: "name",
 					flex: 2,
-					minWidth: columnsSetting.id?.minWidth ?? 200,
-					accessor: (params: Params<Token>) => <CellName token={params.currentData} />,
+					minWidth: columnsSetting.name?.minWidth ?? 280,
+					accessor: (params: Params<PoolStore>) => <CellName pool={params.currentData} />,
 					sortable: true,
 					filterable: true,
 					filters: filtersString,
 				},
 				{
-					display: "Price",
-					key: "price",
+					display: "Liquidity",
+					key: "liquidity",
 					flex: 1,
-					accessor: (params: Params<Token>) => formatAutoPrice(params.currentData.price),
+					accessor: (params: Params<Pool>) => `$${formaterNumber(params.currentData.liquidity)}`,
 					sortable: true,
 					onSort: (a: any, b: any) => {
 						return b - a;
@@ -106,10 +106,10 @@ export const TokenTable = ({ data }: { data: Token[] }) => {
 					filterable: true,
 				},
 				{
-					display: "Price 24h",
-					key: "price24hChange",
+					display: "Liquidity 24h",
+					key: "liquidity24hChange",
 					flex: 1,
-					accessor: (params: Params<Token>) => <CellChange change={params.currentData.price24hChange} />,
+					accessor: (params: Params<Pool>) => <CellChange change={params.currentData.liquidity24hChange} />,
 					sortable: true,
 					onSort: (a: any, b: any) => {
 						return b - a;
@@ -117,26 +117,24 @@ export const TokenTable = ({ data }: { data: Token[] }) => {
 					filters: filtersNumber,
 					filterable: true,
 				},
+
 				{
-					display: "Market cap",
-					key: "marketCap",
-					flex: 1,
-					accessor: (params: Params<Token>) =>
-						params.currentData.marketCap && params.currentData.marketCap > 0
-							? `$${formaterNumber(params.currentData.marketCap)}`
-							: "-",
-					sortable: true,
-					onSort: (a: any, b: any) => {
-						return b - a;
-					},
-					filters: filtersNumber,
-					filterable: true,
-				},
-				{
-					display: "Volumne 24h",
+					display: "Volume 24h",
 					key: "volume24h",
 					flex: 1,
-					accessor: (params: Params<Token>) => `$${formaterNumber(params.currentData.volume24h)}`,
+					accessor: (params: Params<Pool>) => `$${formaterNumber(params.currentData.volume24h)}`,
+					sortable: true,
+					onSort: (a: any, b: any) => {
+						return b - a;
+					},
+					filters: filtersNumber,
+					filterable: true,
+				},
+				{
+					display: "Volume 7d",
+					key: "volume7d",
+					flex: 1,
+					accessor: (params: Params<Pool>) => `$${formaterNumber(params.currentData.volume7d)}`,
 					sortable: true,
 					onSort: (a: any, b: any) => {
 						return b - a;
@@ -148,7 +146,7 @@ export const TokenTable = ({ data }: { data: Token[] }) => {
 					display: "Volume 24h change",
 					key: "volume24hChange",
 					flex: 1,
-					accessor: (params: Params<Token>) => <CellChange change={params.currentData.volume24hChange} />,
+					accessor: (params: Params<Pool>) => <CellChange change={params.currentData.volume24hChange} />,
 					sortable: true,
 					onSort: (a: any, b: any) => {
 						return b - a;
@@ -157,10 +155,49 @@ export const TokenTable = ({ data }: { data: Token[] }) => {
 					filterable: true,
 				},
 				{
-					display: "Liquidity",
-					key: "liquidity",
+					display: "Total return",
+					key: "totalAPR",
 					flex: 1,
-					accessor: (params: Params<Token>) => `$${formaterNumber(params.currentData.liquidity)}`,
+					minWidth: columnsSetting.totalReturn?.minWidth ?? 110,
+					accessor: (params: Params<PoolStore>) => <CellTotalReturn pool={params.currentData} />,
+					sortable: true,
+					onSort: (a: any, b: any) => {
+						return b - a;
+					},
+					filters: filtersNumber,
+					filterable: true,
+				},
+				{
+					display: "Fees",
+					key: "fees",
+					flex: 1,
+					accessor: (params: Params<Pool>) => `${formateNumberDecimals(params.currentData.fees.feesPercentage, 2, 2)}%`,
+					sortable: true,
+					onSort: (a: any, b: any) => {
+						return b - a;
+					},
+					filters: filtersNumber,
+					filterable: true,
+				},
+				{
+					display: "Internal return",
+					key: "internalReturn",
+					flex: 1,
+					accessor: (params: Params<PoolStore>) =>
+						`${formateNumberDecimals(params.currentData.internalReturn.apr14d, 2, 2)}%`,
+					sortable: true,
+					onSort: (a: any, b: any) => {
+						return b - a;
+					},
+					filters: filtersNumber,
+					filterable: true,
+				},
+				{
+					display: "External return",
+					key: "externalReturn",
+					flex: 1,
+					accessor: (params: Params<PoolStore>) =>
+						`${formateNumberDecimals(params.currentData.externalReturn.apr14d, 2, 2)}%`,
 					sortable: true,
 					onSort: (a: any, b: any) => {
 						return b - a;
@@ -195,7 +232,7 @@ export const TokenTable = ({ data }: { data: Token[] }) => {
 					filterable: c.filterable,
 				})),
 			};
-			localStorage.setItem(KEY_SETTINGS, JSON.stringify(settingsTable));
+			// localStorage.setItem(KEY_SETTINGS, JSON.stringify(settingsTable));
 		},
 		[]
 	);

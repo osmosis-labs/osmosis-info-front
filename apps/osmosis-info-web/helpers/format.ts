@@ -48,10 +48,11 @@ export const formatAutoPrice = (price: number) => {
 	return formateNumberPriceDecimals(price, decimals);
 };
 
-export const formateNumberDecimals = (price: number, decimals = 2) => {
+export const formateNumberDecimals = (price: number, maxDecimals = 2, minDecimal = 0) => {
 	return new Intl.NumberFormat("en-US", {
 		currency: "USD",
-		maximumFractionDigits: decimals,
+		maximumFractionDigits: maxDecimals,
+		minimumFractionDigits: minDecimal,
 	}).format(price);
 };
 

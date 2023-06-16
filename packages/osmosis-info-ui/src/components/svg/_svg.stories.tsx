@@ -13,6 +13,8 @@ import {
 	FrenchSvg,
 	EnglishSvg,
 	BottomSvg,
+	VoteSVG,
+	SwapSVG,
 } from "./";
 import { CloseSvg } from "./close-svg";
 import { ArrowTopSVG } from "./arrow-top-svg";
@@ -111,3 +113,11 @@ ArrowTop.argTypes = argsTypeFill;
 export const Loading: ComponentStory<typeof LoadingSVG> = (args) => <LoadingSVG {...args} />;
 Loading.args = argsFill;
 Loading.argTypes = argsTypeFill;
+
+export const Vote: ComponentStory<typeof VoteSVG> = (args) => <VoteSVG {...args} />;
+Vote.args = argsFill;
+Vote.argTypes = argsTypeFill;
+
+export const Swap: ComponentStory<typeof SwapSVG> = (args) => <SwapSVG {...args} />;
+Swap.args = argsStroke;
+Swap.argTypes = argsTypeStroke;

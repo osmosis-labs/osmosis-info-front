@@ -10,3 +10,6 @@ export * from "./french-svg";
 export * from "./english-svg";
 export * from "./bottom-svg";
 export * from "./close-svg";
+export * from "./vote-svg";
+export * from "./swap-svg";
+export * from "./arrow-top-svg";

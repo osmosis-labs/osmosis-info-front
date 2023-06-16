@@ -31,3 +31,29 @@
 .Toastify__toast-theme--colored.Toastify__toast--error {
 	background: linear-gradient(96.42deg, #b03a20 -0.59%, #fa825d 100%) !important;
 }
+
+* {}
+
+*::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+	cursor: scroll;
+}
+
+*::-webkit-scrollbar-corner {
+	@apply bg-wosmongton-400;
+
+}
+
+*::-webkit-scrollbar-track {
+	@apply bg-wosmongton-300;
+}
+
+*::-webkit-scrollbar-thumb {
+	@apply bg-wosmongton-400;
+	border: 1px solid;
+	@apply border-wosmongton-800;
+	border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb:hover {}

@@ -126,6 +126,7 @@ export class TokensStore extends Request<Token[], PromiseRequest> {
 				marketCap: 0,
 				image: "",
 			};
+
 			const mcapToken = mCapResponse.find((mc) => {
 				return mc.symbol == token.symbol;
 			});
@@ -148,7 +149,6 @@ export class TokensStore extends Request<Token[], PromiseRequest> {
 
 	@action
 	saveTokens(tokens: Token[]) {
-		// TO DO CHECK IF TOKEN IS ALREADY IN TOKENS
 		this._lastCall = Date.now();
 		tokens.forEach((token) => {
 			const index = this._tokens.findIndex((t) => {

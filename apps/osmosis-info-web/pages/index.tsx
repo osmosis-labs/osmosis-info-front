@@ -5,6 +5,7 @@ import { useStore } from "../stores";
 import Link from "next/link";
 import axios from "axios";
 import { TokenTable } from "../components/token-table/token-table";
+import { PoolTable } from "../components/pool-table/pool-table";
 
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 
@@ -13,6 +14,7 @@ const Overview = observer(() => {
 	const {
 		userStore,
 		tokensStore: { getTokens, tokens },
+		poolsStore: { pools },
 		metricsStore: { isLoadingMetrics, getMetrics, errorMetrics, metrics },
 	} = useStore();
 
@@ -32,6 +34,7 @@ const Overview = observer(() => {
 			console.log("%cindex.tsx -> 18 ERROR: errorMetrics", "background: #FF0000; color:#FFFFFF", errorMetrics);
 		}
 	}, [errorMetrics]);
+
 	return (
 		<div>
 			<h1 className="text-2xl">{t("overview.title")}</h1>
@@ -46,6 +49,7 @@ const Overview = observer(() => {
 			</Link>
 
 			<div>
+				<PoolTable data={[...pools.filter((pool) => pool.main)]} />
 				<TokenTable data={[...tokens.filter((token) => token.main)]} />
 				{/* <LiquidityChart /> */}
 			</div>
@@ -59,6 +63,9 @@ export async function getServerSideProps() {
 		axios({ url: `${API_URL}/tokens/v2/all` }),
 		axios({ url: `${API_URL}/tokens/v2/mcap` }),
 		axios({ url: `https://raw.githubusercontent.com/osmosis-labs/assetlists/main/osmosis-1/osmosis-1.assetlist.json` }),
+		axios({ url: `${API_URL}/pools/v2/all?low_liquidity=false` }),
+		axios({ url: `${API_URL}/apr/v2/all` }),
+		axios({ url: `${API_URL}/fees/v1/pools` }),
 	]);
 
 	return {
@@ -66,6 +73,7 @@ export async function getServerSideProps() {
 			initialState: {
 				metricsState: responses[0].data,
 				tokensState: { tokens: responses[1].data, marketCap: responses[2].data, assetList: responses[3].data },
+				poolsState: { pools: responses[4].data, apr: responses[5].data, fees: responses[6].data },
 			},
 		},
 	};

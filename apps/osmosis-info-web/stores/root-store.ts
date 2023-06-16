@@ -1,6 +1,8 @@
 import { Storage } from "../helpers/storage";
 import { MetricsResponse } from "./api/metrics/metrics";
 import { MetricsStore } from "./api/metrics/metrics-store";
+import { APRResponse, APRsResponse, FeesResponse, PoolsResponse } from "./api/pools/Pools";
+import { PoolsStore } from "./api/pools/pools-store";
 import { AssetListResponse, MCapResponse, TokenResponse, TokensResponse } from "./api/tokens/tokens";
 import { TokensStore } from "./api/tokens/tokens-store";
 import { MenuStore } from "./app/menu-store";
@@ -14,6 +16,7 @@ export class RootStore {
 	public readonly userStore: UserStore;
 	public readonly metricsStore: MetricsStore;
 	public readonly tokensStore: TokensStore;
+	public readonly poolsStore: PoolsStore;
 
 	constructor() {
 		this.menuStore = new MenuStore();
@@ -21,10 +24,12 @@ export class RootStore {
 		this.userStore = new UserStore();
 		this.metricsStore = new MetricsStore();
 		this.tokensStore = new TokensStore();
+		this.poolsStore = new PoolsStore(this.tokensStore);
 	}
 
 	hydrate = (initState: InitialState): void => {
 		this.tokensStore.hydrate(initState);
+		this.poolsStore.hydrate(initState);
 	};
 }
 
@@ -35,5 +40,10 @@ export interface InitialState {
 		assetList: AssetListResponse;
 		tokens: TokensResponse[];
 		marketCap: MCapResponse;
+	};
+	poolsState?: {
+		pools: PoolsResponse;
+		apr: APRsResponse;
+		fees: FeesResponse;
 	};
 }

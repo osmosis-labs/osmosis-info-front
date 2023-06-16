@@ -3,6 +3,7 @@ const sideMenuWidthOpen = 200;
 const sideMenuWidthClose = 69;
 const paddingChildren = 10;
 const bottomMenuHeight = 88;
+const detailsReturnHeight = 120;
 
 // eslint-disable-next-line no-undef
 module.exports = {
@@ -162,12 +163,20 @@ module.exports = {
       xs: { max: "420px" },
     },
     extend: {
+      translate: {
+        detailsReturn: `${detailsReturnHeight}px`,
+
+      },
       maxWidth: {
         container: "1280px",
+      },
+      maxHeight: {
+        detailsReturn: `${detailsReturnHeight}px`,
       },
       height: {
         topMenu: `${topMenuHeight}px`,
         bottomMenu: `${bottomMenuHeight}px`,
+        detailsReturn: `${detailsReturnHeight}px`,
       },
       width: {
         sideMenuOpen: `${sideMenuWidthOpen}px`,
