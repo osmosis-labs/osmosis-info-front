@@ -12,6 +12,18 @@
         "columnsVolume24": "Volume (24h) change",
         "columnsLiquidity": "Liquidity"
     },
+    "poolsTable": {
+        "name": "Pool",
+        "liquidity": "Liquidity",
+        "liquidity24hChange": "Liquidity (24h) change",
+        "volume24h": "Volume (24h)",
+        "volume7d": "Volume (7d)",
+        "volume24hChange": "Volume (24h) change",
+        "totalAPR": "Total APR",
+        "fees": "Fees",
+        "internalReturn": "Internal return",
+        "externalReturn": "External return"
+    },
     "table": {
         "buttonSettings": "Settings",
         "title": "Settings",
@@ -34,7 +46,22 @@
         "range": "{min} - {max} of {total}"
     },
     "pools": {
-        "title": "Pools"
+        "title": "Pools",
+        "calculatorAPR": {
+            "title": "ROI Calculator for pool {poolName}",
+            "stakedFor": "Stacked for",
+            "periodes": {
+                "one": "1 day",
+                "seven": "7 days",
+                "fourteen": "14 days"
+            },
+            "total": "Total",
+            "priceDay": "${price}/day",
+            "percentAPR": "{percent}% APR",
+            "details": "details",
+            "superfluid": "Superfluid",
+            "swap": "Swap"
+        }
     },
     "tokens": {
         "title": "Tokens"

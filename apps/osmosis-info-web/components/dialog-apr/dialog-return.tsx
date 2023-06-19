@@ -3,8 +3,7 @@ import { ButtonMultiple, CloseSvg, Dialog, ItemButtonMultiple, VoteSVG, LeftSvg 
 import { PoolStore } from "../../stores/api/pools/pool-store";
 import { InputTokens } from "./input-tokens";
 import { formateNumberDecimals } from "../../helpers/format";
-import { t } from "react-multi-lang";
-import { PoolAPR, ReturnAPR } from "../../stores/api/pools/Pools";
+import { useTranslation } from "react-multi-lang";
 
 type DialogReturnProps = {
 	open: boolean;
@@ -15,21 +14,22 @@ type DialogReturnProps = {
 type KeyApr = "apr1d" | "apr7d" | "apr14d";
 
 export const DialogReturn = ({ open, onClose, pool }: DialogReturnProps) => {
+	const t = useTranslation();
+
 	const [valueUSD, setValueUSD] = useState(100);
 
 	const itemsPeriode: ItemButtonMultiple<KeyApr>[] = useMemo(
 		() => [
-			{ label: "1 day", value: "apr1d" },
-			{ label: "7 days", value: "apr7d" },
-			{ label: "14 days", value: "apr14d" },
+			{ label: t("pools.calculatorAPR.periodes.one"), value: "apr1d" },
+			{ label: t("pools.calculatorAPR.periodes.seven"), value: "apr7d" },
+			{ label: t("pools.calculatorAPR.periodes.fourteen"), value: "apr14d" },
 		],
-		[]
+		[t]
 	);
 
 	const [periode, setPeriode] = useState(itemsPeriode[2]);
 
 	const onClickPeriode = (periode: ItemButtonMultiple<KeyApr>) => {
-		console.log("dialog-return.tsx -> 28: periode", periode);
 		setPeriode(periode);
 	};
 
@@ -38,31 +38,29 @@ export const DialogReturn = ({ open, onClose, pool }: DialogReturnProps) => {
 	};
 
 	return (
-		<Dialog onClose={onClose} open={open} closeOnClickAway classNamePaper="p-0 bg-surface rounded-xl">
+		<Dialog onClose={onClose} open={open} closeOnClickAway classNamePaper="p- bg-surface rounded-xl">
 			<div className="relative">
-				<div className=" p-4  ">
-					<div className=" p-4  overflow-hidden">
-						<div className="flex items-center mx-2 mb-2">
-							<span className="border-[1px] rounded-full border-frontier-500 p-2 mr-2">
-								<VoteSVG className="fill-bullish-500  " height={24} />
-							</span>
-							ROI Calculator for pool {pool.name}
-							<CloseSvg
-								className="stroke-default-500  absolute top-[10px] right-[10px] cursor-pointer"
-								height={24}
-								onClick={onClose}
-							/>
-						</div>
-						<div>
-							<InputTokens pool={pool} onChange={onChange} valueUSD={valueUSD} />
-						</div>
-						<div className="m-2">
-							<p className="mb-2">Stacked for: </p>
-							<ButtonMultiple selected={periode} onClick={onClickPeriode} items={itemsPeriode} />
-						</div>
-						<div className="m-2 mt-4 ">
-							<Details pool={pool} periode={periode.value} valueUSD={valueUSD} />
-						</div>
+				<div className=" p-5  overflow-hidden">
+					<div className="flex items-center mx-2 mb-2">
+						<span className="border-[1px] rounded-full border-frontier-500 p-2 mr-2">
+							<VoteSVG className="fill-bullish-500  " height={24} />
+						</span>
+						{t("pools.calculatorAPR.title", { poolName: pool.name })}
+						<CloseSvg
+							className="stroke-default-500  absolute top-[10px] right-[10px] cursor-pointer"
+							height={24}
+							onClick={onClose}
+						/>
+					</div>
+					<div>
+						<InputTokens pool={pool} onChange={onChange} valueUSD={valueUSD} />
+					</div>
+					<div className="m-2">
+						<p className="mb-2">{t("pools.calculatorAPR.stakedFor")}</p>
+						<ButtonMultiple selected={periode} onClick={onClickPeriode} items={itemsPeriode} />
+					</div>
+					<div className="m-2 mt-4 ">
+						<Details pool={pool} periode={periode.value} valueUSD={valueUSD} />
 					</div>
 				</div>
 			</div>
@@ -77,6 +75,7 @@ type DetailsProps = {
 };
 const Details = ({ pool, periode, valueUSD }: DetailsProps) => {
 	const [showDetails, setShowDetails] = useState(false);
+	const t = useTranslation();
 
 	const toogleDetails = () => {
 		setShowDetails(!showDetails);
@@ -101,7 +100,7 @@ const Details = ({ pool, periode, valueUSD }: DetailsProps) => {
 	const classBodyDetailsHide = `${classBodyDetails} translate-y-detailsReturn opacity-0`;
 
 	const classBackdropDetails = `transition-all duration-300 top-0 left-0 right-0 bottom-0  absolute bg-surface `;
-	const classBackdropDetailsShow = `${classBackdropDetails} z-10 opacity-60`;
+	const classBackdropDetailsShow = `${classBackdropDetails} z-10 opacity-60 rounded-xl`;
 	const classBackdropDetailsHide = `${classBackdropDetails} z-[-1] opacity-0`;
 
 	const classIconDetails = `stroke-default-500 transition-all duration-300`;
@@ -112,15 +111,17 @@ const Details = ({ pool, periode, valueUSD }: DetailsProps) => {
 
 	return (
 		<div className="max-h-[24px] ">
-			<div className={showDetails ? classBackdropDetailsShow : classBackdropDetailsHide}></div>
+			<div className={showDetails ? classBackdropDetailsShow : classBackdropDetailsHide} onClick={toogleDetails}></div>
 			<div className={showDetails ? classHeaderDetailsShow : classHeaderDetailsHide} onClick={toogleDetails}>
-				<em className="not-italic flex items-center p-2">Total</em>
+				<em className="not-italic flex items-center p-2">{t("pools.calculatorAPR.total")}</em>
 				<em className="not-italic flex items-center">
-					${formateNumberDecimals(((total / 100) * valueUSD) / 365, 2, 2)} / day{" "}
+					{t("pools.calculatorAPR.priceDay", { price: formateNumberDecimals(((total / 100) * valueUSD) / 365, 2, 2) })}
 				</em>
-				<em className="not-italic flex items-center">{formateNumberDecimals(total)}% APR</em>
+				<em className="not-italic flex items-center">
+					{t("pools.calculatorAPR.percentAPR", { percent: formateNumberDecimals(total) })}
+				</em>
 				<span className="flex items-center text-sm  text-default-500 cursor-pointer">
-					details
+					{t("pools.calculatorAPR.details")}
 					<LeftSvg className={showDetails ? classIconDetailsShow : classIconDetailsHide} />
 				</span>
 			</div>
@@ -132,7 +133,9 @@ const Details = ({ pool, periode, valueUSD }: DetailsProps) => {
 							<div key={i} className={classRow}>
 								<em className="not-italic ">{apr.token?.symbol}</em>
 								<em className="not-italic">
-									${formateNumberDecimals(((apr[periode] / 100) * valueUSD) / 365, 2, 2)} / day{" "}
+									{t("pools.calculatorAPR.priceDay", {
+										price: formateNumberDecimals(((apr[periode] / 100) * valueUSD) / 365, 2, 2),
+									})}
 								</em>
 								<em className="not-italic">{formateNumberDecimals(apr[periode], 2, 2)}%</em>
 							</div>
@@ -140,16 +143,22 @@ const Details = ({ pool, periode, valueUSD }: DetailsProps) => {
 					})}
 					{totalSuperfluid > 0 && periode === "apr14d" && (
 						<div className={classRow}>
-							<em className="not-italic ">Superfluid</em>
+							<em className="not-italic ">{t("pools.calculatorAPR.superfluid")}</em>
 							<em className="not-italic ">
-								${formateNumberDecimals(((totalSuperfluid / 100) * valueUSD) / 365, 2, 2)} / day{" "}
+								{t("pools.calculatorAPR.priceDay", {
+									price: formateNumberDecimals(((totalSuperfluid / 100) * valueUSD) / 365, 2, 2),
+								})}
 							</em>
 							<em className="not-italic ">{formateNumberDecimals(totalSuperfluid, 2, 2)}%</em>
 						</div>
 					)}
 					<div className={classRow}>
-						<em className="not-italic ">Swap</em>
-						<em className="not-italic ">${formateNumberDecimals(((percent / 100) * valueUSD) / 365, 2, 2)} / day </em>
+						<em className="not-italic ">{t("pools.calculatorAPR.swap")}</em>
+						<em className="not-italic ">
+							{t("pools.calculatorAPR.priceDay", {
+								price: formateNumberDecimals(((percent / 100) * valueUSD) / 365, 2, 2),
+							})}
+						</em>
 						<em className="not-italic ">{formateNumberDecimals(percent, 2, 2)}%</em>
 					</div>
 				</div>

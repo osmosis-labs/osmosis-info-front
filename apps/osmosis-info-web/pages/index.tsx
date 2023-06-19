@@ -6,6 +6,7 @@ import Link from "next/link";
 import axios from "axios";
 import { TokenTable } from "../components/token-table/token-table";
 import { PoolTable } from "../components/pool-table/pool-table";
+import { DivMaxWidth } from "../components/main-layout/div-max-width";
 
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 

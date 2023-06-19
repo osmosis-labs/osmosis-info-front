@@ -12,6 +12,18 @@
         "columnsVolume24": "Volume (24h) change",
         "columnsLiquidity": "Liquidité"
     },
+    "poolsTable": {
+        "name": "Bassin",
+        "liquidity": "Liquidité",
+        "liquidity24hChange": "Liquidité (24h) change",
+        "volume24h": "Volume (24h)",
+        "volume7d": "Volume (7d)",
+        "volume24hChange": "Volume (24h) change",
+        "totalAPR": "Total TAP",
+        "fees": "Frais",
+        "internalReturn": "Retour interne",
+        "externalReturn": "Retour externe"
+    },
     "table": {
         "buttonSettings": "Paramètres",
         "title": "Paramètres",
@@ -34,7 +46,22 @@
         "range": "{min} - {max} sur {total}"
     },
     "pools": {
-        "title": "Bassins"
+        "title": "Bassins",
+        "calculatorAPR": {
+            "title": "RSI Calculateur pour {poolName}",
+            "stakedFor": "Bloqué pour",
+            "periodes": {
+                "one": "1 jour",
+                "seven": "7 jours",
+                "fourteen": "14 jours"
+            },
+            "total": "Total",
+            "priceDay": "${price}/jour",
+            "percentAPR": "{percent}% TAP",
+            "details": "détails",
+            "superfluid": "Superfluide",
+            "swap": "Change"
+        }
     },
     "tokens": {
         "title": "Jetons"

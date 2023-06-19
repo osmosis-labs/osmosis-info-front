@@ -71,7 +71,7 @@ const MainLayout: FunctionComponent<PropsWithChildren<MainLayoutProps>> = observ
 			<BottomMenu items={items} />
 			<SideMenu items={items} />
 			<div className={childrenClassName}>
-				<div className={`${className} max-w-container min-h-full p-2`}>{children}</div>
+				<div className={`${className} min-h-full p-2`}>{children}</div>
 			</div>
 		</div>
 	);
