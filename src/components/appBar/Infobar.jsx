@@ -129,9 +129,9 @@ const InfoBar = () => {
 					<p className={classes.prices}>
 						OSMO: <em className={classes.price}>{priceOsmo}</em>
 					</p>
-					<p className={classes.prices}>
+					{/* <p className={classes.prices}>
 						ION: <em className={classes.price}>{priceIon}</em>
-					</p>
+					</p> */}
 				</div>
 				<div className={classes.right}>
 					{MODE === "dev" && (
