@@ -5,46 +5,54 @@ import { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
 import { HeaderChart } from "./header-chart";
 import { bisector } from "d3-array";
 import { timeFormat } from "d3-time-format";
+import { useStore } from "../../stores";
+import { LiquidityChart as DataLiquidity } from "../../stores/api/charts/charts";
+import { observer } from "mobx-react-lite";
+import { formaterNumber } from "../../helpers/format";
 
-export interface DataLiquidity {
-	price: number;
-	time: string;
-}
+const getXAxisData = (d: DataLiquidity) => d.time;
+const getYAxisData = (d: DataLiquidity) => d.value;
 
-const getXAxisData = (d: AppleStock) => new Date(d.date);
-const getYAxisData = (d: AppleStock) => d.close;
+const bisectIndexDate = bisector<DataLiquidity, Date>((d: DataLiquidity) => new Date(d.time)).left;
 
-const bisectIndexDate = bisector<AppleStock, Date>((d: AppleStock) => new Date(d.date)).left;
+const formatX = (d: DataLiquidity) => timeFormat("%b %d %y")(getXAxisData(d));
 
-const formatX = (d: AppleStock) => timeFormat("%b %d %y")(getXAxisData(d));
+const formatY = (d: DataLiquidity) => `$${formaterNumber(Math.round(d.value))}`;
 
-const formatY = (d: AppleStock) => `$${Math.round(getYAxisData(d))}`;
-const getXAxisDataBar = (d: AppleStock) => formatX(d);
+const tickFormatY = (d: number) => `${formaterNumber(Math.round(d))}`;
 
-export const LiquidityChart = () => {
-	const data = useMemo(() => appleStock.slice(800), []);
-	const dataBar = useMemo(() => appleStock.slice(0, 20), []);
-	const [currentData, setCurrentData] = useState<AppleStock | null>(null);
+type Periode = "day" | "week" | "month";
+type TypeValue = "price" | "osmo" | "atom";
 
-	const onHover = useCallback((d: AppleStock) => {
+export const LiquidityChart = observer(() => {
+	const {
+		liquidityStore: { liquidityDay, liquidityWeek, liquidityMonth },
+	} = useStore();
+	const [currentData, setCurrentData] = useState<DataLiquidity | null>(null);
+	const [periode, setPeriode] = useState<Periode>("day");
+	const [typeValue, setTypeValue] = useState<TypeValue>("price");
+	const [defaultView, setDefaultView] = useState<[number, number]>([0, 0]);
+	const [dataDisplay, setDataDisplay] = useState<DataLiquidity[]>(liquidityDay);
+
+	const onHover = useCallback((d: DataLiquidity) => {
 		setCurrentData(d);
 	}, []);
 
 	useEffect(() => {
-		if (data.length > 0 && currentData === null) {
-			setCurrentData(data[data.length - 1]);
-		}
-	}, [currentData, data]);
+		setDataDisplay(liquidityDay);
+		setDefaultView([liquidityDay.length - 300, liquidityDay.length]);
+		console.log("%cliquidity-chart.tsx -> 40 BLUE: liquidityDay", "background: #2196f3; color:#FFFFFF", liquidityDay);
+	}, [liquidityDay]);
 
 	return (
-		<div>
+		<div className="w-full m-2">
 			<HeaderChart data={currentData} />
 			<p>Date scale </p>
 			<div className="flex w-full">
 				<div className="max-h-[500px] max-w-[100%] w-full h-[500px] overflow-hidden">
-					<LineTime<AppleStock>
+					<LineTime<DataLiquidity>
 						maxHeight={500}
-						data={data}
+						data={dataDisplay}
 						onHover={onHover}
 						onClick={onHover}
 						getXAxisData={getXAxisData}
@@ -52,25 +60,11 @@ export const LiquidityChart = () => {
 						bisectDate={bisectIndexDate}
 						formatX={formatX}
 						formatY={formatY}
-					/>
-				</div>
-				<div className="max-h-[500px] max-w-[100%] w-full h-[500px] overflow-x-hidden">
-					<BarTime<AppleStock>
-						maxHeight={500}
-						data={dataBar}
-						getXAxisData={getXAxisDataBar}
-						getYAxisData={getYAxisData}
-						onHover={onHover}
-						onClick={onHover}
-						formatX={formatX}
-						formatY={formatY}
-						// barTimeTooltipFixed={{ display: false }}
-						// barTimeTooltipCursor={{ display: false }}
-						// barTimeTooltipBottom={{ display: false }}
-						// barTimeLineCursorOptions={{ display: false }}
+						tickFormatY={tickFormatY}
+						defaultView={defaultView}
 					/>
 				</div>
 			</div>
 		</div>
 	);
-};
+});

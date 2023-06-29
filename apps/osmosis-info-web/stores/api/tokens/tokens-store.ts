@@ -14,7 +14,7 @@ type PromiseRequest = [
 	AxiosResponse<AssetListResponse, AssetListResponse>
 ];
 
-export class TokensStore extends Request<Token[], PromiseRequest> {
+export class TokensStore extends Request<PromiseRequest> {
 	@observable private _tokens: TokenStore[];
 	@observable private _assetList: AssetList;
 	@observable private _assetMap: AssetMap;
@@ -22,7 +22,7 @@ export class TokensStore extends Request<Token[], PromiseRequest> {
 	private _intervalTime: number;
 
 	constructor() {
-		super({ delayCache: 15 * 1000, defaultData: [] });
+		super({ delayCache: 15 * 1000 });
 		this._tokens = [];
 		this._assetMap = {};
 		this._assetList = { chainName: "", assets: [] };

@@ -64,7 +64,7 @@ export const TokenTable = ({ data }: { data: Token[] }) => {
 			onClickRow,
 			density: savedSettings.density ?? "medium",
 			autoHeight: false,
-			defaultOrderBy: savedSettings.defaultOrderBy ?? "id",
+			defaultOrderBy: savedSettings.defaultOrderBy ?? "liquidity",
 			defaultOrderDirection: savedSettings.defaultOrderDirection ?? "ASC",
 			resizing: savedSettings.resizing ?? false,
 			callBackUpdateStates,

@@ -9,7 +9,7 @@ type PromiseRequest = AxiosResponse<TokenResponse, TokenResponse>;
 export interface TokenStoreArgs {
 	token: Token;
 }
-export class TokenStore extends Request<Token[], PromiseRequest> {
+export class TokenStore extends Request<PromiseRequest> {
 	private _symbol: string;
 	get symbol(): string {
 		return this._symbol;
@@ -139,7 +139,7 @@ export class TokenStore extends Request<Token[], PromiseRequest> {
 	}
 
 	constructor({ token }: TokenStoreArgs) {
-		super({ delayCache: 5 * 60 * 100, defaultData: [] });
+		super({ delayCache: 5 * 60 * 100 });
 		this._symbol = token.symbol;
 		this._id = token.id;
 		this._price = token.price;

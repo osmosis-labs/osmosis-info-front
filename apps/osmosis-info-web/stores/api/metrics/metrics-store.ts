@@ -3,22 +3,35 @@ import { Request } from "../request";
 import { defautMetrics, Metrics, MetricsResponse } from "./metrics";
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 import axios, { AxiosResponse } from "axios";
+import { InitialState } from "../../root-store";
 
-export class MetricsStore extends Request<Metrics, AxiosResponse<MetricsResponse, MetricsResponse>> {
+export class MetricsStore extends Request<AxiosResponse<MetricsResponse, MetricsResponse>> {
+	private _data: Metrics = defautMetrics;
 	constructor() {
-		super({ delayCache: 5 * 60 * 100, defaultData: defautMetrics });
+		super({ delayCache: 5 * 60 * 100 });
 		makeObservable(this);
 	}
 
-	@action
 	format(response: AxiosResponse<MetricsResponse, MetricsResponse>): void {
-		const data = response.data;
+		this.formatData(response.data);
+	}
+
+	@action
+	formatData(data: MetricsResponse): void {
 		this._data = {
 			volume24h: data.volume_24h,
 			volume24hChange: data.volume_24h_change,
 			liquidityUsd: data.liquidity_usd,
 			liquidityUsd24h: data.liquidity_usd_24h,
 		};
+	}
+
+	@action
+	hydrate({ metricsState }: InitialState): void {
+		console.log("%cmetrics-store.ts -> 31 BLUE: metricsState", "background: #2196f3; color:#FFFFFF", metricsState);
+		if (metricsState) {
+			this.formatData(metricsState);
+		}
 	}
 
 	public get metrics(): Metrics {

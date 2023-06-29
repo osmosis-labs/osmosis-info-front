@@ -1,11 +1,10 @@
 import { action, observable } from "mobx";
 
-export interface RequestArgs<D> {
+export interface RequestArgs {
 	delayCache?: number;
-	defaultData: D;
 }
 
-export abstract class Request<D, T> {
+export abstract class Request<T> {
 	// delay between two requests, default is 0
 	@observable protected _delayCache: number;
 
@@ -18,33 +17,20 @@ export abstract class Request<D, T> {
 	// the error if the request failed
 	@observable protected _error: string | undefined;
 
-	@observable protected _data: D;
-
-	constructor({ delayCache, defaultData }: RequestArgs<D>) {
+	constructor({ delayCache }: RequestArgs) {
 		this._delayCache = delayCache || 0;
-		this._data = defaultData;
 	}
 
 	abstract format(promiseResult: T): void;
 
 	@action
 	protected async sendRequest(request: () => Promise<T>) {
-		// console.log(
-		// 	"request.ts -> 32:",
-		// 	this.constructor.name,
-		// 	"-> Loading:",
-		// 	this._isLoading,
-		// 	"cache:",
-		// 	Date.now() - this._lastCall,
-		// 	"Is sent:",
-		// 	!(Date.now() - this._lastCall <= this._delayCache)
-		// );
 		if (this._isLoading) return;
 		if (Date.now() - this._lastCall <= this._delayCache) return;
 		this._lastCall = Date.now();
 		this._isLoading = true;
 		try {
-			const result: T = await request(); //axios({ ...options });
+			const result: T = await request();
 			this.format(result);
 			this._isLoading = false;
 		} catch (error) {
@@ -58,9 +44,6 @@ export abstract class Request<D, T> {
 		return this._isLoading;
 	}
 
-	public get data(): D {
-		return this._data;
-	}
 	public get error(): string | undefined {
 		return this._error;
 	}

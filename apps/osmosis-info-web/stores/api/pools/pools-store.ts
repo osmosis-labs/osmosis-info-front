@@ -1,11 +1,9 @@
 import { action, makeObservable, observable } from "mobx";
 import { Request } from "../request";
 import { autorun } from "mobx";
-import { Token, TokensResponseList, MCapResponse, AssetListResponse, AssetList, Asset, AssetMap } from "./tokens";
 import axios, { AxiosResponse } from "axios";
-import { TokenStore } from "./token-store";
 import { InitialState } from "../../root-store";
-import { APRResponse, APRsResponse, FeesResponse, Pool, PoolAPR, PoolsResponse } from "./Pools";
+import { APRsResponse, FeesResponse, Pool, PoolAPR, PoolsResponse } from "./Pools";
 import { PoolStore } from "./pool-store";
 import { TokensStore } from "../tokens/tokens-store";
 
@@ -13,14 +11,14 @@ const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 
 type PromiseRequest = [AxiosResponse<PoolsResponse, PoolsResponse>, AxiosResponse<APRsResponse, APRsResponse>];
 
-export class PoolsStore extends Request<Token[], PromiseRequest> {
+export class PoolsStore extends Request<PromiseRequest> {
 	@observable private _tokens: TokensStore;
 	@observable private _pools: PoolStore[];
 	private _interval: NodeJS.Timeout | null = null;
 	private _intervalTime: number;
 
 	constructor(tokenStore: TokensStore) {
-		super({ delayCache: 15 * 1000, defaultData: [] });
+		super({ delayCache: 15 * 1000 });
 		this._tokens = tokenStore;
 		this._pools = [];
 		this._intervalTime = 5 * 1000;

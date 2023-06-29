@@ -1,7 +1,7 @@
-import { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
 import React from "react";
+import { LiquidityChart } from "../../stores/api/charts/charts";
 interface HeaderChartProps {
-	data: AppleStock | null;
+	data: LiquidityChart | null;
 }
 
 export const HeaderChart: React.FC<HeaderChartProps> = ({ data }) => {
@@ -9,8 +9,7 @@ export const HeaderChart: React.FC<HeaderChartProps> = ({ data }) => {
 		<div>
 			{data ? (
 				<div>
-					<h2>Apple Stock Price on {data.date}</h2>
-					<p>Close: {data.close}</p>
+					<h2>Apple Stock Price on {data.value}</h2>
 				</div>
 			) : (
 				<p>No data to display.</p>

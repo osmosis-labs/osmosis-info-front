@@ -10,7 +10,7 @@ type PromiseRequest = AxiosResponse<PoolResponse, PoolResponse>;
 export interface PoolStoreArgs {
 	pool: Pool;
 }
-export class PoolStore extends Request<Pool[], PromiseRequest> {
+export class PoolStore extends Request<PromiseRequest> {
 	@observable private _id = 0;
 	get id(): number {
 		return this._id;
@@ -171,7 +171,7 @@ export class PoolStore extends Request<Pool[], PromiseRequest> {
 	}
 
 	constructor({ pool }: PoolStoreArgs) {
-		super({ delayCache: 5 * 60 * 100, defaultData: [] });
+		super({ delayCache: 5 * 60 * 100 });
 		this._id = pool.id;
 		this._liquidity = pool.liquidity;
 		this._liquidity24hChange = pool.liquidity24hChange;
