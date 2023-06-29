@@ -91,6 +91,10 @@ export type LineTimeProps<D> = {
 	tickFormatX?: TickFormatter<any>;
 	/** tickFormatY: (optional) A function that takes an argument of any type and returns a formatted string for the tick labels on the y-axis. This function is used to format the y-axis tick labels. */
 	tickFormatY?: TickFormatter<any>;
+	/** defaultView: (optional) An array of two numbers that specify the default view of the chart.
+	 *
+	 */
+	defaultView?: [number, number];
 };
 
 function ChartLine<D>({
@@ -122,6 +126,7 @@ function ChartLine<D>({
 	lineTimeTooltipFixed = defaultLineTimeTooltipFixed,
 	lineTimeTooltipCursor = defaultLineTimeTooltipCursor,
 	lineTimeTooltipBottom = defaultLineTimeTooltipBottom,
+	defaultView,
 }: LineTimeProps<D>) {
 	const [limits, setLimits] = useState({ start: 0, end: 0 });
 	const displaySVG = width > 0;
@@ -132,7 +137,7 @@ function ChartLine<D>({
 	const [isLoaded, setIsLoaded] = useState(false);
 
 	useEffect(() => {
-		setLimits({ start: 0, end: data.length });
+		if (data.length > 0) setLimits({ start: 320, end: data.length });
 	}, [data]);
 
 	useEffect(() => {
@@ -141,6 +146,9 @@ function ChartLine<D>({
 		}
 	}, [width]);
 
+	useEffect(() => {
+		if (defaultView) setLimits({ start: defaultView[0], end: defaultView[1] });
+	}, [defaultView]);
 	useEffect(() => {
 		if (isLoaded && refPathLine.current) {
 			const path = refPathLine.current;
@@ -182,7 +190,7 @@ function ChartLine<D>({
 	const [animate, setAnimate] = useState(false);
 	const refDrag = useRef<{ dragging: boolean; x: number; y: number }>({ dragging: false, x: 0, y: 0 });
 
-	const [dataLast, setDataLast] = useState<{ x: number; y: number; data: number } | null>(null);
+	const [dataLast, setDataLast] = useState<{ x: number; y: number; data: D } | null>(null);
 
 	const { tooltipData, tooltipLeft, tooltipTop, showTooltip, hideTooltip } = useTooltip<D>();
 
@@ -200,8 +208,10 @@ function ChartLine<D>({
 	}, [data, limits.start, limits.end, margin, innerWidth, getXAxisData]);
 
 	const yScale = useMemo(() => {
-		return getYScale<D>({ innerHeight, margin, data, getYAxisData });
-	}, [innerHeight, margin, data, getYAxisData]);
+		let zoomedStock = data;
+		zoomedStock = data.slice(limits.start, limits.end);
+		return getYScale<D>({ innerHeight, margin, data: zoomedStock, getYAxisData });
+	}, [data, limits.start, limits.end, innerHeight, margin, getYAxisData]);
 
 	useEffect(() => {
 		if (data && data.length > 0) {
@@ -210,7 +220,7 @@ function ChartLine<D>({
 				setDataLast({
 					x: xScale(getXAxisData(last)),
 					y: yScale(getYAxisData(last)),
-					data: getYAxisData(last),
+					data: last,
 				});
 			}
 		}
@@ -548,7 +558,7 @@ function ChartLine<D>({
 				<Tooltip top={dataLast.y} left={innerWidth + 1} style={lineTimeTooltipFixed.style}>
 					<div className="relative">
 						<span style={lineTimeTooltipFixed.styleDash}></span>
-						{Math.round(dataLast.data)}
+						{formatY(dataLast.data)}
 					</div>
 				</Tooltip>
 			)}
