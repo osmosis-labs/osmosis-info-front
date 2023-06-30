@@ -3,6 +3,7 @@ import { ParentSize } from "@visx/responsive";
 import { Margin } from "../line/line-time-config";
 import {
 	AnimationOptions,
+	BarOptions,
 	BarTimeAxisOptions,
 	BarTimeCircleCursorOptions,
 	BarTimeLineCursorOptions,
@@ -10,6 +11,7 @@ import {
 	BarTimeTooltipFixed,
 	defaulBarTimeBottomAxisOptions,
 	defaulBarTimeRightAxisOptions,
+	defaultBarOptions,
 	defaultBarTimeCircleCursorOptions,
 	defaultBarTimeLineCursorOptions,
 	defaultBarTimeMargin,
@@ -76,6 +78,13 @@ export type BarTimeProps<D> = {
 
 	/** classHoverBar: (optional) class passed to bar when it hover*/
 	classHoverBar?: string;
+	/** defaultView: (optional) An array of two numbers that specify the default view of the chart.
+	 *
+	 */
+	defaultView?: [number, number];
+
+	/** barOptions: (optional) An object that specifies the options for the bars of the chart.*/
+	barOptions?: BarOptions;
 };
 
 const getTextWidth = (text: string, font: string): number => {
@@ -113,6 +122,8 @@ function BarChart<D>({
 
 	animationOptions = defaultOptionsAnimation,
 
+	barOptions = defaultBarOptions,
+
 	barTimeRightAxisOptions = defaulBarTimeRightAxisOptions,
 	barTimeBottomAxisOptions = defaulBarTimeBottomAxisOptions,
 
@@ -122,12 +133,13 @@ function BarChart<D>({
 	barTimeTooltipFixed = defaultBarTimeTooltipFixed,
 	barTimeTooltipCursor = defaultBarTimeTooltipCursor,
 	barTimeTooltipBottom = defaultBarTimeTooltipBottom,
+	defaultView,
 }: BarTimeProps<D>) {
 	const refSVG = useRef<SVGSVGElement | null>(null);
 	const [limits, setLimits] = useState({ start: 0, end: 0 });
 	const [startPoint, setStartPoint] = useState<Point | undefined>(undefined);
 	const [isDragging, setIsDragging] = useState(false);
-	const [dataLast, setDataLast] = useState<{ x: number; y: number; data: number } | null>(null);
+	const [dataLast, setDataLast] = useState<{ x: number; y: number; data: D } | null>(null);
 	const [animate, setAnimate] = useState(false);
 	const innerWidth = width - margin.left - margin.right;
 	const innerHeight = height - margin.top - margin.bottom;
@@ -137,6 +149,10 @@ function BarChart<D>({
 	useEffect(() => {
 		if (displaySVG) setAnimate(true);
 	}, [displaySVG]);
+
+	useEffect(() => {
+		if (defaultView) setLimits({ start: defaultView[0], end: defaultView[1] });
+	}, [defaultView]);
 
 	useEffect(() => {
 		setLimits({ start: 0, end: data.length - 1 });
@@ -155,13 +171,15 @@ function BarChart<D>({
 
 	const xScale = useMemo(() => {
 		let zoomedStock = data;
-		zoomedStock = data.slice(limits.start, limits.end + 1);
+		zoomedStock = data.slice(limits.start, limits.end);
 		return getXScale<D>({ innerWidth, margin, data: zoomedStock, getXAxisData });
 	}, [data, limits.start, limits.end, margin, innerWidth, getXAxisData]);
 
 	const yScale = useMemo(() => {
-		return getYScale<D>({ innerHeight, margin, data, getYAxisData });
-	}, [innerHeight, margin, data, getYAxisData]);
+		let zoomedStock = data;
+		zoomedStock = data.slice(limits.start, limits.end);
+		return getYScale<D>({ innerHeight, margin, data: zoomedStock, getYAxisData });
+	}, [data, limits.start, limits.end, innerHeight, margin, getYAxisData]);
 
 	const nbTicksX = useMemo(() => {
 		const paddingLabel = 10;
@@ -176,7 +194,7 @@ function BarChart<D>({
 				setDataLast({
 					x: xScale(getXAxisData(last)) || 0,
 					y: yScale(getYAxisData(last)),
-					data: getYAxisData(last),
+					data: last,
 				});
 			}
 		}
@@ -243,7 +261,6 @@ function BarChart<D>({
 			const { x } = localPoint(event) || { x: 0 };
 			const index = Math.round(x / xScale.step());
 			const d = data[index];
-			console.log("bar-time.tsx -> 112: d", d);
 			onClick(d);
 		}
 	};
@@ -357,6 +374,7 @@ function BarChart<D>({
 							const x = getXAxisData(d);
 							const y = getYAxisData(d);
 
+							const timeAnimationStep = (animationOptions.delayBarTimeTick / data.length) * index;
 							const barWidth = xScale.bandwidth();
 							const barHeight = innerHeight - (yScale(y) ?? 0) + margin.top;
 							const barX = xScale(x);
@@ -370,13 +388,13 @@ function BarChart<D>({
 									y={barY}
 									width={barWidth}
 									height={barHeight}
-									fill={"#aaFaFa"}
+									fill={barOptions.fillColor}
+									stroke={barOptions.strokeColor}
 									className={
 										animate
 											? `${classHoverBar} ${animationOptions.animationBarClass}`
 											: `${classHoverBar} ${animationOptions.waitingBarClass}`
 									}
-									style={{ animationDelay: `${index * animationOptions.delayBarTimeTick}ms` }}
 									onTouchStart={handleTooltip}
 									onTouchMove={handleTooltip}
 									onMouseMove={handleTooltip}
@@ -473,7 +491,7 @@ function BarChart<D>({
 				<Tooltip top={dataLast.y} left={innerWidth + margin.left} style={barTimeTooltipFixed.style}>
 					<div className="relative">
 						<span style={barTimeTooltipFixed.styleDash}></span>
-						{Math.round(dataLast.data)}
+						{formatY(dataLast.data)}
 					</div>
 				</Tooltip>
 			)}

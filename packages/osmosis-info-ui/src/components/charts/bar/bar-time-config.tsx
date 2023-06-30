@@ -261,5 +261,15 @@ export const defaultOptionsAnimation: AnimationOptions = {
 	animationRightAxisClass: "animation-area",
 	animationBarClass: "animation-bar",
 	waitingBarClass: "wait-animation-bar",
-	delayBarTimeTick: 50,
+	delayBarTimeTick: 1000,
+};
+
+export type BarOptions = {
+	fillColor: string;
+	strokeColor: string;
+};
+
+export const defaultBarOptions: BarOptions = {
+	fillColor: "none",
+	strokeColor: "#f6e1b8",
 };

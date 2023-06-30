@@ -41,7 +41,7 @@ export const ButtonMultiple = ({ selected, onClick, items, className }: ButtonMu
 	const currentClassName = `${className} flex w-full justify-center items-center bg-background rounded-full select-none`;
 
 	const classItem =
-		"flex justify-center items-center cursor-pointer rounded-full px-2 py-1  w-full transition-all duration-300 ease-in-out whitespace-nowrap";
+		"flex justify-center items-center cursor-pointer rounded-full px-2 min-w-[36px] py-[6px]  w-full transition-all duration-300 ease-in-out whitespace-nowrap";
 	const classItemSelected = classItem + " bg-primary-500 ";
 	const classItemNotSelected = classItem + " text-default-500";
 	return (
