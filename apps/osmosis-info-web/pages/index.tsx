@@ -7,19 +7,17 @@ import axios from "axios";
 import { TokenTable } from "../components/token-table/token-table";
 import { PoolTable } from "../components/pool-table/pool-table";
 import { DivMaxWidth } from "../components/main-layout/div-max-width";
-import { LiquidityChart } from "../components/liquidity-chart/liquidity-chart";
+import { LiquidityChart } from "../components/charts/liquidity-chart/liquidity-chart";
+import { VolumeChart } from "../components/charts/volume-chart/volume-chart";
 
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 
 const Overview = observer(() => {
 	const t = useTranslation();
 	const {
-		userStore,
 		tokensStore: { getTokens, tokens },
 		poolsStore: { pools },
 		metricsStore: { isLoadingMetrics, getMetrics, errorMetrics, metrics },
-		liquidityStore: { liquidityDay, liquidityWeek, liquidityMonth },
-		volumeStore: { volumeDay, volumeWeek, volumeMonth },
 	} = useStore();
 
 	useEffect(() => {
@@ -44,8 +42,13 @@ const Overview = observer(() => {
 			<h1 className="text-2xl">{t("overview.title")}</h1>
 
 			<div>
-				<div className="flex ">
-					<LiquidityChart />
+				<div className="flex">
+					<div className="flex pr-2 w-1/2">
+						<LiquidityChart />
+					</div>
+					<div className="flex pl-2 w-1/2">
+						<VolumeChart />
+					</div>
 				</div>
 				<TokenTable data={[...tokens.filter((token) => token.main)]} />
 				<PoolTable data={[...pools.filter((pool) => pool.main)]} />

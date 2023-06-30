@@ -30,7 +30,7 @@ export class RootStore {
 		this.metricsStore = new MetricsStore();
 		this.tokensStore = new TokensStore();
 		this.volumeStore = new VolumeStore(this.metricsStore);
-		this.liquidityStore = new LiquidityStore(this.metricsStore);
+		this.liquidityStore = new LiquidityStore();
 		this.poolsStore = new PoolsStore(this.tokensStore);
 	}
 

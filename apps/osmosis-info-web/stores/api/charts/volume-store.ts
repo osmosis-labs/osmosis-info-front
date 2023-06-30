@@ -65,7 +65,7 @@ export class VolumeStore extends Request<PromiseRequest> {
 			const itemWeekNumber = getWeekNumber(itemTime);
 
 			const res = {
-				time: timeToDateUTC(data[0].time),
+				time: itemTime,
 				value: item.value,
 			};
 			// Update whith complete last volume data
@@ -75,7 +75,8 @@ export class VolumeStore extends Request<PromiseRequest> {
 			if (itemWeekNumber === weekNumberCurrentWeek) {
 				currentWeek.value += item.value;
 			} else {
-				volumeWeek.push(currentWeek);
+				volumeWeek.push({ ...currentMonth });
+				currentMonth.time = itemTime;
 				currentWeek.value = item.value;
 				weekNumberCurrentWeek = itemWeekNumber;
 			}
@@ -83,7 +84,8 @@ export class VolumeStore extends Request<PromiseRequest> {
 			if (itemMonth === timeCurrentMonth) {
 				currentMonth.value += item.value;
 			} else {
-				volumeMonth.push(currentMonth);
+				volumeMonth.push({ ...currentMonth });
+				currentMonth.time = itemTime;
 				currentMonth.value = item.value;
 				timeCurrentMonth = itemMonth;
 			}

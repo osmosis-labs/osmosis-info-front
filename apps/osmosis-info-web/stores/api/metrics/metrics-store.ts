@@ -28,7 +28,6 @@ export class MetricsStore extends Request<AxiosResponse<MetricsResponse, Metrics
 
 	@action
 	hydrate({ metricsState }: InitialState): void {
-		console.log("%cmetrics-store.ts -> 31 BLUE: metricsState", "background: #2196f3; color:#FFFFFF", metricsState);
 		if (metricsState) {
 			this.formatData(metricsState);
 		}

@@ -4,7 +4,6 @@ import { autorun } from "mobx";
 import axios, { AxiosResponse } from "axios";
 import { InitialState } from "../../root-store";
 import { ChartLiquidityResponse, LiquidityChart } from "./charts";
-import { MetricsStore } from "../metrics/metrics-store";
 import { getWeekNumber, timeToDateUTC } from "../../../helpers/date";
 
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
@@ -14,15 +13,13 @@ type PromiseRequest = [AxiosResponse<ChartLiquidityResponse, ChartLiquidityRespo
 export class LiquidityStore extends Request<PromiseRequest> {
 	private _interval: NodeJS.Timeout | null = null;
 	private _intervalTime: number;
-	private _metricsStore: MetricsStore;
 	private _liquidityDay: LiquidityChart[] = [];
 	private _liquidityWeek: LiquidityChart[] = [];
 	private _liquidityMonth: LiquidityChart[] = [];
 
-	constructor(metricsStore: MetricsStore) {
+	constructor() {
 		super({ delayCache: 15 * 1000 });
 		this._intervalTime = 5 * 1000;
-		this._metricsStore = metricsStore;
 		makeObservable(this);
 		autorun(() => {
 			this.play();
@@ -76,7 +73,8 @@ export class LiquidityStore extends Request<PromiseRequest> {
 				currentWeek.valueAtom += item.value_atom;
 				currentWeek.valueOsmo += item.value_osmo;
 			} else {
-				liquidityWeek.push(currentWeek);
+				liquidityWeek.push({ ...currentWeek });
+				currentWeek.time = itemTime;
 				currentWeek.value = item.value;
 				currentWeek.valueAtom = item.value_atom;
 				currentWeek.valueOsmo = item.value_osmo;
@@ -88,7 +86,8 @@ export class LiquidityStore extends Request<PromiseRequest> {
 				currentMonth.valueAtom += item.value_atom;
 				currentMonth.valueOsmo += item.value_osmo;
 			} else {
-				liquidityMonth.push(currentMonth);
+				liquidityMonth.push({ ...currentMonth });
+				currentMonth.time = itemTime;
 				currentMonth.value = item.value;
 				currentMonth.valueAtom = item.value_atom;
 				currentMonth.valueOsmo = item.value_osmo;
