@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useTranslation } from "react-multi-lang";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../stores";
@@ -9,6 +9,10 @@ import { PoolTable } from "../components/pool-table/pool-table";
 import { DivMaxWidth } from "../components/main-layout/div-max-width";
 import { LiquidityChart } from "../components/charts/liquidity-chart/liquidity-chart";
 import { VolumeChart } from "../components/charts/volume-chart/volume-chart";
+import { Paper } from "@latouche/osmosis-info-ui";
+import { Metrics } from "./home/metrics/metrics";
+import { Token } from "../stores/api/tokens/tokens";
+import { Pool } from "../stores/api/pools/Pools";
 
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 
@@ -17,8 +21,27 @@ const Overview = observer(() => {
 	const {
 		tokensStore: { getTokens, tokens },
 		poolsStore: { pools },
-		metricsStore: { isLoadingMetrics, getMetrics, errorMetrics, metrics },
+		favoriteStore: { tokens: favoritesTokens, pools: favoritesPools },
+		metricsStore: { getMetrics, errorMetrics },
 	} = useStore();
+	const [tokensFavorites, setTokensFavorites] = React.useState<Token[]>([]);
+	const [poolsFavorites, setPoolsFavorites] = React.useState<Pool[]>([]);
+
+	const tokensMain = useMemo(() => {
+		return [...tokens.filter((token) => token.main)];
+	}, [tokens]);
+
+	const poolsMain = useMemo(() => {
+		return [...pools.filter((pool) => pool.main)];
+	}, [pools]);
+
+	useEffect(() => {
+		setTokensFavorites([...tokensMain.filter((token) => favoritesTokens.includes(token.symbol))]);
+	}, [favoritesTokens, tokensMain]);
+
+	useEffect(() => {
+		setPoolsFavorites([...poolsMain.filter((pool) => favoritesPools.includes(pool.id.toString()))]);
+	}, [favoritesPools, poolsMain]);
 
 	useEffect(() => {
 		getTokens();
@@ -42,16 +65,43 @@ const Overview = observer(() => {
 			<h1 className="text-2xl">{t("overview.title")}</h1>
 
 			<div>
-				<div className="flex">
-					<div className="flex pr-2 w-1/2">
-						<LiquidityChart />
+				<div className="flex w-full mt-4 md:flex-col">
+					<div className="flex w-1/2 md:w-full">
+						<div className="pr-4 pl-2 md:p-0 w-full">
+							<LiquidityChart />
+						</div>
 					</div>
-					<div className="flex pl-2 w-1/2">
-						<VolumeChart />
+					<div className="flex w-1/2 md:w-full md:mt-4">
+						<div className="pr-2 pl-4  md:p-0 w-full">
+							<VolumeChart />
+						</div>
 					</div>
 				</div>
-				<TokenTable data={[...tokens.filter((token) => token.main)]} />
-				<PoolTable data={[...pools.filter((pool) => pool.main)]} />
+				<Metrics />
+				<p className="mt-8 mx-2">{t("overview.watchlistTokens")}</p>
+				<Paper className="mt-4 mx-2">
+					{tokensFavorites.length === 0 ? (
+						<p>{t("overview.watchlistTokensEmpty")}</p>
+					) : (
+						<TokenTable data={tokensFavorites} autoHeight={true} />
+					)}
+				</Paper>
+				<p className="mt-8 mx-2">{t("overview.watchlistPools")}</p>
+				<Paper className="mt-4 mx-2">
+					{poolsFavorites.length === 0 ? (
+						<p>{t("overview.watchlistPoolsEmpty")}</p>
+					) : (
+						<PoolTable data={poolsFavorites} autoHeight={true} />
+					)}
+				</Paper>
+				<p className="mt-8 mx-2">Tokens</p>
+				<Paper className="mt-4 mx-2">
+					<TokenTable data={tokensMain} />
+				</Paper>
+				<p className="mt-8 mx-2">Pools</p>
+				<Paper className="mt-4 mx-2">
+					<PoolTable data={poolsMain} />
+				</Paper>
 			</div>
 		</div>
 	);

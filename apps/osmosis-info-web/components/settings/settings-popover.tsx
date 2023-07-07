@@ -24,7 +24,7 @@ export const SettingsPopover = observer(() => {
 
 	return (
 		<>
-			<IconButton onClick={onClickOpen} Icon={SettingsSvg} className="ml-2" />
+			<IconButton onClick={onClickOpen} Icon={SettingsSvg} className="ml-2" variant="secondary" />
 			<Popover
 				onClose={onClose}
 				open={openPopover}
@@ -34,6 +34,7 @@ export const SettingsPopover = observer(() => {
 					x: "right",
 					y: "top",
 				}}
+				classNamePaper="border-osmosverse-700 border-[2px] "
 			>
 				<div className="p-4">
 					<p className="mb-4 text-xl">{t("settings.title")}</p>
@@ -42,7 +43,7 @@ export const SettingsPopover = observer(() => {
 						<Dropdown<string>
 							onChange={onChangeLanguage}
 							value={language}
-							items={SUPPORTED_LANGUAGES}
+							items={SUPPORTED_LANGUAGES as ItemDropdown<string>[]}
 							size="small"
 							variant={"icon"}
 						/>

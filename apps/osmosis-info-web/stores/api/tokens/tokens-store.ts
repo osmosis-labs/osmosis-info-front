@@ -5,6 +5,7 @@ import { Token, TokensResponseList, MCapResponse, AssetListResponse, AssetList, 
 import axios, { AxiosResponse } from "axios";
 import { TokenStore } from "./token-store";
 import { InitialState } from "../../root-store";
+import { isArray } from "util";
 
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 
@@ -127,11 +128,13 @@ export class TokensStore extends Request<PromiseRequest> {
 				image: "",
 			};
 
-			const mcapToken = mCapResponse.find((mc) => {
-				return mc.symbol == token.symbol;
-			});
-			if (mcapToken) {
-				token.marketCap = mcapToken.market_cap;
+			if (Array.isArray(mCapResponse)) {
+				const mcapToken = mCapResponse.find((mc) => {
+					return mc.symbol == token.symbol;
+				});
+				if (mcapToken) {
+					token.marketCap = mcapToken.market_cap;
+				}
 			}
 			const currentAsset = getAsset(token);
 			token.main = currentAsset?.main || false;

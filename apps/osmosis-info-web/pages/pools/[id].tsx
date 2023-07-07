@@ -1,16 +1,22 @@
-import React from "react";
-import { useTranslation } from "react-multi-lang";
+import React, { useEffect } from "react";
 import axios from "axios";
+import { useStore } from "../../stores";
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 
-export default function Pools() {
-	const t = useTranslation();
+const Pool = ({ id }: { id: string }) => {
+	const { tokensStore } = useStore();
+
+	useEffect(() => {
+		tokensStore.getTokens();
+		// const tokenStore = tokensStore.getToken(id);
+	}, [id, tokensStore]);
+
 	return (
 		<div className="w-full">
-			<h1 className="text-2xl">{t("pools.title")}</h1>
+			<h1 className="text-2xl">Pool: {id}</h1>
 		</div>
 	);
-}
+};
 
 export async function getServerSideProps() {
 	const responses = await Promise.all([
@@ -37,3 +43,5 @@ export async function getServerSideProps() {
 		},
 	};
 }
+
+export default Pool;

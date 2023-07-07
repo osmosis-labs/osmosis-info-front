@@ -22,7 +22,7 @@ import { CellTotalReturn } from "./cell-total-return";
 const STORAGE_KEY = process.env.NEXT_PUBLIC_APP_STORAGE_KEY ?? "OSMO_KEY_";
 const KEY_SETTINGS = `${STORAGE_KEY}POOL_TABLE`;
 
-export const PoolTable = ({ data }: { data: Pool[] }) => {
+export const PoolTable = ({ data, autoHeight }: { data: Pool[]; autoHeight?: boolean }) => {
 	const t = useTranslation();
 	const router = useRouter();
 
@@ -63,7 +63,7 @@ export const PoolTable = ({ data }: { data: Pool[] }) => {
 
 		const newConfig: TableConfiguration = {
 			density: savedSettings.density ?? "medium",
-			autoHeight: false,
+			autoHeight,
 			defaultOrderBy: savedSettings.defaultOrderBy ?? "liquidity",
 			defaultOrderDirection: savedSettings.defaultOrderDirection ?? "ASC",
 			resizing: savedSettings.resizing ?? false,
@@ -238,61 +238,59 @@ export const PoolTable = ({ data }: { data: Pool[] }) => {
 	);
 
 	return (
-		<div className="">
-			<div className="my-4">
-				{config && (
-					<Table
-						config={config}
-						data={currentData}
-						isLoading={loading}
-						translations={{
-							footer: {
-								rowsPerPage: t("table.rowsPerPage"),
-								rangeItems: (min: number, max: number, length: number) => {
-									return (
-										t("table.range", {
-											min: min.toString(),
-											max: max.toString(),
-											total: length.toString(),
-										}) ?? ""
-									);
-								},
+		<div className="m-2">
+			{config && (
+				<Table
+					config={config}
+					data={currentData}
+					isLoading={loading}
+					translations={{
+						footer: {
+							rowsPerPage: t("table.rowsPerPage"),
+							rangeItems: (min: number, max: number, length: number) => {
+								return (
+									t("table.range", {
+										min: min.toString(),
+										max: max.toString(),
+										total: length.toString(),
+									}) ?? ""
+								);
 							},
-							header: {
-								buttonSettings: t("table.buttonSettings"),
-								title: t("table.title"),
-								density: t("table.density"),
-								densityCompact: t("table.densityCompact"),
-								densityMedium: t("table.densityMedium"),
-								densityConfortable: t("table.densityConfortable"),
-								downloadCSV: t("table.downloadCSV"),
-								columns: t("table.columns"),
-								filter: t("table.filter"),
-								filterLower: t("table.filterLower"),
-								filterHigher: t("table.filterHigher"),
-								filterEquals: t("table.filterEquals"),
-								filterContains: t("table.filterContains"),
-								filterStartWith: t("table.filterStartWith"),
-								filterEndWith: t("table.filterEndWith"),
-								enableColunmResize: t("table.enableColunmResize"),
-								validate: t("table.validate"),
-								columnsNames: {
-									name: t("poolsTable.name"),
-									liquidity: t("poolsTable.liquidity"),
-									liquidity24hChange: t("poolsTable.liquidity24hChange"),
-									volume24h: t("poolsTable.volume24h"),
-									volume7d: t("poolsTable.volume7d"),
-									volume24hChange: t("poolsTable.volume24hChange"),
-									totalAPR: t("poolsTable.totalAPR"),
-									fees: t("poolsTable.fees"),
-									internalReturn: t("poolsTable.internalReturn"),
-									externalReturn: t("poolsTable.externalReturn"),
-								},
+						},
+						header: {
+							buttonSettings: t("table.buttonSettings"),
+							title: t("table.title"),
+							density: t("table.density"),
+							densityCompact: t("table.densityCompact"),
+							densityMedium: t("table.densityMedium"),
+							densityConfortable: t("table.densityConfortable"),
+							downloadCSV: t("table.downloadCSV"),
+							columns: t("table.columns"),
+							filter: t("table.filter"),
+							filterLower: t("table.filterLower"),
+							filterHigher: t("table.filterHigher"),
+							filterEquals: t("table.filterEquals"),
+							filterContains: t("table.filterContains"),
+							filterStartWith: t("table.filterStartWith"),
+							filterEndWith: t("table.filterEndWith"),
+							enableColunmResize: t("table.enableColunmResize"),
+							validate: t("table.validate"),
+							columnsNames: {
+								name: t("poolsTable.name"),
+								liquidity: t("poolsTable.liquidity"),
+								liquidity24hChange: t("poolsTable.liquidity24hChange"),
+								volume24h: t("poolsTable.volume24h"),
+								volume7d: t("poolsTable.volume7d"),
+								volume24hChange: t("poolsTable.volume24hChange"),
+								totalAPR: t("poolsTable.totalAPR"),
+								fees: t("poolsTable.fees"),
+								internalReturn: t("poolsTable.internalReturn"),
+								externalReturn: t("poolsTable.externalReturn"),
 							},
-						}}
-					/>
-				)}
-			</div>
+						},
+					}}
+				/>
+			)}
 		</div>
 	);
 };

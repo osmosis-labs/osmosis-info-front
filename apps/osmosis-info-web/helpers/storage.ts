@@ -9,14 +9,15 @@ export class Storage {
 		return `${this._prefix}_${key}`;
 	}
 
-	setItem(key: string, value: string): void {
+	setItem(key: string, value: any): void {
 		if (typeof window === "undefined") return;
 		else window.localStorage.setItem(this.getPrefix(key), JSON.stringify(value));
 	}
 
-	getItem<T>(key: string): void | T {
-		if (typeof window === "undefined") return "" as T;
+	getItem<T>(key: string): T | undefined {
+		if (typeof window === "undefined") return undefined;
 		const item = window.localStorage.getItem(this.getPrefix(key));
-		return item ? (JSON.parse(item) as T) : ("" as T);
+		if (!item || item === "") return undefined;
+		return JSON.parse(item) as T;
 	}
 }

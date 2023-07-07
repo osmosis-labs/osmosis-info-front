@@ -20,7 +20,7 @@ export class VolumeStore extends Request<PromiseRequest> {
 	private _volumeMonth: VolumeChart[] = [];
 
 	constructor(metricsStore: MetricsStore) {
-		super({ delayCache: 15 * 1000 });
+		super({ delayCache: 3 * 1000 });
 		this._intervalTime = 5 * 1000;
 		this._metricsStore = metricsStore;
 		makeObservable(this);
@@ -49,7 +49,7 @@ export class VolumeStore extends Request<PromiseRequest> {
 
 	formatData(data: ChartVolumeResponse) {
 		if (data.length === 0) return;
-
+		if (this._metricsStore.metrics.volume24h !== 0) data[data.length - 1].value = this._metricsStore.metrics.volume24h;
 		const volumeDay: VolumeChart[] = [];
 		const volumeWeek: VolumeChart[] = [];
 		const volumeMonth: VolumeChart[] = [];

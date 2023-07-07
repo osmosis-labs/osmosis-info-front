@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { LiquidityChart } from "../../../stores/api/charts/charts";
 import { Periode, TypeValue } from "./liquidity-chart";
 import { ButtonMultiple, ItemButtonMultiple } from "@latouche/osmosis-info-ui";
 import { useState } from "react";
 import { useEffect } from "react";
 import { formateNumberDecimals, formateNumberPriceDecimals } from "../../../helpers/format";
+import { useTranslation } from "react-multi-lang";
+import { useLanguage } from "../../../hooks/use-language";
+import dayjs from "dayjs";
 interface HeaderChartProps {
 	data: LiquidityChart | null;
 	onChangePeriode: (periode: Periode) => void;
@@ -12,12 +15,6 @@ interface HeaderChartProps {
 	periode: Periode;
 	typeValue: TypeValue;
 }
-
-const itemsPeriode = [
-	{ value: "day", label: "D" },
-	{ value: "week", label: "W" },
-	{ value: "month", label: "M" },
-];
 
 const itemsType = [
 	{ value: "usd", label: "USD" },
@@ -32,6 +29,24 @@ export const HeaderChart: React.FC<HeaderChartProps> = ({
 	periode,
 	typeValue,
 }) => {
+	const t = useTranslation();
+	const locale = useLanguage();
+
+	const [dataDate, setDataDate] = useState<string>("");
+
+	useEffect(() => {
+		setDataDate(dayjs(data?.time).locale(locale).format("LL"));
+	}, [data, locale]);
+
+	const itemsPeriode = useMemo(
+		() => [
+			{ value: "day", label: t("overview.charts.periodes.day") },
+			{ value: "week", label: t("overview.charts.periodes.week") },
+			{ value: "month", label: t("overview.charts.periodes.month") },
+		],
+		[t]
+	);
+
 	const [currentPeriode, setCurrentPeriode] = useState<ItemButtonMultiple<string>>(itemsPeriode[0]);
 	const [currentType, setCurrentType] = useState<ItemButtonMultiple<string>>(itemsType[0]);
 
@@ -67,13 +82,13 @@ export const HeaderChart: React.FC<HeaderChartProps> = ({
 	return (
 		<div className="flex justify-between items-center">
 			<div>
-				<p>Liquidity</p>
+				<p>{t("overview.charts.liquidity.name")}</p>
 				<p className="text-2xl font-bold my-1">
 					{typeValue === "usd"
 						? `$${formateNumberDecimals(data?.value ?? 0, 0)}`
 						: `${formateNumberDecimals(data?.value ?? 0, 0)} ${currentType.label}`}
 				</p>
-				<p>{isToDay ? "Now" : data?.time.toDateString()}</p>
+				<p>{isToDay ? t("overview.charts.liquidity.today") : dataDate}</p>
 			</div>
 			<div className="flex flex-col items-end">
 				<div className="w-fit">

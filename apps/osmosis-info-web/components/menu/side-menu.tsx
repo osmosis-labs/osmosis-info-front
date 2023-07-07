@@ -16,7 +16,8 @@ const SideMenu = ({ items }: SideMenuProps) => {
 		menuStore: { open },
 	} = useStore();
 
-	const defaultclassName = "bg-surface transition-all fixed left-0 h-screen overflow-x-hidden border-modal top-0";
+	const defaultclassName =
+		"bg-osmosverse-800 transition-all fixed left-0 h-screen overflow-x-hidden border-osmosverse-700 top-0";
 
 	const classNameShowOpen = `${defaultclassName} border-r-[1px] px-2 w-sideMenuOpen`;
 	const classNameShowClose = `${defaultclassName}  border-r-[1px] px-2 w-sideMenuClose `;

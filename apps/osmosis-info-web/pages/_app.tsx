@@ -16,12 +16,17 @@ import { DEFAULT_LANGUAGE } from "../stores/app/settings-store/language";
 import { setDefaultLanguage, setTranslations } from "react-multi-lang";
 import dayjsLocaleEn from "../localizations/dayjs-locale-en.js";
 import dayjsLocaleFr from "../localizations/dayjs-locale-fr.js";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+
 dayjs.extend(utc);
 dayjs.extend(updateLocale);
+dayjs.extend(localizedFormat);
+dayjs.locale("en");
+dayjs.updateLocale("fr", dayjsLocaleFr);
+dayjs.updateLocale("en", dayjsLocaleEn);
+
 setDefaultLanguage(DEFAULT_LANGUAGE.value);
 setTranslations({ en, fr });
-dayjs.updateLocale("en", dayjsLocaleEn);
-dayjs.updateLocale("fr", dayjsLocaleFr);
 
 const App = ({ Component, pageProps }: AppProps) => {
 	return (

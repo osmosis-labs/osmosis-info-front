@@ -38,7 +38,7 @@ export const DialogReturn = ({ open, onClose, pool }: DialogReturnProps) => {
 	};
 
 	return (
-		<Dialog onClose={onClose} open={open} closeOnClickAway classNamePaper="p- bg-surface rounded-xl">
+		<Dialog onClose={onClose} open={open} closeOnClickAway classNamePaper="p- bg-osmosverse-800 rounded-xl">
 			<div className="relative">
 				<div className=" p-5  overflow-hidden">
 					<div className="flex items-center mx-2 mb-2">
@@ -47,7 +47,7 @@ export const DialogReturn = ({ open, onClose, pool }: DialogReturnProps) => {
 						</span>
 						{t("pools.calculatorAPR.title", { poolName: pool.name })}
 						<CloseSvg
-							className="stroke-default-500  absolute top-[10px] right-[10px] cursor-pointer"
+							className="strokeosmosverse-400  absolute top-[10px] right-[10px] cursor-pointer"
 							height={24}
 							onClick={onClose}
 						/>
@@ -91,23 +91,23 @@ const Details = ({ pool, periode, valueUSD }: DetailsProps) => {
 	total += totalSuperfluid;
 
 	const classHeaderDetails =
-		"flex items-center justify-between transition-all duration-300  z-20 relative border-b-[1px] border-surface ";
-	const classHeaderDetailsShow = `${classHeaderDetails} -translate-y-detailsReturn bg-background rounded-t-xl`;
+		"flex items-center justify-between transition-all duration-300  z-20 relative border-b-[1px] border-osmosverse-700 ";
+	const classHeaderDetailsShow = `${classHeaderDetails} -translate-y-detailsReturn bg-osmosverse-900 rounded-t-xl`;
 	const classHeaderDetailsHide = `${classHeaderDetails} `;
 
-	const classBodyDetails = `transition-all duration-300 h-full max-h-detailsReturn overflow-y-auto bg-background z-20 relative `;
+	const classBodyDetails = `transition-all duration-300 h-full max-h-detailsReturn overflow-y-auto bg-osmosverse-900 z-20 relative `;
 	const classBodyDetailsShow = `${classBodyDetails} -translate-y-detailsReturn opacity-100 rounded-b-xl`;
 	const classBodyDetailsHide = `${classBodyDetails} translate-y-detailsReturn opacity-0`;
 
-	const classBackdropDetails = `transition-all duration-300 top-0 left-0 right-0 bottom-0  absolute bg-surface `;
+	const classBackdropDetails = `transition-all duration-300 top-0 left-0 right-0 bottom-0  absolute bg-osmosverse-800 `;
 	const classBackdropDetailsShow = `${classBackdropDetails} z-10 opacity-60 rounded-xl`;
 	const classBackdropDetailsHide = `${classBackdropDetails} z-[-1] opacity-0`;
 
-	const classIconDetails = `stroke-default-500 transition-all duration-300`;
+	const classIconDetails = `strokeosmosverse-400 transition-all duration-300`;
 	const classIconDetailsShow = `${classIconDetails} -rotate-90`;
 	const classIconDetailsHide = `${classIconDetails} rotate-90`;
 
-	const classRow = "grid grid-cols-3 gap-2  items-center p-2 not-italic text-sm text-default-400";
+	const classRow = "grid grid-cols-3 gap-2  items-center p-2 not-italic text-sm textosmosverse-300";
 
 	return (
 		<div className="max-h-[24px] ">
@@ -120,7 +120,7 @@ const Details = ({ pool, periode, valueUSD }: DetailsProps) => {
 				<em className="not-italic flex items-center">
 					{t("pools.calculatorAPR.percentAPR", { percent: formateNumberDecimals(total) })}
 				</em>
-				<span className="flex items-center text-sm  text-default-500 cursor-pointer">
+				<span className="flex items-center text-sm  textosmosverse-400 cursor-pointer">
 					{t("pools.calculatorAPR.details")}
 					<LeftSvg className={showDetails ? classIconDetailsShow : classIconDetailsHide} />
 				</span>

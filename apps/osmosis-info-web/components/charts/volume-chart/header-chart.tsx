@@ -1,23 +1,38 @@
-import React from "react";
-import { LiquidityChart } from "../../../stores/api/charts/charts";
+import React, { useMemo } from "react";
+import { VolumeChart } from "../../../stores/api/charts/charts";
 import { Periode } from "./volume-chart";
 import { ButtonMultiple, ItemButtonMultiple } from "@latouche/osmosis-info-ui";
 import { useState } from "react";
 import { useEffect } from "react";
 import { formateNumberDecimals } from "../../../helpers/format";
+import { useTranslation } from "react-multi-lang";
+import dayjs from "dayjs";
+import { useLanguage } from "../../../hooks/use-language";
 interface HeaderChartProps {
-	data: LiquidityChart | null;
+	data: VolumeChart | null;
 	onChangePeriode: (periode: Periode) => void;
 	periode: Periode;
 }
 
-const itemsPeriode = [
-	{ value: "day", label: "D" },
-	{ value: "week", label: "W" },
-	{ value: "month", label: "M" },
-];
-
 export const HeaderChart: React.FC<HeaderChartProps> = ({ data, onChangePeriode, periode }) => {
+	const t = useTranslation();
+	const locale = useLanguage();
+
+	const [dataDate, setDataDate] = useState<string>("");
+
+	useEffect(() => {
+		setDataDate(dayjs(data?.time).locale(locale).format("LL"));
+	}, [data, locale]);
+
+	const itemsPeriode = useMemo(
+		() => [
+			{ value: "day", label: t("overview.charts.periodes.day") },
+			{ value: "week", label: t("overview.charts.periodes.week") },
+			{ value: "month", label: t("overview.charts.periodes.month") },
+		],
+		[t]
+	);
+
 	const [currentPeriode, setCurrentPeriode] = useState<ItemButtonMultiple<string>>(itemsPeriode[0]);
 
 	useEffect(() => {
@@ -42,9 +57,9 @@ export const HeaderChart: React.FC<HeaderChartProps> = ({ data, onChangePeriode,
 	return (
 		<div className="flex justify-between items-center">
 			<div>
-				<p>Volume</p>
+				<p>{t("overview.charts.volume.name")}</p>
 				<p className="text-2xl font-bold my-1">{`$${formateNumberDecimals(data?.value ?? 0, 0)}`}</p>
-				<p>{isToDay ? "Last 24h" : data?.time.toDateString()}</p>
+				<p>{isToDay ? t("overview.charts.volume.today") : dataDate}</p>
 			</div>
 			<div className="flex flex-col items-end">
 				<div className="w-fit mt-2">

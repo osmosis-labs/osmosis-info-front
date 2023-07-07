@@ -39,7 +39,7 @@ const Tokens = observer(() => {
 const Token = observer(({ tokenStore }: { tokenStore: TokenStore }) => {
 	return (
 		<Link href={`/tokens/${tokenStore.symbol}`} prefetch={false}>
-			<Paper className="p-2 m-2 bg-primary-600 w-fit min-w-[260px] rounded-sm cursor-pointer hover:bg-primary-700 transition-colors duration-default">
+			<Paper className="p-2 m-2 bg-wosmongton-600 w-fit min-w-[260px] rounded-sm cursor-pointer hover:bg-wosmongton-700 transition-colors duration-default">
 				<p>id: {tokenStore.id}</p>
 				<p>symbol: {tokenStore.symbol}</p>
 				<p>price: {tokenStore.price}</p>
@@ -50,15 +50,25 @@ const Token = observer(({ tokenStore }: { tokenStore: TokenStore }) => {
 
 export async function getServerSideProps() {
 	const responses = await Promise.all([
+		axios({ url: `${API_URL}/overview/v1/metrics` }),
 		axios({ url: `${API_URL}/tokens/v2/all` }),
 		axios({ url: `${API_URL}/tokens/v2/mcap` }),
 		axios({ url: `https://raw.githubusercontent.com/osmosis-labs/assetlists/main/osmosis-1/osmosis-1.assetlist.json` }),
+		axios({ url: `${API_URL}/pools/v2/all?low_liquidity=false` }),
+		axios({ url: `${API_URL}/apr/v2/all` }),
+		axios({ url: `${API_URL}/fees/v1/pools` }),
+		axios({ url: `${API_URL}/liquidity/v2/historical/chart` }),
+		axios({ url: `${API_URL}/volume/v2/historical/chart` }),
 	]);
 
 	return {
 		props: {
 			initialState: {
-				tokensState: { tokens: responses[0].data, marketCap: responses[1].data, assetList: responses[2].data },
+				metricsState: responses[0].data,
+				tokensState: { tokens: responses[1].data, marketCap: responses[2].data, assetList: responses[3].data },
+				poolsState: { pools: responses[4].data, apr: responses[5].data, fees: responses[6].data },
+				liquidityChartState: responses[7].data,
+				volumeChartState: responses[8].data,
 			},
 		},
 	};

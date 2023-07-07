@@ -1,6 +1,29 @@
 {
     "overview": {
-        "title": "Vue d'ensemble"
+        "title": "Vue d'ensemble",
+        "watchlistTokens": "Jetons en favoris",
+        "watchlistTokensEmpty": "Jetons en favoris apparaîtront ici",
+        "watchlistPools": "Bassins en favoris",
+        "watchlistPoolsEmpty": "Bassins en favoris apparaîtront ici",
+        "tokens": "Jetons",
+        "pools": "Bassins",
+        "liquidity24h": "Liquidité (24h): ",
+        "volume24h": "Volume (24h): ",
+        "charts": {
+            "periodes": {
+                "month": "M",
+                "week": "S",
+                "day": "J"
+            },
+            "liquidity": {
+                "name": "Liquidité",
+                "today": "Maintenant"
+            },
+            "volume": {
+                "name": "Volume",
+                "today": "Les dernières 24h"
+            }
+        }
     },
     "tokensTable": {
         "columnsId": "ID",
@@ -92,5 +115,15 @@
         "titleWalletConnect": "Portefeuille WalletConnect ",
         "infoWalletConnect": "Mobile Keplr",
         "scan": "Scanner le QR Code."
+    },
+    "search": {
+        "placeholderBar": "Rechercher un jeton ou un bassin",
+        "shortcutOpen": "CTRL + K",
+        "shortcutClose": "ESC",
+        "placeholder": "Rechercher par nom ou symbole",
+        "tokens": "Jetons",
+        "pools": "Bassins",
+        "noResultPools": "Aucun résultat pour les bassins",
+        "noResultTokens": "Aucun résultat pour les jetons"
     }
 }

@@ -1,11 +1,11 @@
-!function (e, n) {
-    "object" == typeof exports && "undefined" != typeof module ? module.exports = n() : "function" == typeof define && define.amd ? define(n) : (e = "undefined" != typeof globalThis ? globalThis : e || self).dayjs_locale_en = n();
-}(void 0, function () {
-    "use strict";
+import dayjs from "dayjs";
 
-    return {
-        name: "en",
-        weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"),
-        months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_")
-    };
-});
+const locale = {
+    name: "en",
+    weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"),
+    months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_")
+};
+
+dayjs.locale(locale, null, true);
+
+export default locale;

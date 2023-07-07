@@ -63,3 +63,14 @@ export const formateNumberPriceDecimals = (price: number, decimals = 2) => {
 		minimumFractionDigits: decimals,
 	}).format(price);
 };
+
+export const normalize = (string: string) => {
+	if (string) {
+		return string
+			.normalize("NFD")
+			.replace(/[\u0300-\u036f]/g, "")
+			.toLowerCase();
+	} else {
+		return "";
+	}
+};

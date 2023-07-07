@@ -20,7 +20,7 @@ import { useRouter } from "next/router";
 const STORAGE_KEY = process.env.NEXT_PUBLIC_APP_STORAGE_KEY ?? "OSMO_KEY_";
 const KEY_SETTINGS = `${STORAGE_KEY}TOKEN_TABLE`;
 
-export const TokenTable = ({ data }: { data: Token[] }) => {
+export const TokenTable = ({ data, autoHeight = false }: { data: Token[]; autoHeight?: boolean }) => {
 	const t = useTranslation();
 	const router = useRouter();
 
@@ -63,12 +63,11 @@ export const TokenTable = ({ data }: { data: Token[] }) => {
 		const newConfig: TableConfiguration = {
 			onClickRow,
 			density: savedSettings.density ?? "medium",
-			autoHeight: false,
+			autoHeight,
 			defaultOrderBy: savedSettings.defaultOrderBy ?? "liquidity",
 			defaultOrderDirection: savedSettings.defaultOrderDirection ?? "ASC",
 			resizing: savedSettings.resizing ?? false,
 			callBackUpdateStates,
-
 			columns: [
 				{
 					display: "ID",
@@ -201,59 +200,57 @@ export const TokenTable = ({ data }: { data: Token[] }) => {
 	);
 
 	return (
-		<div className="">
-			<div className="my-4">
-				{config && (
-					<Table
-						config={config}
-						data={currentData}
-						isLoading={loading}
-						translations={{
-							footer: {
-								rowsPerPage: t("table.rowsPerPage"),
-								rangeItems: (min: number, max: number, length: number) => {
-									return (
-										t("table.range", {
-											min: min.toString(),
-											max: max.toString(),
-											total: length.toString(),
-										}) ?? ""
-									);
-								},
+		<div className="m-2">
+			{config && (
+				<Table
+					config={config}
+					data={currentData}
+					isLoading={loading}
+					translations={{
+						footer: {
+							rowsPerPage: t("table.rowsPerPage"),
+							rangeItems: (min: number, max: number, length: number) => {
+								return (
+									t("table.range", {
+										min: min.toString(),
+										max: max.toString(),
+										total: length.toString(),
+									}) ?? ""
+								);
 							},
-							header: {
-								buttonSettings: t("table.buttonSettings"),
-								title: t("table.title"),
-								density: t("table.density"),
-								densityCompact: t("table.densityCompact"),
-								densityMedium: t("table.densityMedium"),
-								densityConfortable: t("table.densityConfortable"),
-								downloadCSV: t("table.downloadCSV"),
-								columns: t("table.columns"),
-								filter: t("table.filter"),
-								filterLower: t("table.filterLower"),
-								filterHigher: t("table.filterHigher"),
-								filterEquals: t("table.filterEquals"),
-								filterContains: t("table.filterContains"),
-								filterStartWith: t("table.filterStartWith"),
-								filterEndWith: t("table.filterEndWith"),
-								enableColunmResize: t("table.enableColunmResize"),
-								validate: t("table.validate"),
-								columnsNames: {
-									id: t("tokensTable.columnsId"),
-									symbol: t("tokensTable.columnsName"),
-									price: t("tokensTable.columnsPrice"),
-									price24hChange: t("tokensTable.columnsPrice24"),
-									marketCap: t("tokensTable.columnsMarketCap"),
-									volume24h: t("tokensTable.columnsVolume"),
-									volume24hChange: t("tokensTable.columnsVolume24"),
-									liquidity: t("tokensTable.columnsLiquidity"),
-								},
+						},
+						header: {
+							buttonSettings: t("table.buttonSettings"),
+							title: t("table.title"),
+							density: t("table.density"),
+							densityCompact: t("table.densityCompact"),
+							densityMedium: t("table.densityMedium"),
+							densityConfortable: t("table.densityConfortable"),
+							downloadCSV: t("table.downloadCSV"),
+							columns: t("table.columns"),
+							filter: t("table.filter"),
+							filterLower: t("table.filterLower"),
+							filterHigher: t("table.filterHigher"),
+							filterEquals: t("table.filterEquals"),
+							filterContains: t("table.filterContains"),
+							filterStartWith: t("table.filterStartWith"),
+							filterEndWith: t("table.filterEndWith"),
+							enableColunmResize: t("table.enableColunmResize"),
+							validate: t("table.validate"),
+							columnsNames: {
+								id: t("tokensTable.columnsId"),
+								symbol: t("tokensTable.columnsName"),
+								price: t("tokensTable.columnsPrice"),
+								price24hChange: t("tokensTable.columnsPrice24"),
+								marketCap: t("tokensTable.columnsMarketCap"),
+								volume24h: t("tokensTable.columnsVolume"),
+								volume24hChange: t("tokensTable.columnsVolume24"),
+								liquidity: t("tokensTable.columnsLiquidity"),
 							},
-						}}
-					/>
-				)}
-			</div>
+						},
+					}}
+				/>
+			)}
 		</div>
 	);
 };

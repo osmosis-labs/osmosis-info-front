@@ -2,6 +2,7 @@ import { Storage } from "../helpers/storage";
 import { ChartLiquidityResponse, ChartVolumeResponse } from "./api/charts/charts";
 import { LiquidityStore } from "./api/charts/liquidity-store";
 import { VolumeStore } from "./api/charts/volume-store";
+import { FavoriteStore } from "./app/favorites/favorites-store";
 import { MetricsResponse } from "./api/metrics/metrics";
 import { MetricsStore } from "./api/metrics/metrics-store";
 import { APRsResponse, FeesResponse, PoolsResponse } from "./api/pools/Pools";
@@ -22,6 +23,7 @@ export class RootStore {
 	public readonly poolsStore: PoolsStore;
 	public readonly liquidityStore: LiquidityStore;
 	public readonly volumeStore: VolumeStore;
+	public readonly favoriteStore: FavoriteStore;
 
 	constructor() {
 		this.menuStore = new MenuStore();
@@ -32,6 +34,7 @@ export class RootStore {
 		this.volumeStore = new VolumeStore(this.metricsStore);
 		this.liquidityStore = new LiquidityStore();
 		this.poolsStore = new PoolsStore(this.tokensStore);
+		this.favoriteStore = new FavoriteStore(new Storage("favorites"));
 	}
 
 	hydrate = (initState: InitialState): void => {

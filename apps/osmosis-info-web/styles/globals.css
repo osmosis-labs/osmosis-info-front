@@ -20,7 +20,7 @@
 	background: linear-gradient(96.42deg, #462adf -0.59%, #8a86ff 100%) !important;
 }
 
-.Toastify__toast-theme--colored.Toastify__toast--success {
+.Toastify__toast-theme--colored.Toastify__toast--bullish-400 {
 	background: linear-gradient(96.28deg, #899eff 0%, #28f6af 99.28%) !important;
 }
 
@@ -41,18 +41,18 @@
 }
 
 *::-webkit-scrollbar-corner {
-	@apply bg-wosmongton-400;
+	@apply bg-osmosverse-700;
 
 }
 
 *::-webkit-scrollbar-track {
-	@apply bg-wosmongton-300;
+	@apply bg-osmosverse-700;
 }
 
 *::-webkit-scrollbar-thumb {
-	@apply bg-wosmongton-400;
+	@apply bg-osmosverse-1000;
 	border: 1px solid;
-	@apply border-wosmongton-800;
+	@apply border-osmosverse-700;
 	border-radius: 10px;
 }
 

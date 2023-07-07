@@ -26,7 +26,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "localizations/dayjs-locale-fr.js"
+    "localizations/dayjs-locale-fr.js",
+    "../../date.ts"
   ],
   "exclude": [
     "node_modules",

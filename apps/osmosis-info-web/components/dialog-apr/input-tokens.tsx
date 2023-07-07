@@ -51,11 +51,11 @@ export const InputTokens = ({ pool, onChange, valueUSD }: InputTokensProps) => {
 	}, [selected, value, tokenSelected, onChange]);
 
 	const classNameToken =
-		"pl-1 py-1 pr-2 bg-card rounded-full flex w-fit items-center justify-center text-default-500 cursor-pointer";
+		"pl-1 py-1 pr-2 bg-osmosverse-700 rounded-full flex w-fit items-center justify-center textosmosverse-400 cursor-pointer";
 	const classNameTokenSelected =
-		" pl-1 py-1 pr-2 bg-modal rounded-full flex w-fit items-center justify-center text-default-400 cursor-pointer";
+		" pl-1 py-1 pr-2 bg-osmosverse-700 rounded-full flex w-fit items-center justify-center textosmosverse-300 cursor-pointer";
 
-	let classSwitch = "stroke-default-500 cursor-pointer transition-all duration-300";
+	let classSwitch = "strokeosmosverse-400 cursor-pointer transition-all duration-300";
 	if (selected !== "USD") classSwitch += "  rotate-180";
 	const onChangeToken = (token: TokenStore) => {
 		setTokenSelected(token);
@@ -68,7 +68,7 @@ export const InputTokens = ({ pool, onChange, valueUSD }: InputTokensProps) => {
 
 	return (
 		<div className="flex flex-col p-2">
-			<div className="flex flex-col bg-background rounded-3xl p-2">
+			<div className="flex flex-col bg-osmosverse-900 rounded-3xl p-2">
 				<div className="flex  justify-end">
 					<div className="flex flex-col  ">
 						<div className="flex items-center">
@@ -76,13 +76,13 @@ export const InputTokens = ({ pool, onChange, valueUSD }: InputTokensProps) => {
 								type="text"
 								value={value}
 								onChange={onChangeInput}
-								className="bg-background text-right py-2 pr-2 text-default-500 outline-none"
+								className="bg-osmosverse-900 text-right py-2 pr-2 textosmosverse-400 outline-none"
 							/>
-							<span className="text-default-50 text-right text-default-500">
+							<span className="text-default-50 text-right textosmosverse-400">
 								{selected === "USD" ? "USD" : tokenSelected.symbol}
 							</span>
 						</div>
-						<span className="text-default-50 text-right text-default-500 text-sm">
+						<span className="text-default-50 text-right textosmosverse-400 text-sm">
 							{formateNumberDecimals(valueConverted)} {selected !== "USD" ? "USD" : tokenSelected.symbol}
 						</span>
 						<div className="flex justify-end mt-1 items-center  select-none">
@@ -132,7 +132,7 @@ const Shorcut = ({
 }) => {
 	return (
 		<span
-			className="pl-1 py-1 pr-2 bg-card rounded-full flex  items-center justify-center text-default-500 cursor-pointer w-full"
+			className="pl-1 py-1 pr-2 bg-osmosverse-700 rounded-full flex  items-center justify-center textosmosverse-400 cursor-pointer w-full"
 			onClick={() => {
 				onClick(value);
 			}}

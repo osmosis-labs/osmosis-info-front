@@ -1,6 +1,29 @@
 {
     "overview": {
-        "title": "Overview"
+        "title": "Overview",
+        "watchlistTokens": "Your token watchlist",
+        "watchlistTokensEmpty": "Saved tokens will appear here",
+        "watchlistPools": "Your pool watchlist",
+        "watchlistPoolsEmpty": "Saved pools will appear here",
+        "tokens": "Tokens",
+        "pools": "Pools",
+        "liquidity24h": "Liquidity (24h):",
+        "volume24h": "Volume (24h):",
+        "charts": {
+            "periodes": {
+                "month": "M",
+                "week": "W",
+                "day": "D"
+            },
+            "liquidity": {
+                "name": "Liquidity",
+                "today": "Now"
+            },
+            "volume": {
+                "name": "Volume",
+                "today": "Last 24h"
+            }
+        }
     },
     "tokensTable": {
         "columnsId": "ID",
@@ -92,5 +115,15 @@
         "titleWalletConnect": "WalletConnect Wallet",
         "infoWalletConnect": "Keplr Mobile",
         "scan": "Scan QR Code"
+    },
+    "search": {
+        "placeholderBar": "Looking for a token or a pool",
+        "shortcutOpen": "CTRL + K",
+        "shortcutClose": "ESC",
+        "placeholder": "Search by name or symbol",
+        "tokens": "Tokens",
+        "pools": "Pools",
+        "noResultPools": "No results for pools",
+        "noResultTokens": "No results for tokens"
     }
 }

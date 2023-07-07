@@ -10,10 +10,10 @@ export interface BottomMenuProps {
 function BottomMenu({ items }: BottomMenuProps) {
 	const isMobile = useIsMobile();
 	const className =
-		"w-full grid grid-cols-4 bg-background bg-opacity-50 h-bottomMenu fixed bottom-0 left-0 transition-all backdrop-blur-[2px] z-10 border-t-[1px] border-primary-800";
+		"w-full grid grid-cols-4 bg-osmosverse-900 bg-opacity-50 h-bottomMenu fixed bottom-0 left-0 transition-all backdrop-blur-[2px] z-10 border-t-[1px] border-osmosverse-700";
 
 	const classNameHide =
-		"w-full grid grid-cols-4 bg-background bg-opacity-50 fixed bottom-0 left-0 transition-all backdrop-blur-[2px] z-10 border-t-[1px] border-primary-800 h-0";
+		"w-full grid grid-cols-4 bg-osmosverse-900 bg-opacity-50 fixed bottom-0 left-0 transition-all backdrop-blur-[2px] z-10 border-t-[1px] border-osmosverse-700 h-0";
 
 	return (
 		<div className={isMobile === null || !isMobile ? classNameHide : className}>

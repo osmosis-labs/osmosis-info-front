@@ -23,7 +23,7 @@ export const CellTotalReturn = ({ pool }: CellTotalReturnProps) => {
 		<div className="grid grid-cols-[70px_30px] items-center">
 			<DialogReturn open={open} onClose={onClose} pool={pool} />
 			<span>{`${formateNumberDecimals(pool.totalAPR, 2, 2)}%`}</span>
-			<VoteSVG className="fill-default-500 cursor-pointer" height={24} onClick={onOpen} />
+			<VoteSVG className="fill-osmosverse-400 cursor-pointer" height={24} onClick={onOpen} />
 		</div>
 	);
 };
