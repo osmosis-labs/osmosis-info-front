@@ -63,11 +63,11 @@ export function Dropdown<T>({
 								overflow-hidden text-ellipsis inline-flex items-center justify-center`;
 	const classNameSmall = `	px-4 py-2`;
 	const classNameMedium = `	px-4 py-4`;
-	const classNameOutlined = `	border-2 border-primary-200 `;
-	const classNameIconHover = `[&>svg]:hover:fill-default-500 [&>svg]:fill-default-400`;
-	const classNameDisabled = `	cursor-not-allowed [&>svg]:fill-default-400 opacity-50`;
+	const classNameOutlined = `	border-2 border-osmosverse-700 `;
+	const classNameIconHover = `[&>svg]:hover:fill-osmosverse-500 [&>svg]:fill-osmosverse-700`;
+	const classNameDisabled = `	cursor-not-allowed [&>svg]:fill-osmosverse-300 opacity-50`;
 	const classNameWithIcon = `	`;
-	const classNameHover = `	hover:border-primary-200 transition-colors`;
+	const classNameHover = `	hover:border-osmosverse-500 transition-colors`;
 
 	const classNameIcon = `		ml-2 duration-default`;
 	const classNameIconLeft = `	mr-2 rounded-full flex items-center justify-center`;
@@ -96,7 +96,7 @@ export function Dropdown<T>({
 				anchorElement={anchorElPopover}
 				anchorPosition={{ x: "right", y: "bottom" }}
 				popoverPosition={{ x: "right", y: "top" }}
-				classNamePaper={`p-0 bg-primary-200 rounded-xl`}
+				classNamePaper={`p-0 bg-osmosverse-900 rounded-xl `}
 			>
 				<div>
 					{items.map(({ value, display, Icon }, index) => {

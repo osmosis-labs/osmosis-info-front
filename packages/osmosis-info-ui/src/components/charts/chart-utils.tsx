@@ -68,6 +68,19 @@ export const zoomInIndex = (limits: Limits, data: any[], index: number, zoomIn: 
 	return { start: newStart, end: newEnd };
 };
 
+export const getTextWidth = (text: string, font: string): number => {
+	if (typeof window === "undefined") return 0;
+	const span = document.createElement("span");
+	span.style.fontSize = font;
+	span.style.position = "absolute";
+	span.style.visibility = "hidden";
+	span.innerText = text;
+	document.body.appendChild(span);
+	const width = span.clientWidth;
+	document.body.removeChild(span);
+	return width;
+};
+
 export const drag = (limits: Limits, data: any[], deltaX: number): Limits => {
 	const { start, end } = limits;
 	const toRight = deltaX > 0;
@@ -86,7 +99,7 @@ export const drag = (limits: Limits, data: any[], deltaX: number): Limits => {
 	} else {
 		if (end < data.length) {
 			if (end + stepDrag >= data.length) {
-				stepDrag = data.length - 1 - end;
+				stepDrag = data.length - end;
 			}
 			newStart = start + stepDrag;
 			newEnd = end + stepDrag;

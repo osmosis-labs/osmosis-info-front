@@ -23,7 +23,7 @@ const Template: ComponentStory<typeof Backdrop> = (args) => {
 				<div className="flex items-center justify-center m-2">
 					<Button onClick={onClickOpen}>Show backdrop</Button>
 				</div>
-				<Backdrop {...args} open={open} className="bg-backdrop-main flex items-center justify-center">
+				<Backdrop {...args} open={open} className="bg-backdrop flex items-center justify-center">
 					<div>
 						<p>Empty backdrop with only text and button</p>
 						<Button className="mx-auto my-2" onClick={onClose}>

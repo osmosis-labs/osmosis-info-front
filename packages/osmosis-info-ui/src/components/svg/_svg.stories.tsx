@@ -15,6 +15,7 @@ import {
 	BottomSvg,
 	VoteSVG,
 	SwapSVG,
+	SearchSVG,
 } from "./";
 import { CloseSvg } from "./close-svg";
 import { ArrowTopSVG } from "./arrow-top-svg";
@@ -121,3 +122,7 @@ Vote.argTypes = argsTypeFill;
 export const Swap: ComponentStory<typeof SwapSVG> = (args) => <SwapSVG {...args} />;
 Swap.args = argsStroke;
 Swap.argTypes = argsTypeStroke;
+
+export const Search: ComponentStory<typeof SearchSVG> = (args) => <SearchSVG {...args} />;
+Search.args = argsStroke;
+Search.argTypes = argsTypeStroke;

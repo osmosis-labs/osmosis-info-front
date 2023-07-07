@@ -37,7 +37,7 @@ export const HeaderSettings = ({ translations }: HeaderSettingsProps) => {
 
 	return (
 		<div
-			className="border-r-[1px] border-l-[1px] border-t-[1px] border-surface rounded-t-md font-light text-xs cursor-pointer flex items-center justify-end px-2 pt-3 pb-1 "
+			className="border-r-[1px] border-l-[1px] border-t-[1px]  border-osmosverse-700 rounded-t-md font-light text-xs cursor-pointer flex items-center justify-end px-2 pt-3 pb-1 "
 			style={{
 				height: `${heightSettings}px`,
 			}}
@@ -53,7 +53,12 @@ export const HeaderSettings = ({ translations }: HeaderSettingsProps) => {
 				<div className="mx-2 mb-2">
 					<div className="flex items-center justify-between">
 						<p className=" my-2"> {translations?.header?.title ?? "Settings"}</p>
-						<IconButton onClick={onCloseDialog} Icon={CloseSvg} variant="flat" className="stroke-default-500  !pr-0" />
+						<IconButton
+							onClick={onCloseDialog}
+							Icon={CloseSvg}
+							variant="flat"
+							className="strokeosmosverse-400  !pr-0"
+						/>
 					</div>
 
 					<div className="flex items-center justify-between">

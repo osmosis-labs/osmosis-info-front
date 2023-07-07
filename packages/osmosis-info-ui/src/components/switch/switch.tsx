@@ -29,15 +29,15 @@ export const Switch = ({ onChange, className, disabled, value, name }: SwitchPro
 		classNameDefault += " transition-colors cursor-pointer";
 		classPin += " bg-white-full";
 	} else {
-		classNameDefault += " opacity-[0.38] bg-primary-600";
-		classPin += " bg-primary-500";
+		classNameDefault += " opacity-[0.38] bg-wosmongton-600";
+		classPin += " bg-wosmongton-500";
 	}
 
 	if (value) {
 		classPin += " translate-x-[20px] ";
 		if (!disabled) classNameDefault += " bg-wosmongton-500 hover:bg-wosmongton-400";
 	} else {
-		if (!disabled) classNameDefault += " bg-default-500 hover:bg-default-400";
+		if (!disabled) classNameDefault += " bgosmosverse-400 hover:bgosmosverse-300";
 	}
 
 	return (

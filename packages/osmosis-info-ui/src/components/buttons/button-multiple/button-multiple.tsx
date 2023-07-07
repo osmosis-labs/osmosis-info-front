@@ -38,12 +38,12 @@ export const ButtonMultiple = ({ selected, onClick, items, className }: ButtonMu
 		onClick(item);
 	};
 
-	const currentClassName = `${className} flex w-full justify-center items-center bg-background rounded-full select-none`;
+	const currentClassName = `${className} flex w-full justify-center items-center bg-osmosverse-900 rounded-full select-none`;
 
 	const classItem =
-		"flex justify-center items-center cursor-pointer rounded-full px-2 min-w-[36px] py-[6px]  w-full transition-all duration-300 ease-in-out whitespace-nowrap";
-	const classItemSelected = classItem + " bg-primary-500 ";
-	const classItemNotSelected = classItem + " text-default-500";
+		"flex justify-center items-center cursor-pointer rounded-full px-2 min-w-[36px] py-[6px] w-full transition-all duration-300 ease-in-out whitespace-nowrap";
+	const classItemSelected = classItem + " bg-wosmongton-700 hover:bg-wosmongton-400 ";
+	const classItemNotSelected = classItem + " text-osmosverse-400 hover:text-osmosverse-200 ";
 	return (
 		<div className={currentClassName}>
 			{items.map((item) => {

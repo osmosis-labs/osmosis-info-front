@@ -13,3 +13,4 @@ export * from "./close-svg";
 export * from "./vote-svg";
 export * from "./swap-svg";
 export * from "./arrow-top-svg";
+export * from "./search-svg";

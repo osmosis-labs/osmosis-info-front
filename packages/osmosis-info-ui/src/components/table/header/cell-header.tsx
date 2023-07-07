@@ -32,7 +32,7 @@ export const CellHeader = ({ column, index, translations }: CellHeaderProps) => 
 		"p-2 flex w-full items-center [&>svg]:hover:opacity-100 [&>svg]:transition-all [&>svg]:duration-default relative ";
 	let classNameHover = "text-sm font-medium text-ellipsis overflow-hidden max-w-full max-h-full whitespace-nowrap";
 
-	let classNameIcon = "p-1 fill-default-500";
+	let classNameIcon = "p-1 fillosmosverse-400";
 	if (align === "right") {
 		className += " flex-row-reverse";
 	} else if (align === "center") {
@@ -128,7 +128,7 @@ export const CellHeader = ({ column, index, translations }: CellHeaderProps) => 
 					style={{ height: `${height}px` }}
 					className="cursor-col-resize w-[8px] flex items-center justify-center absolute right-0"
 				>
-					<span className="w-[2px] bg-default-400 " style={{ height: `${height - 20}px` }} />
+					<span className="w-[2px] bgosmosverse-300 " style={{ height: `${height - 20}px` }} />
 				</span>
 			)}
 		</div>

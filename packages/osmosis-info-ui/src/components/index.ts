@@ -6,6 +6,7 @@ export * from "./buttons/button-multiple/button-multiple";
 export * from "./dialog/dialog";
 export * from "./paper/paper";
 export * from "./popover/popover";
+export * from "./input/input";
 export * from "./svg/index";
 export * from "./portal/portal";
 export * from "./dropdown/dropdown";

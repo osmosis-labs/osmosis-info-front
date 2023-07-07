@@ -36,9 +36,9 @@ export function DropdownItem<T>({
 }: DropdownItemProps<T>) {
 	const classNameDefault = `	duration-default transition-colors cursor-pointer h-fit whitespace-nowrap max-w-full 
 								overflow-hidden text-ellipsis py-2 px-4`;
-	const classNamehover = `	hover:bg-primary-300 transition-colors`;
+	const classNamehover = `	hover:bg-osmosverse-500 transition-colors`;
 	const classNameWithIcon = `	flex items-center`;
-	const classNameSelected = `	bg-primary-200`;
+	const classNameSelected = `	bg-osmosverse-700`;
 	const classNameLast = `		rounded-b-lg`;
 	const classNameFirst = `	rounded-t-lg`;
 	const classNameIcon = `		mr-2 duration-default`;

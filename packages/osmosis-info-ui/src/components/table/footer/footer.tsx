@@ -51,7 +51,7 @@ export const Footer = ({ translations }: FooterProps) => {
 	};
 
 	return (
-		<div className="h-[53px] flex items-center justify-center  box-border border-[1px] border-surface rounded-b-md select-none">
+		<div className="h-[53px] flex items-center justify-center  box-border border-[1px]  border-osmosverse-700 rounded-b-md select-none">
 			<span className="ml-2 flex-1">
 				<span className="xs:hidden">{translations?.footer?.rowsPerPage ?? "Rows per page:"}</span>
 				<Dropdown<number>
@@ -78,7 +78,7 @@ export const Footer = ({ translations }: FooterProps) => {
 						`${rowPerPage * currentPage + 1} - ${maxElt} of ${data.length}`}
 				</span>
 				{isLoading ? (
-					<LoadingSVG height={24} width={24} className="fill-default-400 animate-spin ml-4" />
+					<LoadingSVG height={24} width={24} className="fillosmosverse-300 animate-spin ml-4" />
 				) : (
 					<IconButton
 						className="rotate-180"

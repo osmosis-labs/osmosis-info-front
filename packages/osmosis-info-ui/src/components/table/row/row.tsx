@@ -31,7 +31,7 @@ export function Row({ currentData, data }: RowProps) {
 
 	return (
 		<div
-			className="flex w-fit min-w-full items-center border-b-[1px] border-surface box-border overflow-hidden hover:bg-surface transition-colors duration-default"
+			className="flex w-fit min-w-full items-center border-b-[1px] border-osmosverse-700 box-border overflow-hidden hover:bg-osmosverse-600 transition-colors duration-default"
 			style={{
 				height: `${height}px`,
 			}}

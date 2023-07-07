@@ -81,15 +81,15 @@ export type LineTimeGradientOptions = {
 	/**
 	 * The color to start the gradient from.
 	 */
-	from: string;
+	from?: string;
 	/**
 	 * The color to end the gradient at.
 	 */
-	to: string;
+	to?: string;
 	/**
 	 * The opacity of the gradient.
 	 */
-	opacity: number;
+	opacity?: number;
 	/**
 	 * Whether to display the gradient or not.
 	 */

@@ -40,7 +40,7 @@ export const Body = ({ onScroll }: { onScroll: (e: UIEvent<HTMLDivElement>) => v
 	const emptyRows = Math.max(0, (1 + currentPage) * rowPerPage - data.length);
 
 	return (
-		<div className="border-l-[1px] border-r-[1px] border-surface" ref={refContainer}>
+		<div className="border-l-[1px] border-r-[1px]  border-osmosverse-700" ref={refContainer}>
 			<div
 				className="overflow-auto"
 				style={{ maxHeight: `${rowPerPage * rowHeight}px` }}

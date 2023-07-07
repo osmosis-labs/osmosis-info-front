@@ -33,7 +33,7 @@ import {
 	defaultLineTimeTooltipBottom,
 } from "./line-time-config";
 import { bisector } from "d3-array";
-import { drag } from "../chart-utils";
+import { drag, getTextWidth } from "../chart-utils";
 
 /*
 TO DO use composition pattern to improve performance (ex for axies)
@@ -137,10 +137,6 @@ function ChartLine<D>({
 	const [isLoaded, setIsLoaded] = useState(false);
 
 	useEffect(() => {
-		if (data.length > 0) setLimits({ start: 320, end: data.length });
-	}, [data]);
-
-	useEffect(() => {
 		if (width > 0) {
 			setIsLoaded(true);
 		}
@@ -149,6 +145,11 @@ function ChartLine<D>({
 	useEffect(() => {
 		if (defaultView) setLimits({ start: defaultView[0], end: defaultView[1] });
 	}, [defaultView]);
+
+	useEffect(() => {
+		if (limits.start === 0 && limits.end === 0) setLimits({ start: 0, end: data.length });
+	}, [data, limits.end, limits.start]);
+
 	useEffect(() => {
 		if (isLoaded && refPathLine.current) {
 			const path = refPathLine.current;
@@ -199,7 +200,6 @@ function ChartLine<D>({
 	useEffect(() => {
 		if (displaySVG) setAnimate(true);
 	}, [displaySVG]);
-
 	// scales
 	const xScale = useMemo(() => {
 		let zoomedStock = data;
@@ -373,6 +373,12 @@ function ChartLine<D>({
 		setLimits({ start: 0, end: data.length });
 	};
 
+	const nbTicksX = useMemo(() => {
+		const paddingLabel = 20;
+		const width = getTextWidth(formatX(data[0]), "12px") + paddingLabel;
+		return Math.floor(innerWidth / width);
+	}, [data, formatX, innerWidth]);
+
 	useGesture(
 		{
 			onDragStart: ({ event }) => {
@@ -409,8 +415,9 @@ function ChartLine<D>({
 		},
 		{ target: refSVG, eventOptions: { passive: false }, drag: { filterTaps: true } }
 	);
+
 	return (
-		<div className="relative touch-none">
+		<div className="relative touch-none select-none">
 			<svg width={width} height={height} ref={refSVG}>
 				<defs>
 					<clipPath id="clipPath">
@@ -448,7 +455,9 @@ function ChartLine<D>({
 					{isLoaded && (
 						<LinePath<D>
 							data={data}
-							x={(d: D) => xScale(getXAxisData(d)) ?? 0}
+							x={(d: D) => {
+								return xScale(getXAxisData(d)) ?? 0;
+							}}
 							y={(d: D) => yScale(getYAxisData(d)) ?? 0}
 						>
 							{({ path }) => {
@@ -484,9 +493,10 @@ function ChartLine<D>({
 					/>
 				)}
 				{lineTimeBottomAxisOptions.display && (
-					<AxisBottom<AxisScale>
+					<AxisBottom
+						numTicks={nbTicksX}
+						top={height - margin.bottom}
 						scale={xScale}
-						top={height - margin.bottom - 1}
 						strokeWidth={lineTimeBottomAxisOptions.strokeWitdh}
 						stroke={lineTimeBottomAxisOptions.stroke}
 						tickStroke={lineTimeBottomAxisOptions.tickStroke}

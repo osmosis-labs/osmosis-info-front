@@ -27,7 +27,7 @@ import { AxisBottom, AxisRight, TickFormatter } from "@visx/axis";
 import { Point } from "@visx/zoom/lib/types";
 import { localPoint } from "@visx/event";
 import { useGesture } from "@use-gesture/react";
-import { drag, zoomInIndex } from "../chart-utils";
+import { drag, getTextWidth, zoomInIndex } from "../chart-utils";
 import { Tooltip, useTooltip } from "@visx/tooltip";
 
 export type BarTimeProps<D> = {
@@ -87,19 +87,6 @@ export type BarTimeProps<D> = {
 	barOptions?: BarOptions;
 };
 
-const getTextWidth = (text: string, font: string): number => {
-	if (typeof window === "undefined") return 0;
-	const span = document.createElement("span");
-	span.style.fontSize = font;
-	span.style.position = "absolute";
-	span.style.visibility = "hidden";
-	span.innerText = text;
-	document.body.appendChild(span);
-	const width = span.clientWidth;
-	document.body.removeChild(span);
-	return width;
-};
-
 function BarChart<D>({
 	data,
 	width = 800,
@@ -155,8 +142,8 @@ function BarChart<D>({
 	}, [defaultView]);
 
 	useEffect(() => {
-		setLimits({ start: 0, end: data.length - 1 });
-	}, [data]);
+		if (limits.start === 0 && limits.end === 0) setLimits({ start: 0, end: data.length });
+	}, [data, limits.end, limits.start]);
 
 	useEffect(() => {
 		// Because safari doesn't work like other navigator we need to remove some events
@@ -189,7 +176,7 @@ function BarChart<D>({
 
 	useEffect(() => {
 		if (data && data.length > 0) {
-			const last = data[limits.end];
+			const last = data[limits.end - 1];
 			if (last) {
 				setDataLast({
 					x: xScale(getXAxisData(last)) || 0,
@@ -311,7 +298,7 @@ function BarChart<D>({
 	);
 
 	const doubleClick = () => {
-		setLimits({ start: 0, end: data.length - 1 });
+		setLimits({ start: 0, end: data.length });
 	};
 
 	useGesture(
@@ -354,7 +341,7 @@ function BarChart<D>({
 	);
 
 	return (
-		<div className="relative touch-none">
+		<div className="relative touch-none select-none">
 			<svg width={width} height={height} ref={refSVG}>
 				<defs>
 					<clipPath id="clipPathBar">
@@ -374,7 +361,6 @@ function BarChart<D>({
 							const x = getXAxisData(d);
 							const y = getYAxisData(d);
 
-							const timeAnimationStep = (animationOptions.delayBarTimeTick / data.length) * index;
 							const barWidth = xScale.bandwidth();
 							const barHeight = innerHeight - (yScale(y) ?? 0) + margin.top;
 							const barX = xScale(x);
@@ -383,7 +369,7 @@ function BarChart<D>({
 							return (
 								<Bar
 									aria-details={`bar-${x}`}
-									key={`bar-${x}`}
+									key={`bar-${x}-index-${index}`}
 									x={barX}
 									y={barY}
 									width={barWidth}

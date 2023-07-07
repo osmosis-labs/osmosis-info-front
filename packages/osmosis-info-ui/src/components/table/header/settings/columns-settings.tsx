@@ -65,7 +65,7 @@ const DragableColumns = ({
 					onChangeHideColumn(!value, i);
 				};
 				let className =
-					"absolute w-full flex items-center h-[40px] bg-card border-[1px] border-modal rounded-md my-1 duration-default";
+					"absolute w-full flex items-center h-[40px] bg-osmosverse-700 border-[1px] border-modal rounded-md my-1 duration-default";
 				if (active) className += " !transition-none";
 
 				return (
@@ -80,7 +80,7 @@ const DragableColumns = ({
 						}}
 					>
 						{!configuration.disabledSettings?.orderable && (
-							<MenuSvg className="mx-2 fill-default-500 cursor-grab" height={24} width={24} />
+							<MenuSvg className="mx-2 fillosmosverse-400 cursor-grab" height={24} width={24} />
 						)}
 						{!configuration.disabledSettings?.hide && (
 							<Switch value={!columns[i].hide} onChange={onChange} className="mr-2" name={columns[i].key} />

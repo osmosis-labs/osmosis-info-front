@@ -21,7 +21,7 @@ export function SkeletonRow() {
 
 	return (
 		<div
-			className="flex w-fit min-w-full items-center border-b-[1px] border-surface box-border overflow-hidden hover:bg-surface transition-colors duration-default"
+			className="flex w-fit min-w-full items-center border-b-[1px] border-surface box-border overflow-hidden hover:bg-osmosverse-800 transition-colors duration-default"
 			style={{
 				height: `${height}px`,
 			}}
@@ -39,7 +39,7 @@ export function SkeletonRow() {
 				}
 				return column.hide ? null : (
 					<div style={style} className={classNameContent} key={index}>
-						<Skeleton height={height * 0.5} width={"60%"} className="bg-modal m-2" />
+						<Skeleton height={height * 0.5} width={"60%"} className="bg-osmosverse-700 m-2" />
 					</div>
 				);
 			})}

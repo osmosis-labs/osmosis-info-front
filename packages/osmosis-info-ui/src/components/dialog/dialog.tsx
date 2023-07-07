@@ -44,7 +44,7 @@ export const Dialog = ({
 		<Backdrop
 			open={open}
 			onClick={onClick}
-			className={`${classNameBackdrop} bg-backdrop-main flex items-center justify-center`}
+			className={`${classNameBackdrop} bg-backdrop flex items-center justify-center`}
 		>
 			<Paper className={classNamePaper} ref={refPaper}>
 				{children}

@@ -83,7 +83,7 @@ export const Popover = ({
 			}
 		}
 	}
-	const classNameDefault = `${classNamePaper} fixed bg-surface rounded-xl`;
+	const classNameDefault = `${classNamePaper} fixed bg-osmosverse-800 rounded-xl`;
 	const classNameOpen = `${classNameDefault} popoverTransitionOpen`;
 	const classNameClose = `${classNameDefault} popoverTransitionClose`;
 

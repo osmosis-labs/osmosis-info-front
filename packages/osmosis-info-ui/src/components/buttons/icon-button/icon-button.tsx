@@ -18,7 +18,7 @@ export interface IconButtonProps {
 	/** If the button can be used.*/
 	disabled?: boolean;
 	/** If flat then remove background, just display icon.*/
-	variant?: "default" | "flat";
+	variant?: "default" | "flat" | "secondary";
 	/** Classname passed to the button.*/
 	className?: string;
 }
@@ -43,12 +43,19 @@ export const IconButton = ({
     px-4 py-3 rounded-xl h-fit w-fit cursor-pointer transition-colors 
     ${className}`;
 
-	const fillAnime = `[&>svg]:hover:fill-default-400 [&>svg]:fill-default-500 `;
-	const fill = `[&>svg]:fill-default-500 [&>svg]:transition-colors`;
-	const strokeAnime = `[&>svg]:hover:stroke-default-400 [&>svg]:stroke-default-500 `;
-	const stroke = `[&>svg]:stroke-default-500 [&>svg]:transition-colors`;
+	let fillAnime = `[&>svg]:hover:fill-osmosverse-300 [&>svg]:fill-osmosverse-400 `;
+	let fill = `[&>svg]:fill-osmosverse-400 [&>svg]:transition-colors`;
+	let strokeAnime = `[&>svg]:hover:stroke-osmosverse-300 [&>svg]:stroke-osmosverse-400 `;
+	let stroke = `[&>svg]:stroke-osmosverse-400 [&>svg]:transition-colors`;
 	if (variant === "default") {
-		classIconButton = `bg-primary-200 hover:bg-primary-300 ${classIconButton}`;
+		classIconButton = `bg-wosmongton-200 hover:bg-wosmongton-300 ${classIconButton}`;
+	}
+	if (variant === "secondary") {
+		classIconButton = `bg-osmosverse-700 hover:bg-osmosverse-600 ${classIconButton}`;
+		stroke = "[&>svg]:stroke-white-50 [&>svg]:transition-colors";
+		strokeAnime = "[&>svg]:hover:stroke-osmosverse-400 [&>svg]:stroke-white-50";
+		fill = "[&>svg]:fill-osmosverse-400 [&>svg]:transition-colors";
+		fillAnime = "[&>svg]:hover:fill-white-50 [&>svg]:fill-osmosverse-400";
 	}
 	if (fillAnimation) {
 		classIconButton = `${fill} ${classIconButton}`;

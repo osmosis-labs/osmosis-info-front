@@ -87,8 +87,8 @@
 
 	animation-name: bar;
 	animation-timing-function: linear;
-	animation-duration: 500ms;
-	animation-delay: 200ms;
+	animation-duration: 300ms;
+	animation-delay: 0ms;
 	animation-fill-mode: forwards;
 }
 
