@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { Table } from "./table";
 import { Button } from "../buttons/button/button";
-import { ColumnConfiguration, Params, TableConfiguration } from "./types";
+import { Params, TableConfiguration } from "./types";
 import { filtersNumber, filtersString } from "./config";
 
 export default {
@@ -51,10 +51,6 @@ const onClickCell = (params: Params<Data>) => {
 	);
 };
 
-const onClickRow = (currentData: Data, data: Data[]) => {
-	console.log("%ctable.tsx -> 94 PINK: currentData, data", "background: #e91e63; color:#FFFFFF", currentData, data);
-};
-
 const imageRender = (params: Params<Data>) => {
 	return <img src={params.currentData.image} alt={params.currentData.name} className={"h-[24px]"} />;
 };
@@ -86,12 +82,6 @@ const Template: ComponentStory<typeof Table> = (args) => {
 			defaultOrderBy: "id",
 			defaultOrderDirection: "ASC",
 			resizing: false,
-			translations: {
-				footer: {
-					rangeItems: (min: number, max: number, length: number) => `${min} - ${max} sur ${length}`,
-					rowsPerPage: "Lignes par page:",
-				},
-			},
 
 			columns: [
 				{
@@ -149,7 +139,7 @@ const Template: ComponentStory<typeof Table> = (args) => {
 				if (!(max >= data.length)) next(currentPage + 1);
 			}, 1000);
 		},
-		[data.length, nbRow]
+		[data.length, loading]
 	);
 
 	useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { Dispatch, createContext, useContext, useMemo, useState, useEffect, useCallback } from "react";
+import React, { Dispatch, createContext, useContext, useMemo, useState, useEffect } from "react";
 import { ColumnState, RowState, TableConfiguration, TableState } from "../types";
 import { ColumnSize, calculeSizes } from "../utils/size";
 import { findInArray } from "../utils/utils";

@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useMemo, useState, useCallback } from "react";
-import { ColumnState, Density, TableTranslations } from "../../types";
+import { ColumnState, TableTranslations } from "../../types";
 import { Dropdown, ItemDropdown } from "../../../dropdown/dropdown";
 import { useTable } from "../../context/table-context";
 import { Input } from "../../../input/input";

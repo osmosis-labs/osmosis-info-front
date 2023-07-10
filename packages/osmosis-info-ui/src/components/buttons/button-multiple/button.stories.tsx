@@ -15,7 +15,7 @@ const items = [
 	{ value: 3, label: "Label n° 3" },
 ];
 
-const Template: ComponentStory<typeof ButtonMultiple> = (args) => {
+const Template: ComponentStory<typeof ButtonMultiple> = () => {
 	const [currentItem, setCurrentItem] = React.useState<ItemButtonMultiple<any>>(items[1]);
 
 	const onClick = (item: any) => {

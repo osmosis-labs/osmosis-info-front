@@ -1,6 +1,5 @@
 import React, { ChangeEvent, InputHTMLAttributes } from "react";
 import { CloseSvg, SearchSVG } from "../svg";
-import { IconButton } from "../buttons/icon-button/icon-button";
 
 /**
  * Inputs are used to catch user's actions.

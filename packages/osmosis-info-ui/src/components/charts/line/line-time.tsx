@@ -3,7 +3,7 @@ import { AreaClosed, LinePath, Line as LineVisx, Bar } from "@visx/shape";
 import { curveMonotoneX } from "@visx/curve";
 import { localPoint } from "@visx/event";
 import { LinearGradient } from "@visx/gradient";
-import { AxisRight, AxisBottom, TickFormatter, AxisScale } from "@visx/axis";
+import { AxisRight, AxisBottom, TickFormatter } from "@visx/axis";
 import { Tooltip, useTooltip } from "@visx/tooltip";
 import { ParentSize } from "@visx/responsive";
 import { useGesture } from "@use-gesture/react";
@@ -195,6 +195,7 @@ function ChartLine<D>({
 
 	const { tooltipData, tooltipLeft, tooltipTop, showTooltip, hideTooltip } = useTooltip<D>();
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const bisectDate = useCallback(bisector((d: D) => getXAxisData(d)).left, [getXAxisData]);
 
 	useEffect(() => {

@@ -1,10 +1,7 @@
-import React, { useRef, useMemo, UIEvent } from "react";
+import React, { useRef, UIEvent } from "react";
 import { Row } from "../row/row";
-import { ColumnSize, calculeSizes } from "../utils/size";
 import useResizeObserver from "../../../hooks/use-windows-resize";
 import { useTable } from "../context/table-context";
-import { findInArray } from "../utils/utils";
-import { ColumnState } from "../types";
 import { SkeletonRow } from "../row/row-skeleton";
 
 export const Body = ({ onScroll }: { onScroll: (e: UIEvent<HTMLDivElement>) => void }) => {
@@ -13,8 +10,6 @@ export const Body = ({ onScroll }: { onScroll: (e: UIEvent<HTMLDivElement>) => v
 	const {
 		rowState: { height: rowHeight },
 		tableState,
-		columnsState,
-		updateColumnsState,
 		updateWidth,
 		configuration: { autoHeight },
 		displayData,

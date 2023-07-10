@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { Switch } from "../../../switch/switch";
 import { ColumnState, TableConfiguration, TableTranslations } from "../../types";
 import { useTable } from "../../context/table-context";
@@ -28,7 +28,7 @@ const DragableColumns = ({
 	onChangeHideColumn: (value: boolean, index: number) => void;
 	reorder: (order: number[]) => void;
 	configuration: TableConfiguration;
-	translations: TableTranslations;
+	translations?: TableTranslations;
 }) => {
 	const order = useRef<number[]>(columns.map((_, index) => index));
 
@@ -112,7 +112,7 @@ const fn = (order: number[], active = false, originalIndex = 0, curIndex = 0, y 
 };
 
 type ColumnSettingsProps = {
-	translations: TableTranslations;
+	translations?: TableTranslations;
 };
 
 export const ColumnsSettings = ({ translations }: ColumnSettingsProps) => {
