@@ -68,7 +68,7 @@ export const PoolTable = ({ data, autoHeight }: { data: Pool[]; autoHeight?: boo
 			defaultOrderDirection: savedSettings.defaultOrderDirection ?? "ASC",
 			resizing: savedSettings.resizing ?? false,
 			callBackUpdateStates,
-
+			onClickRow,
 			columns: [
 				{
 					display: "ID",

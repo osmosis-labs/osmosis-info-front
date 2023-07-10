@@ -35,6 +35,15 @@ module.exports = {
       ...screens
     },
     extend: {
+      animation: {
+        'bar-mover': 'bar-mover 120s linear infinite',
+      },
+      keyframes: {
+        'bar-mover': {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-100%)" },
+        }
+      },
       translate: {
         detailsReturn: `${detailsReturnHeight}px`,
       },

@@ -61,12 +61,12 @@ export const TokenTable = ({ data, autoHeight = false }: { data: Token[]; autoHe
 		);
 
 		const newConfig: TableConfiguration = {
-			onClickRow,
 			density: savedSettings.density ?? "medium",
 			autoHeight,
 			defaultOrderBy: savedSettings.defaultOrderBy ?? "liquidity",
 			defaultOrderDirection: savedSettings.defaultOrderDirection ?? "ASC",
 			resizing: savedSettings.resizing ?? false,
+			onClickRow,
 			callBackUpdateStates,
 			columns: [
 				{

@@ -29,6 +29,8 @@ export async function getServerSideProps() {
 		axios({ url: `${API_URL}/fees/v1/pools` }),
 		axios({ url: `${API_URL}/liquidity/v2/historical/chart` }),
 		axios({ url: `${API_URL}/volume/v2/historical/chart` }),
+		axios({ url: `${API_URL}/tokens/v2/top/gainers` }),
+		axios({ url: `${API_URL}/tokens/v2/top/losers` }),
 	]);
 
 	return {
@@ -39,6 +41,10 @@ export async function getServerSideProps() {
 				poolsState: { pools: responses[4].data, apr: responses[5].data, fees: responses[6].data },
 				liquidityChartState: responses[7].data,
 				volumeChartState: responses[8].data,
+				topsState: {
+					gainers: responses[9].data,
+					losers: responses[10].data,
+				},
 			},
 		},
 	};

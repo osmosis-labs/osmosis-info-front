@@ -211,6 +211,10 @@ export class TokensStore extends Request<PromiseRequest> {
 		return this._tokens.find((tokenStore) => tokenStore.symbol === symbol);
 	}
 
+	public getTokenByDenom(denom: string): TokenStore | undefined {
+		return this._tokens.find((tokenStore) => tokenStore.denom === denom);
+	}
+
 	public get tokens(): TokenStore[] {
 		return this._tokens;
 	}

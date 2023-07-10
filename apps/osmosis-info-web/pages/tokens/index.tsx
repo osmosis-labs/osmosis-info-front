@@ -1,50 +1,53 @@
 import { Paper } from "@latouche/osmosis-info-ui";
 import axios from "axios";
 import { observer } from "mobx-react-lite";
-import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useTranslation } from "react-multi-lang";
 import { useStore } from "../../stores";
-import { TokenStore } from "../../stores/api/tokens/token-store";
+import { Token } from "../../stores/api/tokens/tokens";
+import { TokenTable } from "../../components/token-table/token-table";
+import { TokensMovers } from "../../components/tokens-movers/tokens-movers";
 
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 
 const Tokens = observer(() => {
 	const t = useTranslation();
 	const {
-		tokensStore: { isLoadingTokens, errorTokens, tokens },
+		tokensStore: { getTokens, tokens },
+		favoriteStore: { tokens: favoritesTokens },
 	} = useStore();
+	const [tokensFavorites, setTokensFavorites] = React.useState<Token[]>([]);
+
+	const tokensMain = useMemo(() => {
+		return [...tokens.filter((token) => token.main)];
+	}, [tokens]);
 
 	useEffect(() => {
-		if (errorTokens) {
-			console.log("%cindex.tsx -> 18 ERROR: errorTokens", "background: #FF0000; color:#FFFFFF", errorTokens);
-		}
-	}, [errorTokens]);
+		setTokensFavorites([...tokensMain.filter((token) => favoritesTokens.includes(token.symbol))]);
+	}, [favoritesTokens, tokensMain]);
+
+	useEffect(() => {
+		getTokens();
+	}, [getTokens]);
+
 	return (
 		<div>
 			<h1 className="text-2xl">{t("tokens.title")}</h1>
-			<div>
-				<div>
-					{isLoadingTokens && "Loading Tokens"}
-					{!isLoadingTokens && !errorTokens && <p>{tokens.length}</p>}
-				</div>
-				{!isLoadingTokens &&
-					!errorTokens &&
-					tokens.map((tokenStore) => <Token key={tokenStore.symbol + "*" + tokens.length} tokenStore={tokenStore} />)}
-			</div>
-		</div>
-	);
-});
-
-const Token = observer(({ tokenStore }: { tokenStore: TokenStore }) => {
-	return (
-		<Link href={`/tokens/${tokenStore.symbol}`} prefetch={false}>
-			<Paper className="p-2 m-2 bg-wosmongton-600 w-fit min-w-[260px] rounded-sm cursor-pointer hover:bg-wosmongton-700 transition-colors duration-default">
-				<p>id: {tokenStore.id}</p>
-				<p>symbol: {tokenStore.symbol}</p>
-				<p>price: {tokenStore.price}</p>
+			<p className="mt-8 mx-2">{t("overview.watchlistTokens")}</p>
+			<Paper className="mt-4 mx-2">
+				{tokensFavorites.length === 0 ? (
+					<p>{t("overview.watchlistTokensEmpty")}</p>
+				) : (
+					<TokenTable data={tokensFavorites} autoHeight={true} />
+				)}
 			</Paper>
-		</Link>
+			<p className="mt-8 mx-2">{t("tokens.topMovers")}</p>
+			<TokensMovers />
+			<p className="mt-8 mx-2">{t("tokens.allTokens")}</p>
+			<Paper className="mt-4 mx-2">
+				<TokenTable data={tokensMain} />
+			</Paper>
+		</div>
 	);
 });
 
@@ -59,6 +62,8 @@ export async function getServerSideProps() {
 		axios({ url: `${API_URL}/fees/v1/pools` }),
 		axios({ url: `${API_URL}/liquidity/v2/historical/chart` }),
 		axios({ url: `${API_URL}/volume/v2/historical/chart` }),
+		axios({ url: `${API_URL}/tokens/v2/top/gainers` }),
+		axios({ url: `${API_URL}/tokens/v2/top/losers` }),
 	]);
 
 	return {
@@ -69,6 +74,10 @@ export async function getServerSideProps() {
 				poolsState: { pools: responses[4].data, apr: responses[5].data, fees: responses[6].data },
 				liquidityChartState: responses[7].data,
 				volumeChartState: responses[8].data,
+				topsState: {
+					gainers: responses[9].data,
+					losers: responses[10].data,
+				},
 			},
 		},
 	};

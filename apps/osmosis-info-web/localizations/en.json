@@ -9,6 +9,8 @@
         "pools": "Pools",
         "liquidity24h": "Liquidity (24h):",
         "volume24h": "Volume (24h):",
+        "topTokens": "Top tokens",
+        "topPools": "Top pools",
         "charts": {
             "periodes": {
                 "month": "M",
@@ -70,6 +72,7 @@
     },
     "pools": {
         "title": "Pools",
+        "allPools": "All pools",
         "calculatorAPR": {
             "title": "ROI Calculator for pool {poolName}",
             "stakedFor": "Stacked for",
@@ -87,7 +90,9 @@
         }
     },
     "tokens": {
-        "title": "Tokens"
+        "title": "Tokens",
+        "allTokens": "All tokens",
+        "topMovers": "Top movers"
     },
     "dashboard": {
         "title": "Dashboard"

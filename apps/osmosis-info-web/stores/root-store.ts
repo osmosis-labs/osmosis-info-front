@@ -13,6 +13,8 @@ import { MenuStore } from "./app/menu-store";
 import { DEFAULT_LANGUAGE, LanguageSetting } from "./app/settings-store/language";
 import { SettingsStore } from "./app/settings-store/settings-store";
 import { UserStore } from "./user-store";
+import { TopsResponse } from "./api/tops/tops";
+import { TopsStore } from "./api/tops/tops-store";
 
 export class RootStore {
 	public readonly menuStore: MenuStore;
@@ -24,6 +26,7 @@ export class RootStore {
 	public readonly liquidityStore: LiquidityStore;
 	public readonly volumeStore: VolumeStore;
 	public readonly favoriteStore: FavoriteStore;
+	public readonly topsStore: TopsStore;
 
 	constructor() {
 		this.menuStore = new MenuStore();
@@ -34,6 +37,7 @@ export class RootStore {
 		this.volumeStore = new VolumeStore(this.metricsStore);
 		this.liquidityStore = new LiquidityStore();
 		this.poolsStore = new PoolsStore(this.tokensStore);
+		this.topsStore = new TopsStore(this.tokensStore);
 		this.favoriteStore = new FavoriteStore(new Storage("favorites"));
 	}
 
@@ -43,6 +47,7 @@ export class RootStore {
 		this.poolsStore.hydrate(initState);
 		this.liquidityStore.hydrate(initState);
 		this.volumeStore.hydrate(initState);
+		this.topsStore.hydrate(initState);
 	};
 }
 
@@ -61,4 +66,5 @@ export interface InitialState {
 	};
 	liquidityChartState?: ChartLiquidityResponse;
 	volumeChartState?: ChartVolumeResponse;
+	topsState?: TopsResponse;
 }

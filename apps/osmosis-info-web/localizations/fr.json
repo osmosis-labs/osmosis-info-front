@@ -9,6 +9,8 @@
         "pools": "Bassins",
         "liquidity24h": "Liquidité (24h): ",
         "volume24h": "Volume (24h): ",
+        "topTokens": "Top jetons",
+        "topPools": "Top bassins",
         "charts": {
             "periodes": {
                 "month": "M",
@@ -70,6 +72,7 @@
     },
     "pools": {
         "title": "Bassins",
+        "allPools": "Tous les bassins",
         "calculatorAPR": {
             "title": "RSI Calculateur pour {poolName}",
             "stakedFor": "Bloqué pour",
@@ -87,7 +90,9 @@
         }
     },
     "tokens": {
-        "title": "Jetons"
+        "title": "Jetons",
+        "allTokens": "Tous les jetons",
+        "topMovers": "Top variations"
     },
     "dashboard": {
         "title": "Tableau de bord"
