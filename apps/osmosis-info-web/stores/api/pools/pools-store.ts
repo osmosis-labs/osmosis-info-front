@@ -3,7 +3,7 @@ import { Request } from "../request";
 import { autorun } from "mobx";
 import axios, { AxiosResponse } from "axios";
 import { InitialState } from "../../root-store";
-import { APRsResponse, FeesResponse, Pool, PoolAPR, PoolsResponse } from "./Pools";
+import { APRsResponse, FeesResponse, Pool, PoolAPR, PoolsResponse } from "./pools";
 import { PoolStore } from "./pool-store";
 import { TokensStore } from "../tokens/tokens-store";
 

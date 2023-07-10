@@ -25,11 +25,20 @@ export const DialogSearch = observer(({ open, onClose }: DialogSearchProps) => {
 	const t = useTranslation();
 
 	const router = useRouter();
-	const [tokensFiltered, setTokensFiltered] = useState([tokens[0], tokens[1]]);
-	const [poolsFiltered, setPoolsFiltered] = useState([pools[0], pools[1]]);
+	const [tokensFiltered, setTokensFiltered] = useState<TokenStore[]>([]);
+	const [poolsFiltered, setPoolsFiltered] = useState<PoolStore[]>([]);
 	const refInput = React.useRef<HTMLInputElement>(null);
 	const [search, setSearch] = useState("");
 	const [currentSelected, setCurrentSelected] = useState(-1);
+
+	useEffect(() => {
+		if (tokens.length > 0 && search === "") {
+			setTokensFiltered(tokens.slice(0, maxItems));
+		}
+		if (pools.length > 0 && search === "") {
+			setPoolsFiltered(pools.slice(0, maxItems));
+		}
+	}, [tokens, pools, search]);
 
 	const goToToken = useCallback(
 		(token: TokenStore) => {

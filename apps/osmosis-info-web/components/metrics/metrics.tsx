@@ -1,8 +1,8 @@
 import React from "react";
 import { observer } from "mobx-react-lite";
 import { Paper } from "@latouche/osmosis-info-ui";
-import { useStore } from "../../../stores";
-import { formateNumberDecimals, formaterNumber } from "../../../helpers/format";
+import { useStore } from "../../stores";
+import { formateNumberDecimals, formaterNumber } from "../../helpers/format";
 import { useTranslation } from "react-multi-lang";
 
 export const Metrics = observer(() => {

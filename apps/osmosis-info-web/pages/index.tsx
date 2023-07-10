@@ -8,9 +8,9 @@ import { PoolTable } from "../components/pool-table/pool-table";
 import { LiquidityChart } from "../components/charts/liquidity-chart/liquidity-chart";
 import { VolumeChart } from "../components/charts/volume-chart/volume-chart";
 import { Paper } from "@latouche/osmosis-info-ui";
-import { Metrics } from "./home/metrics/metrics";
+import { Metrics } from "../components/metrics/metrics";
 import { Token } from "../stores/api/tokens/tokens";
-import { Pool } from "../stores/api/pools/Pools";
+import { Pool } from "../stores/api/pools/pools";
 
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 

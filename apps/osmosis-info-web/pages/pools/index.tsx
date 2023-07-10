@@ -4,7 +4,7 @@ import axios from "axios";
 import { useStore } from "../../stores";
 import { Paper } from "@latouche/osmosis-info-ui";
 import { PoolTable } from "../../components/pool-table/pool-table";
-import { Pool } from "../../stores/api/pools/Pools";
+import { Pool } from "../../stores/api/pools/pools";
 import { observer } from "mobx-react-lite";
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 
