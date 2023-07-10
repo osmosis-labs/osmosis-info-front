@@ -1,8 +1,7 @@
 import React, { useCallback } from "react";
 import { Top } from "../../stores/api/tops/tops";
 import { useRouter } from "next/router";
-import { TokenStore } from "../../stores/api/tokens/token-store";
-import { formatAutoPrice, formateNumberDecimals, formaterNumber } from "../../helpers/format";
+import { formatAutoPrice, formateNumberDecimals } from "../../helpers/format";
 import { Image } from "../image/image";
 
 type ItemMoverProps = {

@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BarTime, Paper } from "@latouche/osmosis-info-ui";
 import { HeaderChart } from "./header-chart";
-import { bisector } from "d3-array";
-import { timeFormat } from "d3-time-format";
 import { useStore } from "../../../stores";
 import { VolumeChart as DataVolume } from "../../../stores/api/charts/charts";
 import { observer } from "mobx-react-lite";
@@ -18,8 +16,6 @@ import {
 } from "@latouche/osmosis-info-ui/lib/esm/components/charts/bar/bar-time-config";
 import dayjs from "dayjs";
 import { useLanguage } from "../../../hooks/use-language";
-
-const getXAxisData = (d: DataVolume) => d.time;
 
 const tickFormatY = (d: number) => `${formaterNumber(Math.round(d))}`;
 

@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { LineTime, Paper } from "@latouche/osmosis-info-ui";
 import { HeaderChart } from "./header-chart";
 import { bisector } from "d3-array";
-import { timeFormat } from "d3-time-format";
 import { useStore } from "../../../stores";
 import { LiquidityChart as DataLiquidity } from "../../../stores/api/charts/charts";
 import { observer } from "mobx-react-lite";

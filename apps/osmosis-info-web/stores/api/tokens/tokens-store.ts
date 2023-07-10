@@ -5,7 +5,6 @@ import { Token, TokensResponseList, MCapResponse, AssetListResponse, AssetList, 
 import axios, { AxiosResponse } from "axios";
 import { TokenStore } from "./token-store";
 import { InitialState } from "../../root-store";
-import { isArray } from "util";
 
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 

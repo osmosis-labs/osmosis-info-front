@@ -1,14 +1,11 @@
 import { observer } from "mobx-react-lite";
 import React, { useCallback, useEffect, useState } from "react";
 import { useStore } from "../../../stores";
-import { Dialog, Input } from "@latouche/osmosis-info-ui";
+import { Dialog } from "@latouche/osmosis-info-ui";
 import { InputSearch } from "./input-search";
 import { PoolItem, TokenItem } from "./items-search";
-import { set } from "husky";
 import { normalize } from "../../../helpers/format";
 import { TokenStore } from "../../../stores/api/tokens/token-store";
-import { getInclude } from "../../../helpers/array";
-import { PoolsStore } from "../../../stores/api/pools/pools-store";
 import { PoolStore } from "../../../stores/api/pools/pool-store";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-multi-lang";

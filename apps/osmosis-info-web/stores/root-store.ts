@@ -5,7 +5,7 @@ import { VolumeStore } from "./api/charts/volume-store";
 import { FavoriteStore } from "./app/favorites/favorites-store";
 import { MetricsResponse } from "./api/metrics/metrics";
 import { MetricsStore } from "./api/metrics/metrics-store";
-import { APRsResponse, FeesResponse, PoolsResponse } from "./api/pools/Pools";
+import { APRsResponse, FeesResponse, PoolsResponse } from "./api/pools/pools";
 import { PoolsStore } from "./api/pools/pools-store";
 import { AssetListResponse, MCapResponse, TokenResponse, TokensResponse } from "./api/tokens/tokens";
 import { TokensStore } from "./api/tokens/tokens-store";

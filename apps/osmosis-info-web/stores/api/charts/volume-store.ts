@@ -1,4 +1,4 @@
-import { action, makeObservable, observable } from "mobx";
+import { action, makeObservable } from "mobx";
 import { Request } from "../request";
 import { autorun } from "mobx";
 import axios, { AxiosResponse } from "axios";

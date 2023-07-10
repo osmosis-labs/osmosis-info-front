@@ -1,4 +1,4 @@
-import { action, makeObservable, observable, autorun, toJS } from "mobx";
+import { action, makeObservable, toJS } from "mobx";
 import { Storage } from "../../../helpers/storage";
 
 const KEY_TOKENS = "tokens";

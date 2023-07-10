@@ -9,7 +9,11 @@ import { TokensStore } from "../tokens/tokens-store";
 
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 
-type PromiseRequest = [AxiosResponse<PoolsResponse, PoolsResponse>, AxiosResponse<APRsResponse, APRsResponse>];
+type PromiseRequest = [
+	AxiosResponse<PoolsResponse, PoolsResponse>,
+	AxiosResponse<APRsResponse, APRsResponse>,
+	AxiosResponse<FeesResponse, FeesResponse>
+];
 
 export class PoolsStore extends Request<PromiseRequest> {
 	@observable private _tokens: TokensStore;
@@ -133,7 +137,8 @@ export class PoolsStore extends Request<PromiseRequest> {
 	format(reponseData: PromiseRequest): void {
 		const responseToken = reponseData[0].data;
 		const responseMcap = reponseData[1].data;
-		this.formatPools(responseToken, responseMcap);
+		const responseFees = reponseData[2].data;
+		this.formatPools(responseToken, responseMcap, responseFees);
 	}
 
 	public getPools = () => {
@@ -141,6 +146,7 @@ export class PoolsStore extends Request<PromiseRequest> {
 			Promise.all([
 				axios({ url: `${API_URL}/pools/v2/all?low_liquidity=false` }),
 				axios({ url: `${API_URL}/apr/v2/all` }),
+				axios({ url: `${API_URL}/fees/v1/pools` }),
 			])
 		);
 	};

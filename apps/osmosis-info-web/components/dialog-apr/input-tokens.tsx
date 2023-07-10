@@ -11,7 +11,7 @@ type InputTokensProps = {
 	valueUSD: number;
 };
 
-export const InputTokens = ({ pool, onChange, valueUSD }: InputTokensProps) => {
+export const InputTokens = ({ pool, onChange }: InputTokensProps) => {
 	const [selected, setSelected] = useState("USD");
 	const [tokenSelected, setTokenSelected] = useState(pool.tokens[0]);
 

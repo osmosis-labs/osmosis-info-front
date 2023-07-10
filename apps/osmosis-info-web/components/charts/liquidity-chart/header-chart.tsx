@@ -4,7 +4,7 @@ import { Periode, TypeValue } from "./liquidity-chart";
 import { ButtonMultiple, ItemButtonMultiple } from "@latouche/osmosis-info-ui";
 import { useState } from "react";
 import { useEffect } from "react";
-import { formateNumberDecimals, formateNumberPriceDecimals } from "../../../helpers/format";
+import { formateNumberDecimals } from "../../../helpers/format";
 import { useTranslation } from "react-multi-lang";
 import { useLanguage } from "../../../hooks/use-language";
 import dayjs from "dayjs";

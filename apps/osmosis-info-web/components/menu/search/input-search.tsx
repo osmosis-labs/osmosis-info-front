@@ -1,5 +1,5 @@
 import { CloseSvg, SearchSVG } from "@latouche/osmosis-info-ui";
-import React, { forwardRef, RefObject, ChangeEvent, InputHTMLAttributes, useState } from "react";
+import React, { forwardRef, RefObject, ChangeEvent, InputHTMLAttributes } from "react";
 import { useTranslation } from "react-multi-lang";
 
 export interface InputSearchProps extends InputHTMLAttributes<HTMLInputElement> {

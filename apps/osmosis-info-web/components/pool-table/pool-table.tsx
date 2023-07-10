@@ -9,13 +9,13 @@ import {
 } from "@latouche/osmosis-info-ui/lib/esm/components/table/types";
 import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
-import { formatAutoPrice, formateNumberDecimals, formaterNumber } from "../../helpers/format";
+import { formateNumberDecimals, formaterNumber } from "../../helpers/format";
 import { useTranslation } from "react-multi-lang";
 import { useStore } from "../../stores";
 import { useRouter } from "next/router";
 import { CellChange } from "../token-table/cell-change";
 import { CellName } from "./cell-name";
-import { Pool } from "../../stores/api/pools/Pools";
+import { Pool } from "../../stores/api/pools/pools";
 import { PoolStore } from "../../stores/api/pools/pool-store";
 import { CellTotalReturn } from "./cell-total-return";
 
@@ -232,9 +232,9 @@ export const PoolTable = ({ data, autoHeight }: { data: Pool[]; autoHeight?: boo
 					filterable: c.filterable,
 				})),
 			};
-			// localStorage.setItem(KEY_SETTINGS, JSON.stringify(settingsTable));
+			localStorage.setItem(KEY_SETTINGS, JSON.stringify(settingsTable));
 		},
-		[]
+		[onClickRow]
 	);
 
 	return (

@@ -1,5 +1,4 @@
 import React, { useCallback } from "react";
-import { Token } from "../../../stores/api/tokens/tokens";
 import { Image } from "../../image/image";
 import { formatAutoPrice, formateNumberDecimals } from "../../../helpers/format";
 import { PoolStore } from "../../../stores/api/pools/pool-store";

@@ -1,6 +1,5 @@
 import React from "react";
 import { Image } from "../image/image";
-import { Pool } from "../../stores/api/pools/Pools";
 import { PoolStore } from "../../stores/api/pools/pool-store";
 
 type CellNameProps = {

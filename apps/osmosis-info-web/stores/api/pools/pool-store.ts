@@ -1,6 +1,6 @@
 import { action, computed, makeObservable, observable } from "mobx";
 import { Request } from "../request";
-import { Fees, Pool, PoolAPR, PoolResponse, ReturnAPR, TokenPool } from "./Pools";
+import { Fees, Pool, PoolAPR, PoolResponse, ReturnAPR } from "./pools";
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 import axios, { AxiosResponse } from "axios";
 import { TokenStore } from "../tokens/token-store";

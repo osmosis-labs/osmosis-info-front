@@ -1,4 +1,4 @@
-import { Button, Table } from "@latouche/osmosis-info-ui";
+import { Table } from "@latouche/osmosis-info-ui";
 import { filtersNumber, filtersString } from "@latouche/osmosis-info-ui/lib/esm/components/table/config";
 import {
 	ColumnConfiguration,
@@ -196,6 +196,7 @@ export const TokenTable = ({ data, autoHeight = false }: { data: Token[]; autoHe
 			};
 			localStorage.setItem(KEY_SETTINGS, JSON.stringify(settingsTable));
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[]
 	);
 
