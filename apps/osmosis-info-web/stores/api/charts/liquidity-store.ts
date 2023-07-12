@@ -18,8 +18,8 @@ export class LiquidityStore extends Request<PromiseRequest> {
 	private _liquidityMonth: LiquidityChart[] = [];
 
 	constructor() {
-		super({ delayCache: 5 * 1000 });
-		this._intervalTime = 5 * 1000;
+		super({ delayCache: 6 * 1000 });
+		this._intervalTime = 6 * 1000;
 		makeObservable(this);
 		autorun(() => {
 			this.play();

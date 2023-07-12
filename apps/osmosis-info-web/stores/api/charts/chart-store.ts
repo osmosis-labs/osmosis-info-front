@@ -28,8 +28,8 @@ export class ChartStore extends Request<PromiseRequest> {
 	private _dataMonth: ChartData[] = [];
 
 	constructor(url: string) {
-		super({ delayCache: 5 * 1000 });
-		this._intervalTime = 5 * 1000;
+		super({ delayCache: 6 * 1000 });
+		this._intervalTime = 6 * 1000;
 		this._url = url;
 		makeObservable(this);
 	}

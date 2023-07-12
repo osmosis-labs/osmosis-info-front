@@ -20,8 +20,8 @@ export class VolumeStore extends Request<PromiseRequest> {
 	private _volumeMonth: VolumeChart[] = [];
 
 	constructor(metricsStore: MetricsStore) {
-		super({ delayCache: 5 * 1000 });
-		this._intervalTime = 5 * 1000;
+		super({ delayCache: 6 * 1000 });
+		this._intervalTime = 6 * 1000;
 		this._metricsStore = metricsStore;
 		makeObservable(this);
 		autorun(() => {
