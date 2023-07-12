@@ -24,7 +24,6 @@ const KEY_SETTINGS = `${STORAGE_KEY}POOL_TABLE`;
 
 export const PoolTable = ({ data, autoHeight }: { data: Pool[]; autoHeight?: boolean }) => {
 	const t = useTranslation();
-	const router = useRouter();
 
 	const [currentData, setCurrentData] = useState<Pool[]>([]);
 	const [loading, setLoading] = useState(true);
@@ -36,13 +35,6 @@ export const PoolTable = ({ data, autoHeight }: { data: Pool[]; autoHeight?: boo
 	}, [data]);
 
 	const [config, setConfig] = useState<TableConfiguration | null>(null);
-
-	const onClickRow = useCallback(
-		(params: Params<Pool>) => {
-			router.push(`/pools/${params.currentData.id}`);
-		},
-		[router]
-	);
 
 	useEffect(() => {
 		const savedSettings = {} as Partial<TableConfiguration>; //JSON.parse(localStorage.getItem(KEY_SETTINGS) ?? "{}") as Partial<TableConfiguration>;
@@ -68,7 +60,6 @@ export const PoolTable = ({ data, autoHeight }: { data: Pool[]; autoHeight?: boo
 			defaultOrderDirection: savedSettings.defaultOrderDirection ?? "ASC",
 			resizing: savedSettings.resizing ?? false,
 			callBackUpdateStates,
-			onClickRow,
 			columns: [
 				{
 					display: "ID",
@@ -215,7 +206,6 @@ export const PoolTable = ({ data, autoHeight }: { data: Pool[]; autoHeight?: boo
 	const callBackUpdateStates = useCallback(
 		({ tableState, columnsState }: { tableState: TableState; columnsState: ColumnState[] }) => {
 			const settingsTable: Partial<TableConfiguration> = {
-				onClickRow,
 				displaySettings: tableState.displaySettings,
 				defaultOrderBy: tableState.orderBy,
 				defaultOrderDirection: tableState.orderDirection,
@@ -234,7 +224,7 @@ export const PoolTable = ({ data, autoHeight }: { data: Pool[]; autoHeight?: boo
 			};
 			localStorage.setItem(KEY_SETTINGS, JSON.stringify(settingsTable));
 		},
-		[onClickRow]
+		[]
 	);
 
 	return (

@@ -4,6 +4,7 @@ import { SwapSVG } from "@latouche/osmosis-info-ui";
 import { Image } from "../image/image";
 import { TokenStore } from "../../stores/api/tokens/token-store";
 import { formateNumberDecimals } from "../../helpers/format";
+import { PoolToken } from "../../stores/api/pools/pools";
 
 type InputTokensProps = {
 	pool: PoolStore;
@@ -38,12 +39,13 @@ export const InputTokens = ({ pool, onChange }: InputTokensProps) => {
 	useEffect(() => {
 		if (value > 0) {
 			let currentConverted = value;
+			if (!tokenSelected.tokenStore) return;
 			let currentUSD = value;
 			if (selected === "USD") {
-				currentConverted = value / tokenSelected.price;
+				currentConverted = value / tokenSelected.tokenStore.price;
 			} else {
-				currentConverted = value * tokenSelected.price;
-				currentUSD = value * tokenSelected.price;
+				currentConverted = value * tokenSelected.tokenStore.price;
+				currentUSD = value * tokenSelected.tokenStore.price;
 			}
 			setValueConverted(currentConverted);
 			onChange(currentUSD);
@@ -57,7 +59,7 @@ export const InputTokens = ({ pool, onChange }: InputTokensProps) => {
 
 	let classSwitch = "strokeosmosverse-400 cursor-pointer transition-all duration-300";
 	if (selected !== "USD") classSwitch += "  rotate-180";
-	const onChangeToken = (token: TokenStore) => {
+	const onChangeToken = (token: PoolToken) => {
 		setTokenSelected(token);
 	};
 
@@ -96,7 +98,7 @@ export const InputTokens = ({ pool, onChange }: InputTokensProps) => {
 											onChangeToken(token);
 										}}
 									>
-										<Image src={token.image} height={18} width={18} />{" "}
+										<Image src={token.tokenStore?.image ?? "/images/default.png"} height={18} width={18} />{" "}
 										<span className="ml-[2px] text-xs flex flex-col items-center justify-center text-center">
 											{token.symbol}
 										</span>

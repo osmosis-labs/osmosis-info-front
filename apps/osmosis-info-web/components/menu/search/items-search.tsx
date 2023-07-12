@@ -83,9 +83,9 @@ export const PoolItem = ({ pool, selected, onClick }: PoolItemProps) => {
 						return (
 							<Image
 								key={token.denom}
-								src={token.image}
+								src={token.tokenStore?.image ?? "/images/default.png"}
 								style={{ left: index * 18 + "px" }}
-								alt={token.name}
+								alt={token.denom}
 								className="h-[44px] w-[44px]  absolute top-[1px]"
 								srcFallback="/images/default.png"
 								width={44}

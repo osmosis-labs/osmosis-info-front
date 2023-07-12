@@ -1,9 +1,11 @@
 import { action, computed, makeObservable, observable } from "mobx";
 import { Request } from "../request";
-import { Fees, Pool, PoolAPR, PoolResponse, ReturnAPR } from "./pools";
+import { Fees, Pool, PoolAPR, PoolResponse, PoolToken, ReturnAPR } from "./pools";
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
-import axios, { AxiosResponse } from "axios";
-import { TokenStore } from "../tokens/token-store";
+import { ChartStore } from "../charts/chart-store";
+import { TrxStore } from "./trx-store";
+import { AxiosResponse } from "axios";
+import { PriceChartStore } from "./price-chart-store";
 
 type PromiseRequest = AxiosResponse<PoolResponse, PoolResponse>;
 
@@ -11,6 +13,37 @@ export interface PoolStoreArgs {
 	pool: Pool;
 }
 export class PoolStore extends Request<PromiseRequest> {
+	private _interval: NodeJS.Timeout | null = null;
+	private _intervalTime: number;
+
+	@observable
+	private _volumeStore: ChartStore;
+
+	@observable
+	private _liquidityStore: ChartStore;
+
+	@observable
+	private _trxStore: TrxStore;
+
+	@observable
+	private _priceStore: PriceChartStore;
+
+	get trxStore(): TrxStore {
+		return this._trxStore;
+	}
+
+	get volumeStore(): ChartStore {
+		return this._volumeStore;
+	}
+
+	get liquidityStore(): ChartStore {
+		return this._liquidityStore;
+	}
+
+	get priceStore(): PriceChartStore {
+		return this._priceStore;
+	}
+
 	@observable private _id = 0;
 	get id(): number {
 		return this._id;
@@ -19,11 +52,11 @@ export class PoolStore extends Request<PromiseRequest> {
 		this._id = id;
 	}
 
-	@observable private _tokens = [] as TokenStore[];
-	get tokens(): TokenStore[] {
+	@observable private _tokens = [] as PoolToken[];
+	get tokens(): PoolToken[] {
 		return this._tokens;
 	}
-	set tokens(tokens: TokenStore[]) {
+	set tokens(tokens: PoolToken[]) {
 		this._tokens = tokens;
 	}
 
@@ -172,6 +205,7 @@ export class PoolStore extends Request<PromiseRequest> {
 
 	constructor({ pool }: PoolStoreArgs) {
 		super({ delayCache: 5 * 60 * 100 });
+		this._intervalTime = 5 * 1000;
 		this._id = pool.id;
 		this._liquidity = pool.liquidity;
 		this._liquidity24hChange = pool.liquidity24hChange;
@@ -183,6 +217,14 @@ export class PoolStore extends Request<PromiseRequest> {
 		this._main = pool.main;
 		this._tokens = pool.tokens;
 		this._fees = pool.fees;
+		this._volumeStore = new ChartStore(`${API_URL}/pools/v2/volume/${this._id}/chart`);
+		this._liquidityStore = new ChartStore(`${API_URL}/pools/v2/liquidity/${this._id}/chart`);
+		let denom1 = "";
+		let denom2 = "";
+		if (this._tokens.length > 0) denom1 = this._tokens[0].denom;
+		if (this._tokens.length > 1) denom2 = this._tokens[1].denom;
+		this._priceStore = new PriceChartStore(this._id, denom1, denom2, "7d");
+		this._trxStore = new TrxStore(this._id);
 		makeObservable(this);
 	}
 
@@ -191,6 +233,29 @@ export class PoolStore extends Request<PromiseRequest> {
 		console.log("%cpool-store.ts -> 57 BLUE: reponseData", "background: #2196f3; color:#FFFFFF", reponseData);
 	}
 
+	@action
+	fetchData(): void {
+		if (!this._id) return;
+		console.log("pool-store.ts -> 201: ", this._id);
+	}
+
+	@action
+	play = () => {
+		this._interval = setInterval(this.fetchData, this._intervalTime);
+		this._volumeStore.play();
+		this._liquidityStore.play();
+		this._priceStore.play();
+	};
+
+	@action
+	pause = () => {
+		clearInterval(this._interval!);
+		this._interval = null;
+		this._volumeStore.pause();
+		this._liquidityStore.pause();
+		this._priceStore.pause();
+	};
+
 	public get errorPool(): string | undefined {
 		return this._error;
 	}
@@ -198,8 +263,4 @@ export class PoolStore extends Request<PromiseRequest> {
 	public get isLoadingPool(): boolean {
 		return this._isLoading;
 	}
-
-	public getPool = () => {
-		this.sendRequest(() => axios({ url: `${API_URL}/pools/v2/${this._id}` }));
-	};
 }

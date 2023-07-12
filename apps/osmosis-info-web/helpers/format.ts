@@ -74,3 +74,10 @@ export const normalize = (string: string) => {
 		return "";
 	}
 };
+
+export const truncate = (str: string, n = 5) => {
+	if (str.length <= n) {
+		return str;
+	}
+	return str.substring(0, n) + "..." + str.substring(str.length - n);
+};

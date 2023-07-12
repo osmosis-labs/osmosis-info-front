@@ -1,31 +1,31 @@
 import { action, makeObservable, observable } from "mobx";
 import { Request } from "../request";
 import { autorun } from "mobx";
-import { Token, TokensResponseList, MCapResponse, AssetListResponse, AssetList, Asset, AssetMap } from "./tokens";
+import { Token, TokensResponseList, MCapResponse } from "./tokens";
 import axios, { AxiosResponse } from "axios";
 import { TokenStore } from "./token-store";
 import { InitialState } from "../../root-store";
+import { AssetsStore } from "../assets/assetsStore";
 
 const API_URL = process.env.NEXT_PUBLIC_APP_API_URL;
 
 type PromiseRequest = [
 	AxiosResponse<TokensResponseList, TokensResponseList>,
-	AxiosResponse<MCapResponse, MCapResponse>,
-	AxiosResponse<AssetListResponse, AssetListResponse>
+	AxiosResponse<MCapResponse, MCapResponse>
 ];
 
 export class TokensStore extends Request<PromiseRequest> {
 	@observable private _tokens: TokenStore[];
-	@observable private _assetList: AssetList;
-	@observable private _assetMap: AssetMap;
+	@observable private _assetsStore: AssetsStore;
+
 	private _interval: NodeJS.Timeout | null = null;
 	private _intervalTime: number;
 
-	constructor() {
+	constructor(assetsStore: AssetsStore) {
 		super({ delayCache: 15 * 1000 });
+		this._assetsStore = assetsStore;
 		this._tokens = [];
-		this._assetMap = {};
-		this._assetList = { chainName: "", assets: [] };
+
 		this._intervalTime = 5 * 1000;
 		makeObservable(this);
 		autorun(() => {
@@ -36,7 +36,7 @@ export class TokensStore extends Request<PromiseRequest> {
 	@action
 	hydrate({ tokensState }: InitialState): void {
 		if (tokensState) {
-			this.formatTokens(tokensState.tokens, tokensState.marketCap, tokensState.assetList);
+			this.formatTokens(tokensState.tokens, tokensState.marketCap);
 		}
 	}
 
@@ -51,62 +51,14 @@ export class TokensStore extends Request<PromiseRequest> {
 		this._interval = null;
 	};
 
-	formatTokens(
-		tokensResponses: TokensResponseList,
-		mCapResponse: MCapResponse,
-		assetListResponse: AssetListResponse
-	): Token[] {
+	formatTokens(tokensResponses: TokensResponseList, mCapResponse: MCapResponse): Token[] {
 		const tokensFormatted: Token[] = [];
-		const assetMap: { [key: string]: Asset } = {};
-		const assetList: AssetList = {
-			chainName: assetListResponse.chain_name,
-			assets: assetListResponse.assets.map((asset) => {
-				const currentAsset = {
-					...asset,
-					coingeckoId: asset.coingecko_id,
-					denomUnits: asset.denom_units,
-					logoURIs: asset.logo_URIs,
-					main: false,
-					traces: asset.traces.map((trace) => ({
-						...trace,
-						counterparty: {
-							chainName: trace.counterparty.chain_name,
-							baseDenom: trace.counterparty.base_denom,
-						},
-					})),
-				};
-				if (currentAsset.keywords && currentAsset.keywords.length > 0) {
-					currentAsset.main = currentAsset.keywords.includes("osmosis-main");
-					assetMap[currentAsset.symbol.toUpperCase()] = currentAsset;
-					assetMap[currentAsset.display.toUpperCase()] = currentAsset;
-					if (currentAsset.symbol.includes(".axl")) {
-						const name = currentAsset.symbol.split(".")[0];
-						assetMap[name] = currentAsset;
-					}
-					currentAsset.denomUnits.forEach((denomUnit) => {
-						assetMap[denomUnit.denom] = currentAsset;
-					});
-				}
-				return currentAsset;
-			}),
-		};
 
 		tokensResponses.sort((a, b) => {
 			if (a.liquidity > b.liquidity) return -1;
 			if (a.liquidity < b.liquidity) return 1;
 			return 0;
 		});
-
-		const getAsset = (token: Token): Asset | undefined => {
-			let res: Asset | undefined;
-			if (token.denom) {
-				res = assetMap[token.denom];
-			}
-			if (token.symbol && !res) {
-				res = assetMap[token.symbol.toUpperCase()];
-			}
-			return res;
-		};
 
 		tokensResponses.forEach((dataToken, index) => {
 			const token = {
@@ -135,7 +87,7 @@ export class TokensStore extends Request<PromiseRequest> {
 					token.marketCap = mcapToken.market_cap;
 				}
 			}
-			const currentAsset = getAsset(token);
+			const currentAsset = this._assetsStore.getAssetFromToken(token);
 			token.main = currentAsset?.main || false;
 
 			if (currentAsset) {
@@ -143,8 +95,6 @@ export class TokensStore extends Request<PromiseRequest> {
 			}
 			tokensFormatted.push(token);
 		});
-		this._assetList = assetList;
-		this._assetMap = assetMap;
 		this.saveTokens(tokensFormatted);
 		return tokensFormatted;
 	}
@@ -190,19 +140,12 @@ export class TokensStore extends Request<PromiseRequest> {
 	format(reponseData: PromiseRequest): void {
 		const responseToken = reponseData[0].data;
 		const responseMcap = reponseData[1].data;
-		const responseAssets = reponseData[2].data;
-		this.formatTokens(responseToken, responseMcap, responseAssets);
+		this.formatTokens(responseToken, responseMcap);
 	}
 
 	public getTokens = () => {
 		this.sendRequest(() =>
-			Promise.all([
-				axios({ url: `${API_URL}/tokens/v2/all` }),
-				axios({ url: `${API_URL}/tokens/v2/mcap` }),
-				axios({
-					url: `https://raw.githubusercontent.com/osmosis-labs/assetlists/main/osmosis-1/osmosis-1.assetlist.json`,
-				}),
-			])
+			Promise.all([axios({ url: `${API_URL}/tokens/v2/all` }), axios({ url: `${API_URL}/tokens/v2/mcap` })])
 		);
 	};
 
@@ -216,14 +159,6 @@ export class TokensStore extends Request<PromiseRequest> {
 
 	public get tokens(): TokenStore[] {
 		return this._tokens;
-	}
-
-	public get assetList(): AssetList {
-		return this._assetList;
-	}
-
-	public get assetMap(): AssetMap {
-		return this._assetMap;
 	}
 
 	public get errorTokens(): string | undefined {

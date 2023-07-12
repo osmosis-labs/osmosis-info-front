@@ -3,7 +3,7 @@ import { Request } from "../request";
 import { autorun } from "mobx";
 import axios, { AxiosResponse } from "axios";
 import { InitialState } from "../../root-store";
-import { APRsResponse, FeesResponse, Pool, PoolAPR, PoolsResponse } from "./pools";
+import { APRsResponse, FeesResponse, Pool, PoolAPR, PoolToken, PoolsResponse } from "./pools";
 import { PoolStore } from "./pool-store";
 import { TokensStore } from "../tokens/tokens-store";
 
@@ -102,11 +102,19 @@ export class PoolsStore extends Request<PromiseRequest> {
 				};
 			}
 			poolResponse.forEach((tokenPoolResponse) => {
-				const currentToken = this._tokens.getToken(tokenPoolResponse.symbol);
-				if (currentToken && !currentToken.main) {
+				const currentToken: PoolToken = {
+					denom: tokenPoolResponse.denom,
+					symbol: tokenPoolResponse.symbol,
+				};
+				const currentTokenStore =
+					this._tokens.getToken(tokenPoolResponse.symbol) ?? this._tokens.getTokenByDenom(tokenPoolResponse.denom);
+				if (currentTokenStore && !currentTokenStore.main) {
 					main = false;
 				}
-				if (currentToken) pool.tokens.push(currentToken);
+				if (currentTokenStore) {
+					currentToken.tokenStore = currentTokenStore;
+				}
+				pool.tokens.push(currentToken);
 			});
 			pool.main = main;
 			poolsFormatted.push(pool);
@@ -151,9 +159,9 @@ export class PoolsStore extends Request<PromiseRequest> {
 		);
 	};
 
-	public getPool(id: number): PoolStore | undefined {
+	public getPool = (id: number): PoolStore | undefined => {
 		return this._pools.find((pool) => pool.id === id);
-	}
+	};
 
 	public get pools(): PoolStore[] {
 		return this._pools;

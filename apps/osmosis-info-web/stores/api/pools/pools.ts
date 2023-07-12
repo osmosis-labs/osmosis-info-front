@@ -3,7 +3,7 @@ import { TokenStore } from "../tokens/token-store";
 export type Pool = {
 	id: number;
 	main: boolean;
-	tokens: TokenStore[];
+	tokens: PoolToken[];
 	apr: PoolAPR[];
 	liquidity: number;
 	liquidity24hChange: number;
@@ -11,6 +11,12 @@ export type Pool = {
 	volume24hChange: number;
 	volume7d: number;
 	fees: Fees;
+};
+
+export type PoolToken = {
+	tokenStore?: TokenStore;
+	symbol: string;
+	denom: string;
 };
 
 export type PoolAPR = {

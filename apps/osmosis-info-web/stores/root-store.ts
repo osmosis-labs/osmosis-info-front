@@ -15,6 +15,7 @@ import { SettingsStore } from "./app/settings-store/settings-store";
 import { UserStore } from "./user-store";
 import { TopsResponse } from "./api/tops/tops";
 import { TopsStore } from "./api/tops/tops-store";
+import { AssetsStore } from "./api/assets/assetsStore";
 
 export class RootStore {
 	public readonly menuStore: MenuStore;
@@ -27,13 +28,15 @@ export class RootStore {
 	public readonly volumeStore: VolumeStore;
 	public readonly favoriteStore: FavoriteStore;
 	public readonly topsStore: TopsStore;
+	public readonly assetsStore: AssetsStore;
 
 	constructor() {
 		this.menuStore = new MenuStore();
 		this.settingsStore = new SettingsStore(new Storage("settings"), [new LanguageSetting(DEFAULT_LANGUAGE.value)]);
 		this.userStore = new UserStore();
+		this.assetsStore = new AssetsStore();
 		this.metricsStore = new MetricsStore();
-		this.tokensStore = new TokensStore();
+		this.tokensStore = new TokensStore(this.assetsStore);
 		this.volumeStore = new VolumeStore(this.metricsStore);
 		this.liquidityStore = new LiquidityStore();
 		this.poolsStore = new PoolsStore(this.tokensStore);
@@ -48,14 +51,15 @@ export class RootStore {
 		this.liquidityStore.hydrate(initState);
 		this.volumeStore.hydrate(initState);
 		this.topsStore.hydrate(initState);
+		this.assetsStore.hydrate(initState);
 	};
 }
 
 export interface InitialState {
 	metricsState?: MetricsResponse;
 	tokenState?: TokenResponse;
+	assetsState?: AssetListResponse;
 	tokensState?: {
-		assetList: AssetListResponse;
 		tokens: TokensResponse[];
 		marketCap: MCapResponse;
 	};
