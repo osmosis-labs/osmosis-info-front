@@ -105,6 +105,7 @@ export class PoolsStore extends Request<PromiseRequest> {
 				const currentToken: PoolToken = {
 					denom: tokenPoolResponse.denom,
 					symbol: tokenPoolResponse.symbol,
+					amount: tokenPoolResponse.amount,
 				};
 				const currentTokenStore =
 					this._tokens.getToken(tokenPoolResponse.symbol) ?? this._tokens.getTokenByDenom(tokenPoolResponse.denom);
@@ -137,7 +138,7 @@ export class PoolsStore extends Request<PromiseRequest> {
 				this._pools.push(new PoolStore({ pool }));
 			} else {
 				//update current pool
-				this._pools[index] = new PoolStore({ pool });
+				this._pools[index].update({ pool });
 			}
 		});
 	}

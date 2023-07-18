@@ -78,7 +78,7 @@ export const Footer = ({ translations }: FooterProps) => {
 						`${rowPerPage * currentPage + 1} - ${maxElt} of ${data.length}`}
 				</span>
 				{isLoading ? (
-					<LoadingSVG height={24} width={24} className="fillosmosverse-300 animate-spin ml-4" />
+					<LoadingSVG height={24} width={24} className="fill-osmosverse-300 animate-spin ml-4" />
 				) : (
 					<IconButton
 						className="rotate-180"

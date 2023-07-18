@@ -67,6 +67,22 @@ export class AssetsStore extends Request<AxiosResponse<AssetListResponse>> {
 
 	getAssetFromSymbol = (symbol: string): Asset | undefined => this._assetMap[symbol.toUpperCase()];
 
+	getImageFromSymbol = (symbol: string): string => {
+		const currentAsset = this.getAssetFromSymbol(symbol);
+		if (currentAsset) {
+			return currentAsset.logoURIs.png || currentAsset.logoURIs.svg || "";
+		}
+		return "";
+	};
+
+	getImageFromDenom = (denom: string): string => {
+		const currentAsset = this.getAssetFromDenom(denom);
+		if (currentAsset) {
+			return currentAsset.logoURIs.png || currentAsset.logoURIs.svg || "";
+		}
+		return "";
+	};
+
 	getAssetFromToken = (token: Token): Asset | undefined => {
 		let res: Asset | undefined;
 		if (token.denom) {

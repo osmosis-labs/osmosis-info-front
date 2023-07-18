@@ -17,6 +17,7 @@ export type PoolToken = {
 	tokenStore?: TokenStore;
 	symbol: string;
 	denom: string;
+	amount: number;
 };
 
 export type PoolAPR = {

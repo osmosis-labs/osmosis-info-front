@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useStore } from "../../stores";
 import { useRouter } from "next/router";
 import { observer } from "mobx-react-lite";
@@ -6,9 +6,19 @@ import { defaultGetServerSideProps } from "../../helpers/server-side-props";
 import { PriceChartPeriode } from "../../stores/api/pools/price-chart-store";
 import { ButtonMultiple, ItemButtonMultiple } from "@latouche/osmosis-info-ui";
 import { truncate } from "../../helpers/format";
+import { TableTrx } from "./table-trx/table-trx";
+import { PoolName } from "./pool-name";
+import { Path, Paths } from "../../components/path/path";
+import { PoolPrice } from "./pool-price";
+import { PoolSelect } from "./pool-select";
+import { PoolToken } from "../../stores/api/pools/pools";
+import { set } from "mobx";
+import { PoolInfo } from "./pool-info";
+import { useTranslation } from "react-multi-lang";
 
 const Pool = observer(() => {
 	const router = useRouter();
+	const t = useTranslation();
 	const {
 		query: { id },
 	} = router;
@@ -22,6 +32,9 @@ const Pool = observer(() => {
 
 	const poolExists = poolStore !== undefined;
 
+	const [firstSelected, setFirstSelected] = useState<PoolToken | undefined>(undefined);
+	const [secondSelected, setSecondSelected] = useState<PoolToken | undefined>(undefined);
+
 	useEffect(() => {
 		if (!poolExists) {
 			// TODO redirect and diplay message
@@ -32,10 +45,13 @@ const Pool = observer(() => {
 
 	useEffect(() => {
 		if (!poolStore) return;
+		if (poolStore.isPlaying) return;
 		poolStore.play();
 		poolStore.volumeStore.getData();
 		poolStore.liquidityStore.getData();
-		poolStore.trxStore.getData({ limit: 10, offset: 0 });
+		if (poolStore.tokens.length > 0) setFirstSelected(poolStore.tokens[0]);
+		if (poolStore.tokens.length > 1) setSecondSelected(poolStore.tokens[1]);
+		if (poolStore.trxStore.data.length === 0) poolStore.trxStore.getData({ limit: 20, offset: 0 });
 		return () => {
 			poolStore.pause();
 		};
@@ -80,17 +96,56 @@ const Pool = observer(() => {
 		poolStore.priceStore.getData(denom.value, denom2, periode.value);
 	}, [denom, denom2, periode, poolStore]);
 
-	console.log("%c[id].tsx -> 87 PINK: data", "background: #e91e63; color:#FFFFFF", poolStore?.priceStore?.data);
+	const onClickMoreTrx = useCallback(
+		async (nextPage: (currentPage: number) => void, currentPage: number) => {
+			const lengthBefore = poolStore?.trxStore.data.length ?? 0;
+			await poolStore?.trxStore.fetchNextPage();
+			if (lengthBefore !== poolStore?.trxStore.data.length) {
+				nextPage(currentPage + 1);
+			}
+		},
+		[poolStore?.trxStore]
+	);
+
+	const paths = useMemo<Path[]>(() => {
+		return [
+			{ name: t("overview.title"), href: "/" },
+			{ name: t("pools.title"), href: "/pools" },
+			{ name: poolStore?.name ?? "", href: `/pools/${poolStore?.id}` },
+		];
+	}, [poolStore?.id, poolStore?.name, t]);
+
+	const onChangeSelect = useCallback((first: PoolToken, second: PoolToken) => {
+		setFirstSelected(first);
+		setSecondSelected(second);
+	}, []);
 
 	return (
 		<div className="w-full">
-			<h1 className="text-2xl">Pool: {id}</h1>
+			{/* <h1 className="text-2xl">Pool: {id}</h1>
 			<div className="m-2">
 				<ButtonMultiple selected={periode} onClick={onClickPeriode} items={itemsPeriode} />
 			</div>
 			<div className="m-2">
 				<ButtonMultiple selected={denom} onClick={onClickDenom} items={itemsDenom} />
+			</div> */}
+			<Paths paths={paths} selected={2} className="mt-2" />
+			<PoolName pool={poolStore} />
+			<PoolPrice firstSelected={firstSelected} secondSelected={secondSelected} />
+			<PoolSelect
+				firstSelected={firstSelected}
+				secondSelected={secondSelected}
+				onChangeSelect={onChangeSelect}
+				pool={poolStore}
+			/>
+			<div className="grid grid-cols-[3fr_6fr]">
+				<PoolInfo pool={poolStore} />
 			</div>
+			<TableTrx
+				data={poolStore?.trxStore.data ?? []}
+				onClickMore={onClickMoreTrx}
+				isLoading={poolStore?.trxStore.isLoading}
+			/>
 		</div>
 	);
 });

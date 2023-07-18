@@ -87,6 +87,16 @@
             "details": "details",
             "superfluid": "Superfluid",
             "swap": "Swap"
+        },
+        "trx": {
+            "hash": "Hash",
+            "time": "Time",
+            "pools": "Pools",
+            "pool": "Pool",
+            "tokenIn": "Token In",
+            "tokenOut": "Token Out&",
+            "value": "Value",
+            "address": "Adress"
         }
     },
     "tokens": {
@@ -130,5 +140,17 @@
         "pools": "Pools",
         "noResultPools": "No results for pools",
         "noResultTokens": "No results for tokens"
+    },
+    "pool": {
+        "pooledTokens": {
+            "title": "Pooled tokens",
+            "name": "Name",
+            "amount": "Amount",
+            "price": "Price"
+        },
+        "liquidity": "Liquidity",
+        "volume": "Volume",
+        "fees": "Fees",
+        "volume7d": "Volume (7d)"
     }
 }

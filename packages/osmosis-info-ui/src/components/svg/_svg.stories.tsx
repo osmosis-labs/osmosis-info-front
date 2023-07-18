@@ -16,6 +16,7 @@ import {
 	VoteSVG,
 	SwapSVG,
 	SearchSVG,
+	StarSVG,
 } from "./";
 import { CloseSvg } from "./close-svg";
 import { ArrowTopSVG } from "./arrow-top-svg";
@@ -126,3 +127,7 @@ Swap.argTypes = argsTypeStroke;
 export const Search: ComponentStory<typeof SearchSVG> = (args) => <SearchSVG {...args} />;
 Search.args = argsStroke;
 Search.argTypes = argsTypeStroke;
+
+export const Star: ComponentStory<typeof StarSVG> = (args) => <StarSVG {...args} />;
+Star.args = argsFill;
+Star.argTypes = argsTypeFill;

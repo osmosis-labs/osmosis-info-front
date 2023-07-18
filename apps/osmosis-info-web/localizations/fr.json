@@ -87,6 +87,16 @@
             "details": "détails",
             "superfluid": "Superfluide",
             "swap": "Change"
+        },
+        "trx": {
+            "hash": "Hash",
+            "time": "Date",
+            "pools": "Bassins",
+            "pool": "Bassin",
+            "tokenIn": "Jeton entrant",
+            "tokenOut": "Jeton sortant",
+            "value": "Valeur",
+            "address": "Adresse"
         }
     },
     "tokens": {
@@ -130,5 +140,17 @@
         "pools": "Bassins",
         "noResultPools": "Aucun résultat pour les bassins",
         "noResultTokens": "Aucun résultat pour les jetons"
+    },
+    "pool": {
+        "pooledTokens": {
+            "title": "Jetons dans le bassin",
+            "name": "Nom",
+            "amount": "Montant",
+            "price": "prix"
+        },
+        "liquidity": "Liquidité",
+        "volume": "Volume",
+        "fees": "Frais",
+        "volume7d": "Volume (7j)"
     }
 }

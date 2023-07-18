@@ -3,24 +3,34 @@ import { Request } from "../request";
 import axios, { AxiosResponse } from "axios";
 const API_URL_CHAIN = process.env.NEXT_PUBLIC_APP_CHAIN_API_URL;
 
-type PromiseRequest = [AxiosResponse<TrxResponse[]>];
+type PromiseRequest = AxiosResponse<TrxResponse[]>;
 
-export class TrxStore extends Request<PromiseRequest> {
+export class TrxStore {
 	private _id: number;
+	private _currentPage = 1;
+
+	@observable
+	private _isLoading = false;
+
+	@observable
+	private _noMorePage = false;
 
 	@observable
 	private _data: Trx[] = [];
 
+	get noMorePage(): boolean {
+		return this._noMorePage;
+	}
+
 	constructor(id: number) {
-		super({ delayCache: 5 * 1000 });
 		this._id = id;
 		makeObservable(this);
 	}
 
 	@action
-	formatData(data: TrxResponse[]) {
+	formatData = (data: TrxResponse[]) => {
 		if (data.length === 0) return;
-		this._data = data.map((trx) => {
+		const formattedData = data.map((trx) => {
 			const pools: PoolsTrx[] = [];
 			const routes = trx.swap_route.routes.map((route) => {
 				pools.push({
@@ -53,32 +63,47 @@ export class TrxStore extends Request<PromiseRequest> {
 				pools,
 			};
 		});
-	}
+
+		this._data = [...this._data, ...formattedData];
+	};
 
 	@action
 	format(responseData: PromiseRequest): void {
-		this.formatData(responseData[0].data);
+		console.log("%ctrx-store.ts -> 72 BLUE: responseData", "background: #2196f3; color:#FFFFFF", responseData);
+		this.formatData(responseData.data);
 	}
 
 	@action
-	getData = ({ limit, offset }: { limit: number; offset: number }) => {
-		this.sendRequest(() =>
-			Promise.all([
-				axios({ url: `${API_URL_CHAIN}/swap/v1/pool/${this._id}?only_success=true&limit=${limit}&offset=${offset}` }),
-			])
-		);
+	getData = async ({ limit, offset }: { limit: number; offset: number }): Promise<void> => {
+		if (this._isLoading) return Promise.resolve();
+		console.log("%ctrx-store.ts -> 78 ORANGE: GET DATA", "background: #FFA500; color:#FFFFFF");
+		try {
+			this._isLoading = true;
+			const response: PromiseRequest = await axios({
+				url: `${API_URL_CHAIN}/swap/v1/pool/${this._id}?only_success=true&limit=${limit}&offset=${offset}`,
+			});
+			this.format(response);
+			this._isLoading = false;
+		} catch (e) {
+			console.log("%ctrx-store.ts -> 77 ERROR: e", "background: #FF0000; color:#FFFFFF", e);
+			this._isLoading = false;
+			throw e;
+		}
 	};
 
-	public get errorTokens(): string | undefined {
-		return this._error;
-	}
-
-	public get isLoadingTokens(): boolean {
-		return this._isLoading;
-	}
+	@action
+	fetchNextPage = (): Promise<void> => {
+		if (this._isLoading) return Promise.resolve();
+		this._currentPage++;
+		return this.getData({ limit: 20, offset: this._currentPage * 10 });
+	};
 
 	public get data(): Trx[] {
 		return toJS(this._data);
+	}
+
+	public get isLoading(): boolean {
+		return this._isLoading;
 	}
 }
 

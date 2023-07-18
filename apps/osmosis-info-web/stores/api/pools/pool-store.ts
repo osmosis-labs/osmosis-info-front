@@ -17,6 +17,9 @@ export class PoolStore extends Request<PromiseRequest> {
 	private _intervalTime: number;
 
 	@observable
+	private _isPlaying = false;
+
+	@observable
 	private _volumeStore: ChartStore;
 
 	@observable
@@ -30,6 +33,10 @@ export class PoolStore extends Request<PromiseRequest> {
 
 	get trxStore(): TrxStore {
 		return this._trxStore;
+	}
+
+	get isPlaying(): boolean {
+		return this._isPlaying;
 	}
 
 	get volumeStore(): ChartStore {
@@ -204,8 +211,9 @@ export class PoolStore extends Request<PromiseRequest> {
 	}
 
 	constructor({ pool }: PoolStoreArgs) {
-		super({ delayCache: 5 * 60 * 100 });
-		this._intervalTime = 5 * 1000;
+		super({ delayCache: 6 * 60 * 100 });
+		this._intervalTime = 6 * 1000;
+		if (pool.id === 803) console.log("pool-store.ts -> 216: create", pool.id);
 		this._id = pool.id;
 		this._liquidity = pool.liquidity;
 		this._liquidity24hChange = pool.liquidity24hChange;
@@ -228,6 +236,20 @@ export class PoolStore extends Request<PromiseRequest> {
 		makeObservable(this);
 	}
 
+	update({ pool }: PoolStoreArgs) {
+		this._id = pool.id;
+		this._liquidity = pool.liquidity;
+		this._liquidity24hChange = pool.liquidity24hChange;
+		this._volume24hChange = pool.volume24hChange;
+		this._volume24h = pool.volume24h;
+		this._volume7d = pool.volume7d;
+		this._fees = pool.fees;
+		this._apr = pool.apr;
+		this._main = pool.main;
+		this._tokens = pool.tokens;
+		this._fees = pool.fees;
+	}
+
 	@action
 	format(reponseData: PromiseRequest): void {
 		console.log("%cpool-store.ts -> 57 BLUE: reponseData", "background: #2196f3; color:#FFFFFF", reponseData);
@@ -236,12 +258,12 @@ export class PoolStore extends Request<PromiseRequest> {
 	@action
 	fetchData(): void {
 		if (!this._id) return;
-		console.log("pool-store.ts -> 201: ", this._id);
 	}
 
 	@action
 	play = () => {
 		this._interval = setInterval(this.fetchData, this._intervalTime);
+		this._isPlaying = true;
 		this._volumeStore.play();
 		this._liquidityStore.play();
 		this._priceStore.play();
@@ -251,6 +273,8 @@ export class PoolStore extends Request<PromiseRequest> {
 	pause = () => {
 		clearInterval(this._interval!);
 		this._interval = null;
+		this._isPlaying = false;
+
 		this._volumeStore.pause();
 		this._liquidityStore.pause();
 		this._priceStore.pause();
@@ -264,3 +288,24 @@ export class PoolStore extends Request<PromiseRequest> {
 		return this._isLoading;
 	}
 }
+
+export const defaultPoolStore = new PoolStore({
+	pool: {
+		id: 0,
+		main: false,
+		tokens: [],
+		apr: [],
+		liquidity: 0,
+		liquidity24hChange: 0,
+		volume24h: 0,
+		volume24hChange: 0,
+		volume7d: 0,
+		fees: {
+			volume24h: 0,
+			volume7d: 0,
+			feesSpent24h: 0,
+			feesSpent7d: 0,
+			feesPercentage: 0,
+		},
+	},
+});
