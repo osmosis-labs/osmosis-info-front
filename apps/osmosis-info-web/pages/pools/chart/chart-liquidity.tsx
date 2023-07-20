@@ -39,18 +39,21 @@ export const ChartLiquidity = ({ periode, pool, onChangeItem }: ChartLiquidityPr
 	const liquidityDay: DataLiquidity[] = useMemo(() => {
 		if (pool.liquidityStore.dataDay.length === 0) return [{ time: new Date(), value: 0 }];
 		return pool.liquidityStore.dataDay;
+		// To do inmprove dependecy because we can change one item value and have same length
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [pool.liquidityStore.dataDay.length]);
 
 	const liquidityWeek: DataLiquidity[] = useMemo(() => {
-		if (!pool || pool.liquidityStore.dataWeek.length === 0) return [{ time: new Date(), value: 0 }];
+		if (pool.liquidityStore.dataWeek.length === 0) return [{ time: new Date(), value: 0 }];
 		return pool.liquidityStore.dataWeek;
-	}, [pool]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [pool.liquidityStore.dataDay.length]);
 
 	const liquidityMonth: DataLiquidity[] = useMemo(() => {
-		if (!pool || pool.liquidityStore.dataMonth.length === 0) return [{ time: new Date(), value: 0 }];
+		if (pool.liquidityStore.dataMonth.length === 0) return [{ time: new Date(), value: 0 }];
 		return pool.liquidityStore.dataMonth;
-	}, [pool]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [pool.liquidityStore.dataDay.length]);
 	const [dataDisplay, setDataDisplay] = useState<DataLiquidity[]>(liquidityDay);
 
 	const formatX = useCallback(
