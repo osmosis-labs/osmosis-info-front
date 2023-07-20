@@ -3,7 +3,6 @@ import { PoolStore } from "../../stores/api/pools/pool-store";
 import { useStore } from "../../stores";
 import { Image } from "../../components/image/image";
 import { Paper } from "@latouche/osmosis-info-ui";
-import { TokenStore } from "../../stores/api/tokens/token-store";
 import { formateNumberDecimals, formateNumberPriceDecimals, formaterNumber } from "../../helpers/format";
 import { PoolToken } from "../../stores/api/pools/pools";
 import { useTranslation } from "react-multi-lang";

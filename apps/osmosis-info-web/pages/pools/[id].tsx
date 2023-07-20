@@ -3,16 +3,12 @@ import { useStore } from "../../stores";
 import { useRouter } from "next/router";
 import { observer } from "mobx-react-lite";
 import { defaultGetServerSideProps } from "../../helpers/server-side-props";
-import { PriceChartPeriode } from "../../stores/api/pools/price-chart-store";
-import { ButtonMultiple, ItemButtonMultiple } from "@latouche/osmosis-info-ui";
-import { truncate } from "../../helpers/format";
 import { TableTrx } from "./table-trx/table-trx";
 import { PoolName } from "./pool-name";
 import { Path, Paths } from "../../components/path/path";
 import { PoolPrice } from "./pool-price";
 import { PoolSelect } from "./pool-select";
 import { PoolToken } from "../../stores/api/pools/pools";
-import { set } from "mobx";
 import { PoolInfo } from "./pool-info";
 import { useTranslation } from "react-multi-lang";
 import { Charts } from "./chart/charts";
@@ -58,44 +54,32 @@ const Pool = observer(() => {
 		};
 	}, [poolStore]);
 
-	const itemsPeriode: ItemButtonMultiple<PriceChartPeriode>[] = useMemo(
-		() => [
-			{ label: "D", value: "7d" as PriceChartPeriode },
-			{ label: "W", value: "1mo" as PriceChartPeriode },
-			{ label: "M", value: "1y" as PriceChartPeriode },
-		],
-		[]
-	);
+	// const itemsPeriode: ItemButtonMultiple<PriceChartPeriode>[] = useMemo(
+	// 	() => [
+	// 		{ label: "D", value: "7d" as PriceChartPeriode },
+	// 		{ label: "W", value: "1mo" as PriceChartPeriode },
+	// 		{ label: "M", value: "1y" as PriceChartPeriode },
+	// 	],
+	// 	[]
+	// );
 
-	const [periode, setPeriode] = useState(itemsPeriode[0]);
+	// const [periode, setPeriode] = useState(itemsPeriode[0]);
 
-	const itemsDenom: ItemButtonMultiple<string>[] = useMemo(() => {
-		return (
-			poolStore?.tokens.map((token) => {
-				return { label: token.symbol ?? truncate(token.denom), value: token.denom };
-			}) ?? []
-		);
-	}, [poolStore?.tokens]);
+	// const itemsDenom: ItemButtonMultiple<string>[] = useMemo(() => {
+	// 	return (
+	// 		poolStore?.tokens.map((token) => {
+	// 			return { label: token.symbol ?? truncate(token.denom), value: token.denom };
+	// 		}) ?? []
+	// 	);
+	// }, [poolStore?.tokens]);
 
-	const [denom, setDenom] = useState(itemsDenom.length > 0 ? itemsDenom[0] : { label: "", value: "" });
-	const [denom2, setDenom2] = useState(itemsDenom.length > 1 ? itemsDenom[1].value : "");
+	// const [denom, setDenom] = useState(itemsDenom.length > 0 ? itemsDenom[0] : { label: "", value: "" });
+	// const [denom2, setDenom2] = useState(itemsDenom.length > 1 ? itemsDenom[1].value : "");
 
-	const onClickPeriode = (periode: ItemButtonMultiple<PriceChartPeriode>) => {
-		setPeriode(periode);
-	};
-
-	const onClickDenom = (denom: ItemButtonMultiple<string>) => {
-		if (denom.value === denom2) {
-			if (itemsDenom.length > 1 && denom2 !== itemsDenom[0].value) setDenom2(itemsDenom[0].value);
-			else setDenom2(itemsDenom[1].value);
-		}
-		setDenom(denom);
-	};
-
-	useEffect(() => {
-		if (!poolStore) return;
-		poolStore.priceStore.getData(denom.value, denom2, periode.value);
-	}, [denom, denom2, periode, poolStore]);
+	// useEffect(() => {
+	// 	if (!poolStore) return;
+	// 	poolStore.priceStore.getData(denom.value, denom2, periode.value);
+	// }, [denom, denom2, periode, poolStore]);
 
 	const onClickMoreTrx = useCallback(
 		async (nextPage: (currentPage: number) => void, currentPage: number) => {

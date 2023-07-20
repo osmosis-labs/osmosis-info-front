@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo } from "react";
-import { useRouter } from "next/router";
 import { Trx } from "../../../stores/api/pools/trx-store";
 import { truncate } from "../../../helpers/format";
 

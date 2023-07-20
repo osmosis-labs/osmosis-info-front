@@ -31,7 +31,6 @@ const bisectIndexDate = bisector<DataLiquidity, Date>((d: DataLiquidity) => new 
 const tickFormatY = (d: number) => `${formaterNumber(Math.round(d))}`;
 
 export const ChartLiquidity = ({ periode, pool, onChangeItem }: ChartLiquidityProps) => {
-	const [defaultView, setDefaultView] = useState<[number, number]>([0, 0]);
 	const locale = useLanguage();
 
 	const toDay = useMemo(() => new Date(), []);

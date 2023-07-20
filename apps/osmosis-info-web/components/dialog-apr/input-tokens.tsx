@@ -2,7 +2,6 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { PoolStore } from "../../stores/api/pools/pool-store";
 import { SwapSVG } from "@latouche/osmosis-info-ui";
 import { Image } from "../image/image";
-import { TokenStore } from "../../stores/api/tokens/token-store";
 import { formateNumberDecimals } from "../../helpers/format";
 import { PoolToken } from "../../stores/api/pools/pools";
 

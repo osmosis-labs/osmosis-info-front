@@ -6,5 +6,6 @@ type ChartVolumeProps = {
 };
 
 export const ChartVolume = ({ periode }: ChartVolumeProps) => {
+	console.log("chart-volume.tsx (9) ->periode", periode);
 	return <div>Volume</div>;
 };

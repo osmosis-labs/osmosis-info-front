@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { PoolStore } from "../../stores/api/pools/pool-store";
 import { PoolToken } from "../../stores/api/pools/pools";
 import { Paper } from "@latouche/osmosis-info-ui";
 import { Image } from "../../components/image/image";

@@ -12,7 +12,6 @@ import { useState } from "react";
 import { formateNumberDecimals, formaterNumber } from "../../helpers/format";
 import { useTranslation } from "react-multi-lang";
 import { useStore } from "../../stores";
-import { useRouter } from "next/router";
 import { CellChange } from "../token-table/cell-change";
 import { CellName } from "./cell-name";
 import { Pool } from "../../stores/api/pools/pools";

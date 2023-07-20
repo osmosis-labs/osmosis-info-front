@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { ChartHeader } from "./chart-header";
+import React, { useEffect, useState } from "react";
 import { PeriodeChart, TypeChart } from "./charts";
 import { PoolStore } from "../../../stores/api/pools/pool-store";
 import { PoolToken } from "../../../stores/api/pools/pools";
@@ -16,14 +15,7 @@ type ChartContainerProps = {
 	secondSelected: PoolToken | undefined;
 };
 
-export const ChartContainer = ({
-	typeChart,
-	periodeChart,
-	onChangeItem,
-	pool,
-	firstSelected,
-	secondSelected,
-}: ChartContainerProps) => {
+export const ChartContainer = ({ typeChart, periodeChart, onChangeItem, pool }: ChartContainerProps) => {
 	const [isVisible, setIsVisible] = useState(false);
 
 	useEffect(() => {

@@ -1,7 +1,6 @@
-import React, { useCallback, useMemo } from "react";
-import { useRouter } from "next/router";
+import React, { useMemo } from "react";
 import { EnterTrx, Trx } from "../../../stores/api/pools/trx-store";
-import { formateNumberDecimals, truncate } from "../../../helpers/format";
+import { formateNumberDecimals } from "../../../helpers/format";
 
 type CellTokenProps = {
 	enter: EnterTrx;

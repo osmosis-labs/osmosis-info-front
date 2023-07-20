@@ -1,7 +1,6 @@
-import React, { useCallback, useMemo } from "react";
-import { useRouter } from "next/router";
+import React, { useMemo } from "react";
 import { Trx } from "../../../stores/api/pools/trx-store";
-import { formatAutoPrice, truncate } from "../../../helpers/format";
+import { formatAutoPrice } from "../../../helpers/format";
 
 type CellValueProps = {
 	trx: Trx;
