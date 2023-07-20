@@ -14,7 +14,7 @@ type ImageProps = {
 
 export const Image = ({
 	src,
-	srcFallback,
+	srcFallback = "",
 	alt,
 	className,
 	style,
@@ -35,7 +35,9 @@ export const Image = ({
 	};
 
 	useEffect(() => {
-		const initSrc = assets ? `${pathAssets}${src}` : src;
+		const currentSrc = src ?? "/images/default.png";
+		const initSrc = assets ? `${pathAssets}${currentSrc}` : currentSrc;
+
 		setStateSrc(initSrc);
 		setError(false);
 	}, [src, assets, pathAssets]);
@@ -45,7 +47,7 @@ export const Image = ({
 			className={className}
 			alt={alt ?? ""}
 			style={style}
-			src={stateSrc}
+			src={stateSrc ?? ""}
 			onError={onError}
 			width={width}
 			height={height}

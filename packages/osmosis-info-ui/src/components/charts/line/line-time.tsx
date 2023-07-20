@@ -147,8 +147,8 @@ function ChartLine<D>({
 	}, [defaultView]);
 
 	useEffect(() => {
-		if (limits.start === 0 && limits.end === 0) setLimits({ start: 0, end: data.length });
-	}, [data, limits.end, limits.start]);
+		if ((limits.start === 0 && limits.end === 0) || !defaultView) setLimits({ start: 0, end: data.length });
+	}, [data.length, limits.end, limits.start, defaultView]);
 
 	useEffect(() => {
 		if (isLoaded && refPathLine.current) {

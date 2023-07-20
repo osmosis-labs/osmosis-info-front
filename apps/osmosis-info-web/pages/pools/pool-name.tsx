@@ -4,12 +4,14 @@ import { Image } from "../../components/image/image";
 import { PoolStore, defaultPoolStore } from "../../stores/api/pools/pool-store";
 import { DialogReturn } from "../../components/dialog-apr/dialog-return";
 import { useStore } from "../../stores";
+import { twMerge } from "tailwind-merge";
 
 export type PoolNameProps = {
 	pool: PoolStore | undefined;
+	className?: string;
 };
 
-export const PoolName = ({ pool }: PoolNameProps) => {
+export const PoolName = ({ pool, className }: PoolNameProps) => {
 	const {
 		assetsStore,
 		favoriteStore: { pools: favoritesPools, removePool, addPool },
@@ -42,10 +44,10 @@ export const PoolName = ({ pool }: PoolNameProps) => {
 	};
 
 	return (
-		<div className="flex items-center mt-4">
+		<div className={twMerge("flex items-center", className)}>
 			<DialogReturn open={open} onClose={onClose} pool={pool ?? defaultPoolStore} />
 
-			<div className="relative p-2 min-h-[40px]" style={{ minWidth: `${(pool?.tokens.length ?? 1) * 30}px` }}>
+			<div className="relative p-2 min-h-[40px]" style={{ minWidth: `${(pool?.tokens.length ?? 1) * 30 + 10}px` }}>
 				{pool?.tokens.map((token, index) => {
 					return (
 						<Image
@@ -55,7 +57,7 @@ export const PoolName = ({ pool }: PoolNameProps) => {
 							alt={token.denom ?? "token"}
 							height={40}
 							width={40}
-							className="h-[40px] w-[40px] absolute top-[-2px] min-w-[40px] min-h-[40px]"
+							className="h-[40px] w-[40px] absolute top-0 min-w-[40px] min-h-[40px]"
 						/>
 					);
 				})}

@@ -4,15 +4,17 @@ import { Image } from "../../components/image/image";
 import { useStore } from "../../stores";
 import { Dropdown, IconButton, ItemDropdown, SwapSVG } from "@latouche/osmosis-info-ui";
 import { PoolStore } from "../../stores/api/pools/pool-store";
+import { twMerge } from "tailwind-merge";
 
 export type PoolSelectProps = {
 	firstSelected: PoolToken | undefined;
 	secondSelected: PoolToken | undefined;
 	pool: PoolStore | undefined;
 	onChangeSelect(first: PoolToken, second: PoolToken): void;
+	className?: string;
 };
 
-export const PoolSelect = ({ firstSelected, secondSelected, onChangeSelect, pool }: PoolSelectProps) => {
+export const PoolSelect = ({ firstSelected, secondSelected, onChangeSelect, pool, className }: PoolSelectProps) => {
 	const { assetsStore } = useStore();
 
 	const onSwap = useCallback(() => {
@@ -70,7 +72,7 @@ export const PoolSelect = ({ firstSelected, secondSelected, onChangeSelect, pool
 	}, [assetsStore, pool]);
 
 	return (
-		<div className="flex items-center mt-4">
+		<div className={twMerge("flex items-center", className)}>
 			<Dropdown<string>
 				onChange={onChangeFirst}
 				value={firstSelected?.denom ?? ""}

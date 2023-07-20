@@ -12,5 +12,5 @@ export const CellValue = ({ trx }: CellValueProps) => {
 		return formatAutoPrice(trx.valueUsd);
 	}, [trx.valueUsd]);
 
-	return <span className="overflow-hidden items-center cursor-pointertext-sm">{value}</span>;
+	return <span className="overflow-hidden items-center justify-end cursor-pointertext-sm">{value}</span>;
 };

@@ -15,6 +15,7 @@ import { PoolToken } from "../../stores/api/pools/pools";
 import { set } from "mobx";
 import { PoolInfo } from "./pool-info";
 import { useTranslation } from "react-multi-lang";
+import { Charts } from "./chart/charts";
 
 const Pool = observer(() => {
 	const router = useRouter();
@@ -121,31 +122,35 @@ const Pool = observer(() => {
 	}, []);
 
 	return (
-		<div className="w-full">
-			{/* <h1 className="text-2xl">Pool: {id}</h1>
+		<div className="w-full  flex flex-col items-center">
+			<div className="w-full max-w-container">
+				{/* <h1 className="text-2xl">Pool: {id}</h1>
 			<div className="m-2">
 				<ButtonMultiple selected={periode} onClick={onClickPeriode} items={itemsPeriode} />
 			</div>
 			<div className="m-2">
 				<ButtonMultiple selected={denom} onClick={onClickDenom} items={itemsDenom} />
 			</div> */}
-			<Paths paths={paths} selected={2} className="mt-2" />
-			<PoolName pool={poolStore} />
-			<PoolPrice firstSelected={firstSelected} secondSelected={secondSelected} />
-			<PoolSelect
-				firstSelected={firstSelected}
-				secondSelected={secondSelected}
-				onChangeSelect={onChangeSelect}
-				pool={poolStore}
-			/>
-			<div className="grid grid-cols-[3fr_6fr]">
-				<PoolInfo pool={poolStore} />
+				<Paths paths={paths} selected={2} className="mt-2" />
+				<PoolName pool={poolStore} className="mt-8" />
+				<PoolPrice firstSelected={firstSelected} secondSelected={secondSelected} className="mt-4" />
+				<PoolSelect
+					firstSelected={firstSelected}
+					secondSelected={secondSelected}
+					onChangeSelect={onChangeSelect}
+					pool={poolStore}
+					className="mt-4"
+				/>
+				<div className="grid grid-cols-[2fr_5fr] gap-6 my-8">
+					<PoolInfo pool={poolStore} />
+					<Charts pool={poolStore} firstSelected={firstSelected} secondSelected={secondSelected} />
+				</div>
+				<TableTrx
+					data={poolStore?.trxStore.data ?? []}
+					onClickMore={onClickMoreTrx}
+					isLoading={poolStore?.trxStore.isLoading}
+				/>
 			</div>
-			<TableTrx
-				data={poolStore?.trxStore.data ?? []}
-				onClickMore={onClickMoreTrx}
-				isLoading={poolStore?.trxStore.isLoading}
-			/>
 		</div>
 	);
 });

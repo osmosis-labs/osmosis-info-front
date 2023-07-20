@@ -213,7 +213,6 @@ export class PoolStore extends Request<PromiseRequest> {
 	constructor({ pool }: PoolStoreArgs) {
 		super({ delayCache: 6 * 60 * 100 });
 		this._intervalTime = 6 * 1000;
-		if (pool.id === 803) console.log("pool-store.ts -> 216: create", pool.id);
 		this._id = pool.id;
 		this._liquidity = pool.liquidity;
 		this._liquidity24hChange = pool.liquidity24hChange;

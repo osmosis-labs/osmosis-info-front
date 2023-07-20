@@ -69,14 +69,12 @@ export class TrxStore {
 
 	@action
 	format(responseData: PromiseRequest): void {
-		console.log("%ctrx-store.ts -> 72 BLUE: responseData", "background: #2196f3; color:#FFFFFF", responseData);
 		this.formatData(responseData.data);
 	}
 
 	@action
 	getData = async ({ limit, offset }: { limit: number; offset: number }): Promise<void> => {
 		if (this._isLoading) return Promise.resolve();
-		console.log("%ctrx-store.ts -> 78 ORANGE: GET DATA", "background: #FFA500; color:#FFFFFF");
 		try {
 			this._isLoading = true;
 			const response: PromiseRequest = await axios({

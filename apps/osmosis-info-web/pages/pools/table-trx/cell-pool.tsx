@@ -4,11 +4,12 @@ import { Popover } from "@latouche/osmosis-info-ui";
 import { useStore } from "../../../stores";
 import { Image } from "../../../components/image/image";
 import { useTranslation } from "react-multi-lang";
+import { observer } from "mobx-react-lite";
 
 type CellPoolProps = {
 	trx: Trx;
 };
-export const CellPool = ({ trx }: CellPoolProps) => {
+export const CellPool = observer(({ trx }: CellPoolProps) => {
 	const t = useTranslation();
 	const [anchorElPopover, setAnchorElPopover] = useState<null | HTMLElement>(null);
 	const { assetsStore } = useStore();
@@ -33,10 +34,8 @@ export const CellPool = ({ trx }: CellPoolProps) => {
 						height={20}
 						width={20}
 						className={`h-[20px] w-[20px]`}
-						assets={true}
 						src={assetsStore.getImageFromSymbol(tokenSymbol) ?? "/images/default.png"}
-						srcFallback="../assets/default.png"
-						pathAssets=""
+						alt={tokenSymbol}
 					/>
 				);
 			})}
@@ -80,10 +79,8 @@ export const CellPool = ({ trx }: CellPoolProps) => {
 													height={20}
 													width={20}
 													className={`h-[20px] w-[20px]`}
-													assets={true}
 													src={assetsStore.getImageFromSymbol(tokenSymbol) ?? "/images/default.png"}
-													srcFallback="../assets/default.png"
-													pathAssets=""
+													alt={tokenSymbol}
 												/>
 											);
 										})}
@@ -97,4 +94,4 @@ export const CellPool = ({ trx }: CellPoolProps) => {
 			</Popover>
 		</div>
 	);
-};
+});

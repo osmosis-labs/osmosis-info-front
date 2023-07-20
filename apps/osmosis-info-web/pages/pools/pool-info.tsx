@@ -15,7 +15,7 @@ export type PoolInfoProps = {
 export const PoolInfo = ({ pool }: PoolInfoProps) => {
 	const t = useTranslation();
 	return (
-		<Paper className="flex flex-col mt-4 w-full">
+		<Paper className="flex flex-col w-full">
 			<div className="bg-osmosverse-900 rounded-xl px-2 py-4 w-full">
 				<p>{t("pool.pooledTokens.title")}</p>
 				<div className="grid grid-cols-[2fr_1fr_1fr] my-2 w-full text-sm text-osmosverse-500">

@@ -140,6 +140,7 @@ export const TableTrx = ({
 				},
 				{
 					display: "value",
+					align: "right",
 					key: "value",
 					flex: 1,
 					minWidth: columnsSetting.value?.minWidth ?? 100,
@@ -155,7 +156,7 @@ export const TableTrx = ({
 					display: "address",
 					key: "address",
 					flex: 1,
-					minWidth: columnsSetting.address?.minWidth ?? 300,
+					minWidth: columnsSetting.address?.minWidth ?? 130,
 					sortable: true,
 					accessor: (params: Params<Trx>) => <CellAddress trx={params.currentData} />,
 					onSort: (a: any, b: any) => {
@@ -196,7 +197,7 @@ export const TableTrx = ({
 	);
 
 	return (
-		<div className="mt-4">
+		<div className="">
 			{config && (
 				<Table
 					config={config}
