@@ -34,8 +34,7 @@ const useStyles = makeStyles((theme) => {
 				alignItems: "flex-start",
 			},
 		},
-		headerInfo: {
-		},
+		headerInfo: {},
 		currentTitle: {},
 		currentInfo: {
 			fontSize: theme.fontSize.veryBig,
@@ -47,7 +46,7 @@ const useStyles = makeStyles((theme) => {
 			fontSize: "12px",
 		},
 		headerActions: {
-			flex:"1",
+			flex: "1",
 			alignSelf: "flex-end",
 			display: "flex",
 			alignItems: "flex-end",
@@ -82,7 +81,7 @@ const ContainerChartLiquidity = ({ dataDay, dataWeek, dataMonth, title }) => {
 		if (dataDay.length > 0) {
 			changeRange("d")
 			setDefaultView({
-				from: dataDay[dataDay.length - 290].time,
+				from: dataDay[dataDay.length - 365].time,
 				to: dataDay[dataDay.length - 1].time,
 			})
 		}
@@ -101,20 +100,20 @@ const ContainerChartLiquidity = ({ dataDay, dataWeek, dataMonth, title }) => {
 		if (value === "d") {
 			data = dataDay.map((item) => ({ time: item.time, value: item[key] }))
 			setDefaultView({
-				from: data[data.length - 290].time,
+				from: data[data.length - 365].time,
 				to: data[data.length - 1].time,
 			})
 		} else if (value === "w") {
 			data = dataWeek.map((item) => ({ time: item.time, value: item[key] }))
 
 			setDefaultView({
-				from: data[data.length - 41].time,
+				from: data[data.length - 52].time,
 				to: data[data.length - 1].time,
 			})
 		} else if (value === "m") {
 			data = dataMonth.map((item) => ({ time: item.time, value: item[key] }))
 			setDefaultView({
-				from: data[data.length - 10].time,
+				from: data[data.length - 12].time,
 				to: data[data.length - 1].time,
 			})
 		}
@@ -165,7 +164,7 @@ const ContainerChartLiquidity = ({ dataDay, dataWeek, dataMonth, title }) => {
 		<div className={classes.chartContainer}>
 			<div className={classes.header}>
 				<div className={classes.headerInfo}>
-				<InfoLiquidity title={title} range={range} data={currentItem} currency={currency} />
+					<InfoLiquidity title={title} range={range} data={currentItem} currency={currency} />
 				</div>
 				<div className={classes.headerActions}>
 					<ButtonsLiquidityType onChangeRange={changeRangeType} range={rangeType} />

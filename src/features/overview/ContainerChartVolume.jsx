@@ -81,7 +81,7 @@ const ContainerChartVolume = ({ dataDay, dataWeek, dataMonth, title }) => {
 		if (dataDay.length > 0) {
 			changeRange("d")
 			setDefaultView({
-				from: dataDay[dataDay.length - 290].time,
+				from: dataDay[dataDay.length - 365].time,
 				to: dataDay[dataDay.length - 1].time,
 			})
 		}
@@ -92,19 +92,19 @@ const ContainerChartVolume = ({ dataDay, dataWeek, dataMonth, title }) => {
 		if (value === "d") {
 			data = [...dataDay]
 			setDefaultView({
-				from: data[data.length - 290].time,
+				from: data[data.length - 365].time,
 				to: data[data.length - 1].time,
 			})
 		} else if (value === "w") {
 			data = [...dataWeek]
 			setDefaultView({
-				from: data[data.length - 41].time,
+				from: data[data.length - 52].time,
 				to: data[data.length - 1].time,
 			})
 		} else if (value === "m") {
 			data = [...dataMonth]
 			setDefaultView({
-				from: data[data.length - 10].time,
+				from: data[data.length - 12].time,
 				to: data[data.length - 1].time,
 			})
 		}
