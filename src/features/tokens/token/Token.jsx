@@ -260,9 +260,10 @@ const Token = () => {
 		// needed to update price of token
 		if (tkn.symbol) {
 			setToken((t) => ({ ...tkn }))
+			console.log("%cToken.jsx (263) -> historical", "background: #2196f3; color:#FFFFFF", historical)
 			if (historical.length > 0) {
-				priceDecimals.current = detectBestDecimalsDisplay(historical[0].close)
-				setToken((t) => ({ ...tkn, price: historical[historical.length - 1].close }))
+				priceDecimals.current = detectBestDecimalsDisplay(historical[0].close ?? 0)
+				setToken((t) => ({ ...tkn, price: historical[historical.length - 1].close ?? 0 }))
 			}
 		}
 	}, [tkn, historical])

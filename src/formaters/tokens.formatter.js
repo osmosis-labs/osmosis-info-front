@@ -204,6 +204,8 @@ export const formatLiquidityToken = (data) => {
 
 export const defaultHistoricalToken = []
 export const formatHistoricalToken = (data) => {
-	let res = data
-	return res
+	if (data.length === 0) return []
+	if (!data[0].close) return []
+	return data
+
 }
