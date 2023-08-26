@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core"
+import { FormControlLabel, Switch, makeStyles } from "@material-ui/core"
 import { Button } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useDebug } from "../../contexts/debug.provider"
@@ -98,9 +98,17 @@ const InfoBar = () => {
 	const { MODE, setOpen } = useDebug()
 	const { settings, updateSettings } = useSettings()
 
+	const [valueVerified, setValueVerified] = useState(settings.type === "frontier")
+
+	useEffect(() => {
+		setValueVerified(settings.type === "frontier")
+	}, [settings.type])
+
 	const onChangeType = (event, value) => {
 		if (value) {
-			updateSettings({ type: value })
+			updateSettings({ type: "frontier" })
+		} else {
+			updateSettings({ type: "app" })
 		}
 	}
 
@@ -119,6 +127,7 @@ const InfoBar = () => {
 	const onOpenDebug = () => {
 		setOpen(true)
 	}
+
 	return (
 		<div className={classes.infoBarRoot}>
 			<div className={classes.appBarContent}>
@@ -139,10 +148,9 @@ const InfoBar = () => {
 							Debug
 						</Button>
 					)}
-					<Toggle color="primary" value={settings.type} exclusive onChange={onChangeType}>
-						<ToggleItem value="app">App</ToggleItem>
-						<ToggleItem value="frontier">Frontier</ToggleItem>
-					</Toggle>
+
+					<span>Unverified Assets</span>
+					<Switch color="secondary" checked={valueVerified} onChange={onChangeType} />
 					<a className={classes.link} href="https://github.com/osmosis-labs" target="_blank">
 						Github
 					</a>

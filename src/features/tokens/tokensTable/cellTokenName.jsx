@@ -1,11 +1,12 @@
-import { makeStyles, TableCell } from "@material-ui/core"
+import { makeStyles, TableCell, Tooltip } from "@material-ui/core"
 import Image from "../../../components/image/Image"
 import { getImageFromAsset, useAssets } from "../../../hooks/data/assets.hook"
+import WarningAmberIcon from "@mui/icons-material/WarningAmber"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootCellTokenName: {
 			display: "grid",
-			gridTemplateColumns: "60px 200px",
+			gridTemplateColumns: "60px 200px 30px",
 			textOverflow: "ellipsis",
 			overflow: "hidden",
 			whiteSpace: "nowrap",
@@ -45,6 +46,9 @@ const useStyles = makeStyles((theme) => {
 			color: theme.palette.gray.dark,
 			paddingLeft: theme.spacing(1),
 		},
+		warning: {
+			color: theme.palette.gray.dark,
+		},
 	}
 })
 const CellTokenName = ({ cellKey, cellConfig, data }) => {
@@ -52,6 +56,7 @@ const CellTokenName = ({ cellKey, cellConfig, data }) => {
 	let currentData = data[cellConfig.cellKey]
 	const { data: assets } = useAssets()
 	const image = getImageFromAsset(assets, data)
+
 	return (
 		<TableCell
 			key={cellKey}
@@ -74,6 +79,11 @@ const CellTokenName = ({ cellKey, cellConfig, data }) => {
 				<p className={classes.name}>
 					{currentData} <em className={classes.symbolName}>({data.symbolDisplay})</em>
 				</p>
+				{!data.main && (
+					<Tooltip title="This asset is not verified">
+						<WarningAmberIcon className={classes.warning} />
+					</Tooltip>
+				)}
 			</div>
 		</TableCell>
 	)

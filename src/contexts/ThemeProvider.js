@@ -140,6 +140,14 @@ export const ThemeCustomProvider = ({ children }) => {
 			dark2: "rgb(23, 15, 52)",
 			contrastText: "#ffffff",
 		},
+		secondary: {
+			light: "rgb(65 61 66)",
+			lightLowOpacity: "rgba(65 61 66, 0.9)",
+			main: "#8E83AA",
+			dark: "rgb(41, 36, 33)",
+			dark2: " rgb(34, 27, 24)",
+			contrastText: "#ffffff",
+		},
 		table: {
 			cell: "#FFFFFFDE",
 			cellDark: "#FFFFFF66",
@@ -176,7 +184,8 @@ export const ThemeCustomProvider = ({ children }) => {
 
 	const themeCustomFrontier = createTheme({ ...baseTheme, palette: { ...colors, ...colorsFronier } })
 	return (
-		<ThemeCustomContext.Provider value={settings.type === "app" ? themeCustomApp : themeCustomFrontier}>
+		// <ThemeCustomContext.Provider value={settings.type === "app" ? themeCustomApp : themeCustomFrontier}>
+		<ThemeCustomContext.Provider value={themeCustomApp}>
 			{children}
 		</ThemeCustomContext.Provider>
 	)

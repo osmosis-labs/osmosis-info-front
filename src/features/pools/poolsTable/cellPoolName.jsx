@@ -1,11 +1,12 @@
-import { makeStyles, TableCell } from "@material-ui/core"
+import { makeStyles, TableCell, Tooltip } from "@material-ui/core"
 import Image from "../../../components/image/Image"
 import { getImageFromAsset, useAssets } from "../../../hooks/data/assets.hook"
+import WarningAmberIcon from "@mui/icons-material/WarningAmber"
 const useStyles = makeStyles((theme) => {
 	return {
 		rootCellPoolName: {
 			display: "grid",
-			gridTemplateColumns: "60px 200px",
+			gridTemplateColumns: "60px 200px 30px",
 			textOverflow: "ellipsis",
 			overflow: "hidden",
 			whiteSpace: "nowrap",
@@ -38,6 +39,9 @@ const useStyles = makeStyles((theme) => {
 			textOverflow: "ellipsis",
 			overflow: "hidden",
 			whiteSpace: "nowrap",
+		},
+		warning: {
+			color: theme.palette.gray.dark,
 		},
 	}
 })
@@ -74,6 +78,11 @@ const CellPoolName = ({ cellKey, cellConfig, data }) => {
 						})}
 				</div>
 				<p className={classes.name}>{data.nameDisplay}</p>
+				{!data.main && (
+					<Tooltip title="This pool contains not verified assets">
+						<WarningAmberIcon className={classes.warning} />
+					</Tooltip>
+				)}
 			</div>
 		</TableCell>
 	)
