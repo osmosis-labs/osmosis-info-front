@@ -29,6 +29,7 @@ import Trades from "../dashboard/trades/trades"
 import { DebugProvider } from "../../contexts/debug.provider"
 import DebugModal from "../_debug/debug_modal"
 import ModalMessage from "../modal_message/modal_message"
+import { MadeFixe, MadeSimpleText } from "../../components/made/made"
 
 let MODE = "production"
 if (process.env.REACT_APP_ENV && process.env.REACT_APP_ENV !== "production" && process.env.REACT_APP_DEBUG === "true") {
@@ -66,6 +67,7 @@ const useStyles = makeStyles((theme) => {
 		},
 		container: {
 			paddingTop: `${theme.menuHeight.desktop}px`,
+			paddingBottom: `30px`,
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "center",
@@ -179,6 +181,10 @@ const App = () => {
 																</div>
 															</Route>
 														</Switch>
+														<div style={{ margin: "8px 0" }}>
+															<MadeSimpleText />
+														</div>
+														<MadeFixe />
 													</div>
 												</div>
 											</div>

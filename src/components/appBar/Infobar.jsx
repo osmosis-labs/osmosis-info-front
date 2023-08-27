@@ -8,6 +8,7 @@ import { useQueryClient } from "react-query"
 
 import Toggle from "../toggle/Toggle"
 import ToggleItem from "../toggle/ToggleItem"
+import { MadeSimpleText } from "../made/made"
 const useStyles = makeStyles((theme) => {
 	return {
 		infoBarRoot: {
@@ -141,6 +142,9 @@ const InfoBar = () => {
 					{/* <p className={classes.prices}>
 						ION: <em className={classes.price}>{priceIon}</em>
 					</p> */}
+					<span>
+						<MadeSimpleText />
+					</span>
 				</div>
 				<div className={classes.right}>
 					{MODE === "dev" && (

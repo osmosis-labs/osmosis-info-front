@@ -71,6 +71,7 @@ export const ThemeCustomProvider = ({ children }) => {
 			main: "#dddf39",
 			rgb: "221, 223, 57",
 			gold: "#C4A46A",
+			hover: "#E5C68C"
 		},
 		blue: {
 			main: "#322DC2",
