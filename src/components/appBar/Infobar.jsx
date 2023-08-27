@@ -35,9 +35,15 @@ const useStyles = makeStyles((theme) => {
 			flexGrow: "2",
 			alignItems: "center",
 			paddingLeft: theme.spacing(2),
+			[theme.breakpoints.down("xs")]: {
+				justifyContent: "space-around",
+			},
 		},
 		right: {
 			paddingRight: theme.spacing(3),
+			display: "flex",
+			flexDirection: "row",
+			alignItems: "center",
 			[theme.breakpoints.down("xs")]: {
 				display: "none",
 			},
@@ -84,6 +90,12 @@ const useStyles = makeStyles((theme) => {
 			padding: `0 ${theme.spacing(2)}px`,
 			fontSize: theme.fontSize.verySmall,
 			marginRight: "16px !important",
+		},
+		madeXS: {
+			display: "none",
+			[theme.breakpoints.down("xs")]: {
+				display: "flex",
+			},
 		},
 	}
 })
@@ -142,7 +154,7 @@ const InfoBar = () => {
 					{/* <p className={classes.prices}>
 						ION: <em className={classes.price}>{priceIon}</em>
 					</p> */}
-					<span>
+					<span className={classes.madeXS}>
 						<MadeSimpleText />
 					</span>
 				</div>
@@ -161,6 +173,9 @@ const InfoBar = () => {
 					<a className={classes.link} href="https://app.osmosis.zone/" target="_blank">
 						App
 					</a>
+					<span>
+						<MadeSimpleText />
+					</span>
 				</div>
 			</div>
 		</div>

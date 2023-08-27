@@ -181,10 +181,8 @@ const App = () => {
 																</div>
 															</Route>
 														</Switch>
-														<div style={{ margin: "8px 0" }}>
-															<MadeSimpleText />
-														</div>
-														<MadeFixe />
+
+														{/* <MadeFixe /> */}
 													</div>
 												</div>
 											</div>
