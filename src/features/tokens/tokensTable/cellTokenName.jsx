@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme) => {
 	return {
 		rootCellTokenName: {
 			display: "grid",
-			gridTemplateColumns: "60px 200px 30px",
+			gridTemplateColumns: " 60px 200px 30px ",
 			textOverflow: "ellipsis",
 			overflow: "hidden",
 			whiteSpace: "nowrap",
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "center",
 			height: "36px",
 			[theme.breakpoints.down("xs")]: {
-				gridTemplateColumns: "60px 100px",
+				gridTemplateColumns: " 60px 100px 30px ",
 				fontSize: "12px  !important",
 			},
 		},
@@ -79,10 +79,12 @@ const CellTokenName = ({ cellKey, cellConfig, data }) => {
 				<p className={classes.name}>
 					{currentData} <em className={classes.symbolName}>({data.symbolDisplay})</em>
 				</p>
-				{!data.main && (
+				{!data.main ? (
 					<Tooltip title="This asset is not verified">
 						<WarningAmberIcon className={classes.warning} />
 					</Tooltip>
+				) : (
+					<span />
 				)}
 			</div>
 		</TableCell>

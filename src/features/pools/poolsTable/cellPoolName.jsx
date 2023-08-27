@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme) => {
 	return {
 		rootCellPoolName: {
 			display: "grid",
-			gridTemplateColumns: "60px 200px 30px",
+			gridTemplateColumns: "60px 200px 30px ",
 			textOverflow: "ellipsis",
 			overflow: "hidden",
 			whiteSpace: "nowrap",
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => {
 			alignItems: "center",
 			height: "30px",
 			[theme.breakpoints.down("xs")]: {
-				gridTemplateColumns: "60px 100px",
+				gridTemplateColumns: "60px 100px 30px ",
 				fontSize: "12px  !important",
 			},
 		},
@@ -78,10 +78,12 @@ const CellPoolName = ({ cellKey, cellConfig, data }) => {
 						})}
 				</div>
 				<p className={classes.name}>{data.nameDisplay}</p>
-				{!data.main && (
+				{!data.main ? (
 					<Tooltip title="This pool contains not verified assets">
 						<WarningAmberIcon className={classes.warning} />
 					</Tooltip>
+				) : (
+					<span />
 				)}
 			</div>
 		</TableCell>
