@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => {
 			height: "100%",
 			width: "100%",
 			display: "flex",
+			flexDirection: "column",
 			[theme.breakpoints.down("xs")]: {},
 		},
 		headerInfo: {
@@ -79,6 +80,16 @@ const useStyles = makeStyles((theme) => {
 		},
 		expertButton: {
 			marginBottom: theme.spacing(1),
+		},
+		linkTV: {
+			textAlign: "right",
+			fontSize: "11px",
+			fontStyle: "italic",
+			opacity: "0.8",
+			margin: "4px 0 0 0",
+			"& a": {
+				color: theme.palette.secondary.main,
+			},
 		},
 	}
 })
@@ -220,6 +231,16 @@ const ContainerCharts = ({
 					rangePrice={rangePrice}
 					isLoading={isLoading}
 				/>
+				{typeChart === "price" && (
+					<p className={classes.linkTV}>
+						The chart is provided by TradingView, an advanced platform that provides unparalleled access to live data
+						e.g.{" "}
+						<a target="blank" href="https://www.tradingview.com/symbols/BTCUSD/">
+							BTC USD chart
+						</a>
+						.
+					</p>
+				)}
 			</div>
 		</div>
 	)
