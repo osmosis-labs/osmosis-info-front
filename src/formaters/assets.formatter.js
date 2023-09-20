@@ -13,7 +13,7 @@ export const formatAssets = (data) => {
 				coingeckoId: asset.coingecko_id,
 				image: asset.logo_URIs.png ?? asset.logo_URIs.svg,
 				denomUnits: asset.denom_units,
-				main: asset.keywords.includes('osmosis-main')
+				main: asset.keywords.includes('osmosis-main') || asset.keywords.includes('osmosis-verified')
 			}
 
 			res[asset.symbol.toUpperCase()] = currentAsset
