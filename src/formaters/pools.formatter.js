@@ -146,11 +146,14 @@ export const formatPoolTrx = (data, assets) => {
 			name: `${trx.symbol_in}/${trx.symbol_out}`,
 			nameDisplay: `${symbolInDisplay}/${symbolOutDisplay}`,
 			routes: trx.swap_route.routes.map((route) => {
-				return {
+				const poolName = route.poolName ? route.poolName : route.token_out_denom
+				const newRoute = {
 					...route,
+					poolName,
 					poolNameDisplay: formatTokenName(route.poolName ? route.poolName : ""),
 					tokenOutSymbolDisplay: formatTokenName(route.tokenOutSymbol ? route.tokenOutSymbol : ""),
 				}
+				return newRoute
 			}),
 		}
 		return {
