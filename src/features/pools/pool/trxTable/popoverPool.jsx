@@ -80,7 +80,6 @@ const useStyles = makeStyles((theme) => {
 const PopoverPool = ({ routes, open, event, onClose, id }) => {
 	const classes = useStyles()
 	const { data: assets } = useAssets()
-	console.log("%cpopoverPool.jsx (83) -> routes", "background: #2196f3; color:#FFFFFF", routes, id)
 
 	return (
 		<Popover
