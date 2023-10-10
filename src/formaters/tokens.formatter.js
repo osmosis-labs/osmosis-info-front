@@ -113,13 +113,24 @@ export const formatTrxToken = (data, symbol, assets) => {
 			name: `${trx.symbol_in}/${trx.symbol_out}`,
 			nameDisplay: `${symbolInDisplay}/${symbolOutDisplay}`,
 			routes: trx.swap_route.routes.map((route) => {
-				return {
+				const poolName = route.poolName ? route.poolName : route.token_out_denom
+				const newRoute = {
 					...route,
-					poolNameDisplay: formatTokenName(route.poolName),
+					poolName,
+					poolNameDisplay: formatTokenName(poolName),
 					tokenOutSymbolDisplay: formatTokenName(route.tokenOutSymbol),
 				}
+				// if (route.poolName) {
+				// 	console.log("%ctokens.formatter.js (117) -> trx", 'background: #cddc39; color:#212121', trx, route, newRoute)
+				// } else {
+				// 	console.log("%ctokens.formatter.js (119) -> TRX ", 'background: #f44336; color:#FFFFFF', trx, route, newRoute)
+				// }
+				return newRoute
 			}),
+
 		}
+
+
 		return {
 			type: trx.symbol_out === symbol ? "Buy" : "Sell",
 			time: { value: time, display: sourceDate.format("DD/MM/YY HH:mm:ss") },

@@ -2,6 +2,7 @@ import { makeStyles } from "@material-ui/core"
 const useStyles = makeStyles((theme) => {
 	return {
 		root: {
+			display: "none",
 			fontSize: "12px",
 			color: theme.palette.gray.contrastText,
 			fontStyle: "italic",
