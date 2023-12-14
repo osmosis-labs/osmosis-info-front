@@ -168,7 +168,7 @@ const InfoBar = () => {
 					<span>Unverified Assets</span>
 					<Switch color="secondary" checked={valueVerified} onChange={onChangeType} />
 					<a className={classes.link} href="https://github.com/osmosis-labs" target="_blank">
-						Github
+						GitHub
 					</a>
 					<a className={classes.link} href="https://app.osmosis.zone/" target="_blank">
 						App
