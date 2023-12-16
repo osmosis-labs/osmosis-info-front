@@ -1,0 +1,13 @@
+resolver  127.0.0.11 valid=1s;
+
+server {
+
+  listen ${PORT};
+  listen [::]:${PORT};
+
+  location / {
+    root  /usr/share/nginx/html;
+    index index.html index.htm;
+    try_files $uri $uri/ /index.html;
+  }
+}
