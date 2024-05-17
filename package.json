@@ -2,6 +2,9 @@
 	"name": "osmosis",
 	"version": "0.1.0",
 	"private": true,
+	"engines": {
+		"node": "20.x"
+	  },
 	"dependencies": {
 		"@emotion/react": "^11.8.2",
 		"@emotion/styled": "^11.8.1",
