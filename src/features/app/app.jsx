@@ -183,8 +183,8 @@ const App = () => {
 														</Switch> */}
 														<p>
 															info.osmosis.zone has been deprecated. Historical Osmosis info can be found on 
-															<span><a href="app.osmosis.zone">app.osmosis.zone</a></span> and 
-															<span><a href="https://www.datalenses.zone/chain/osmosis">https://www.datalenses.zone/chain/osmosis</a></span>
+															<span>&nbsp;<a style={{ color: 'white'}} href="app.osmosis.zone">app.osmosis.zone</a></span> and 
+															<span>&nbsp;<a style={{ color: 'white'}} href="https://www.datalenses.zone/chain/osmosis">https://www.datalenses.zone/chain/osmosis</a></span>
 														</p>
 
 														{/* <MadeFixe /> */}
