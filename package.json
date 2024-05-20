@@ -2,6 +2,9 @@
 	"name": "osmosis",
 	"version": "0.1.0",
 	"private": true,
+	"engines": {
+		"node": "20.x"
+	  },
 	"dependencies": {
 		"@emotion/react": "^11.8.2",
 		"@emotion/styled": "^11.8.1",
@@ -40,11 +43,11 @@
 		"web-vitals": "^1.0.1"
 	},
 	"scripts": {
-		"startssl": "env-cmd -f .env react-scripts --openssl-legacy-provider start",
-		"start": "set PORT=3002 && env-cmd -f .env react-scripts start",
-		"build": "env-cmd -f .env react-scripts build",
-		"buildssl": "env-cmd -f .env react-scripts --openssl-legacy-provider build",
-		"buildProd": "env-cmd -f .env react-app-rewired build",
+		"startssl": "react-scripts --openssl-legacy-provider start",
+		"start": "set PORT=3002 && react-scripts start",
+		"build": "react-scripts build",
+		"buildssl": "react-scripts --openssl-legacy-provider build",
+		"buildProd": "react-app-rewired build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"postinstall": "patch-package"
