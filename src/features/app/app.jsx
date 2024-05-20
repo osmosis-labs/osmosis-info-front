@@ -139,7 +139,7 @@ const App = () => {
 												<AppBar />
 												<div className={classes.container}>
 													<div className={classes.contentContainer} id="mainContainer">
-														<Switch>
+														{/* <Switch>
 															<Route path="/" exact={true}>
 																<div className={classes.content}>
 																	<Overview />
@@ -180,7 +180,10 @@ const App = () => {
 																	<NotFound />
 																</div>
 															</Route>
-														</Switch>
+														</Switch> */}
+														<p>
+														info.osmosis.zone has been deprecated.  Historical Osmosis info can be found on app.osmosis.zone and https://www.datalenses.zone/chain/osmosis
+														</p>
 
 														{/* <MadeFixe /> */}
 													</div>
