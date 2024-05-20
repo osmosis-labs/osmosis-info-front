@@ -181,9 +181,9 @@ const App = () => {
 																</div>
 															</Route>
 														</Switch> */}
-														<p>
+														<div style={{ display: "flex", justifyContent: "center", alignItems: "center"}}>
 														info.osmosis.zone has been deprecated.  Historical Osmosis info can be found on <a>app.osmosis.zone</a> and <a>https://www.datalenses.zone/chain/osmosis</a>
-														</p>
+														</div>
 
 														{/* <MadeFixe /> */}
 													</div>
