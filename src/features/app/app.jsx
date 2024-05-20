@@ -181,7 +181,7 @@ const App = () => {
 																</div>
 															</Route>
 														</Switch> */}
-														<p>
+														<p style={{ paddingTop: "50px"}}>
 															info.osmosis.zone has been deprecated. Historical Osmosis info can be found on 
 															<span>&nbsp;<a style={{ color: 'white'}} href="app.osmosis.zone">app.osmosis.zone</a></span> and 
 															<span>&nbsp;<a style={{ color: 'white'}} href="https://www.datalenses.zone/chain/osmosis">https://www.datalenses.zone/chain/osmosis</a></span>
